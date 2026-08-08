@@ -21,13 +21,30 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 
 ## Run locally
 
+### First-time setup
+
 From the repo root (`dashbuilder/`):
 
 ```bash
-# 1. Install dependencies (first time, or after package.json changes)
-npm install
+npm install                  # JavaScript dependencies
+npm run setup:e2e      # Playwright Chromium (required once for e2e)
+npm run e2e:fresh      # use once after setup:e2e if Nx replays an old cached failure
+npm run verify:all     # optional sanity check
+```
 
-# 2. Start the builder (Angular + NestJS together)
+**Important:** If you skip `npm run setup:e2e`, `npm run e2e` / `npm run verify:all` fail with `Executable doesn't exist at .../ms-playwright/...`. Run:
+
+```bash
+npx playwright install chromium
+```
+
+Full guide: **[docs/13-local-development-and-components.md](docs/13-local-development-and-components.md)** (startup, troubleshooting, adding components).
+
+### Start the builder (client + server)
+
+You need **both** processes for save, preview, and export:
+
+```bash
 npm start
 ```
 
@@ -39,24 +56,33 @@ Then open **http://localhost:4200** in your browser.
 | NestJS API | http://localhost:3000/api | REST backend |
 | Health check | http://localhost:3000/api/health | Confirms server is up |
 
+Quick health check:
+
+```bash
+curl http://localhost:3000/api/health
+```
+
 The Angular dev server proxies `/api/*` to the NestJS server, so the client always calls `/api/...` without CORS setup.
 
 ### Run client or server separately
 
+Start the **server first**, then the client:
+
 ```bash
 npm run start:server   # NestJS only → http://localhost:3000/api
-npm run start:client   # Angular only → http://localhost:4200 (needs server for save/preview API)
+npm run start:client   # Angular only → http://localhost:4200 (needs server for API)
 ```
 
 ### Quality checks (run before committing)
 
 ```bash
 npm run verify         # lint + typecheck + unit tests
-npm run e2e            # Playwright (starts server + client if needed)
+npm run setup:e2e      # re-run if Playwright was upgraded and e2e fails
+npm run e2e            # Playwright (starts server + client on :4201/:3001)
 npm run verify:all     # both
 ```
 
-**E2E tips:** Playwright uses dedicated ports **4201** (client) and **3001** (API) so it can run alongside `npm start` on 4200/3000. If tests still hang, cancel stuck `nx serve` / `verify:all` runs and re-run `npm run e2e`.
+**E2E tips:** Playwright uses dedicated ports **4201** (client) and **3001** (API) so it can run alongside `npm start` on 4200/3000. Install browsers with `npm run setup:e2e` before the first e2e run. See [docs/13-local-development-and-components.md](docs/13-local-development-and-components.md).
 
 ## CI on GitHub (optional)
 
@@ -108,11 +134,13 @@ Example body:
 | POST | `/api/export/ir` | Build ExportIR from a strictly validated composite (400 on validation errors) |
 | POST | `/api/export/react` | Build ExportIR and generate React UI source files |
 | POST | `/api/export/nest` | Build ExportIR and generate NestJS + PostgreSQL server files |
+| POST | `/api/export/bundle` | Build ExportIR and generate combined React + NestJS file list |
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
+| `npm run setup:e2e` | Install Playwright Chromium (required once for e2e) |
 | `npm start` | Serve client and server |
 | `npm run build` | Build client, server, and core |
 | `npm run verify` | **Lint + typecheck + unit tests** (run before every commit) |
@@ -126,7 +154,10 @@ Example body:
 
 See [docs/README.md](docs/README.md) for the full documentation index.
 
-Detailed CI vs hosting notes: [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting.md)
+**Developer guides:**
+
+- [Local development & component how-to](docs/13-local-development-and-components.md)
+- [CI and hosting](docs/12-ci-and-hosting.md)
 
 ## Workflow
 
@@ -137,8 +168,8 @@ Detailed CI vs hosting notes: [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting
 
 ## Current ticket
 
-**[DAS-15](https://planetkevin.atlassian.net/browse/DAS-15)** — NestJS + PostgreSQL infra exporter  
-Branch: `feature/DAS-15-nest-pg-exporter`
+**[DAS-16](https://planetkevin.atlassian.net/browse/DAS-16)** — Export wizard UI + zip download  
+Branch: `feature/DAS-16-export-wizard`
 
 ## License
 

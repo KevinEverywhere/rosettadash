@@ -7,30 +7,35 @@
   "tags": [],
   "targets": {
     "e2e": {
+      "cache": false,
       "dependsOn": [
         { "projects": ["core"], "target": "build" },
         { "projects": ["server"], "target": "build" }
       ]
     },
     "e2e-ci": {
+      "cache": false,
       "dependsOn": [
         { "projects": ["core"], "target": "build" },
         { "projects": ["server"], "target": "build" }
       ]
     },
     "e2e-ci--src/builder-bindings.spec.ts": {
+      "cache": false,
       "dependsOn": [
         { "projects": ["core"], "target": "build" },
         { "projects": ["server"], "target": "build" }
       ]
     },
     "e2e-ci--src/builder-preview.spec.ts": {
+      "cache": false,
       "dependsOn": [
         { "projects": ["core"], "target": "build" },
         { "projects": ["server"], "target": "build" }
       ]
     },
     "e2e-ci--src/builder-smoke.spec.ts": {
+      "cache": false,
       "dependsOn": [
         { "projects": ["core"], "target": "build" },
         { "projects": ["server"], "target": "build" }

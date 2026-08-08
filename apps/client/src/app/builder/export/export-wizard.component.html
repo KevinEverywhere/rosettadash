@@ -1,0 +1,108 @@
+@if (open()) {
+  <div class="export-wizard" data-testid="export-wizard">
+    <button
+      type="button"
+      class="export-wizard__backdrop"
+      data-testid="export-wizard-backdrop"
+      aria-label="Close export wizard"
+      (click)="close()"
+    ></button>
+
+    <section
+      class="export-wizard__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="export-wizard-title"
+    >
+      <header class="export-wizard__header">
+        <div>
+          <h2 id="export-wizard-title">Export dashboard</h2>
+          <p>Generate React UI and NestJS server files for your composite.</p>
+        </div>
+        <button
+          type="button"
+          class="export-wizard__close"
+          data-testid="export-wizard-close"
+          aria-label="Close export wizard"
+          (click)="close()"
+        >
+          ×
+        </button>
+      </header>
+
+      <div class="export-wizard__body">
+        <section class="export-wizard__section">
+          <h3>Targets</h3>
+          <p data-testid="export-wizard-targets">{{ targetsLabel() }}</p>
+        </section>
+
+        @if (loading()) {
+          <p class="export-wizard__status" data-testid="export-wizard-loading">
+            Building export preview…
+          </p>
+        } @else if (errorMessage()) {
+          <section class="export-wizard__section export-wizard__section--error">
+            <h3>Validation</h3>
+            <p data-testid="export-wizard-error">{{ errorMessage() }}</p>
+            @if (validationIssues().length) {
+              <ul data-testid="export-wizard-issues">
+                @for (issue of validationIssues(); track issue.code + issue.message) {
+                  <li>{{ issue.message }}</li>
+                }
+              </ul>
+            }
+          </section>
+        } @else if (bundle(); as preview) {
+          <section class="export-wizard__section">
+            <h3>Environment variables</h3>
+            @if (preview.ir.envVars.length) {
+              <ul data-testid="export-wizard-env-vars">
+                @for (envVar of preview.ir.envVars; track envVar.key) {
+                  <li>
+                    <code>{{ envVar.key }}</code>
+                    @if (envVar.required) {
+                      <span class="export-wizard__required">required</span>
+                    }
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p>No environment variables required.</p>
+            }
+          </section>
+
+          <section class="export-wizard__section">
+            <h3>Files ({{ preview.files.length }})</h3>
+            <ul class="export-wizard__files" data-testid="export-wizard-files">
+              @for (path of filePaths(preview.files); track path) {
+                <li><code>{{ path }}</code></li>
+              }
+            </ul>
+          </section>
+        }
+      </div>
+
+      <footer class="export-wizard__footer">
+        <button type="button" class="export-wizard__btn" (click)="close()">Cancel</button>
+        <button
+          type="button"
+          class="export-wizard__btn"
+          data-testid="export-wizard-refresh"
+          [disabled]="loading()"
+          (click)="refreshPreview()"
+        >
+          Refresh preview
+        </button>
+        <button
+          type="button"
+          class="export-wizard__btn export-wizard__btn--primary"
+          data-testid="export-wizard-download"
+          [disabled]="loading() || downloading() || !bundle()"
+          (click)="downloadZip()"
+        >
+          {{ downloading() ? 'Preparing zip…' : 'Download zip' }}
+        </button>
+      </footer>
+    </section>
+  </div>
+}

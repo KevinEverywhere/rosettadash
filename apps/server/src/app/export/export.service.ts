@@ -20,4 +20,10 @@ export class ExportService {
     const files = generateNestInfraFiles(ir);
     return { ir, files };
   }
+
+  buildBundleExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = [...generateReactUiFiles(ir), ...generateNestInfraFiles(ir)];
+    return { ir, files };
+  }
 }

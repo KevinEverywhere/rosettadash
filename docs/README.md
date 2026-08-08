@@ -19,6 +19,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 9. [Glossary](./09-glossary.md) — terms
 10. [Roadmap](./10-roadmap.md) — phased delivery
 11. [CI and Hosting](./12-ci-and-hosting.md) — GitHub Actions, Nx, Pages
+12. **[Local Development & Components](./13-local-development-and-components.md)** — startup, e2e setup, adding palette components
 
 ## Active work
 
@@ -37,4 +38,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | merged to `development` | Preview binding flow |
 | [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | merged to `development` | ExportIR builder |
 | [DAS-14](https://planetkevin.atlassian.net/browse/DAS-14) | merged to `development` | React UI exporter |
-| [DAS-15](https://planetkevin.atlassian.net/browse/DAS-15) | `feature/DAS-15-nest-pg-exporter` | NestJS + PostgreSQL exporter |
+| [DAS-15](https://planetkevin.atlassian.net/browse/DAS-15) | merged to `development` | NestJS + PostgreSQL exporter |
+| [DAS-16](https://planetkevin.atlassian.net/browse/DAS-16) | `feature/DAS-16-export-wizard` | Export wizard UI |

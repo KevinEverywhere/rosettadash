@@ -128,11 +128,15 @@ Animation, drag-drop lists, remaining charts, all DB/server targets, Vue/Nuxt ex
 
 ## Adding new components
 
+See **[Local Development & Components](./13-local-development-and-components.md)** for the full step-by-step (core definition → preview → exporters → tests).
+
+Summary:
+
 1. Define type key and property schema in `packages/core`
-2. Add preview renderer in `packages/ui-primitives`
-3. Implement exporters per target framework
-4. Register in palette manifest
-5. Document smart defaults rules
+2. Add preview renderer in `apps/client/.../preview/preview-node.component.html`
+3. Implement React template in `packages/exporters-react` (visual) or Nest exporter (infra)
+4. Palette picks up registry automatically — no separate manifest file
+5. Add E2E `data-testid` hooks and document in this taxonomy
 
 ## Related documents
 

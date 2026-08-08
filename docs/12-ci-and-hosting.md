@@ -6,11 +6,14 @@ DashBuilder is built for **developers running the builder on their own machines*
 
 ```bash
 npm install
+npm run setup:e2e   # Playwright Chromium — once per machine / after @playwright/test upgrade
 npm start
 # → http://localhost:4200
 ```
 
 No public server or cloud hosting is required to use the product.
+
+Full startup and component guide: **[Local Development & Components](./13-local-development-and-components.md)**.
 
 ## GitHub Actions (CI) — validation only
 
@@ -38,6 +41,7 @@ From the repository root:
 
 ```bash
 npm install
+npm run setup:e2e    # if you plan to run e2e locally
 npm start
 ```
 
@@ -60,6 +64,7 @@ npm run start:client   # :4200 (proxies /api → server)
 
 ```bash
 npm run verify
+npm run setup:e2e    # if browsers missing
 npm run e2e            # or npm run verify:all
 ```
 
@@ -67,6 +72,8 @@ npm run e2e            # or npm run verify:all
 
 | Symptom | Fix |
 |---------|-----|
+| `Executable doesn't exist at .../ms-playwright/...` after running `setup:e2e` | Nx may be replaying a **cached failed e2e run** from before browsers were installed. Run `npm run e2e:fresh` once, or `npx nx reset` then `npm run e2e`. E2e caching is disabled in `apps/client-e2e/project.json` going forward. |
+| `Executable doesn't exist at .../ms-playwright/...` (first time) | Run `npm run setup:e2e` or `npx playwright install chromium` |
 | All e2e tests timeout on "Loading project…" | E2E uses ports **4201** / **3001** (not 4200/3000). Cancel stuck `verify:all` or `nx e2e` runs and re-run `npm run e2e`. |
 | E2e waits forever on "another nx process" | Cancel stuck `nx serve` / `verify:all` runs; re-run `npm run e2e`. |
 | Preview test fails on "Data source: API" | Server must include `POST /api/preview/data` (DAS-11+). Re-run e2e so Playwright starts fresh servers. |
@@ -86,4 +93,5 @@ Push a branch and open a PR to `development`. Actions runs verify + e2e automati
 ## Related
 
 - [README](../README.md)
+- [Local Development & Components](./13-local-development-and-components.md)
 - [Workflow & Branching](./07-workflow-and-branching.md)

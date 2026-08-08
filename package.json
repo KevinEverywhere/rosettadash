@@ -11,7 +11,9 @@
     "lint": "nx run-many -t lint -p client,server,core,ui-primitives,exporters-react,exporters-nest",
     "typecheck": "nx run-many -t typecheck -p client,server,core,ui-primitives,exporters-react,exporters-nest",
     "verify": "npm run lint && npm run typecheck && npm run test",
+    "setup:e2e": "playwright install chromium",
     "e2e": "nx e2e client-e2e",
+    "e2e:fresh": "nx e2e client-e2e --skip-nx-cache",
     "verify:all": "npm run verify && npm run e2e"
   },
   "private": true,
@@ -74,6 +76,7 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "jszip": "^3.10.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "~7.8.0"
   },

@@ -42,6 +42,15 @@
       </span>
       <button
         type="button"
+        class="builder__export"
+        data-testid="export-button"
+        [disabled]="state.loading()"
+        (click)="openExportWizard()"
+      >
+        Export
+      </button>
+      <button
+        type="button"
         class="builder__save"
         data-testid="save-button"
         [disabled]="state.loading() || state.saveStatus() === 'saving' || !state.dirty()"
@@ -66,3 +75,5 @@
     </div>
   }
 </div>
+
+<app-export-wizard [open]="exportWizardOpen()" (closed)="closeExportWizard()" />
