@@ -36,4 +36,19 @@ export class ExportController {
       throw error;
     }
   }
+
+  @Post('nest')
+  buildNestExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildNestExport(composite);
+    } catch (error) {
+      if (error instanceof ExportBuildError) {
+        throw new BadRequestException({
+          message: 'Composite validation failed for export',
+          issues: error.issues,
+        });
+      }
+      throw error;
+    }
+  }
 }
