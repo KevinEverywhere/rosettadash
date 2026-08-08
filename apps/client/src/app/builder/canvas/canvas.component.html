@@ -1,7 +1,18 @@
 <section class="canvas" data-testid="canvas">
   <header class="canvas__header">
-    <h2>Canvas</h2>
-    <span class="canvas__count">{{ state.nodes().length }} component(s)</span>
+    <div class="canvas__header-main">
+      <h2>Canvas</h2>
+      <span class="canvas__count">{{ state.nodes().length }} component(s)</span>
+    </div>
+    @if (state.pendingBindingSource()) {
+      <p class="canvas__binding-hint" data-testid="binding-hint">
+        Select an input port to complete the binding.
+      </p>
+    } @else if (state.bindingMessage()) {
+      <p class="canvas__binding-error" data-testid="binding-error">
+        {{ state.bindingMessage() }}
+      </p>
+    }
   </header>
 
   <div class="canvas__surface">
@@ -13,20 +24,78 @@
         </p>
       </div>
     } @else {
+      <svg class="canvas__edges" aria-hidden="true">
+        @for (edge of bindingEdges(); track edge.id) {
+          <line
+            class="canvas__edge"
+            [attr.x1]="edge.x1"
+            [attr.y1]="edge.y1"
+            [attr.x2]="edge.x2"
+            [attr.y2]="edge.y2"
+          />
+        }
+      </svg>
+
       <div class="canvas__nodes">
         @for (node of state.nodes(); track node.id) {
-          <button
-            type="button"
+          <article
             class="canvas__node"
             data-testid="canvas-node"
+            role="button"
+            tabindex="0"
             [class.canvas__node--selected]="state.selectedNodeId() === node.id"
             [style.left.px]="node.layout?.x ?? 24"
             [style.top.px]="node.layout?.y ?? 24"
+            [style.width.px]="node.layout?.width ?? 220"
+            [style.height.px]="nodeHeight(node)"
             (click)="selectNode(node.id, $event)"
+            (keydown.enter)="selectNode(node.id, $event)"
+            (keydown.space)="selectNode(node.id, $event)"
           >
-            <span class="canvas__node-label">{{ node.label }}</span>
-            <span class="canvas__node-type">{{ node.type }}</span>
-          </button>
+            <header class="canvas__node-header">
+              <span class="canvas__node-label">{{ node.label }}</span>
+              <span class="canvas__node-type">{{ node.type }}</span>
+            </header>
+
+            <div class="canvas__node-ports">
+              <ul class="canvas__ports canvas__ports--inputs">
+                @for (port of node.ports.inputs; track port.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="canvas__port canvas__port--input"
+                      [class.canvas__port--bound]="state.isInputBound(node.id, port.id)"
+                      [class.canvas__port--pending-target]="isPendingTarget(node.id, port.id)"
+                      [attr.data-testid]="'port-input-' + node.id + '-' + port.id"
+                      (click)="onInputPortClick(node.id, port.id, $event)"
+                    >
+                      <span class="canvas__port-dot" aria-hidden="true"></span>
+                      <span class="canvas__port-name">{{ port.name }}</span>
+                      <span class="canvas__port-type">{{ port.dataType }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+
+              <ul class="canvas__ports canvas__ports--outputs">
+                @for (port of node.ports.outputs; track port.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="canvas__port canvas__port--output"
+                      [class.canvas__port--pending]="isPendingOutput(node.id, port.id)"
+                      [attr.data-testid]="'port-output-' + node.id + '-' + port.id"
+                      (click)="onOutputPortClick(node.id, port.id, $event)"
+                    >
+                      <span class="canvas__port-name">{{ port.name }}</span>
+                      <span class="canvas__port-type">{{ port.dataType }}</span>
+                      <span class="canvas__port-dot" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            </div>
+          </article>
         }
       </div>
     }

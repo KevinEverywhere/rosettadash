@@ -4,13 +4,14 @@ Phased delivery plan for DashBuilder. Tickets will be created in Jira (DAS proje
 
 ## Phase 0 — Foundation
 
-**Tickets:** DAS-1 through DAS-6 (done), [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) (in progress)
+**Tickets:** DAS-1 through DAS-8 (done), [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) (in progress)
 
 - [x] Vision, architecture, and workflow documentation
 - [x] `development` branch as integration target
 - [x] Monorepo scaffold (Angular client + NestJS server + packages/core)
 - [x] Core model, projects API, builder shell, canvas persistence
-- [ ] CI verify baseline (`npm run verify` + GitHub Actions)
+- [x] CI verify baseline (`npm run verify` + GitHub Actions)
+- [x] Playwright E2E smoke test
 
 See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 
@@ -22,12 +23,12 @@ See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 - [x] Project save/load
 - [x] Basic validation rules (draft + strict modes)
 
-**Next:** Phase 2 — bindings UI and preview renderers (DAS-8+).
+**Next:** Phase 2 — bindings UI and preview renderers (DAS-9+).
 
 ## Phase 2 — Preview & P0 palette
 
+- [ ] Bindings UI (connect ports) — DAS-9
 - Preview renderers for P0 components (see [Component Taxonomy](./08-component-taxonomy.md))
-- Bindings UI (connect ports)
 - Date range → table/chart data flow in preview
 - Mock data generation (NestJS preview module)
 

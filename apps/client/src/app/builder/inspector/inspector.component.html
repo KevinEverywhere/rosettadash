@@ -72,7 +72,30 @@
             Remove from canvas
           </button>
         </section>
-      } @else if (!isEditingNode() && def.properties.length) {
+      }
+
+      @if (isEditingNode() && nodeBindings().length) {
+        <section class="inspector__section" data-testid="inspector-bindings">
+          <h4>Bindings</h4>
+          <ul class="inspector__bindings">
+            @for (binding of nodeBindings(); track binding.id) {
+              <li class="inspector__binding">
+                <span class="inspector__binding-label">{{ describeBinding(binding) }}</span>
+                <button
+                  type="button"
+                  class="inspector__binding-remove"
+                  [attr.data-testid]="'remove-binding-' + binding.id"
+                  (click)="removeBinding(binding.id)"
+                >
+                  Remove
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      @if (!isEditingNode() && def.properties.length) {
         <section class="inspector__section">
           <h4>Properties</h4>
           <dl class="inspector__dl">

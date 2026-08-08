@@ -13,6 +13,7 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | Builder shell UI |
 | [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | `feature/DAS-6-canvas-persistence` | Canvas persistence |
 | [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | `feature/DAS-7-ci-baseline` | Typecheck, verify, GitHub Actions |
+| [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | `feature/DAS-8-e2e-smoke` | Playwright E2E smoke test |
 
 ## Phase 0 — complete
 
@@ -22,7 +23,7 @@ Phase 0 exit criteria met: `npm run verify` green, canvas persistence, Playwrigh
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| DAS-9 | `feature/DAS-9-bindings-ui` | Connect ports between nodes on canvas |
+| [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) | `feature/DAS-9-bindings-ui` | Connect ports between nodes on canvas |
 | DAS-10 | `feature/DAS-10-preview-renderers` | Builder-side preview for P0 visual components |
 | DAS-11 | `feature/DAS-11-mock-data-api` | NestJS preview module with mock row generation |
 | DAS-12 | `feature/DAS-12-filter-table-chart-flow` | Date range → table → chart binding demo |
@@ -40,7 +41,7 @@ Phase 0 exit criteria met: `npm run verify` green, canvas persistence, Playwrigh
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | `feature/DAS-8-e2e-smoke` | In progress |
+| [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) | `feature/DAS-9-bindings-ui` | In progress |
 
 ## Related documents
 

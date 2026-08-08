@@ -2,6 +2,7 @@ import { JsonPipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
+  Binding,
   PropertySchema,
   defaultComponentRegistry,
 } from '@dashbuilder/core';
@@ -26,6 +27,7 @@ export class InspectorComponent {
   });
 
   protected readonly node = computed(() => this.state.selectedNode());
+  protected readonly nodeBindings = computed(() => this.state.bindingsForSelectedNode());
   protected readonly hasSelection = computed(
     () => this.definition() !== null,
   );
@@ -53,5 +55,28 @@ export class InspectorComponent {
   protected readProperty(key: string): unknown {
     const node = this.node();
     return node?.properties[key];
+  }
+
+  protected describeBinding(binding: Binding): string {
+    const source = this.state.nodes().find((node) => node.id === binding.sourceNodeId);
+    const target = this.state.nodes().find((node) => node.id === binding.targetNodeId);
+    if (!source || !target) {
+      return 'Unknown binding';
+    }
+    const sourcePort = defaultComponentRegistry.findPort(
+      source,
+      binding.sourcePortId,
+      'output',
+    );
+    const targetPort = defaultComponentRegistry.findPort(
+      target,
+      binding.targetPortId,
+      'input',
+    );
+    return `${source.label}.${sourcePort?.name ?? binding.sourcePortId} → ${target.label}.${targetPort?.name ?? binding.targetPortId}`;
+  }
+
+  protected removeBinding(bindingId: string): void {
+    this.state.removeBinding(bindingId);
   }
 }

@@ -1,21 +1,35 @@
 import { Injectable, computed, signal } from '@angular/core';
 import {
+  Binding,
   ComponentDefinition,
   ComponentNode,
   Composite,
   Project,
+  areDataTypesCompatible,
   defaultComponentRegistry,
 } from '@dashbuilder/core';
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+export interface PendingBindingSource {
+  nodeId: string;
+  portId: string;
+}
+
+export type CreateBindingResult =
+  | { ok: true; binding: Binding }
+  | { ok: false; error: string };
 
 @Injectable({ providedIn: 'root' })
 export class BuilderStateService {
   readonly project = signal<Project | null>(null);
   readonly composite = signal<Composite | null>(null);
   readonly nodes = signal<ComponentNode[]>([]);
+  readonly bindings = signal<Binding[]>([]);
   readonly selectedDefinition = signal<ComponentDefinition | null>(null);
   readonly selectedNodeId = signal<string | null>(null);
+  readonly pendingBindingSource = signal<PendingBindingSource | null>(null);
+  readonly bindingMessage = signal<string | null>(null);
   readonly dirty = signal(false);
   readonly saveStatus = signal<SaveStatus>('idle');
   readonly loading = signal(true);
@@ -29,9 +43,20 @@ export class BuilderStateService {
     return this.nodes().find((node) => node.id === id) ?? null;
   });
 
+  readonly bindingsForSelectedNode = computed(() => {
+    const nodeId = this.selectedNodeId();
+    if (!nodeId) {
+      return [];
+    }
+    return this.bindings().filter(
+      (binding) => binding.sourceNodeId === nodeId || binding.targetNodeId === nodeId,
+    );
+  });
+
   selectDefinition(definition: ComponentDefinition): void {
     this.selectedDefinition.set(definition);
     this.selectedNodeId.set(null);
+    this.clearPendingBinding();
   }
 
   selectNode(nodeId: string): void {
@@ -42,6 +67,7 @@ export class BuilderStateService {
   clearSelection(): void {
     this.selectedDefinition.set(null);
     this.selectedNodeId.set(null);
+    this.clearPendingBinding();
   }
 
   addNodeFromDefinition(definition: ComponentDefinition): ComponentNode {
@@ -77,7 +103,13 @@ export class BuilderStateService {
       return;
     }
     this.nodes.update((nodes) => nodes.filter((node) => node.id !== id));
+    this.bindings.update((bindings) =>
+      bindings.filter(
+        (binding) => binding.sourceNodeId !== id && binding.targetNodeId !== id,
+      ),
+    );
     this.selectedNodeId.set(null);
+    this.clearPendingBinding();
     this.markDirty();
   }
 
@@ -85,16 +117,20 @@ export class BuilderStateService {
     this.project.set(project);
     this.composite.set(composite);
     this.nodes.set([...composite.nodes]);
+    this.bindings.set([...(composite.bindings ?? [])]);
     this.dirty.set(false);
     this.saveStatus.set('idle');
     this.errorMessage.set(null);
+    this.clearPendingBinding();
   }
 
   applySavedComposite(composite: Composite): void {
     this.composite.set(composite);
     this.nodes.set([...composite.nodes]);
+    this.bindings.set([...(composite.bindings ?? [])]);
     this.dirty.set(false);
     this.saveStatus.set('saved');
+    this.clearPendingBinding();
   }
 
   buildCompositePayload(): Composite {
@@ -105,8 +141,134 @@ export class BuilderStateService {
     return {
       ...composite,
       nodes: this.nodes(),
-      bindings: composite.bindings ?? [],
+      bindings: this.bindings(),
     };
+  }
+
+  beginBindingFrom(nodeId: string, portId: string): void {
+    const pending = this.pendingBindingSource();
+    if (pending?.nodeId === nodeId && pending?.portId === portId) {
+      this.clearPendingBinding();
+      return;
+    }
+    this.pendingBindingSource.set({ nodeId, portId });
+    this.bindingMessage.set(null);
+  }
+
+  tryCompleteBindingTo(targetNodeId: string, targetPortId: string): void {
+    const pending = this.pendingBindingSource();
+    if (!pending) {
+      return;
+    }
+
+    const result = this.createBinding(
+      pending.nodeId,
+      pending.portId,
+      targetNodeId,
+      targetPortId,
+    );
+    this.pendingBindingSource.set(null);
+
+    if (result.ok) {
+      this.bindingMessage.set(null);
+      this.markDirty();
+      return;
+    }
+
+    this.bindingMessage.set(result.error);
+  }
+
+  createBinding(
+    sourceNodeId: string,
+    sourcePortId: string,
+    targetNodeId: string,
+    targetPortId: string,
+  ): CreateBindingResult {
+    if (sourceNodeId === targetNodeId) {
+      return { ok: false, error: 'Cannot bind a node to itself' };
+    }
+
+    const sourceNode = this.nodes().find((node) => node.id === sourceNodeId);
+    const targetNode = this.nodes().find((node) => node.id === targetNodeId);
+    if (!sourceNode || !targetNode) {
+      return { ok: false, error: 'Binding nodes not found on canvas' };
+    }
+
+    const sourcePort = defaultComponentRegistry.findPort(
+      sourceNode,
+      sourcePortId,
+      'output',
+    );
+    const targetPort = defaultComponentRegistry.findPort(
+      targetNode,
+      targetPortId,
+      'input',
+    );
+
+    if (!sourcePort) {
+      return { ok: false, error: 'Source output port not found' };
+    }
+    if (!targetPort) {
+      return { ok: false, error: 'Target input port not found' };
+    }
+
+    if (!areDataTypesCompatible(sourcePort.dataType, targetPort.dataType)) {
+      return {
+        ok: false,
+        error: `Incompatible types: ${sourcePort.dataType} → ${targetPort.dataType}`,
+      };
+    }
+
+    const duplicate = this.bindings().some(
+      (binding) =>
+        binding.sourceNodeId === sourceNodeId &&
+        binding.sourcePortId === sourcePortId &&
+        binding.targetNodeId === targetNodeId &&
+        binding.targetPortId === targetPortId,
+    );
+    if (duplicate) {
+      return { ok: false, error: 'This binding already exists' };
+    }
+
+    const binding: Binding = {
+      id: crypto.randomUUID(),
+      sourceNodeId,
+      sourcePortId,
+      targetNodeId,
+      targetPortId,
+    };
+
+    this.bindings.update((bindings) => [
+      ...bindings.filter(
+        (existing) =>
+          !(
+            existing.targetNodeId === targetNodeId &&
+            existing.targetPortId === targetPortId
+          ),
+      ),
+      binding,
+    ]);
+
+    return { ok: true, binding };
+  }
+
+  removeBinding(bindingId: string): void {
+    this.bindings.update((bindings) =>
+      bindings.filter((binding) => binding.id !== bindingId),
+    );
+    this.markDirty();
+  }
+
+  clearPendingBinding(): void {
+    this.pendingBindingSource.set(null);
+    this.bindingMessage.set(null);
+  }
+
+  isInputBound(nodeId: string, portId: string): boolean {
+    return this.bindings().some(
+      (binding) =>
+        binding.targetNodeId === nodeId && binding.targetPortId === portId,
+    );
   }
 
   markDirty(): void {

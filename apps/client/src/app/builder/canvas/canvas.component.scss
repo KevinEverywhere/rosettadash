@@ -8,11 +8,17 @@
 
 .canvas__header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.375rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--db-border);
   background: var(--db-panel-bg);
+}
+
+.canvas__header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   h2 {
     margin: 0;
@@ -29,12 +35,41 @@
   color: var(--db-text-subtle);
 }
 
+.canvas__binding-hint,
+.canvas__binding-error {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.canvas__binding-hint {
+  color: var(--db-accent);
+}
+
+.canvas__binding-error {
+  color: var(--db-danger, #b42318);
+}
+
 .canvas__surface {
   position: relative;
   flex: 1;
   min-height: 24rem;
   padding: 1rem;
   overflow: auto;
+}
+
+.canvas__edges {
+  position: absolute;
+  inset: 1rem;
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.canvas__edge {
+  stroke: var(--db-accent);
+  stroke-width: 2;
+  opacity: 0.75;
 }
 
 .canvas__nodes {
@@ -46,15 +81,10 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
-  min-width: 10rem;
-  padding: 0.625rem 0.75rem;
   border: 1px solid var(--db-border);
   border-radius: 0.5rem;
   background: var(--db-panel-bg);
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
-  text-align: left;
   cursor: pointer;
 
   &:hover {
@@ -67,6 +97,14 @@
   }
 }
 
+.canvas__node-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.625rem 0.75rem 0.375rem;
+  border-bottom: 1px solid var(--db-border);
+}
+
 .canvas__node-label {
   font-size: 0.875rem;
   font-weight: 600;
@@ -76,6 +114,84 @@
 .canvas__node-type {
   font-family: ui-monospace, monospace;
   font-size: 0.6875rem;
+  color: var(--db-text-subtle);
+}
+
+.canvas__node-ports {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  padding: 0.375rem 0.25rem 0.5rem;
+}
+
+.canvas__ports {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.canvas__port {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.125rem 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  background: transparent;
+  font-size: 0.625rem;
+  color: var(--db-text-muted);
+  cursor: pointer;
+  text-align: left;
+
+  &--output {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  &:hover {
+    border-color: var(--db-border);
+    background: var(--db-surface);
+  }
+
+  &--pending {
+    border-color: var(--db-accent);
+    background: var(--db-accent-soft);
+    color: var(--db-text);
+  }
+
+  &--pending-target {
+    border-color: var(--db-accent);
+    border-style: dashed;
+  }
+
+  &--bound {
+    color: var(--db-text);
+  }
+}
+
+.canvas__port-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--db-border-strong);
+  flex-shrink: 0;
+
+  .canvas__port--pending &,
+  .canvas__port--bound & {
+    background: var(--db-accent);
+  }
+}
+
+.canvas__port-name {
+  font-weight: 600;
+}
+
+.canvas__port-type {
+  font-family: ui-monospace, monospace;
   color: var(--db-text-subtle);
 }
 
