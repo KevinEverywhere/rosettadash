@@ -1,7 +1,16 @@
 <section class="preview" data-testid="preview-panel">
   <header class="preview__header">
-    <h2>Preview</h2>
-    <span class="preview__count">{{ state.previewNodes().length }} visual component(s)</span>
+    <div class="preview__header-main">
+      <h2>Preview</h2>
+      <span class="preview__count">{{ state.previewNodes().length }} visual component(s)</span>
+    </div>
+    @if (previewData.loading()) {
+      <span class="preview__status" data-testid="preview-loading">Loading mock data…</span>
+    } @else {
+      <span class="preview__status" data-testid="preview-data-source">
+        Data source: {{ previewData.source() === 'api' ? 'API' : 'Fallback' }}
+      </span>
+    }
   </header>
 
   <div class="preview__surface">

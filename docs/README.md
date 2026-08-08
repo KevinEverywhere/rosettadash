@@ -32,4 +32,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | merged to `development` | CI baseline |
 | [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | merged to `development` | Playwright E2E |
 | [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) | merged to `development` | Bindings UI |
-| [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | `feature/DAS-10-preview-renderers` | Preview renderers |
+| [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | merged to `development` | Preview renderers |
+| [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | Mock data API |

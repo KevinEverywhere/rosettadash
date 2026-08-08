@@ -17,7 +17,7 @@
       <span class="preview-field__label">{{ node().label }}</span>
       <select class="preview-input" data-testid="preview-select">
         <option value="">{{ readString('placeholder', 'Select…') }}</option>
-        @for (option of selectOptions; track option.value) {
+        @for (option of selectOptions(); track option.value) {
           <option [value]="option.value">{{ option.label }}</option>
         }
       </select>
@@ -31,7 +31,7 @@
         <span class="preview-date-range__sep">to</span>
         <input type="date" class="preview-input" value="2026-08-08" readonly />
       </div>
-      <span class="preview-date-range__preset">{{ dateRangeLabel }}</span>
+      <span class="preview-date-range__preset">{{ dateRangeLabel() }}</span>
     </div>
   }
   @case ('visual.table') {
@@ -52,7 +52,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (row of tableRows.slice(0, readNumber('pageSize', 25)); track row.id) {
+          @for (row of tableRows().slice(0, readNumber('pageSize', 25)); track row.id) {
             <tr>
               <td>{{ row.name }}</td>
               <td>{{ row.status }}</td>
@@ -67,8 +67,8 @@
   @case ('visual.kpi') {
     <div class="preview-kpi" data-testid="preview-kpi">
       <span class="preview-kpi__title">{{ readString('title', 'Metric') }}</span>
-      <span class="preview-kpi__value">{{ formatKpi(kpiValue) }}</span>
-      <span class="preview-kpi__delta">+{{ kpiDelta }}%</span>
+      <span class="preview-kpi__value">{{ formatKpi(kpiValue()) }}</span>
+      <span class="preview-kpi__delta">+{{ kpiDelta() }}%</span>
     </div>
   }
   @case ('visual.chart.line') {
@@ -83,7 +83,7 @@
     <div class="preview-chart" data-testid="preview-bar-chart">
       <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
       <div class="preview-chart__bars">
-        @for (point of chartPoints; track point.label) {
+        @for (point of chartPoints(); track point.label) {
           <div class="preview-chart__bar-wrap">
             <div
               class="preview-chart__bar"

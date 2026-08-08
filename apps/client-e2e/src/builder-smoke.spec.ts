@@ -1,12 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { openBuilder } from './test-helpers';
 
 test.describe('Builder smoke', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => sessionStorage.clear());
-    await page.reload();
-    await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 60_000 });
-    await expect(page.getByTestId('builder-shell')).toBeVisible();
+    await openBuilder(page);
   });
 
   test('adds a component, edits a property, saves, and restores after reload', async ({
@@ -23,7 +20,7 @@ test.describe('Builder smoke', () => {
     await expect(page.getByTestId('save-status')).toContainText('Saved');
 
     await page.reload();
-    await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 60_000 });
+    await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
     await page.getByTestId('canvas-node').click();

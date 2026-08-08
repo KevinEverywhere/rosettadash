@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { BuilderStateService } from '../builder-state.service';
+import { PreviewDataService } from './preview-data.service';
 import { PreviewNodeComponent } from './preview-node.component';
 
 @Component({
@@ -10,6 +11,32 @@ import { PreviewNodeComponent } from './preview-node.component';
 })
 export class PreviewPanelComponent {
   protected readonly state = inject(BuilderStateService);
+  protected readonly previewData = inject(PreviewDataService);
+
+  constructor() {
+    effect(() => {
+      if (this.state.workspaceMode() !== 'preview') {
+        return;
+      }
+
+      const project = this.state.project();
+      const composite = this.state.composite();
+      const dateRangeNode = this.state
+        .nodes()
+        .find((node) => node.type === 'visual.input.date-range');
+      const preset =
+        typeof dateRangeNode?.properties['preset'] === 'string'
+          ? dateRangeNode.properties['preset']
+          : 'last-7-days';
+
+      void this.previewData.load({
+        projectName: project?.name,
+        compositeName: composite?.name,
+        dateRangePreset: preset,
+        limit: 5,
+      });
+    });
+  }
 
   protected sortedPreviewNodes() {
     return [...this.state.previewNodes()].sort((left, right) => {

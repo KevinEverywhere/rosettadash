@@ -1,6 +1,10 @@
 # DashBuilder
 
-DashBuilder is a visual dashboard component builder. Users design dashboard interfaces piecemeal—forms, tables, charts, drag-and-drop layouts, timing, animation, and more—then assemble them into composites and export working code for their target stack.
+DashBuilder is a visual dashboard component builder for **developers working locally**. Design dashboard UIs—forms, tables, charts, layouts—assemble them into composites, and export code for your target stack.
+
+## Who this is for
+
+DashBuilder is intended to run on **your machine** during development. There is no required public deployment; GitHub Actions only validates PRs.
 
 ## Monorepo
 
@@ -11,19 +15,58 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `client` | `apps/client` | Angular builder UI |
 | `server` | `apps/server` | NestJS API |
 | `core` | `packages/core` | Shared types and utilities |
+| `ui-primitives` | `packages/ui-primitives` | Preview mock data and generators |
 
-## Quick start
+## Run locally
+
+From the repo root (`dashbuilder/`):
 
 ```bash
+# 1. Install dependencies (first time, or after package.json changes)
 npm install
-npm start              # client + server in parallel
-npm run start:client   # Angular only (proxies /api → :3000)
-npm run start:server   # NestJS only (default http://localhost:3000/api)
+
+# 2. Start the builder (Angular + NestJS together)
+npm start
 ```
 
-Health check: `GET http://localhost:3000/api/health`
+Then open **http://localhost:4200** in your browser.
 
-### Projects API (in-memory, single-user MVP)
+| Service | URL | Notes |
+|---------|-----|-------|
+| Angular client | http://localhost:4200 | Builder UI |
+| NestJS API | http://localhost:3000/api | REST backend |
+| Health check | http://localhost:3000/api/health | Confirms server is up |
+
+The Angular dev server proxies `/api/*` to the NestJS server, so the client always calls `/api/...` without CORS setup.
+
+### Run client or server separately
+
+```bash
+npm run start:server   # NestJS only → http://localhost:3000/api
+npm run start:client   # Angular only → http://localhost:4200 (needs server for save/preview API)
+```
+
+### Quality checks (run before committing)
+
+```bash
+npm run verify         # lint + typecheck + unit tests
+npm run e2e            # Playwright (starts server + client if needed)
+npm run verify:all     # both
+```
+
+**E2E tips:** If tests hang on "Loading project…", stop stale processes on `:3000` / `:4200` and re-run. If `npm start` is already running, e2e reuses those servers.
+
+## CI on GitHub (optional)
+
+CI validates PRs to `development`; no public deployment is required for local development.
+
+Workflow: [`.github/workflows/verify.yml`](.github/workflows/verify.yml) — `verify` + `e2e` on push/PR.
+
+See [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting.md) for troubleshooting.
+
+## API (in-memory MVP)
+
+### Projects & composites
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -39,6 +82,23 @@ Health check: `GET http://localhost:3000/api/health`
 
 Invalid composites return `400` with `{ message, issues }`.
 
+### Preview mock data
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/preview/data` | Generate seeded mock rows/chart/KPI fixtures for builder preview |
+
+Example body:
+
+```json
+{
+  "projectName": "Revenue Ops",
+  "compositeName": "Overview",
+  "dateRangePreset": "last-7-days",
+  "limit": 5
+}
+```
+
 ## Scripts
 
 | Command | Description |
@@ -46,7 +106,7 @@ Invalid composites return `400` with `{ message, issues }`.
 | `npm start` | Serve client and server |
 | `npm run build` | Build client, server, and core |
 | `npm run verify` | **Lint + typecheck + unit tests** (run before every commit) |
-| `npm run e2e` | Playwright E2E smoke tests |
+| `npm run e2e` | Playwright E2E tests |
 | `npm run verify:all` | verify + e2e |
 | `npm test` | Run unit tests only |
 | `npm run lint` | Lint all projects |
@@ -55,6 +115,8 @@ Invalid composites return `400` with `{ message, issues }`.
 ## Documentation
 
 See [docs/README.md](docs/README.md) for the full documentation index.
+
+Detailed CI vs hosting notes: [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting.md)
 
 ## Workflow
 
@@ -65,10 +127,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-8](https://planetkevin.atlassian.net/browse/DAS-8)** — Playwright E2E smoke  
-Branch: `feature/DAS-8-e2e-smoke`
-
-See [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting.md) for CI vs GitHub Pages.
+**[DAS-11](https://planetkevin.atlassian.net/browse/DAS-11)** — Mock data API  
+Branch: `feature/DAS-11-mock-data-api`
 
 ## License
 

@@ -1,12 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { openBuilder, waitForPreviewData } from './test-helpers';
 
 test.describe('Builder preview', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.evaluate(() => sessionStorage.clear());
-    await page.reload();
-    await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 60_000 });
-    await expect(page.getByTestId('builder-shell')).toBeVisible();
+    await openBuilder(page);
   });
 
   test('renders visual components in preview mode and reflects property edits', async ({
@@ -21,6 +18,8 @@ test.describe('Builder preview', () => {
     await page.getByTestId('mode-preview').click();
     await expect(page.getByTestId('preview-workspace')).toBeVisible();
     await expect(page.getByTestId('preview-panel')).toBeVisible();
+    await waitForPreviewData(page);
+    await expect(page.getByTestId('preview-data-source')).toContainText('API');
     await expect(page.getByTestId('preview-text-input')).toHaveAttribute(
       'placeholder',
       'Customer name',
@@ -36,6 +35,7 @@ test.describe('Builder preview', () => {
     await page.getByTestId('palette-add-visual.chart.line').click();
 
     await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
     await expect(page.getByTestId('preview-table')).toBeVisible();
     await expect(page.getByTestId('preview-line-chart')).toBeVisible();
   });

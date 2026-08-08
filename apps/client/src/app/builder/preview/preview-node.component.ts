@@ -1,14 +1,7 @@
+import { Component, computed, inject, input } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
 import { ComponentNode } from '@dashbuilder/core';
-import {
-  PREVIEW_CHART_POINTS,
-  PREVIEW_DATE_RANGE_LABEL,
-  PREVIEW_KPI_DELTA,
-  PREVIEW_KPI_VALUE,
-  PREVIEW_SELECT_OPTIONS,
-  PREVIEW_TABLE_ROWS,
-} from '@dashbuilder/ui-primitives';
+import { PreviewDataService } from './preview-data.service';
 
 @Component({
   selector: 'app-preview-node',
@@ -19,25 +12,34 @@ import {
 export class PreviewNodeComponent {
   readonly node = input.required<ComponentNode>();
 
-  protected readonly tableRows = PREVIEW_TABLE_ROWS;
-  protected readonly selectOptions = PREVIEW_SELECT_OPTIONS;
-  protected readonly chartPoints = PREVIEW_CHART_POINTS;
-  protected readonly kpiValue = PREVIEW_KPI_VALUE;
-  protected readonly kpiDelta = PREVIEW_KPI_DELTA;
-  protected readonly dateRangeLabel = PREVIEW_DATE_RANGE_LABEL;
+  private readonly previewData = inject(PreviewDataService);
+
+  protected readonly tableRows = computed(() => this.previewData.bundle().tableRows);
+  protected readonly selectOptions = computed(
+    () => this.previewData.bundle().selectOptions,
+  );
+  protected readonly chartPoints = computed(
+    () => this.previewData.bundle().chartPoints,
+  );
+  protected readonly kpiValue = computed(() => this.previewData.bundle().kpiValue);
+  protected readonly kpiDelta = computed(() => this.previewData.bundle().kpiDelta);
+  protected readonly dateRangeLabel = computed(
+    () => this.previewData.bundle().dateRangeLabel,
+  );
 
   protected readonly chartMax = computed(() =>
-    Math.max(...this.chartPoints.map((point) => point.value), 1),
+    Math.max(...this.chartPoints().map((point) => point.value), 1),
   );
 
   protected readonly lineChartPoints = computed(() => {
+    const points = this.chartPoints();
     const max = this.chartMax();
-    if (this.chartPoints.length < 2) {
+    if (points.length < 2) {
       return '';
     }
-    return this.chartPoints
+    return points
       .map((point, index) => {
-        const x = index * (220 / (this.chartPoints.length - 1)) + 10;
+        const x = index * (220 / (points.length - 1)) + 10;
         const y = 86 - (point.value / max) * 72;
         return `${x},${y}`;
       })

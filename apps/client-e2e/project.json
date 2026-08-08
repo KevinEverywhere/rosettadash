@@ -4,5 +4,37 @@
   "projectType": "application",
   "sourceRoot": "apps/client-e2e/src",
   "implicitDependencies": ["client", "server"],
-  "tags": []
+  "tags": [],
+  "targets": {
+    "e2e": {
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci": {
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci--src/builder-bindings.spec.ts": {
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci--src/builder-preview.spec.ts": {
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci--src/builder-smoke.spec.ts": {
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    }
+  }
 }
