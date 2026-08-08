@@ -39,6 +39,17 @@ Examples:
 4. **Open PR** targeting `development`.
 5. **Kevin commits and merges** — agents assist with messages and code; Kevin is sole committer/merger.
 
+## Remote and push policy
+
+**Agents never push to the remote.** No exceptions.
+
+Kevin is the only person who pushes, and only these branches go to the remote:
+
+- `development` — when Kevin decides
+- `main` — when Kevin decides
+
+Feature branches stay **local** unless Kevin explicitly chooses otherwise. Agents must not run `git push`, suggest pushing feature branches, or assume anything has been published to GitHub.
+
 ## Commit messages
 
 Agents draft commit messages; Kevin performs commits.
@@ -81,11 +92,12 @@ domain model, and workflow conventions for DashBuilder.
 
 | Agent | Human (Kevin) |
 |-------|---------------|
-| Draft code and docs | Commit and push |
+| Draft code and docs | Commit locally |
 | Propose commit messages | Approve/edit and commit |
 | Create Jira tickets (when asked) | Prioritize backlog |
-| Create feature branches | Merge PRs |
-| Run tests locally | Final review |
+| Create feature branches (local) | Merge locally |
+| Run tests locally | Push `development` or `main` when decided |
+| | Final review |
 
 ## Repository notes
 
