@@ -1,7 +1,7 @@
 <aside class="palette">
   <header class="palette__header">
     <h2>Components</h2>
-    <p>Click to preview in inspector</p>
+    <p>Click to inspect, + to add</p>
   </header>
 
   @for (group of groups(); track group.category) {
@@ -17,9 +17,20 @@
               (click)="select(item)"
             >
               <span class="palette__item-label">{{ item.label }}</span>
-              @if (!item.isVisual) {
-                <span class="palette__badge">infra</span>
-              }
+              <span class="palette__actions">
+                @if (!item.isVisual) {
+                  <span class="palette__badge">infra</span>
+                }
+                <span
+                  class="palette__add"
+                  role="button"
+                  tabindex="0"
+                  title="Add to canvas"
+                  (click)="add(item, $event)"
+                  (keydown.enter)="add(item, $event)"
+                  (keydown.space)="add(item, $event)"
+                >+</span>
+              </span>
             </button>
           </li>
         }

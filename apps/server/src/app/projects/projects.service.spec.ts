@@ -27,17 +27,17 @@ describe('ProjectsService', () => {
     expect(service.listComposites(project.id)).toHaveLength(1);
   });
 
-  it('rejects invalid composites', () => {
+  it('allows draft composites with unbound required ports', () => {
     const project = service.createProject({ name: 'Test' });
     const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
 
-    expect(() =>
-      service.createComposite(project.id, {
-        name: 'Invalid',
-        nodes: [table],
-        bindings: [],
-      }),
-    ).toThrow();
+    const composite = service.createComposite(project.id, {
+      name: 'Draft page',
+      nodes: [table],
+      bindings: [],
+    });
+
+    expect(composite.nodes).toHaveLength(1);
   });
 
   it('increments composite version on update', () => {
@@ -56,6 +56,26 @@ describe('ProjectsService', () => {
 
     expect(updated.version).toBe(2);
     expect(updated.name).toBe('Page 1 updated');
+  });
+
+  it('rejects unknown component types', () => {
+    const project = service.createProject({ name: 'Test' });
+
+    expect(() =>
+      service.createComposite(project.id, {
+        name: 'Bad',
+        nodes: [
+          {
+            id: 'x1',
+            type: 'unknown.type',
+            label: 'Bad',
+            properties: {},
+            ports: { inputs: [], outputs: [] },
+          },
+        ],
+        bindings: [],
+      }),
+    ).toThrow();
   });
 
   it('deletes projects and composites', () => {

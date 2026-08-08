@@ -5,7 +5,7 @@
 
   @if (!hasSelection()) {
     <div class="inspector__empty">
-      <p>Select a component from the palette to preview its schema.</p>
+      <p>Select a palette component to preview, or click a canvas node to edit.</p>
     </div>
   } @else if (definition(); as def) {
     <div class="inspector__content">
@@ -15,9 +15,63 @@
         @if (def.description) {
           <p class="inspector__description">{{ def.description }}</p>
         }
+        @if (!isEditingNode()) {
+          <button type="button" class="inspector__btn" (click)="addToCanvas()">
+            Add to canvas
+          </button>
+        }
       </section>
 
-      @if (def.properties.length) {
+      @if (isEditingNode() && def.properties.length) {
+        <section class="inspector__section">
+          <h4>Properties</h4>
+          @for (prop of def.properties; track prop.key) {
+            <div class="inspector__field">
+              <label [for]="prop.key">{{ prop.label }}</label>
+              @switch (prop.type) {
+                @case ('boolean') {
+                  <input
+                    [id]="prop.key"
+                    type="checkbox"
+                    [checked]="readProperty(prop.key) === true"
+                    (change)="updateProperty(prop, $any($event.target).checked)"
+                  />
+                }
+                @case ('number') {
+                  <input
+                    [id]="prop.key"
+                    type="number"
+                    [ngModel]="readProperty(prop.key)"
+                    (ngModelChange)="updateProperty(prop, $event)"
+                  />
+                }
+                @case ('select') {
+                  <select
+                    [id]="prop.key"
+                    [ngModel]="readProperty(prop.key)"
+                    (ngModelChange)="updateProperty(prop, $event)"
+                  >
+                    @for (option of prop.options ?? []; track option.value) {
+                      <option [ngValue]="option.value">{{ option.label }}</option>
+                    }
+                  </select>
+                }
+                @default {
+                  <input
+                    [id]="prop.key"
+                    type="text"
+                    [ngModel]="readProperty(prop.key)"
+                    (ngModelChange)="updateProperty(prop, $event)"
+                  />
+                }
+              }
+            </div>
+          }
+          <button type="button" class="inspector__btn inspector__btn--danger" (click)="removeNode()">
+            Remove from canvas
+          </button>
+        </section>
+      } @else if (!isEditingNode() && def.properties.length) {
         <section class="inspector__section">
           <h4>Properties</h4>
           <dl class="inspector__dl">
@@ -34,7 +88,7 @@
         </section>
       }
 
-      @if (def.inputs.length || def.outputs.length) {
+      @if (!isEditingNode() && (def.inputs.length || def.outputs.length)) {
         <section class="inspector__section">
           <h4>Ports</h4>
           @if (def.inputs.length) {

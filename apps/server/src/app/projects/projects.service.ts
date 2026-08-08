@@ -158,7 +158,7 @@ export class ProjectsService {
   }
 
   private assertValidComposite(composite: Composite): void {
-    const result = validateComposite(composite, defaultComponentRegistry);
+    const result = validateComposite(composite, defaultComponentRegistry, { mode: 'draft' });
     if (!result.valid) {
       throw new CompositeValidationError(result.issues);
     }

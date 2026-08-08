@@ -111,4 +111,22 @@ describe('validateComposite', () => {
     const result = validateComposite(composite, registry);
     expect(result.valid).toBe(true);
   });
+
+  it('allows unbound required ports in draft mode', () => {
+    const composite: Composite = {
+      id: 'c1',
+      name: 'Dashboard',
+      nodes: [
+        registry.createNode('visual.table', { id: 'table-1' }),
+      ],
+      bindings: [],
+      version: 1,
+    };
+
+    const draft = validateComposite(composite, registry, { mode: 'draft' });
+    const strict = validateComposite(composite, registry, { mode: 'strict' });
+
+    expect(draft.valid).toBe(true);
+    expect(strict.valid).toBe(false);
+  });
 });

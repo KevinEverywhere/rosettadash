@@ -40,10 +40,18 @@ export class PaletteComponent {
   });
 
   protected readonly selectedType = computed(
-    () => this.state.selectedDefinition()?.type ?? this.state.selectedNode()?.type ?? null,
+    () =>
+      this.state.selectedDefinition()?.type ??
+      this.state.selectedNode()?.type ??
+      null,
   );
 
   protected select(definition: ComponentDefinition): void {
     this.state.selectDefinition(definition);
+  }
+
+  protected add(definition: ComponentDefinition, event: Event): void {
+    event.stopPropagation();
+    this.state.addNodeFromDefinition(definition);
   }
 }

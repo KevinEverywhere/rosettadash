@@ -5,4 +5,5 @@ export * from './lib/model/types';
 export * from './lib/registry/component-registry';
 export * from './lib/registry/p0-components';
 export * from './lib/validation/validate-composite';
+export type { ValidateCompositeOptions } from './lib/validation/validate-composite';
 export * from './lib/validation/validate-node';

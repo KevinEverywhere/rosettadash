@@ -3,9 +3,15 @@ import type { Binding, Composite, ValidationIssue, ValidationResult } from '../m
 import type { ComponentRegistry } from '../registry/component-registry';
 import { validateNode } from './validate-node';
 
+export interface ValidateCompositeOptions {
+  /** draft allows unbound required ports (builder save); strict is for export */
+  mode?: 'draft' | 'strict';
+}
+
 export function validateComposite(
   composite: Composite,
   registry: ComponentRegistry,
+  options: ValidateCompositeOptions = { mode: 'strict' },
 ): ValidationResult {
   const issues: ValidationIssue[] = [];
 
@@ -44,24 +50,26 @@ export function validateComposite(
 
   issues.push(...detectDataCycles(composite));
 
-  const boundRequiredInputs = findBoundRequiredInputs(composite);
-  for (const node of composite.nodes) {
-    const definition = registry.get(node.type);
-    if (!definition) {
-      continue;
-    }
-    for (const input of definition.inputs) {
-      if (!input.required) {
+  if (options.mode !== 'draft') {
+    const boundRequiredInputs = findBoundRequiredInputs(composite);
+    for (const node of composite.nodes) {
+      const definition = registry.get(node.type);
+      if (!definition) {
         continue;
       }
-      const key = `${node.id}:${input.id}`;
-      if (!boundRequiredInputs.has(key)) {
-        issues.push({
-          code: 'UNBOUND_REQUIRED_PORT',
-          message: `Required input "${input.name}" on "${node.label}" is not bound`,
-          nodeId: node.id,
-          path: `ports.inputs.${input.id}`,
-        });
+      for (const input of definition.inputs) {
+        if (!input.required) {
+          continue;
+        }
+        const key = `${node.id}:${input.id}`;
+        if (!boundRequiredInputs.has(key)) {
+          issues.push({
+            code: 'UNBOUND_REQUIRED_PORT',
+            message: `Required input "${input.name}" on "${node.label}" is not bound`,
+            nodeId: node.id,
+            path: `ports.inputs.${input.id}`,
+          });
+        }
       }
     }
   }

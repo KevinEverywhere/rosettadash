@@ -1,15 +1,33 @@
 <section class="canvas">
   <header class="canvas__header">
     <h2>Canvas</h2>
+    <span class="canvas__count">{{ state.nodes().length }} component(s)</span>
   </header>
 
   <div class="canvas__surface">
-    <div class="canvas__empty">
-      <p class="canvas__title">Design surface</p>
-      <p class="canvas__hint">
-        Drag components here in a future update. For now, browse the palette and
-        inspect component schemas on the right.
-      </p>
-    </div>
+    @if (state.nodes().length === 0) {
+      <div class="canvas__empty">
+        <p class="canvas__title">Design surface</p>
+        <p class="canvas__hint">
+          Use the + button in the palette to add components here.
+        </p>
+      </div>
+    } @else {
+      <div class="canvas__nodes">
+        @for (node of state.nodes(); track node.id) {
+          <button
+            type="button"
+            class="canvas__node"
+            [class.canvas__node--selected]="state.selectedNodeId() === node.id"
+            [style.left.px]="node.layout?.x ?? 24"
+            [style.top.px]="node.layout?.y ?? 24"
+            (click)="selectNode(node.id, $event)"
+          >
+            <span class="canvas__node-label">{{ node.label }}</span>
+            <span class="canvas__node-type">{{ node.type }}</span>
+          </button>
+        }
+      </div>
+    }
   </div>
 </section>
