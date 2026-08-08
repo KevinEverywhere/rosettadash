@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import {
+  NodePreviewSlice,
   PreviewDataBundle,
   PreviewDataRequest,
   getDefaultPreviewData,
@@ -17,6 +18,8 @@ export class PreviewDataService {
   readonly loading = signal(false);
   readonly source = signal<PreviewDataSource>('default');
 
+  readonly nodeSlices = computed(() => this.bundle().nodes);
+
   async load(request: PreviewDataRequest): Promise<void> {
     this.loading.set(true);
     try {
@@ -31,5 +34,9 @@ export class PreviewDataService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  sliceForNode(nodeId: string): NodePreviewSlice | undefined {
+    return this.bundle().nodes[nodeId];
   }
 }

@@ -16,28 +16,26 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | `feature/DAS-8-e2e-smoke` | Playwright E2E smoke test |
 | [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) | `feature/DAS-9-bindings-ui` | Bindings UI |
 | [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | `feature/DAS-10-preview-renderers` | Preview renderers |
+| [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | Mock data API |
 
-## Phase 2 — Preview & P0 palette
+## Phase 2 — complete
 
-| Ticket | Branch (planned) | Summary |
-|--------|------------------|---------|
-| [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | NestJS preview module with mock row generation |
-| DAS-12 | `feature/DAS-12-filter-table-chart-flow` | Date range → table → chart binding demo |
+Phase 2 exit criteria met: bindings UI, preview renderers, mock data API, date range → table → chart preview flow (DAS-12).
 
 ## Phase 3 — Export MVP
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-export-ir` | Build ExportIR from validated composite |
-| DAS-13 | `feature/DAS-13-react-exporter` | React UI exporter (P0 components) |
-| DAS-14 | `feature/DAS-14-nest-pg-exporter` | NestJS + PostgreSQL infra exporter |
-| DAS-15 | `feature/DAS-15-export-wizard` | Export wizard UI + zip download |
+| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | `feature/DAS-13-export-ir` | Build ExportIR from validated composite |
+| DAS-14 | `feature/DAS-14-react-exporter` | React UI exporter (P0 components) |
+| DAS-15 | `feature/DAS-15-nest-pg-exporter` | NestJS + PostgreSQL infra exporter |
+| DAS-16 | `feature/DAS-16-export-wizard` | Export wizard UI + zip download |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | In progress |
+| [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-filter-table-chart-flow` | In progress |
 
 ## Related documents
 

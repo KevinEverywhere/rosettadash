@@ -38,7 +38,9 @@
     <div class="preview-table" data-testid="preview-table">
       <div class="preview-table__header">
         <span>{{ node().label }}</span>
-        @if (readBoolean('filterable')) {
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        } @else if (readBoolean('filterable')) {
           <span class="preview-chip">Filterable</span>
         }
       </div>
@@ -73,7 +75,12 @@
   }
   @case ('visual.chart.line') {
     <div class="preview-chart" data-testid="preview-line-chart">
-      <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+      <div class="preview-chart__header">
+        <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        }
+      </div>
       <svg viewBox="0 0 240 96" class="preview-chart__svg" aria-hidden="true">
         <polyline class="preview-chart__line" [attr.points]="lineChartPoints()" />
       </svg>
@@ -81,7 +88,12 @@
   }
   @case ('visual.chart.bar') {
     <div class="preview-chart" data-testid="preview-bar-chart">
-      <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+      <div class="preview-chart__header">
+        <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        }
+      </div>
       <div class="preview-chart__bars">
         @for (point of chartPoints(); track point.label) {
           <div class="preview-chart__bar-wrap">

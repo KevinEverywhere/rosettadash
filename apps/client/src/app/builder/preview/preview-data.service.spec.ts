@@ -37,6 +37,7 @@ describe('PreviewDataService', () => {
       kpiValue: 5000,
       kpiDelta: 3.2,
       dateRangeLabel: 'Last 7 days',
+      nodes: {},
     });
 
     await loadPromise;

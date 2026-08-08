@@ -116,6 +116,13 @@
   background: #fff;
 }
 
+.preview-chart__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .preview-chart__title {
   font-size: 0.875rem;
   font-weight: 600;

@@ -33,7 +33,19 @@ export class PreviewPanelComponent {
         projectName: project?.name,
         compositeName: composite?.name,
         dateRangePreset: preset,
-        limit: 5,
+        limit: 10,
+        nodes: this.state.nodes().map((node) => ({
+          id: node.id,
+          type: node.type,
+          properties: node.properties,
+        })),
+        bindings: this.state.bindings().map((binding) => ({
+          id: binding.id,
+          sourceNodeId: binding.sourceNodeId,
+          sourcePortId: binding.sourcePortId,
+          targetNodeId: binding.targetNodeId,
+          targetPortId: binding.targetPortId,
+        })),
       });
     });
   }

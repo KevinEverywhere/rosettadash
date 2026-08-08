@@ -33,4 +33,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | merged to `development` | Playwright E2E |
 | [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) | merged to `development` | Bindings UI |
 | [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | merged to `development` | Preview renderers |
-| [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | Mock data API |
+| [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | merged to `development` | Mock data API |
+| [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-filter-table-chart-flow` | Preview binding flow |

@@ -28,11 +28,11 @@ See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 ## Phase 2 — Preview & P0 palette
 
 - [x] Bindings UI (connect ports) — DAS-9
-- [ ] Preview renderers for P0 components — DAS-10
-- Date range → table/chart data flow in preview
-- Mock data generation (NestJS preview module)
+- [x] Preview renderers for P0 components — DAS-10
+- [x] Mock data generation (NestJS preview module) — DAS-11
+- [x] Date range → table/chart data flow in preview — DAS-12
 
-**Exit criteria:** Filter + table + chart composite works in builder preview.
+**Phase 2 exit criteria met.**
 
 ## Phase 3 — Export MVP
 

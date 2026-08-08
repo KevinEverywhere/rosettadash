@@ -14,18 +14,37 @@ export class PreviewNodeComponent {
 
   private readonly previewData = inject(PreviewDataService);
 
-  protected readonly tableRows = computed(() => this.previewData.bundle().tableRows);
+  private readonly slice = computed(() =>
+    this.previewData.sliceForNode(this.node().id),
+  );
+
+  protected readonly tableRows = computed(
+    () => this.slice()?.tableRows ?? this.previewData.bundle().tableRows,
+  );
   protected readonly selectOptions = computed(
     () => this.previewData.bundle().selectOptions,
   );
   protected readonly chartPoints = computed(
-    () => this.previewData.bundle().chartPoints,
+    () => this.slice()?.chartPoints ?? this.previewData.bundle().chartPoints,
   );
   protected readonly kpiValue = computed(() => this.previewData.bundle().kpiValue);
   protected readonly kpiDelta = computed(() => this.previewData.bundle().kpiDelta);
   protected readonly dateRangeLabel = computed(
-    () => this.previewData.bundle().dateRangeLabel,
+    () => this.slice()?.dateRangeLabel ?? this.previewData.bundle().dateRangeLabel,
   );
+  protected readonly bindingHint = computed(() => {
+    const slice = this.slice();
+    if (slice?.filteredByDateRange && slice.linkedFromTable) {
+      return 'Date range → table → chart';
+    }
+    if (slice?.filteredByDateRange) {
+      return 'Filtered by date range';
+    }
+    if (slice?.linkedFromTable) {
+      return 'Chart uses table rowset';
+    }
+    return null;
+  });
 
   protected readonly chartMax = computed(() =>
     Math.max(...this.chartPoints().map((point) => point.value), 1),

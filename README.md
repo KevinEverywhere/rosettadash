@@ -127,8 +127,8 @@ Detailed CI vs hosting notes: [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting
 
 ## Current ticket
 
-**[DAS-11](https://planetkevin.atlassian.net/browse/DAS-11)** — Mock data API  
-Branch: `feature/DAS-11-mock-data-api`
+**[DAS-12](https://planetkevin.atlassian.net/browse/DAS-12)** — Preview binding flow  
+Branch: `feature/DAS-12-filter-table-chart-flow`
 
 ## License
 
