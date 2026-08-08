@@ -17,10 +17,7 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) | `feature/DAS-9-bindings-ui` | Bindings UI |
 | [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | `feature/DAS-10-preview-renderers` | Preview renderers |
 | [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | Mock data API |
-
-## Phase 2 — complete
-
-Phase 2 exit criteria met: bindings UI, preview renderers, mock data API, date range → table → chart preview flow (DAS-12).
+| [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-filter-table-chart-flow` | Preview binding flow |
 
 ## Phase 3 — Export MVP
 
@@ -35,7 +32,7 @@ Phase 2 exit criteria met: bindings UI, preview renderers, mock data API, date r
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-filter-table-chart-flow` | In progress |
+| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | `feature/DAS-13-export-ir` | In progress |
 
 ## Related documents
 

@@ -1,0 +1,215 @@
+import type { ComponentRegistry } from '../registry/component-registry';
+import type { Composite, ValidationIssue } from '../model/types';
+import { validateComposite } from '../validation/validate-composite';
+import type {
+  BuildExportIROptions,
+  ExportIR,
+  ExportIRTargets,
+  IREventBinding,
+  IRDataSource,
+} from './types';
+
+export class ExportBuildError extends Error {
+  constructor(public readonly issues: ValidationIssue[]) {
+    super('Composite validation failed for export');
+    this.name = 'ExportBuildError';
+  }
+}
+
+const DEFAULT_TARGETS: ExportIRTargets = {
+  ui: 'react',
+  server: 'nest',
+  database: 'postgresql',
+};
+
+export function buildExportIR(
+  composite: Composite,
+  registry: ComponentRegistry,
+  options: BuildExportIROptions = {},
+): ExportIR {
+  const validation = validateComposite(composite, registry, { mode: 'strict' });
+  if (!validation.valid) {
+    throw new ExportBuildError(validation.issues);
+  }
+
+  const components = [];
+  const layouts = [];
+  const dataSources: IRDataSource[] = [];
+  const envVarKeys = new Set<string>();
+
+  for (const node of composite.nodes) {
+    const definition = registry.getOrThrow(node.type);
+
+    if (definition.category === 'visual' || definition.category === 'domain') {
+      components.push({
+        id: node.id,
+        type: node.type,
+        label: node.label,
+        category: definition.category,
+        properties: { ...node.properties },
+        layout: node.layout ? { ...node.layout } : undefined,
+        inputs: node.ports.inputs.map((port) => ({ ...port })),
+        outputs: node.ports.outputs.map((port) => ({ ...port })),
+      });
+      continue;
+    }
+
+    if (definition.category === 'layout') {
+      layouts.push({
+        id: node.id,
+        type: node.type,
+        label: node.label,
+        properties: { ...node.properties },
+        layout: node.layout ? { ...node.layout } : undefined,
+      });
+      continue;
+    }
+
+    if (definition.category === 'infra') {
+      dataSources.push(mapInfraDataSource(node));
+      collectEnvVars(node, envVarKeys);
+    }
+  }
+
+  const events = mapEventBindings(composite, registry);
+  const envVars = [...envVarKeys].map((key) => ({
+    key,
+    required: true,
+    description: `Environment variable for ${key}`,
+  }));
+
+  return {
+    meta: {
+      compositeId: composite.id,
+      compositeName: composite.name,
+      version: composite.version,
+      generatedAt: options.generatedAt ?? new Date().toISOString(),
+    },
+    targets: resolveTargets(composite.exportTargets, options.defaultTargets),
+    envVars,
+    components,
+    layouts,
+    dataSources,
+    routes: buildRoutes(composite, registry),
+    events,
+    styles: { preset: 'neutral' },
+  };
+}
+
+function resolveTargets(
+  configured: Composite['exportTargets'],
+  overrides?: Partial<Composite['exportTargets']>,
+): ExportIRTargets {
+  return {
+    ui: overrides?.ui ?? configured?.ui ?? DEFAULT_TARGETS.ui,
+    server: overrides?.server ?? configured?.server ?? DEFAULT_TARGETS.server,
+    database: overrides?.database ?? configured?.database ?? DEFAULT_TARGETS.database,
+  };
+}
+
+function mapInfraDataSource(node: Composite['nodes'][number]): IRDataSource {
+  if (node.type === 'infra.postgresql') {
+    const connectionEnvKey =
+      typeof node.properties['connectionEnvKey'] === 'string'
+        ? node.properties['connectionEnvKey']
+        : 'DATABASE_URL';
+    const table =
+      typeof node.properties['table'] === 'string' ? node.properties['table'] : undefined;
+
+    return {
+      id: node.id,
+      type: node.type,
+      label: node.label,
+      connectionEnvKey,
+      table,
+      properties: { ...node.properties },
+    };
+  }
+
+  return {
+    id: node.id,
+    type: node.type,
+    label: node.label,
+    properties: { ...node.properties },
+  };
+}
+
+function collectEnvVars(node: Composite['nodes'][number], envVarKeys: Set<string>): void {
+  if (node.type === 'infra.postgresql') {
+    const key =
+      typeof node.properties['connectionEnvKey'] === 'string'
+        ? node.properties['connectionEnvKey']
+        : 'DATABASE_URL';
+    envVarKeys.add(key);
+    return;
+  }
+
+  if (node.type === 'infra.env') {
+    const variables = node.properties['variables'];
+    if (Array.isArray(variables)) {
+      for (const entry of variables) {
+        if (typeof entry === 'string') {
+          envVarKeys.add(entry);
+        } else if (
+          entry &&
+          typeof entry === 'object' &&
+          'key' in entry &&
+          typeof (entry as { key: unknown }).key === 'string'
+        ) {
+          envVarKeys.add((entry as { key: string }).key);
+        }
+      }
+    }
+  }
+}
+
+function mapEventBindings(
+  composite: Composite,
+  registry: ComponentRegistry,
+): IREventBinding[] {
+  return composite.bindings.map((binding) => {
+    const sourceNode = composite.nodes.find((node) => node.id === binding.sourceNodeId);
+    const sourcePort = sourceNode
+      ? registry.findPort(sourceNode, binding.sourcePortId, 'output')
+      : undefined;
+
+    return {
+      bindingId: binding.id,
+      sourceNodeId: binding.sourceNodeId,
+      sourcePortId: binding.sourcePortId,
+      targetNodeId: binding.targetNodeId,
+      targetPortId: binding.targetPortId,
+      dataType: sourcePort?.dataType ?? 'any',
+    };
+  });
+}
+
+function buildRoutes(composite: Composite, registry: ComponentRegistry) {
+  const serverNode = composite.nodes.find((node) => node.type === 'infra.server.nest');
+  if (!serverNode) {
+    return [];
+  }
+
+  const prefix =
+    typeof serverNode.properties['globalPrefix'] === 'string'
+      ? serverNode.properties['globalPrefix']
+      : 'api';
+
+  const tableNodes = composite.nodes.filter((node) => node.type === 'visual.table');
+  const pgNode = composite.nodes.find((node) => node.type === 'infra.postgresql');
+  const tableName =
+    pgNode && typeof pgNode.properties['table'] === 'string'
+      ? pgNode.properties['table']
+      : tableNodes[0]?.label.toLowerCase().replace(/\s+/g, '-') ?? 'records';
+
+  registry.getOrThrow(serverNode.type);
+
+  return [
+    {
+      id: `${serverNode.id}:list-${tableName}`,
+      method: 'GET' as const,
+      path: `/${prefix}/${tableName}`,
+      handlerNodeId: serverNode.id,
+    },
+  ];
+}

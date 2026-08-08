@@ -99,6 +99,12 @@ Example body:
 }
 ```
 
+### Export
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/export/ir` | Build ExportIR from a strictly validated composite (400 on validation errors) |
+
 ## Scripts
 
 | Command | Description |
@@ -127,8 +133,8 @@ Detailed CI vs hosting notes: [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting
 
 ## Current ticket
 
-**[DAS-12](https://planetkevin.atlassian.net/browse/DAS-12)** — Preview binding flow  
-Branch: `feature/DAS-12-filter-table-chart-flow`
+**[DAS-13](https://planetkevin.atlassian.net/browse/DAS-13)** — ExportIR builder  
+Branch: `feature/DAS-13-export-ir`
 
 ## License
 
