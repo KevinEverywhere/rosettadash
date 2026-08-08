@@ -39,4 +39,6 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | merged to `development` | ExportIR builder |
 | [DAS-14](https://planetkevin.atlassian.net/browse/DAS-14) | merged to `development` | React UI exporter |
 | [DAS-15](https://planetkevin.atlassian.net/browse/DAS-15) | merged to `development` | NestJS + PostgreSQL exporter |
-| [DAS-16](https://planetkevin.atlassian.net/browse/DAS-16) | `feature/DAS-16-export-wizard` | Export wizard UI |
+| [DAS-16](https://planetkevin.atlassian.net/browse/DAS-16) | merged to `development` | Export wizard UI |
+| [DAS-17](https://planetkevin.atlassian.net/browse/DAS-17) | merged to `development` | Fix CI npm / lockfile |
+| [DAS-18](https://planetkevin.atlassian.net/browse/DAS-18) | `feature/DAS-18-angular-ui-exporter` | Angular UI exporter |

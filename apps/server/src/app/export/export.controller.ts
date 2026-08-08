@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import type { Composite } from '@dashbuilder/core';
 import { ExportBuildError } from '@dashbuilder/core';
+import { AngularExportError } from '@dashbuilder/exporters-angular';
 import { NestExportError } from '@dashbuilder/exporters-nest';
 import { ReactExportError } from '@dashbuilder/exporters-react';
 import { ExportService } from './export.service';
@@ -16,7 +17,7 @@ export class ExportController {
         issues: error.issues,
       });
     }
-    if (error instanceof ReactExportError || error instanceof NestExportError) {
+    if (error instanceof ReactExportError || error instanceof NestExportError || error instanceof AngularExportError) {
       throw new BadRequestException({
         message: error.message,
       });
@@ -37,6 +38,15 @@ export class ExportController {
   buildReactExport(@Body() composite: Composite) {
     try {
       return this.exportService.buildReactExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('angular')
+  buildAngularExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildAngularExport(composite);
     } catch (error) {
       this.handleExportError(error);
     }
