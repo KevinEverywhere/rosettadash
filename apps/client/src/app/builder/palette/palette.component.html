@@ -1,0 +1,29 @@
+<aside class="palette">
+  <header class="palette__header">
+    <h2>Components</h2>
+    <p>Click to preview in inspector</p>
+  </header>
+
+  @for (group of groups(); track group.category) {
+    <section class="palette__group">
+      <h3>{{ group.label }}</h3>
+      <ul class="palette__list">
+        @for (item of group.items; track item.type) {
+          <li>
+            <button
+              type="button"
+              class="palette__item"
+              [class.palette__item--selected]="selectedType() === item.type"
+              (click)="select(item)"
+            >
+              <span class="palette__item-label">{{ item.label }}</span>
+              @if (!item.isVisual) {
+                <span class="palette__badge">infra</span>
+              }
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</aside>

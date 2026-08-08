@@ -103,8 +103,8 @@ domain model, and workflow conventions for DashBuilder.
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3)
-- **Current branch:** `feature/DAS-3-core-component-model`
+- **Current ticket:** [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5)
+- **Current branch:** `feature/DAS-5-builder-shell`
 
 ## Related documents
 

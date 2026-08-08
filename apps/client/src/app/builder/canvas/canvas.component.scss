@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  background: var(--db-canvas-bg);
+}
+
+.canvas__header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--db-border);
+  background: var(--db-panel-bg);
+
+  h2 {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--db-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+}
+
+.canvas__surface {
+  flex: 1;
+  padding: 1.5rem;
+  overflow: auto;
+}
+
+.canvas__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 20rem;
+  padding: 2rem;
+  border: 2px dashed var(--db-border-strong);
+  border-radius: 0.75rem;
+  background: var(--db-surface);
+  text-align: center;
+}
+
+.canvas__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--db-text);
+}
+
+.canvas__hint {
+  max-width: 24rem;
+  margin: 0.75rem 0 0;
+  line-height: 1.5;
+  color: var(--db-text-muted);
+  font-size: 0.875rem;
+}

@@ -8,14 +8,14 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 |--------|--------|---------|
 | [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | `feature/DAS-1-project-foundation` | Vision, architecture, workflow docs |
 | [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | `feature/DAS-2-monorepo-scaffold` | Nx monorepo: client, server, core |
+| [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | `feature/DAS-3-core-component-model` | Types, registry, schemas, validation |
 
 ## Phase 0 — remaining
 
 | Ticket | Branch (planned) | Summary | Depends on |
 |--------|------------------|---------|------------|
-| DAS-3 | `feature/DAS-3-core-component-model` | Types, registry, schemas, validation in `packages/core` | DAS-2 |
-| — | `feature/DAS-4-projects-api` | NestJS in-memory projects/composites CRUD API | DAS-3 |
-| — | `feature/DAS-5-builder-shell` | Angular three-panel layout: palette, canvas, inspector | DAS-3 |
+| DAS-4 | `feature/DAS-4-projects-api` | NestJS in-memory projects/composites CRUD API | DAS-3 |
+| DAS-5 | `feature/DAS-5-builder-shell` | Angular three-panel layout: palette, canvas, inspector | DAS-3 |
 | — | `feature/DAS-6-canvas-persistence` | Place nodes, edit properties, save/load via API | DAS-4, DAS-5 |
 | — | `feature/DAS-7-ci-baseline` | GitHub Actions: lint, test, build on PR to development | DAS-2 |
 
@@ -51,7 +51,7 @@ See [roadmap](./10-roadmap.md) for multi-target export, smart defaults, advanced
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | `feature/DAS-3-core-component-model` | In progress |
+| [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | In progress |
 
 ## Related documents
 

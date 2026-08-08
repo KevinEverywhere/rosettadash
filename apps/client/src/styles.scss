@@ -1,1 +1,41 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--db-bg);
+  color: var(--db-text);
+}
+
+:root {
+  --db-bg: #f3f4f6;
+  --db-panel-bg: #ffffff;
+  --db-canvas-bg: #eef0f4;
+  --db-surface: #fafbfc;
+  --db-surface-hover: #f3f4f6;
+  --db-border: #e2e5eb;
+  --db-border-strong: #c8ced8;
+  --db-text: #1a1d24;
+  --db-text-muted: #5c6370;
+  --db-text-subtle: #8b919a;
+  --db-accent: #3b5bdb;
+  --db-accent-soft: #edf2ff;
+  --db-badge-bg: #eef0f4;
+}
+
+button {
+  font: inherit;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}

@@ -1,0 +1,69 @@
+<aside class="inspector">
+  <header class="inspector__header">
+    <h2>Inspector</h2>
+  </header>
+
+  @if (!hasSelection()) {
+    <div class="inspector__empty">
+      <p>Select a component from the palette to preview its schema.</p>
+    </div>
+  } @else if (definition(); as def) {
+    <div class="inspector__content">
+      <section class="inspector__section">
+        <h3>{{ def.label }}</h3>
+        <p class="inspector__type">{{ def.type }}</p>
+        @if (def.description) {
+          <p class="inspector__description">{{ def.description }}</p>
+        }
+      </section>
+
+      @if (def.properties.length) {
+        <section class="inspector__section">
+          <h4>Properties</h4>
+          <dl class="inspector__dl">
+            @for (prop of def.properties; track prop.key) {
+              <dt>{{ prop.label }}</dt>
+              <dd>
+                <span class="inspector__chip">{{ prop.type }}</span>
+                @if (prop.default !== undefined) {
+                  <code>{{ prop.default | json }}</code>
+                }
+              </dd>
+            }
+          </dl>
+        </section>
+      }
+
+      @if (def.inputs.length || def.outputs.length) {
+        <section class="inspector__section">
+          <h4>Ports</h4>
+          @if (def.inputs.length) {
+            <p class="inspector__port-heading">Inputs</p>
+            <ul>
+              @for (port of def.inputs; track port.id) {
+                <li>
+                  {{ port.name }}
+                  <span class="inspector__chip">{{ port.dataType }}</span>
+                  @if (port.required) {
+                    <span class="inspector__required">required</span>
+                  }
+                </li>
+              }
+            </ul>
+          }
+          @if (def.outputs.length) {
+            <p class="inspector__port-heading">Outputs</p>
+            <ul>
+              @for (port of def.outputs; track port.id) {
+                <li>
+                  {{ port.name }}
+                  <span class="inspector__chip">{{ port.dataType }}</span>
+                </li>
+              }
+            </ul>
+          }
+        </section>
+      }
+    </div>
+  }
+</aside>

@@ -44,8 +44,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-3](https://planetkevin.atlassian.net/browse/DAS-3)** — Core component model  
-Branch: `feature/DAS-3-core-component-model`
+**[DAS-5](https://planetkevin.atlassian.net/browse/DAS-5)** — Builder shell  
+Branch: `feature/DAS-5-builder-shell`
+
+Run the builder: `npm run start:client` → http://localhost:4200
 
 ## License
 
