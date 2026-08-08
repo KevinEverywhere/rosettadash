@@ -26,7 +26,7 @@ CI confirms that changes pass lint, typecheck, unit tests, and Playwright e2e. I
 
 Triggers: pull requests and pushes to `development`.
 
-CI uses **Node 22** with **npm 11** (via Corepack and the `packageManager` field in `package.json`). The lockfile is generated with npm 11; Node 22’s default npm 10 cannot run `npm ci` against it.
+CI uses **Node 22** with **npm 11** (Corepack prepares `npm@11.17.0` before `npm ci`; see `packageManager` in `package.json`). The lockfile is generated with npm 11 — Node 22’s bundled npm 10 rejects it, and `corepack enable` alone is not enough without `corepack prepare`.
 
 ## Nx — yes, free tier
 

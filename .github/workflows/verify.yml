@@ -19,8 +19,11 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Use npm 11 (lockfile requires npm 11+)
+        run: |
+          corepack enable
+          corepack prepare npm@11.17.0 --activate
+          npm --version
 
       - name: Install dependencies
         run: npm ci
@@ -40,8 +43,11 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Use npm 11 (lockfile requires npm 11+)
+        run: |
+          corepack enable
+          corepack prepare npm@11.17.0 --activate
+          npm --version
 
       - name: Install dependencies
         run: npm ci
