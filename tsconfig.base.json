@@ -16,7 +16,8 @@
     "strict": false,
     "paths": {
       "@dashbuilder/core": ["./packages/core/src/index.ts"],
-      "@dashbuilder/ui-primitives": ["./packages/ui-primitives/src/index.ts"]
+      "@dashbuilder/ui-primitives": ["./packages/ui-primitives/src/index.ts"],
+      "@dashbuilder/exporters-react": ["./packages/exporters-react/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

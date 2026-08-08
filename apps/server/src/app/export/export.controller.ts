@@ -21,4 +21,19 @@ export class ExportController {
       throw error;
     }
   }
+
+  @Post('react')
+  buildReactExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildReactExport(composite);
+    } catch (error) {
+      if (error instanceof ExportBuildError) {
+        throw new BadRequestException({
+          message: 'Composite validation failed for export',
+          issues: error.issues,
+        });
+      }
+      throw error;
+    }
+  }
 }

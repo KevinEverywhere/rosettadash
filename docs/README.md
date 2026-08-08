@@ -35,4 +35,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | merged to `development` | Preview renderers |
 | [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | merged to `development` | Mock data API |
 | [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | merged to `development` | Preview binding flow |
-| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | `feature/DAS-13-export-ir` | ExportIR builder |
+| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | merged to `development` | ExportIR builder |
+| [DAS-14](https://planetkevin.atlassian.net/browse/DAS-14) | `feature/DAS-14-react-exporter` | React UI exporter |

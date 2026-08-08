@@ -16,6 +16,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `server` | `apps/server` | NestJS API |
 | `core` | `packages/core` | Shared types and utilities |
 | `ui-primitives` | `packages/ui-primitives` | Preview mock data and generators |
+| `exporters-react` | `packages/exporters-react` | React UI code generator from ExportIR |
 
 ## Run locally
 
@@ -104,6 +105,7 @@ Example body:
 | Method | Path | Description |
 |--------|------|-------------|
 | POST | `/api/export/ir` | Build ExportIR from a strictly validated composite (400 on validation errors) |
+| POST | `/api/export/react` | Build ExportIR and generate React UI source files |
 
 ## Scripts
 
@@ -133,8 +135,8 @@ Detailed CI vs hosting notes: [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting
 
 ## Current ticket
 
-**[DAS-13](https://planetkevin.atlassian.net/browse/DAS-13)** — ExportIR builder  
-Branch: `feature/DAS-13-export-ir`
+**[DAS-14](https://planetkevin.atlassian.net/browse/DAS-14)** — React UI exporter  
+Branch: `feature/DAS-14-react-exporter`
 
 ## License
 

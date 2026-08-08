@@ -1,0 +1,73 @@
+import type { IRComponent } from '@dashbuilder/core';
+
+const DEFAULT_NAMES: Record<string, string> = {
+  'visual.input.text': 'TextInput',
+  'visual.input.select': 'SelectInput',
+  'visual.input.date-range': 'DateRangeFilter',
+  'visual.table': 'DataTable',
+  'visual.kpi': 'KpiCard',
+  'visual.chart.line': 'LineChart',
+  'visual.chart.bar': 'BarChart',
+};
+
+export function pascalCase(value: string): string {
+  return value
+    .replace(/[^a-zA-Z0-9]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('');
+}
+
+export function componentExportName(component: IRComponent, usedNames: Set<string>): string {
+  const fromLabel = pascalCase(component.label);
+  const base = fromLabel || DEFAULT_NAMES[component.type] || pascalCase(component.id);
+  let candidate = base;
+  let suffix = 2;
+
+  while (usedNames.has(candidate)) {
+    candidate = `${base}${suffix}`;
+    suffix += 1;
+  }
+
+  usedNames.add(candidate);
+  return candidate;
+}
+
+export function stateVarName(nodeId: string, portId: string): string {
+  return `${nodeId}_${portId}`.replace(/[^a-zA-Z0-9_]/g, '_');
+}
+
+export function setterName(stateVar: string): string {
+  return `set${stateVar.charAt(0).toUpperCase()}${stateVar.slice(1)}`;
+}
+
+export function quote(value: string): string {
+  return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+}
+
+export function formatPropValue(value: unknown): string {
+  if (typeof value === 'string') {
+    return quote(value);
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (value === null || value === undefined) {
+    return 'undefined';
+  }
+  return JSON.stringify(value);
+}
+
+export function joinLines(lines: string[]): string {
+  return `${lines.filter((line) => line !== undefined).join('\n')}\n`;
+}
+
+export function pascalFromId(id: string): string {
+  return id
+    .split(/[^a-zA-Z0-9]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}

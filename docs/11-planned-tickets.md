@@ -18,13 +18,13 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-10](https://planetkevin.atlassian.net/browse/DAS-10) | `feature/DAS-10-preview-renderers` | Preview renderers |
 | [DAS-11](https://planetkevin.atlassian.net/browse/DAS-11) | `feature/DAS-11-mock-data-api` | Mock data API |
 | [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-filter-table-chart-flow` | Preview binding flow |
+| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | `feature/DAS-13-export-ir` | ExportIR builder |
 
 ## Phase 3 — Export MVP
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | `feature/DAS-13-export-ir` | Build ExportIR from validated composite |
-| DAS-14 | `feature/DAS-14-react-exporter` | React UI exporter (P0 components) |
+| [DAS-14](https://planetkevin.atlassian.net/browse/DAS-14) | `feature/DAS-14-react-exporter` | React UI exporter (P0 components) |
 | DAS-15 | `feature/DAS-15-nest-pg-exporter` | NestJS + PostgreSQL infra exporter |
 | DAS-16 | `feature/DAS-16-export-wizard` | Export wizard UI + zip download |
 
@@ -32,7 +32,7 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-13](https://planetkevin.atlassian.net/browse/DAS-13) | `feature/DAS-13-export-ir` | In progress |
+| [DAS-14](https://planetkevin.atlassian.net/browse/DAS-14) | `feature/DAS-14-react-exporter` | In progress |
 
 ## Related documents
 
