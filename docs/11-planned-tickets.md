@@ -24,6 +24,7 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-16](https://planetkevin.atlassian.net/browse/DAS-16) | `feature/DAS-16-export-wizard` | Export wizard UI + zip download |
 | [DAS-17](https://planetkevin.atlassian.net/browse/DAS-17) | `feature/DAS-17-fix-ci-npm-global` | Fix CI npm version for lockfile compatibility |
 | [DAS-18](https://planetkevin.atlassian.net/browse/DAS-18) | `feature/DAS-18-angular-ui-exporter` | Angular UI exporter package |
+| [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19) | `feature/DAS-19-export-wizard-ui-targets` | Export wizard UI target picker |
 
 ## Phase 3 — Export MVP (complete)
 
@@ -33,17 +34,17 @@ Phase 3 exit criteria met: ExportIR, React + Nest/PostgreSQL exporters, export w
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19) | `feature/DAS-19-export-wizard-ui-targets` | Export wizard UI target picker |
+| [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | `feature/DAS-20-vue-ui-exporter` | Vue UI exporter package |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19) | `feature/DAS-19-export-wizard-ui-targets` | In progress |
+| [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | `feature/DAS-20-vue-ui-exporter` | In progress |
 
 ## Phase 4 — planned (not yet ticketed)
 
-- Vue UI exporter
+- Export wizard UI polish (Vue target + visible React/Angular picker — follow-up)
 - Express / Next.js / Nuxt server exporters
 - MongoDB, Supabase, MySQL exporters
 - Export target matrix testing

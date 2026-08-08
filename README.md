@@ -168,8 +168,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-19](https://planetkevin.atlassian.net/browse/DAS-19)** — Export wizard UI target picker (React / Angular)  
-Branch: `feature/DAS-19-export-wizard-ui-targets`
+**[DAS-20](https://planetkevin.atlassian.net/browse/DAS-20)** — Vue UI exporter package  
+Branch: `feature/DAS-20-vue-ui-exporter`
 
 ## License
 

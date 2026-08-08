@@ -1,0 +1,313 @@
+import type { IRComponent } from '@dashbuilder/core';
+import { VueExportError } from './types';
+import { joinLines } from './utils';
+
+const SUPPORTED_TYPES = new Set([
+  'visual.input.text',
+  'visual.input.select',
+  'visual.input.date-range',
+  'visual.table',
+  'visual.kpi',
+  'visual.chart.line',
+  'visual.chart.bar',
+]);
+
+export function generateComponentFile(component: IRComponent, exportName: string): string {
+  if (!SUPPORTED_TYPES.has(component.type)) {
+    throw new VueExportError(`Unsupported Vue export component type: ${component.type}`);
+  }
+
+  switch (component.type) {
+    case 'visual.input.text':
+      return generateTextInput(exportName);
+    case 'visual.input.select':
+      return generateSelectInput(exportName);
+    case 'visual.input.date-range':
+      return generateDateRangeFilter(exportName);
+    case 'visual.table':
+      return generateDataTable(exportName);
+    case 'visual.kpi':
+      return generateKpiCard(exportName);
+    case 'visual.chart.line':
+      return generateLineChart(exportName);
+    case 'visual.chart.bar':
+      return generateBarChart(exportName);
+    default:
+      throw new VueExportError(`Missing Vue template for ${component.type}`);
+  }
+}
+
+function generateTextInput(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `const model = defineModel<string>({ default: '' });`,
+    `defineProps<{ id?: string; placeholder?: string; required?: boolean }>();`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <label class="field" :for="id">`,
+    `    <input`,
+    `      class="input"`,
+    `      type="text"`,
+    `      :id="id"`,
+    `      :placeholder="placeholder"`,
+    `      :required="required"`,
+    `      v-model="model"`,
+    `    />`,
+    `  </label>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateSelectInput(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import type { Row } from '../types';`,
+    `const model = defineModel<string>({ default: '' });`,
+    `withDefaults(`,
+    `  defineProps<{ id?: string; placeholder?: string; options?: Row[] }>(),`,
+    `  { placeholder: 'Select…', options: () => [] },`,
+    `);`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <label class="field" :for="id">`,
+    `    <select class="select" :id="id" v-model="model">`,
+    `      <option value="">{{ placeholder }}</option>`,
+    `      <option`,
+    `        v-for="(option, index) in options"`,
+    `        :key="String(option.id ?? index)"`,
+    `        :value="String(option.id ?? option.label ?? index)"`,
+    `      >`,
+    `        {{ option.label ?? option.id ?? index }}`,
+    `      </option>`,
+    `    </select>`,
+    `  </label>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateDateRangeFilter(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { DateRange } from '../types';`,
+    `const model = defineModel<DateRange>();`,
+    `const props = withDefaults(defineProps<{ id?: string; preset?: string }>(), {`,
+    `  preset: 'last-7-days',`,
+    `});`,
+    `const current = computed(() => model.value ?? defaultRangeForPreset(props.preset));`,
+    `function onStartChange(start: string) {`,
+    `  model.value = { ...current.value, start };`,
+    `}`,
+    `function onEndChange(end: string) {`,
+    `  model.value = { ...current.value, end };`,
+    `}`,
+    `function defaultRangeForPreset(preset: string): DateRange {`,
+    `  const end = new Date();`,
+    `  const start = new Date(end);`,
+    `  if (preset === 'last-30-days') start.setDate(end.getDate() - 30);`,
+    `  else if (preset === 'qtd') start.setMonth(Math.floor(end.getMonth() / 3) * 3, 1);`,
+    `  else start.setDate(end.getDate() - 7);`,
+    `  return { start: formatDate(start), end: formatDate(end) };`,
+    `}`,
+    `function formatDate(date: Date): string {`,
+    `  return date.toISOString().slice(0, 10);`,
+    `}`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <div class="date-range" :id="id">`,
+    `    <label class="field">`,
+    `      <span>Start</span>`,
+    `      <input class="input" type="date" :value="current.start" @input="onStartChange(($event.target as HTMLInputElement).value)" />`,
+    `    </label>`,
+    `    <label class="field">`,
+    `      <span>End</span>`,
+    `      <input class="input" type="date" :value="current.end" @input="onEndChange(($event.target as HTMLInputElement).value)" />`,
+    `    </label>`,
+    `  </div>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateDataTable(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { DateRange, Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    data?: Row[];`,
+    `    filter?: DateRange;`,
+    `    pageSize?: number;`,
+    `    sortable?: boolean;`,
+    `    filterable?: boolean;`,
+    `  }>(),`,
+    `  { data: () => [], pageSize: 25, sortable: true, filterable: true },`,
+    `);`,
+    `const rows = computed(() => filterRows(props.data ?? [], props.filter).slice(0, props.pageSize));`,
+    `const columns = computed(() => {`,
+    `  const first = rows.value[0];`,
+    `  return first ? Object.keys(first) : ['id', 'label', 'value'];`,
+    `});`,
+    `function filterRows(data: Row[], filter?: DateRange): Row[] {`,
+    `  if (!filter) return data;`,
+    `  return data.filter((row) => {`,
+    `    const value = String(row.date ?? row.createdAt ?? '');`,
+    `    if (!value) return true;`,
+    `    return value >= filter.start && value <= filter.end;`,
+    `  });`,
+    `}`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="table-card" :id="id" :data-sortable="sortable" :data-filterable="filterable">`,
+    `    <table class="table">`,
+    `      <thead>`,
+    `        <tr>`,
+    `          <th v-for="column in columns" :key="column">{{ column }}</th>`,
+    `        </tr>`,
+    `      </thead>`,
+    `      <tbody>`,
+    `        <tr v-for="(row, index) in rows" :key="String(row.id ?? index)">`,
+    `          <td v-for="column in columns" :key="column">{{ row[column] ?? '' }}</td>`,
+    `        </tr>`,
+    `      </tbody>`,
+    `    </table>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateKpiCard(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    title?: string;`,
+    `    format?: 'number' | 'currency' | 'percent';`,
+    `    value?: number;`,
+    `  }>(),`,
+    `  { title: 'Metric', format: 'number', value: 0 },`,
+    `);`,
+    `function formatValue(value: number, format: 'number' | 'currency' | 'percent'): string {`,
+    `  if (format === 'currency') {`,
+    `    return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(value);`,
+    `  }`,
+    `  if (format === 'percent') {`,
+    `    return new Intl.NumberFormat(undefined, { style: 'percent', maximumFractionDigits: 1 }).format(value / 100);`,
+    `  }`,
+    `  return new Intl.NumberFormat().format(value);`,
+    `}`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <article class="kpi-card" :id="id">`,
+    `    <h3>{{ title }}</h3>`,
+    `    <p class="kpi-value">{{ formatValue(value ?? 0, format ?? 'number') }}</p>`,
+    `  </article>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateLineChart(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { DateRange, Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    title?: string;`,
+    `    xField?: string;`,
+    `    yField?: string;`,
+    `    data?: Row[];`,
+    `    range?: DateRange;`,
+    `  }>(),`,
+    `  { title: 'Chart', xField: 'date', yField: 'value', data: () => [] },`,
+    `);`,
+    `const filtered = computed(() => filterByRange(props.data ?? [], props.range));`,
+    `const points = computed(() => {`,
+    `  const rows = filtered.value;`,
+    `  const yField = props.yField ?? 'value';`,
+    `  const max = Math.max(...rows.map((row) => Number(row[yField] ?? 0)), 1);`,
+    `  return rows`,
+    `    .map((row, index) => {`,
+    `      const x = (index / Math.max(rows.length - 1, 1)) * 300 + 10;`,
+    `      const y = 110 - (Number(row[yField] ?? 0) / max) * 90;`,
+    `      return \`\${x},\${y}\`;`,
+    `    })`,
+    `    .join(' ');`,
+    `});`,
+    `function filterByRange(data: Row[], range?: DateRange): Row[] {`,
+    `  if (!range) return data;`,
+    `  return data.filter((row) => {`,
+    `    const value = String(row.date ?? row.createdAt ?? '');`,
+    `    if (!value) return true;`,
+    `    return value >= range.start && value <= range.end;`,
+    `  });`,
+    `}`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="chart-card" :id="id">`,
+    `    <h3>{{ title }}</h3>`,
+    `    <svg class="line-chart" viewBox="0 0 320 120" role="img" :aria-label="title">`,
+    `      <polyline fill="none" stroke="currentColor" stroke-width="2" :points="points" />`,
+    `    </svg>`,
+    `    <p class="chart-meta">{{ filtered.length }} points · x={{ xField }} · y={{ yField }}</p>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateBarChart(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { DateRange, Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{ id?: string; title?: string; data?: Row[]; range?: DateRange }>(),`,
+    `  { title: 'Chart', data: () => [] },`,
+    `);`,
+    `const filtered = computed(() => filterByRange(props.data ?? [], props.range));`,
+    `function barHeight(row: Row): number {`,
+    `  const max = Math.max(...filtered.value.map((entry) => Number(entry.value ?? 0)), 1);`,
+    `  return (Number(row.value ?? 0) / max) * 100;`,
+    `}`,
+    `function filterByRange(data: Row[], range?: DateRange): Row[] {`,
+    `  if (!range) return data;`,
+    `  return data.filter((row) => {`,
+    `    const value = String(row.date ?? row.createdAt ?? '');`,
+    `    if (!value) return true;`,
+    `    return value >= range.start && value <= range.end;`,
+    `  });`,
+    `}`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="chart-card" :id="id">`,
+    `    <h3>{{ title }}</h3>`,
+    `    <div class="bar-chart">`,
+    `      <div`,
+    `        v-for="(row, index) in filtered"`,
+    `        :key="String(row.id ?? index)"`,
+    `        class="bar"`,
+    `        :style="{ height: barHeight(row) + '%' }"`,
+    `        :title="String(row.label ?? row.id ?? index)"`,
+    `      />`,
+    `    </div>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}

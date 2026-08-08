@@ -4,6 +4,7 @@ import { ExportBuildError } from '@dashbuilder/core';
 import { AngularExportError } from '@dashbuilder/exporters-angular';
 import { NestExportError } from '@dashbuilder/exporters-nest';
 import { ReactExportError } from '@dashbuilder/exporters-react';
+import { VueExportError } from '@dashbuilder/exporters-vue';
 import { ExportService } from './export.service';
 
 @Controller('export')
@@ -17,7 +18,12 @@ export class ExportController {
         issues: error.issues,
       });
     }
-    if (error instanceof ReactExportError || error instanceof NestExportError || error instanceof AngularExportError) {
+    if (
+      error instanceof ReactExportError ||
+      error instanceof NestExportError ||
+      error instanceof AngularExportError ||
+      error instanceof VueExportError
+    ) {
       throw new BadRequestException({
         message: error.message,
       });
@@ -47,6 +53,15 @@ export class ExportController {
   buildAngularExport(@Body() composite: Composite) {
     try {
       return this.exportService.buildAngularExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('vue')
+  buildVueExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildVueExport(composite);
     } catch (error) {
       this.handleExportError(error);
     }

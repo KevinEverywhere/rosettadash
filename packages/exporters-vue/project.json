@@ -1,0 +1,15 @@
+{
+  "name": "exporters-vue",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/exporters-vue/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/exporters-vue/tsconfig.lib.json"
+      }
+    }
+  }
+}

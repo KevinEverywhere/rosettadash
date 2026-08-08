@@ -84,6 +84,32 @@ describe('ExportService', () => {
     expect(result.files.some((file) => file.path.startsWith('src/components/'))).toBe(true);
   });
 
+  it('returns generated Vue files for a valid composite', () => {
+    const pg = defaultComponentRegistry.createNode('infra.postgresql', { id: 'pg1' });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+
+    const result = service.buildVueExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'vue', server: 'nest' },
+      nodes: [pg, table],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'pg1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.ir.meta.compositeName).toBe('Export me');
+    expect(result.files.some((file) => file.path === 'src/Dashboard.vue')).toBe(true);
+    expect(result.files.some((file) => file.path.endsWith('.vue'))).toBe(true);
+  });
+
   it('returns generated NestJS files for a valid composite', () => {
     const pg = defaultComponentRegistry.createNode('infra.postgresql', {
       id: 'pg1',
