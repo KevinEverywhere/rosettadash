@@ -94,6 +94,30 @@ describe('BuilderStateService', () => {
     expect(service.bindings()).toHaveLength(0);
   });
 
+  it('filters preview nodes to visual components only', () => {
+    service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.input.text'),
+    );
+    service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('infra.postgresql'),
+    );
+
+    expect(service.previewNodes()).toHaveLength(1);
+    expect(service.previewNodes()[0]?.type).toBe('visual.input.text');
+  });
+
+  it('switches workspace mode and clears pending bindings', () => {
+    const dateRange = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.input.date-range'),
+    );
+    service.beginBindingFrom(dateRange.id, 'range');
+    expect(service.pendingBindingSource()).not.toBeNull();
+
+    service.setWorkspaceMode('preview');
+    expect(service.workspaceMode()).toBe('preview');
+    expect(service.pendingBindingSource()).toBeNull();
+  });
+
   it('removes bindings when a node is deleted', () => {
     const dateRange = service.addNodeFromDefinition(
       defaultComponentRegistry.getOrThrow('visual.input.date-range'),

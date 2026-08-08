@@ -7,9 +7,9 @@
     "start:server": "nx serve server",
     "start": "nx run-many -t serve -p client,server --parallel=2",
     "build": "nx run-many -t build -p client,server,core",
-    "test": "nx run-many -t test -p client,server,core",
-    "lint": "nx run-many -t lint -p client,server,core",
-    "typecheck": "nx run-many -t typecheck -p client,server,core",
+    "test": "nx run-many -t test -p client,server,core,ui-primitives",
+    "lint": "nx run-many -t lint -p client,server,core,ui-primitives",
+    "typecheck": "nx run-many -t typecheck -p client,server,core,ui-primitives",
     "verify": "npm run lint && npm run typecheck && npm run test",
     "e2e": "nx e2e client-e2e",
     "verify:all": "npm run verify && npm run e2e"

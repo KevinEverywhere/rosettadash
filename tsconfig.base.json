@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
-      "@dashbuilder/core": ["./packages/core/src/index.ts"]
+      "@dashbuilder/core": ["./packages/core/src/index.ts"],
+      "@dashbuilder/ui-primitives": ["./packages/ui-primitives/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

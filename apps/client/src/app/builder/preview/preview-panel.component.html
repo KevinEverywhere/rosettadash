@@ -1,0 +1,33 @@
+<section class="preview" data-testid="preview-panel">
+  <header class="preview__header">
+    <h2>Preview</h2>
+    <span class="preview__count">{{ state.previewNodes().length }} visual component(s)</span>
+  </header>
+
+  <div class="preview__surface">
+    @if (state.previewNodes().length === 0) {
+      <div class="preview__empty">
+        <p class="preview__title">Live preview</p>
+        <p class="preview__hint">
+          Add visual components in Design mode to see them rendered here.
+        </p>
+      </div>
+    } @else {
+      <div class="preview__nodes">
+        @for (node of sortedPreviewNodes(); track node.id) {
+          <div
+            class="preview__node"
+            data-testid="preview-node"
+            [class.preview__node--selected]="state.selectedNodeId() === node.id"
+            [style.left.px]="node.layout?.x ?? 24"
+            [style.top.px]="node.layout?.y ?? 24"
+            [style.width.px]="node.layout?.width ?? 220"
+            [style.minHeight.px]="node.layout?.height ?? 72"
+          >
+            <app-preview-node [node]="node" />
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

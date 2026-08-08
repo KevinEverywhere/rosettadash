@@ -1,0 +1,144 @@
+@switch (node().type) {
+  @case ('visual.input.text') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <input
+        type="text"
+        class="preview-input"
+        data-testid="preview-text-input"
+        [placeholder]="readString('placeholder')"
+        [attr.required]="readBoolean('required') ? true : null"
+        readonly
+      />
+    </label>
+  }
+  @case ('visual.input.select') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <select class="preview-input" data-testid="preview-select">
+        <option value="">{{ readString('placeholder', 'Select…') }}</option>
+        @for (option of selectOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </label>
+  }
+  @case ('visual.input.date-range') {
+    <div class="preview-date-range" data-testid="preview-date-range">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <div class="preview-date-range__controls">
+        <input type="date" class="preview-input" value="2026-08-01" readonly />
+        <span class="preview-date-range__sep">to</span>
+        <input type="date" class="preview-input" value="2026-08-08" readonly />
+      </div>
+      <span class="preview-date-range__preset">{{ dateRangeLabel }}</span>
+    </div>
+  }
+  @case ('visual.table') {
+    <div class="preview-table" data-testid="preview-table">
+      <div class="preview-table__header">
+        <span>{{ node().label }}</span>
+        @if (readBoolean('filterable')) {
+          <span class="preview-chip">Filterable</span>
+        }
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of tableRows.slice(0, readNumber('pageSize', 25)); track row.id) {
+            <tr>
+              <td>{{ row.name }}</td>
+              <td>{{ row.status }}</td>
+              <td>{{ row.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
+              <td>{{ row.date }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @case ('visual.kpi') {
+    <div class="preview-kpi" data-testid="preview-kpi">
+      <span class="preview-kpi__title">{{ readString('title', 'Metric') }}</span>
+      <span class="preview-kpi__value">{{ formatKpi(kpiValue) }}</span>
+      <span class="preview-kpi__delta">+{{ kpiDelta }}%</span>
+    </div>
+  }
+  @case ('visual.chart.line') {
+    <div class="preview-chart" data-testid="preview-line-chart">
+      <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+      <svg viewBox="0 0 240 96" class="preview-chart__svg" aria-hidden="true">
+        <polyline class="preview-chart__line" [attr.points]="lineChartPoints()" />
+      </svg>
+    </div>
+  }
+  @case ('visual.chart.bar') {
+    <div class="preview-chart" data-testid="preview-bar-chart">
+      <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+      <div class="preview-chart__bars">
+        @for (point of chartPoints; track point.label) {
+          <div class="preview-chart__bar-wrap">
+            <div
+              class="preview-chart__bar"
+              [style.height.%]="(point.value / chartMax()) * 100"
+            ></div>
+            <span>{{ point.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+  @case ('layout.grid') {
+    <div class="preview-layout" data-testid="preview-grid">
+      <span class="preview-layout__title">{{ node().label }}</span>
+      <div
+        class="preview-layout__grid"
+        [style.gridTemplateColumns]="'repeat(' + readNumber('columns', 12) + ', 1fr)'"
+        [style.gap.px]="readNumber('gap', 16)"
+      >
+        @for (slot of [1, 2, 3]; track slot) {
+          <div class="preview-layout__slot">Slot {{ slot }}</div>
+        }
+      </div>
+    </div>
+  }
+  @case ('layout.tabs') {
+    <div class="preview-layout" data-testid="preview-tabs">
+      <span class="preview-layout__title">{{ node().label }}</span>
+      <div class="preview-tabs">
+        <span class="preview-tabs__tab preview-tabs__tab--active">Tab 1</span>
+        <span class="preview-tabs__tab">Tab 2</span>
+        <span class="preview-tabs__tab">Tab 3</span>
+      </div>
+      <div class="preview-layout__slot">Tab panel content</div>
+    </div>
+  }
+  @case ('layout.modal') {
+    <div class="preview-modal" data-testid="preview-modal">
+      <div class="preview-modal__dialog">
+        <span class="preview-modal__title">{{ readString('title', 'Dialog') }}</span>
+        <p class="preview-modal__body">Modal content preview</p>
+      </div>
+    </div>
+  }
+  @case ('domain.role-gate') {
+    <div class="preview-role-gate" data-testid="preview-role-gate">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <p class="preview-role-gate__hint">Visible for roles:</p>
+      <code>{{ node().properties['roles'] | json }}</code>
+    </div>
+  }
+  @default {
+    <div class="preview-fallback" data-testid="preview-fallback">
+      <span>{{ node().label }}</span>
+      <code>{{ node().type }}</code>
+    </div>
+  }
+}

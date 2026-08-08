@@ -1,14 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { APP_NAME } from '@dashbuilder/core';
 import { BuilderProjectService } from './builder-project.service';
-import { BuilderStateService } from './builder-state.service';
+import { BuilderStateService, WorkspaceMode } from './builder-state.service';
 import { CanvasComponent } from './canvas/canvas.component';
 import { InspectorComponent } from './inspector/inspector.component';
 import { PaletteComponent } from './palette/palette.component';
+import { PreviewPanelComponent } from './preview/preview-panel.component';
 
 @Component({
   selector: 'app-builder-shell',
-  imports: [PaletteComponent, CanvasComponent, InspectorComponent],
+  imports: [PaletteComponent, CanvasComponent, PreviewPanelComponent, InspectorComponent],
   templateUrl: './builder-shell.component.html',
   styleUrl: './builder-shell.component.scss',
 })
@@ -24,6 +25,10 @@ export class BuilderShellComponent implements OnInit {
 
   protected save(): void {
     void this.projectService.save();
+  }
+
+  protected setWorkspaceMode(mode: WorkspaceMode): void {
+    this.state.setWorkspaceMode(mode);
   }
 
   protected statusLabel(): string {

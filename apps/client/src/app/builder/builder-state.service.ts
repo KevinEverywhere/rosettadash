@@ -10,6 +10,7 @@ import {
 } from '@dashbuilder/core';
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+export type WorkspaceMode = 'design' | 'preview';
 
 export interface PendingBindingSource {
   nodeId: string;
@@ -30,6 +31,7 @@ export class BuilderStateService {
   readonly selectedNodeId = signal<string | null>(null);
   readonly pendingBindingSource = signal<PendingBindingSource | null>(null);
   readonly bindingMessage = signal<string | null>(null);
+  readonly workspaceMode = signal<WorkspaceMode>('design');
   readonly dirty = signal(false);
   readonly saveStatus = signal<SaveStatus>('idle');
   readonly loading = signal(true);
@@ -263,6 +265,20 @@ export class BuilderStateService {
     this.pendingBindingSource.set(null);
     this.bindingMessage.set(null);
   }
+
+  setWorkspaceMode(mode: WorkspaceMode): void {
+    this.workspaceMode.set(mode);
+    if (mode === 'preview') {
+      this.clearPendingBinding();
+    }
+  }
+
+  previewNodes = computed(() =>
+    this.nodes().filter((node) => {
+      const definition = defaultComponentRegistry.get(node.type);
+      return definition?.isVisual ?? false;
+    }),
+  );
 
   isInputBound(nodeId: string, portId: string): boolean {
     return this.bindings().some(

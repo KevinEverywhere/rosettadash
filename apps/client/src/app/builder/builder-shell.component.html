@@ -6,6 +6,30 @@
     </div>
 
     <div class="builder__actions">
+      <div class="builder__modes" role="tablist" aria-label="Workspace mode">
+        <button
+          type="button"
+          class="builder__mode"
+          data-testid="mode-design"
+          role="tab"
+          [attr.aria-selected]="state.workspaceMode() === 'design'"
+          [class.builder__mode--active]="state.workspaceMode() === 'design'"
+          (click)="setWorkspaceMode('design')"
+        >
+          Design
+        </button>
+        <button
+          type="button"
+          class="builder__mode"
+          data-testid="mode-preview"
+          role="tab"
+          [attr.aria-selected]="state.workspaceMode() === 'preview'"
+          [class.builder__mode--active]="state.workspaceMode() === 'preview'"
+          (click)="setWorkspaceMode('preview')"
+        >
+          Preview
+        </button>
+      </div>
       @if (state.errorMessage()) {
         <span class="builder__error">{{ state.errorMessage() }}</span>
       }
@@ -33,7 +57,11 @@
   } @else {
     <div class="builder__workspace">
       <app-palette class="builder__palette" />
-      <app-canvas class="builder__canvas" />
+      @if (state.workspaceMode() === 'design') {
+        <app-canvas class="builder__canvas" data-testid="design-workspace" />
+      } @else {
+        <app-preview-panel class="builder__canvas" data-testid="preview-workspace" />
+      }
       <app-inspector class="builder__inspector" />
     </div>
   }
