@@ -67,14 +67,14 @@ npm run e2e            # or npm run verify:all
 
 | Symptom | Fix |
 |---------|-----|
-| All e2e tests timeout on "Loading project…" | Ensure API is up: `curl http://localhost:3000/api/health`. Stop stale processes on `:3000` / `:4200`. |
+| All e2e tests timeout on "Loading project…" | E2E uses ports **4201** / **3001** (not 4200/3000). Cancel stuck `verify:all` or `nx e2e` runs and re-run `npm run e2e`. |
 | E2e waits forever on "another nx process" | Cancel stuck `nx serve` / `verify:all` runs; re-run `npm run e2e`. |
-| Preview test fails on "Data source: API" | Server must include `POST /api/preview/data` (DAS-11+). Restart dev servers after pulling. |
+| Preview test fails on "Data source: API" | Server must include `POST /api/preview/data` (DAS-11+). Re-run e2e so Playwright starts fresh servers. |
 
 Playwright config (`apps/client-e2e/playwright.config.ts`):
 
-- Starts NestJS + Angular via `webServer` (with health URL checks)
-- Reuses existing local servers when not in CI
+- Starts NestJS on **:3001** and Angular on **:4201** via `webServer` (health URL checks)
+- Does **not** reuse existing dev servers (avoids stale or mismatched `npm start` processes)
 - Runs **one worker** (shared in-memory API)
 
 Nx e2e depends on **build only**, not `serve`, to avoid double-starting servers.

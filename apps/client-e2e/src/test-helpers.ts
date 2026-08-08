@@ -6,6 +6,7 @@ export async function openBuilder(page: Page): Promise<void> {
   await page.reload();
   await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
   await expect(page.getByTestId('builder-shell')).toBeVisible();
+  await expect(page.getByTestId('palette')).toBeVisible({ timeout: 30_000 });
 }
 
 export async function waitForPreviewData(page: Page): Promise<void> {

@@ -55,7 +55,7 @@ npm run e2e            # Playwright (starts server + client if needed)
 npm run verify:all     # both
 ```
 
-**E2E tips:** If tests hang on "Loading project…", stop stale processes on `:3000` / `:4200` and re-run. If `npm start` is already running, e2e reuses those servers.
+**E2E tips:** Playwright uses dedicated ports **4201** (client) and **3001** (API) so it can run alongside `npm start` on 4200/3000. If tests still hang, cancel stuck `nx serve` / `verify:all` runs and re-run `npm run e2e`.
 
 ## CI on GitHub (optional)
 
