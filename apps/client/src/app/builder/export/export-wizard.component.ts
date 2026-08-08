@@ -26,6 +26,7 @@ export class ExportWizardComponent {
 
   protected readonly loading = signal(false);
   protected readonly downloading = signal(false);
+  protected readonly uiTarget = signal<'react' | 'angular'>('react');
   protected readonly bundle = signal<ExportBundleResponse | null>(null);
   protected readonly validationIssues = signal<ValidationIssue[]>([]);
   protected readonly errorMessage = signal<string | null>(null);
@@ -40,6 +41,14 @@ export class ExportWizardComponent {
 
   protected close(): void {
     this.closed.emit();
+  }
+
+  protected setUiTarget(target: 'react' | 'angular'): void {
+    if (this.uiTarget() === target) {
+      return;
+    }
+    this.uiTarget.set(target);
+    void this.refreshPreview();
   }
 
   protected async refreshPreview(): Promise<void> {
@@ -93,10 +102,11 @@ export class ExportWizardComponent {
     const payload = this.state.buildCompositePayload();
     return {
       ...payload,
-      exportTargets: payload.exportTargets ?? {
-        ui: 'react',
+      exportTargets: {
         server: 'nest',
         database: 'postgresql',
+        ...payload.exportTargets,
+        ui: this.uiTarget(),
       },
     };
   }

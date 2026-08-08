@@ -103,6 +103,29 @@
   font-size: 0.875rem;
 }
 
+.export-wizard__target-picker {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: none;
+}
+
+.export-wizard__target-legend {
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--db-text-muted);
+}
+
+.export-wizard__target-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-right: 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
 .export-wizard__required {
   margin-left: 0.375rem;
   color: var(--db-text-muted);

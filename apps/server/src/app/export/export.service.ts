@@ -30,7 +30,9 @@ export class ExportService {
 
   buildBundleExport(composite: Composite) {
     const ir = this.buildIr(composite);
-    const files = [...generateReactUiFiles(ir), ...generateNestInfraFiles(ir)];
+    const uiFiles =
+      ir.targets.ui === 'angular' ? generateAngularUiFiles(ir) : generateReactUiFiles(ir);
+    const files = [...uiFiles, ...generateNestInfraFiles(ir)];
     return { ir, files };
   }
 }

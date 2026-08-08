@@ -17,7 +17,7 @@
       <header class="export-wizard__header">
         <div>
           <h2 id="export-wizard-title">Export dashboard</h2>
-          <p>Generate React UI and NestJS server files for your composite.</p>
+          <p>Generate UI and NestJS server files for your composite.</p>
         </div>
         <button
           type="button"
@@ -33,6 +33,31 @@
       <div class="export-wizard__body">
         <section class="export-wizard__section">
           <h3>Targets</h3>
+          <fieldset class="export-wizard__target-picker">
+            <legend class="export-wizard__target-legend">UI framework</legend>
+            <label class="export-wizard__target-option">
+              <input
+                type="radio"
+                name="export-ui-target"
+                value="react"
+                [checked]="uiTarget() === 'react'"
+                data-testid="export-wizard-ui-react"
+                (change)="setUiTarget('react')"
+              />
+              React
+            </label>
+            <label class="export-wizard__target-option">
+              <input
+                type="radio"
+                name="export-ui-target"
+                value="angular"
+                [checked]="uiTarget() === 'angular'"
+                data-testid="export-wizard-ui-angular"
+                (change)="setUiTarget('angular')"
+              />
+              Angular
+            </label>
+          </fieldset>
           <p data-testid="export-wizard-targets">{{ targetsLabel() }}</p>
         </section>
 

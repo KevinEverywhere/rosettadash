@@ -128,8 +128,8 @@ domain model, and workflow conventions for DashBuilder.
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-18](https://planetkevin.atlassian.net/browse/DAS-18)
-- **Current branch:** `feature/DAS-18-angular-ui-exporter`
+- **Current ticket:** [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19)
+- **Current branch:** `feature/DAS-19-export-wizard-ui-targets`
 
 ## Related documents
 

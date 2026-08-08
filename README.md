@@ -168,8 +168,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-18](https://planetkevin.atlassian.net/browse/DAS-18)** — Angular UI exporter package  
-Branch: `feature/DAS-18-angular-ui-exporter`
+**[DAS-19](https://planetkevin.atlassian.net/browse/DAS-19)** — Export wizard UI target picker (React / Angular)  
+Branch: `feature/DAS-19-export-wizard-ui-targets`
 
 ## License
 
