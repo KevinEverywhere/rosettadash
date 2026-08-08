@@ -17,6 +17,7 @@
     "verify:all": "npm run verify && npm run e2e"
   },
   "private": true,
+  "packageManager": "npm@11.17.0",
   "devDependencies": {
     "@angular-devkit/core": "~22.0.4",
     "@angular-devkit/schematics": "~22.0.4",

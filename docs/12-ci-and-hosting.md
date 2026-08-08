@@ -26,6 +26,8 @@ CI confirms that changes pass lint, typecheck, unit tests, and Playwright e2e. I
 
 Triggers: pull requests and pushes to `development`.
 
+CI uses **Node 22** with **npm 11** (via Corepack and the `packageManager` field in `package.json`). The lockfile is generated with npm 11; Node 22’s default npm 10 cannot run `npm ci` against it.
+
 ## Nx — yes, free tier
 
 - Nx orchestrates builds, tests, and e2e locally and in CI via npm scripts.
