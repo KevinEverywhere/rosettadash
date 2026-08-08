@@ -9,17 +9,17 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | `feature/DAS-1-project-foundation` | Vision, architecture, workflow docs |
 | [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | `feature/DAS-2-monorepo-scaffold` | Nx monorepo: client, server, core |
 | [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | `feature/DAS-3-core-component-model` | Types, registry, schemas, validation |
+| [DAS-4](https://planetkevin.atlassian.net/browse/DAS-4) | `feature/DAS-4-projects-api` | Projects/composites REST API |
+| [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | Builder shell UI |
 
 ## Phase 0 — remaining
 
 | Ticket | Branch (planned) | Summary | Depends on |
 |--------|------------------|---------|------------|
-| DAS-4 | `feature/DAS-4-projects-api` | NestJS in-memory projects/composites CRUD API | DAS-3 |
-| DAS-5 | `feature/DAS-5-builder-shell` | Angular three-panel layout: palette, canvas, inspector | DAS-3 |
-| — | `feature/DAS-6-canvas-persistence` | Place nodes, edit properties, save/load via API | DAS-4, DAS-5 |
-| — | `feature/DAS-7-ci-baseline` | GitHub Actions: lint, test, build on PR to development | DAS-2 |
+| DAS-6 | `feature/DAS-6-canvas-persistence` | Place nodes, edit properties, save/load via API | DAS-4, DAS-5 |
+| DAS-7 | `feature/DAS-7-ci-baseline` | GitHub Actions: lint, test, typecheck; e2e scaffold | DAS-2 |
 
-**Phase 0 exit:** lint/test/build CI green; component model in core; user can place nodes and save a project.
+**Phase 0 exit:** lint/test/build CI green; user can place nodes and save a project.
 
 ## Phase 1 — builder shell (continued)
 
@@ -43,15 +43,11 @@ Covered by DAS-3–DAS-6 above. Phase 1 exit criteria from [roadmap](./10-roadma
 | DAS-14 | `feature/DAS-14-nest-pg-exporter` | NestJS + PostgreSQL infra exporter |
 | DAS-15 | `feature/DAS-15-export-wizard` | Export wizard UI + zip download |
 
-## Phase 4+
-
-See [roadmap](./10-roadmap.md) for multi-target export, smart defaults, advanced UX, and production hardening. Tickets DAS-16+ will be broken down when Phase 3 nears completion.
-
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | In progress |
+| [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | `feature/DAS-6-canvas-persistence` | In progress |
 
 ## Related documents
 

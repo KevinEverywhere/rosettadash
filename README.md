@@ -17,11 +17,27 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 ```bash
 npm install
 npm start              # client + server in parallel
-npm run start:client   # Angular only (default http://localhost:4200)
+npm run start:client   # Angular only (proxies /api → :3000)
 npm run start:server   # NestJS only (default http://localhost:3000/api)
 ```
 
 Health check: `GET http://localhost:3000/api/health`
+
+### Projects API (in-memory, single-user MVP)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/projects` | List projects |
+| POST | `/api/projects` | Create project `{ "name": "..." }` |
+| GET | `/api/projects/:id` | Get project with composites |
+| PATCH | `/api/projects/:id` | Update project metadata |
+| DELETE | `/api/projects/:id` | Delete project |
+| GET | `/api/projects/:id/composites` | List composites |
+| POST | `/api/projects/:id/composites` | Create composite (validated) |
+| PUT | `/api/projects/:id/composites/:cid` | Update composite (validated, version++) |
+| DELETE | `/api/projects/:id/composites/:cid` | Delete composite |
+
+Invalid composites return `400` with `{ message, issues }`.
 
 ## Scripts
 
@@ -44,10 +60,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-5](https://planetkevin.atlassian.net/browse/DAS-5)** — Builder shell  
-Branch: `feature/DAS-5-builder-shell`
-
-Run the builder: `npm run start:client` → http://localhost:4200
+**[DAS-6](https://planetkevin.atlassian.net/browse/DAS-6)** — Canvas persistence  
+Branch: `feature/DAS-6-canvas-persistence`
 
 ## License
 

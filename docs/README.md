@@ -25,6 +25,6 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 |--------|--------|--------|
 | [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | merged to `development` | Documentation |
 | [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | merged to `development` | Nx monorepo scaffold |
-| [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | merged to `development` | Core component model |
-| [DAS-4](https://planetkevin.atlassian.net/browse/DAS-4) | `feature/DAS-4-projects-api` | Projects API (awaiting merge) |
-| [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | Builder shell |
+| [DAS-4](https://planetkevin.atlassian.net/browse/DAS-4) | merged to `development` | Projects API |
+| [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | merged to `development` | Builder shell |
+| [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | `feature/DAS-6-canvas-persistence` | Canvas persistence |
