@@ -12,33 +12,26 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-4](https://planetkevin.atlassian.net/browse/DAS-4) | `feature/DAS-4-projects-api` | Projects/composites REST API |
 | [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | Builder shell UI |
 | [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | `feature/DAS-6-canvas-persistence` | Canvas persistence |
+| [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | `feature/DAS-7-ci-baseline` | Typecheck, verify, GitHub Actions |
 
-## Phase 0 — remaining
+## Phase 0 — complete
 
-| Ticket | Branch (planned) | Summary | Depends on |
-|--------|------------------|---------|------------|
-| DAS-7 | `feature/DAS-7-ci-baseline` | Typecheck, verify script, GitHub Actions | DAS-2 |
-
-**Phase 0 exit:** `npm run verify` green; user can place nodes and save a project.
-
-## Phase 1 — builder shell (continued)
-
-Covered by DAS-3–DAS-6 above. Phase 1 exit criteria from [roadmap](./10-roadmap.md): user can place nodes on canvas, edit properties, save project.
+Phase 0 exit criteria met: `npm run verify` green, canvas persistence, Playwright smoke (DAS-8).
 
 ## Phase 2 — Preview & P0 palette
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| DAS-8 | `feature/DAS-8-bindings-ui` | Connect ports between nodes on canvas |
-| DAS-9 | `feature/DAS-9-preview-renderers` | Builder-side preview for P0 visual components |
-| DAS-10 | `feature/DAS-10-mock-data-api` | NestJS preview module with mock row generation |
-| DAS-11 | `feature/DAS-11-filter-table-chart-flow` | Date range → table → chart binding demo |
+| DAS-9 | `feature/DAS-9-bindings-ui` | Connect ports between nodes on canvas |
+| DAS-10 | `feature/DAS-10-preview-renderers` | Builder-side preview for P0 visual components |
+| DAS-11 | `feature/DAS-11-mock-data-api` | NestJS preview module with mock row generation |
+| DAS-12 | `feature/DAS-12-filter-table-chart-flow` | Date range → table → chart binding demo |
 
 ## Phase 3 — Export MVP
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| DAS-12 | `feature/DAS-12-export-ir` | Build ExportIR from validated composite |
+| [DAS-12](https://planetkevin.atlassian.net/browse/DAS-12) | `feature/DAS-12-export-ir` | Build ExportIR from validated composite |
 | DAS-13 | `feature/DAS-13-react-exporter` | React UI exporter (P0 components) |
 | DAS-14 | `feature/DAS-14-nest-pg-exporter` | NestJS + PostgreSQL infra exporter |
 | DAS-15 | `feature/DAS-15-export-wizard` | Export wizard UI + zip download |
@@ -47,7 +40,7 @@ Covered by DAS-3–DAS-6 above. Phase 1 exit criteria from [roadmap](./10-roadma
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | `feature/DAS-7-ci-baseline` | In progress |
+| [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | `feature/DAS-8-e2e-smoke` | In progress |
 
 ## Related documents
 

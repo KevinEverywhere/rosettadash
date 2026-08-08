@@ -60,6 +60,7 @@
                   <input
                     [id]="prop.key"
                     type="text"
+                    [attr.data-testid]="'inspector-prop-' + prop.key"
                     [ngModel]="readProperty(prop.key)"
                     (ngModelChange)="updateProperty(prop, $event)"
                   />

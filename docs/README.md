@@ -18,6 +18,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 8. [Component Taxonomy](./08-component-taxonomy.md) — palette inventory
 9. [Glossary](./09-glossary.md) — terms
 10. [Roadmap](./10-roadmap.md) — phased delivery
+11. [CI and Hosting](./12-ci-and-hosting.md) — GitHub Actions, Nx, Pages
 
 ## Active work
 
@@ -28,4 +29,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-4](https://planetkevin.atlassian.net/browse/DAS-4) | merged to `development` | Projects API |
 | [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | merged to `development` | Builder shell |
 | [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | merged to `development` | Canvas persistence |
-| [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | `feature/DAS-7-ci-baseline` | CI baseline |
+| [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | merged to `development` | CI baseline |
+| [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8) | `feature/DAS-8-e2e-smoke` | Playwright E2E |

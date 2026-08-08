@@ -45,7 +45,9 @@ Invalid composites return `400` with `{ message, issues }`.
 |---------|-------------|
 | `npm start` | Serve client and server |
 | `npm run build` | Build client, server, and core |
-| `npm run verify` | **Lint + typecheck + test** (run before every commit) |
+| `npm run verify` | **Lint + typecheck + unit tests** (run before every commit) |
+| `npm run e2e` | Playwright E2E smoke tests |
+| `npm run verify:all` | verify + e2e |
 | `npm test` | Run unit tests only |
 | `npm run lint` | Lint all projects |
 | `npm run typecheck` | TypeScript check all projects |
@@ -63,8 +65,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-7](https://planetkevin.atlassian.net/browse/DAS-7)** — CI baseline  
-Branch: `feature/DAS-7-ci-baseline`
+**[DAS-8](https://planetkevin.atlassian.net/browse/DAS-8)** — Playwright E2E smoke  
+Branch: `feature/DAS-8-e2e-smoke`
+
+See [docs/12-ci-and-hosting.md](docs/12-ci-and-hosting.md) for CI vs GitHub Pages.
 
 ## License
 

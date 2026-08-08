@@ -56,7 +56,12 @@ This runs **lint**, **typecheck**, and **unit tests** in order. Do not commit if
 | `npm run test` | Unit tests (Jest + Vitest) |
 | `npm run verify` | All of the above |
 
-When CI is enabled on GitHub, the same `verify` job runs on pushes and PRs to `development`.
+When Playwright is set up (DAS-8+), also run `npm run e2e` before merging feature branches that touch the builder UI.
+
+| Command | What it checks |
+|---------|----------------|
+| `npm run e2e` | Playwright smoke (starts server + client) |
+| `npm run verify:all` | verify + e2e |
 
 ## Remote and push policy
 
@@ -123,8 +128,8 @@ domain model, and workflow conventions for DashBuilder.
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7)
-- **Current branch:** `feature/DAS-7-ci-baseline`
+- **Current ticket:** [DAS-8](https://planetkevin.atlassian.net/browse/DAS-8)
+- **Current branch:** `feature/DAS-8-e2e-smoke`
 
 ## Related documents
 

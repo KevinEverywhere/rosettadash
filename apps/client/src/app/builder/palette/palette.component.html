@@ -1,4 +1,4 @@
-<aside class="palette">
+<aside class="palette" data-testid="palette">
   <header class="palette__header">
     <h2>Components</h2>
     <p>Click to inspect, + to add</p>
@@ -26,6 +26,7 @@
                   role="button"
                   tabindex="0"
                   title="Add to canvas"
+                  [attr.data-testid]="'palette-add-' + item.type"
                   (click)="add(item, $event)"
                   (keydown.enter)="add(item, $event)"
                   (keydown.space)="add(item, $event)"

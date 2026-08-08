@@ -1,4 +1,4 @@
-<div class="builder">
+<div class="builder" data-testid="builder-shell">
   <header class="builder__toolbar">
     <div class="builder__brand">
       <span class="builder__logo">{{ appName }}</span>
@@ -9,12 +9,17 @@
       @if (state.errorMessage()) {
         <span class="builder__error">{{ state.errorMessage() }}</span>
       }
-      <span class="builder__status" [class.builder__status--dirty]="state.dirty()">
+      <span
+        class="builder__status"
+        data-testid="save-status"
+        [class.builder__status--dirty]="state.dirty()"
+      >
         {{ statusLabel() }}
       </span>
       <button
         type="button"
         class="builder__save"
+        data-testid="save-button"
         [disabled]="state.loading() || state.saveStatus() === 'saving' || !state.dirty()"
         (click)="save()"
       >
@@ -24,7 +29,7 @@
   </header>
 
   @if (state.loading()) {
-    <div class="builder__loading">Loading project…</div>
+    <div class="builder__loading" data-testid="builder-loading">Loading project…</div>
   } @else {
     <div class="builder__workspace">
       <app-palette class="builder__palette" />
