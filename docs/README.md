@@ -19,4 +19,5 @@ Foundational documents for the DashBuilder project. Start with the vision doc, t
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | `feature/DAS-1-project-foundation` | Documentation |
+| [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | merged to `development` | Documentation |
+| [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | `feature/DAS-2-monorepo-scaffold` | Nx monorepo scaffold |

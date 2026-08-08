@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  color: #1a1a2e;
+  background: linear-gradient(160deg, #f8f9fc 0%, #eef1f8 100%);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.shell {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+
+.shell__header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.shell__tagline {
+  margin: 0.5rem 0 0;
+  color: #5c6370;
+  font-size: 1.125rem;
+}
+
+.shell__content {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid #dde2eb;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.shell__version {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #8b919a;
+}
+
+.shell__hint {
+  margin: 0.75rem 0 0;
+  line-height: 1.5;
+}

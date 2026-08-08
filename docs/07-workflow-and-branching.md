@@ -34,9 +34,9 @@ Examples:
 ### Workflow steps
 
 1. **Create or select Jira ticket** — define scope and acceptance criteria.
-2. **Create feature branch** from `main` (or `development` once it exists with content).
-3. **Implement** on the feature branch.
-4. **Open PR** targeting `development` (or `main` early on).
+2. **Create feature branch** from `development`.
+3. **Implement** on the feature branch — one ticket/branch at a time.
+4. **Open PR** targeting `development`.
 5. **Kevin commits and merges** — agents assist with messages and code; Kevin is sole committer/merger.
 
 ## Commit messages
@@ -90,8 +90,9 @@ domain model, and workflow conventions for DashBuilder.
 ## Repository notes
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
-- **Current ticket:** [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1)
-- **Current branch:** `feature/DAS-1-project-foundation`
+- **Integration branch:** `development`
+- **Current ticket:** [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2)
+- **Current branch:** `feature/DAS-2-monorepo-scaffold`
 
 ## Related documents
 

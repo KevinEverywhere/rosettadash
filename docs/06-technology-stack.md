@@ -4,9 +4,9 @@
 
 | Layer | Choice | Rationale |
 |-------|--------|-----------|
-| **Client** | Angular (latest stable) | Strong structure for complex builder UI; team direction; CDK for drag-drop |
+| **Client** | Angular 22 (latest stable with broad ecosystem support) | Strong structure for complex builder UI; team direction; CDK for drag-drop |
 | **Server** | NestJS | TypeScript parity with client; modular architecture; aligns with export target |
-| **Monorepo** | Nx or npm workspaces (TBD in scaffold ticket) | Shared `packages/core` between client and server |
+| **Monorepo** | Nx 23 (free tier, no Nx Cloud) | Shared `packages/core` between client and server |
 | **Language** | TypeScript (strict) | End-to-end type safety; shared models |
 
 ### Angular client libraries (planned)
@@ -24,7 +24,7 @@
 | Concern | Library direction |
 |---------|-------------------|
 | Validation | `class-validator` + DTOs |
-| Persistence | TBD — PostgreSQL or MongoDB for builder's own project storage |
+| Persistence | Deferred — single-user MVP uses in-memory/file stub first |
 | Export orchestration | Custom job runner; zip via `archiver` |
 | Config | `@nestjs/config` |
 
@@ -52,9 +52,9 @@ Future: Svelte, Solid via plugin interface.
 | Database | Client/driver direction |
 |----------|------------------------|
 | **MongoDB** | Official driver or Mongoose |
-| **PostgreSQL** | `pg` or Prisma |
+| **PostgreSQL** | Prisma (preferred when no added cost) or `pg` |
 | **Supabase** | `@supabase/supabase-js` |
-| **MySQL** | `mysql2` or Prisma |
+| **MySQL** | Prisma or `mysql2` |
 
 ## Shared packages
 
@@ -96,6 +96,12 @@ Future: Svelte, Solid via plugin interface.
 | 2026-08-08 | React, Angular, Vue as initial export UI targets | DAS-1 |
 | 2026-08-08 | Next, Nuxt, Nest, Express as initial server targets | DAS-1 |
 | 2026-08-08 | MongoDB, PostgreSQL, Supabase, MySQL as initial DB targets | DAS-1 |
+| 2026-08-08 | Nx free tier for monorepo; repo is source of truth | DAS-2 |
+| 2026-08-08 | Single-user MVP; no auth initially | DAS-2 |
+| 2026-08-08 | Angular 22; standalone components for export default | DAS-2 |
+| 2026-08-08 | Prisma preferred for PG/MySQL export when no added cost | DAS-2 |
+| 2026-08-08 | Neutral design tokens (no brand preset) | DAS-2 |
+| 2026-08-08 | `development` branch is integration target for PRs | DAS-2 |
 
 Subsequent decisions append here with Jira references.
 
