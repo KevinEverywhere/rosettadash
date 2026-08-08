@@ -44,8 +44,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-2](https://planetkevin.atlassian.net/browse/DAS-2)** — Monorepo scaffold  
-Branch: `feature/DAS-2-monorepo-scaffold`
+**[DAS-3](https://planetkevin.atlassian.net/browse/DAS-3)** — Core component model  
+Branch: `feature/DAS-3-core-component-model`
 
 ## License
 

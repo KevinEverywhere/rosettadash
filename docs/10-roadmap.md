@@ -4,14 +4,16 @@ Phased delivery plan for DashBuilder. Tickets will be created in Jira (DAS proje
 
 ## Phase 0 — Foundation
 
-**Tickets:** [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) (done), [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) (in progress)
+**Tickets:** [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) (done), [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) (done)
 
 - [x] Vision, architecture, and workflow documentation
 - [x] `development` branch as integration target
-- [ ] Monorepo scaffold (Angular client + NestJS server + packages/core)
+- [x] Monorepo scaffold (Angular client + NestJS server + packages/core)
 - [ ] CI lint/test baseline
 
-**Next after DAS-2:** Phase 1 — core model and builder shell
+See [planned tickets](./11-planned-tickets.md) for DAS-3+ breakdown.
+
+**Next:** DAS-3 — core component model; then DAS-4 projects API, DAS-5 builder shell.
 
 ## Phase 1 — Core model & builder shell
 

@@ -2,6 +2,10 @@
 
 Foundational documents for the DashBuilder project. Start with the vision doc, then architecture, then dive into specifics.
 
+## Ticket plan
+
+See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket and branch sequence.
+
 ## Reading order
 
 1. [Vision & Product Overview](./01-vision-and-product-overview.md) — what we're building and why
@@ -20,4 +24,5 @@ Foundational documents for the DashBuilder project. Start with the vision doc, t
 | Ticket | Branch | Status |
 |--------|--------|--------|
 | [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | merged to `development` | Documentation |
-| [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | `feature/DAS-2-monorepo-scaffold` | Nx monorepo scaffold |
+| [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | merged to `development` | Nx monorepo scaffold |
+| [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | `feature/DAS-3-core-component-model` | Core component model |

@@ -1,0 +1,60 @@
+# Planned Tickets
+
+Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — only the active ticket gets a Jira issue and feature branch; others stay as plan until the prior ticket merges to `development`.
+
+## Completed
+
+| Ticket | Branch | Summary |
+|--------|--------|---------|
+| [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) | `feature/DAS-1-project-foundation` | Vision, architecture, workflow docs |
+| [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) | `feature/DAS-2-monorepo-scaffold` | Nx monorepo: client, server, core |
+
+## Phase 0 — remaining
+
+| Ticket | Branch (planned) | Summary | Depends on |
+|--------|------------------|---------|------------|
+| DAS-3 | `feature/DAS-3-core-component-model` | Types, registry, schemas, validation in `packages/core` | DAS-2 |
+| — | `feature/DAS-4-projects-api` | NestJS in-memory projects/composites CRUD API | DAS-3 |
+| — | `feature/DAS-5-builder-shell` | Angular three-panel layout: palette, canvas, inspector | DAS-3 |
+| — | `feature/DAS-6-canvas-persistence` | Place nodes, edit properties, save/load via API | DAS-4, DAS-5 |
+| — | `feature/DAS-7-ci-baseline` | GitHub Actions: lint, test, build on PR to development | DAS-2 |
+
+**Phase 0 exit:** lint/test/build CI green; component model in core; user can place nodes and save a project.
+
+## Phase 1 — builder shell (continued)
+
+Covered by DAS-3–DAS-6 above. Phase 1 exit criteria from [roadmap](./10-roadmap.md): user can place nodes on canvas, edit properties, save project.
+
+## Phase 2 — Preview & P0 palette
+
+| Ticket | Branch (planned) | Summary |
+|--------|------------------|---------|
+| DAS-8 | `feature/DAS-8-bindings-ui` | Connect ports between nodes on canvas |
+| DAS-9 | `feature/DAS-9-preview-renderers` | Builder-side preview for P0 visual components |
+| DAS-10 | `feature/DAS-10-mock-data-api` | NestJS preview module with mock row generation |
+| DAS-11 | `feature/DAS-11-filter-table-chart-flow` | Date range → table → chart binding demo |
+
+## Phase 3 — Export MVP
+
+| Ticket | Branch (planned) | Summary |
+|--------|------------------|---------|
+| DAS-12 | `feature/DAS-12-export-ir` | Build ExportIR from validated composite |
+| DAS-13 | `feature/DAS-13-react-exporter` | React UI exporter (P0 components) |
+| DAS-14 | `feature/DAS-14-nest-pg-exporter` | NestJS + PostgreSQL infra exporter |
+| DAS-15 | `feature/DAS-15-export-wizard` | Export wizard UI + zip download |
+
+## Phase 4+
+
+See [roadmap](./10-roadmap.md) for multi-target export, smart defaults, advanced UX, and production hardening. Tickets DAS-16+ will be broken down when Phase 3 nears completion.
+
+## Active work
+
+| Ticket | Branch | Status |
+|--------|--------|--------|
+| [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | `feature/DAS-3-core-component-model` | In progress |
+
+## Related documents
+
+- [Roadmap](./10-roadmap.md)
+- [Workflow & Branching](./07-workflow-and-branching.md)
+- [Component Model](./03-component-model.md)

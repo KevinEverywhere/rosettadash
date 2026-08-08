@@ -1,0 +1,205 @@
+import type { ComponentDefinition } from '../model/types';
+
+export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
+  {
+    type: 'visual.input.text',
+    category: 'visual',
+    label: 'Text Input',
+    description: 'Single-line text field',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'value', name: 'value', dataType: 'string' }],
+    properties: [
+      { key: 'placeholder', label: 'Placeholder', type: 'string', default: '' },
+      { key: 'required', label: 'Required', type: 'boolean', default: false },
+    ],
+  },
+  {
+    type: 'visual.input.select',
+    category: 'visual',
+    label: 'Select',
+    description: 'Dropdown selection',
+    isVisual: true,
+    inputs: [{ id: 'options', name: 'options', dataType: 'rowset' }],
+    outputs: [{ id: 'value', name: 'value', dataType: 'string' }],
+    properties: [
+      { key: 'placeholder', label: 'Placeholder', type: 'string', default: 'Select…' },
+    ],
+  },
+  {
+    type: 'visual.input.date-range',
+    category: 'visual',
+    label: 'Date Range',
+    description: 'Start/end date filter',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'range', name: 'range', dataType: 'date-range' }],
+    properties: [
+      {
+        key: 'preset',
+        label: 'Default preset',
+        type: 'select',
+        default: 'last-7-days',
+        options: [
+          { label: 'Last 7 days', value: 'last-7-days' },
+          { label: 'Last 30 days', value: 'last-30-days' },
+          { label: 'Quarter to date', value: 'qtd' },
+        ],
+      },
+    ],
+  },
+  {
+    type: 'visual.table',
+    category: 'visual',
+    label: 'Data Table',
+    description: 'Sortable, filterable table',
+    isVisual: true,
+    inputs: [
+      { id: 'data', name: 'data', dataType: 'rowset', required: true },
+      { id: 'filter', name: 'filter', dataType: 'date-range' },
+    ],
+    outputs: [
+      { id: 'row-select', name: 'rowSelect', dataType: 'event' },
+      { id: 'selected-row', name: 'selectedRow', dataType: 'row' },
+    ],
+    properties: [
+      { key: 'pageSize', label: 'Page size', type: 'number', default: 25 },
+      { key: 'sortable', label: 'Sortable', type: 'boolean', default: true },
+      { key: 'filterable', label: 'Filterable', type: 'boolean', default: true },
+    ],
+  },
+  {
+    type: 'visual.kpi',
+    category: 'visual',
+    label: 'KPI Card',
+    description: 'Single metric with optional delta',
+    isVisual: true,
+    inputs: [{ id: 'value', name: 'value', dataType: 'number' }],
+    outputs: [],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Metric' },
+      { key: 'format', label: 'Format', type: 'select', default: 'number', options: [
+        { label: 'Number', value: 'number' },
+        { label: 'Currency', value: 'currency' },
+        { label: 'Percent', value: 'percent' },
+      ]},
+    ],
+  },
+  {
+    type: 'visual.chart.line',
+    category: 'visual',
+    label: 'Line Chart',
+    description: 'Time-series line chart',
+    isVisual: true,
+    inputs: [
+      { id: 'data', name: 'data', dataType: 'rowset', required: true },
+      { id: 'range', name: 'range', dataType: 'date-range' },
+    ],
+    outputs: [],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Chart' },
+      { key: 'xField', label: 'X field', type: 'string', default: 'date' },
+      { key: 'yField', label: 'Y field', type: 'string', default: 'value' },
+    ],
+  },
+  {
+    type: 'visual.chart.bar',
+    category: 'visual',
+    label: 'Bar Chart',
+    isVisual: true,
+    inputs: [
+      { id: 'data', name: 'data', dataType: 'rowset', required: true },
+      { id: 'range', name: 'range', dataType: 'date-range' },
+    ],
+    outputs: [],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Chart' },
+    ],
+  },
+  {
+    type: 'layout.grid',
+    category: 'layout',
+    label: 'Grid',
+    description: 'Responsive grid layout',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    properties: [
+      { key: 'columns', label: 'Columns', type: 'number', default: 12 },
+      { key: 'gap', label: 'Gap (px)', type: 'number', default: 16 },
+    ],
+  },
+  {
+    type: 'layout.tabs',
+    category: 'layout',
+    label: 'Tabs',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    properties: [
+      { key: 'defaultTab', label: 'Default tab index', type: 'number', default: 0 },
+    ],
+  },
+  {
+    type: 'layout.modal',
+    category: 'layout',
+    label: 'Modal',
+    isVisual: true,
+    inputs: [{ id: 'open', name: 'open', dataType: 'event' }],
+    outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Dialog' },
+    ],
+  },
+  {
+    type: 'domain.role-gate',
+    category: 'domain',
+    label: 'Role Gate',
+    description: 'Show children only for allowed roles',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'visible', name: 'visible', dataType: 'boolean' }],
+    properties: [
+      {
+        key: 'roles',
+        label: 'Allowed roles',
+        type: 'json',
+        default: ['admin', 'editor'],
+      },
+    ],
+  },
+  {
+    type: 'infra.env',
+    category: 'infra',
+    label: 'Environment Config',
+    isVisual: false,
+    inputs: [],
+    outputs: [{ id: 'config', name: 'config', dataType: 'any' }],
+    properties: [
+      { key: 'variables', label: 'Variables', type: 'json', default: [] },
+    ],
+  },
+  {
+    type: 'infra.postgresql',
+    category: 'infra',
+    label: 'PostgreSQL',
+    isVisual: false,
+    inputs: [{ id: 'env', name: 'env', dataType: 'any' }],
+    outputs: [{ id: 'rowset', name: 'rowset', dataType: 'rowset' }],
+    properties: [
+      { key: 'connectionEnvKey', label: 'Connection env key', type: 'string', default: 'DATABASE_URL', required: true },
+      { key: 'table', label: 'Table name', type: 'string', default: '' },
+    ],
+  },
+  {
+    type: 'infra.server.nest',
+    category: 'infra',
+    label: 'NestJS Server',
+    isVisual: false,
+    inputs: [{ id: 'database', name: 'database', dataType: 'any' }],
+    outputs: [{ id: 'api', name: 'api', dataType: 'any' }],
+    properties: [
+      { key: 'globalPrefix', label: 'API prefix', type: 'string', default: 'api' },
+    ],
+  },
+];
