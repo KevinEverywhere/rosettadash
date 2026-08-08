@@ -4,26 +4,25 @@ Phased delivery plan for DashBuilder. Tickets will be created in Jira (DAS proje
 
 ## Phase 0 — Foundation
 
-**Tickets:** [DAS-1](https://planetkevin.atlassian.net/browse/DAS-1) (done), [DAS-2](https://planetkevin.atlassian.net/browse/DAS-2) (done)
+**Tickets:** DAS-1 through DAS-6 (done), [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) (in progress)
 
 - [x] Vision, architecture, and workflow documentation
 - [x] `development` branch as integration target
 - [x] Monorepo scaffold (Angular client + NestJS server + packages/core)
-- [ ] CI lint/test baseline
+- [x] Core model, projects API, builder shell, canvas persistence
+- [ ] CI verify baseline (`npm run verify` + GitHub Actions)
 
-See [planned tickets](./11-planned-tickets.md) for DAS-3+ breakdown.
+See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 
-**Next:** DAS-3 — core component model; then DAS-4 projects API, DAS-5 builder shell.
+## Phase 1 — Core model & builder shell (complete)
 
-## Phase 1 — Core model & builder shell
+- [x] Component type registry and JSON schemas in `packages/core`
+- [x] Composite graph CRUD API (NestJS)
+- [x] Angular shell: palette, canvas, inspector
+- [x] Project save/load
+- [x] Basic validation rules (draft + strict modes)
 
-- Component type registry and JSON schemas in `packages/core`
-- Composite graph CRUD API (NestJS)
-- Angular shell: palette (static list), empty canvas, inspector stub
-- Project save/load
-- Basic validation rules
-
-**Exit criteria:** User can place nodes on canvas, edit properties, save project.
+**Next:** Phase 2 — bindings UI and preview renderers (DAS-8+).
 
 ## Phase 2 — Preview & P0 palette
 

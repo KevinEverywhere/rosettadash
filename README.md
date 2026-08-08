@@ -45,8 +45,10 @@ Invalid composites return `400` with `{ message, issues }`.
 |---------|-------------|
 | `npm start` | Serve client and server |
 | `npm run build` | Build client, server, and core |
-| `npm test` | Run unit tests |
+| `npm run verify` | **Lint + typecheck + test** (run before every commit) |
+| `npm test` | Run unit tests only |
 | `npm run lint` | Lint all projects |
+| `npm run typecheck` | TypeScript check all projects |
 
 ## Documentation
 
@@ -56,12 +58,13 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 1. Pick a Jira ticket in [DAS](https://planetkevin.atlassian.net/jira/software/projects/DAS/boards/68/backlog).
 2. Branch from `development`: `feature/DAS-<n>-<description>`.
-3. Open PR to `development`. Kevin commits and merges.
+3. Run `npm run verify` before committing.
+4. Open PR to `development`. Kevin commits and merges.
 
 ## Current ticket
 
-**[DAS-6](https://planetkevin.atlassian.net/browse/DAS-6)** — Canvas persistence  
-Branch: `feature/DAS-6-canvas-persistence`
+**[DAS-7](https://planetkevin.atlassian.net/browse/DAS-7)** — CI baseline  
+Branch: `feature/DAS-7-ci-baseline`
 
 ## License
 

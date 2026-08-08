@@ -14,6 +14,12 @@
         "tsConfig": "packages/core/tsconfig.lib.json",
         "assets": ["packages/core/*.md"]
       }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/core/tsconfig.lib.json"
+      }
     }
   }
 }

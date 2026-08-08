@@ -65,6 +65,10 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "typecheck": {
+      "cache": true,
+      "inputs": ["default", "^default"]
     }
   },
   "generators": {
@@ -74,6 +78,5 @@
       "style": "scss",
       "unitTestRunner": "vitest-angular"
     }
-  },
-  "nxCloudId": "6a77850b61cbfbeb4556b67c"
+  }
 }

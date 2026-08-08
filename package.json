@@ -8,7 +8,9 @@
     "start": "nx run-many -t serve -p client,server --parallel=2",
     "build": "nx run-many -t build -p client,server,core",
     "test": "nx run-many -t test -p client,server,core",
-    "lint": "nx run-many -t lint -p client,server,core"
+    "lint": "nx run-many -t lint -p client,server,core",
+    "typecheck": "nx run-many -t typecheck -p client,server,core",
+    "verify": "npm run lint && npm run typecheck && npm run test"
   },
   "private": true,
   "devDependencies": {

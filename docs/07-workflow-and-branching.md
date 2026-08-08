@@ -39,6 +39,25 @@ Examples:
 4. **Open PR** targeting `development`.
 5. **Kevin commits and merges** — agents assist with messages and code; Kevin is sole committer/merger.
 
+## Pre-commit verification
+
+Before every commit on a feature branch, run:
+
+```bash
+npm run verify
+```
+
+This runs **lint**, **typecheck**, and **unit tests** in order. Do not commit if verify fails.
+
+| Command | What it checks |
+|---------|----------------|
+| `npm run lint` | ESLint across client, server, core |
+| `npm run typecheck` | TypeScript (`tsc --noEmit`) across all projects |
+| `npm run test` | Unit tests (Jest + Vitest) |
+| `npm run verify` | All of the above |
+
+When CI is enabled on GitHub, the same `verify` job runs on pushes and PRs to `development`.
+
 ## Remote and push policy
 
 **Agents never push to the remote.** No exceptions.
@@ -96,15 +115,16 @@ domain model, and workflow conventions for DashBuilder.
 | Propose commit messages | Approve/edit and commit |
 | Create Jira tickets (when asked) | Prioritize backlog |
 | Create feature branches (local) | Merge locally |
-| Run tests locally | Push `development` or `main` when decided |
+| Run tests locally | Run `npm run verify` before each commit |
+| | Push `development` or `main` when decided |
 | | Final review |
 
 ## Repository notes
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6)
-- **Current branch:** `feature/DAS-6-canvas-persistence`
+- **Current ticket:** [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7)
+- **Current branch:** `feature/DAS-7-ci-baseline`
 
 ## Related documents
 

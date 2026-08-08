@@ -11,15 +11,15 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-3](https://planetkevin.atlassian.net/browse/DAS-3) | `feature/DAS-3-core-component-model` | Types, registry, schemas, validation |
 | [DAS-4](https://planetkevin.atlassian.net/browse/DAS-4) | `feature/DAS-4-projects-api` | Projects/composites REST API |
 | [DAS-5](https://planetkevin.atlassian.net/browse/DAS-5) | `feature/DAS-5-builder-shell` | Builder shell UI |
+| [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | `feature/DAS-6-canvas-persistence` | Canvas persistence |
 
 ## Phase 0 — remaining
 
 | Ticket | Branch (planned) | Summary | Depends on |
 |--------|------------------|---------|------------|
-| DAS-6 | `feature/DAS-6-canvas-persistence` | Place nodes, edit properties, save/load via API | DAS-4, DAS-5 |
-| DAS-7 | `feature/DAS-7-ci-baseline` | GitHub Actions: lint, test, typecheck; e2e scaffold | DAS-2 |
+| DAS-7 | `feature/DAS-7-ci-baseline` | Typecheck, verify script, GitHub Actions | DAS-2 |
 
-**Phase 0 exit:** lint/test/build CI green; user can place nodes and save a project.
+**Phase 0 exit:** `npm run verify` green; user can place nodes and save a project.
 
 ## Phase 1 — builder shell (continued)
 
@@ -47,7 +47,7 @@ Covered by DAS-3–DAS-6 above. Phase 1 exit criteria from [roadmap](./10-roadma
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-6](https://planetkevin.atlassian.net/browse/DAS-6) | `feature/DAS-6-canvas-persistence` | In progress |
+| [DAS-7](https://planetkevin.atlassian.net/browse/DAS-7) | `feature/DAS-7-ci-baseline` | In progress |
 
 ## Related documents
 
