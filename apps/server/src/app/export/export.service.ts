@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Composite, buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { Composite, ExportIR, buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
 import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
 import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
 import { generateReactUiFiles } from '@dashbuilder/exporters-react';
@@ -37,9 +37,19 @@ export class ExportService {
 
   buildBundleExport(composite: Composite) {
     const ir = this.buildIr(composite);
-    const uiFiles =
-      ir.targets.ui === 'angular' ? generateAngularUiFiles(ir) : generateReactUiFiles(ir);
+    const uiFiles = this.generateUiFiles(ir);
     const files = [...uiFiles, ...generateNestInfraFiles(ir)];
     return { ir, files };
+  }
+
+  private generateUiFiles(ir: ExportIR) {
+    switch (ir.targets.ui) {
+      case 'angular':
+        return generateAngularUiFiles(ir);
+      case 'vue':
+        return generateVueUiFiles(ir);
+      default:
+        return generateReactUiFiles(ir);
+    }
   }
 }

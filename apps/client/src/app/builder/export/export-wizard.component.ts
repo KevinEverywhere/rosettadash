@@ -11,6 +11,14 @@ import {
 } from './export-api.service';
 import { ExportZipService } from './export-zip.service';
 
+type UiTarget = 'react' | 'angular' | 'vue';
+
+interface UiTargetOption {
+  id: UiTarget;
+  label: string;
+  description: string;
+}
+
 @Component({
   selector: 'app-export-wizard',
   templateUrl: './export-wizard.component.html',
@@ -24,9 +32,15 @@ export class ExportWizardComponent {
   readonly open = input(false);
   readonly closed = output<void>();
 
+  protected readonly uiTargetOptions: UiTargetOption[] = [
+    { id: 'react', label: 'React', description: 'TSX + hooks' },
+    { id: 'angular', label: 'Angular', description: 'Standalone components' },
+    { id: 'vue', label: 'Vue', description: 'Composition API SFCs' },
+  ];
+
   protected readonly loading = signal(false);
   protected readonly downloading = signal(false);
-  protected readonly uiTarget = signal<'react' | 'angular'>('react');
+  protected readonly uiTarget = signal<UiTarget>('react');
   protected readonly bundle = signal<ExportBundleResponse | null>(null);
   protected readonly validationIssues = signal<ValidationIssue[]>([]);
   protected readonly errorMessage = signal<string | null>(null);
@@ -43,7 +57,7 @@ export class ExportWizardComponent {
     this.closed.emit();
   }
 
-  protected setUiTarget(target: 'react' | 'angular'): void {
+  protected setUiTarget(target: UiTarget): void {
     if (this.uiTarget() === target) {
       return;
     }
@@ -90,12 +104,10 @@ export class ExportWizardComponent {
 
   protected targetsLabel(): string {
     const current = this.bundle();
-    if (!current) {
-      return 'React UI + NestJS + PostgreSQL';
-    }
-    const { targets } = current.ir;
-    const database = targets.database ? ` + ${targets.database}` : '';
-    return `${targets.ui} UI + ${targets.server}${database}`;
+    const ui = current?.ir.targets.ui ?? this.uiTarget();
+    const server = current?.ir.targets.server ?? 'nest';
+    const database = current?.ir.targets.database ?? 'postgresql';
+    return `${ui} UI + ${server} + ${database}`;
   }
 
   private buildExportComposite(): Composite {

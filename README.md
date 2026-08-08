@@ -168,8 +168,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-20](https://planetkevin.atlassian.net/browse/DAS-20)** — Vue UI exporter package  
-Branch: `feature/DAS-20-vue-ui-exporter`
+**[DAS-21](https://planetkevin.atlassian.net/browse/DAS-21)** — Export wizard UI target polish (React / Angular / Vue)  
+Branch: `feature/DAS-21-export-wizard-ui-polish`
 
 ## License
 

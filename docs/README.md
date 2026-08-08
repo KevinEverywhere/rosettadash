@@ -43,4 +43,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-17](https://planetkevin.atlassian.net/browse/DAS-17) | merged to `development` | Fix CI npm / lockfile |
 | [DAS-18](https://planetkevin.atlassian.net/browse/DAS-18) | merged to `development` | Angular UI exporter |
 | [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19) | merged to `development` | Export wizard UI targets |
-| [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | `feature/DAS-20-vue-ui-exporter` | Vue UI exporter |
+| [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | merged to `development` | Vue UI exporter |
+| [DAS-21](https://planetkevin.atlassian.net/browse/DAS-21) | `feature/DAS-21-export-wizard-ui-polish` | Export wizard UI polish |
