@@ -15,6 +15,26 @@ describe('evaluateDefaults', () => {
     };
   }
 
+  it('suggests companion components when a table is added without typical groupings', () => {
+    const table = registry.createNode('visual.table', { id: 't1' });
+
+    const suggestions = evaluateDefaults(
+      { nodes: [table], bindings: [] },
+      { type: 'nodeAdded', nodeId: 't1' },
+      registry,
+    );
+
+    expect(suggestions).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'companion:t1:visual.input.date-range',
+          kind: 'hint',
+          title: 'Typical grouping',
+        }),
+      ]),
+    );
+  });
+
   it('suggests pagination when a table is added without page size', () => {
     const table = registry.createNode('visual.table', {
       id: 't1',

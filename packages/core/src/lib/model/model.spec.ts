@@ -147,4 +147,23 @@ describe('validateComposite', () => {
     expect(draft.valid).toBe(true);
     expect(strict.valid).toBe(false);
   });
+
+  it('rejects empty composites in strict mode', () => {
+    const composite: Composite = {
+      id: 'c1',
+      name: 'Empty',
+      nodes: [],
+      bindings: [],
+      version: 1,
+    };
+
+    const draft = validateComposite(composite, registry, { mode: 'draft' });
+    const strict = validateComposite(composite, registry, { mode: 'strict' });
+
+    expect(draft.valid).toBe(true);
+    expect(strict.valid).toBe(false);
+    expect(strict.issues.some((issue) => issue.code === 'EMPTY_COMPOSITE')).toBe(
+      true,
+    );
+  });
 });

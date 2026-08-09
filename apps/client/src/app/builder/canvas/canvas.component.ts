@@ -1,5 +1,5 @@
 import { Component, HostListener, computed, inject } from '@angular/core';
-import { Binding, ComponentNode } from '@dashbuilder/core';
+import { Binding, ComponentNode, PlacementPrompt, groupingAnimationLabel } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import {
   CANVAS_MIN_NODE_HEIGHT,
@@ -50,6 +50,49 @@ export class CanvasComponent {
     this.state.bindings().map((binding) => this.edgeForBinding(binding)).filter(Boolean) as BindingEdge[],
   );
 
+  protected promptAnimationLabel(prompt: PlacementPrompt): string {
+    return groupingAnimationLabel(prompt.animationKey);
+  }
+
+  protected promptAnimationBlocks(prompt: PlacementPrompt): string[] {
+    switch (prompt.animationKey) {
+      case 'filter-table':
+        return ['Date Range', 'Data Table'];
+      case 'filter-chart':
+        return ['Date Range', 'Chart'];
+      case 'data-stack':
+        return ['Database', 'Server', 'Table'];
+      case 'form-row':
+        return ['Text Input', 'Checkbox'];
+      case 'access-flow':
+        return ['Role Gate', 'Role Assign', 'Invite'];
+      case 'server-data':
+        return ['NestJS Server', 'PostgreSQL', 'Table'];
+      default:
+        return ['Component', 'Companion'];
+    }
+  }
+
+  protected promptLeft(prompt: PlacementPrompt): number {
+    const source = this.state.nodes().find((node) => node.id === prompt.sourceNodeId);
+    return (source?.layout?.x ?? 24) + (source?.layout?.width ?? 220) + 16;
+  }
+
+  protected promptTop(prompt: PlacementPrompt): number {
+    const source = this.state.nodes().find((node) => node.id === prompt.sourceNodeId);
+    return source?.layout?.y ?? 24;
+  }
+
+  protected addCompanionFromPrompt(companionType: string, event: Event): void {
+    event.stopPropagation();
+    this.state.addCompanionFromPrompt(companionType);
+  }
+
+  protected dismissPlacementPrompt(event: Event): void {
+    event.stopPropagation();
+    this.state.dismissPlacementPrompt();
+  }
+
   protected selectNode(nodeId: string, event: Event): void {
     event.stopPropagation();
     if (event instanceof KeyboardEvent && event.key === ' ') {
@@ -57,6 +100,13 @@ export class CanvasComponent {
     }
     const additive = event instanceof MouseEvent && event.shiftKey;
     this.state.selectNode(nodeId, { additive });
+  }
+
+  protected stopHeaderEvent(event: Event): void {
+    event.stopPropagation();
+    if (event instanceof KeyboardEvent && event.key === ' ') {
+      event.preventDefault();
+    }
   }
 
   protected clearCanvasSelection(event: Event): void {
@@ -72,17 +122,19 @@ export class CanvasComponent {
 
   protected onHeaderPointerDown(nodeId: string, event: PointerEvent): void {
     event.stopPropagation();
-    event.preventDefault();
 
     const additive = event.shiftKey;
-    if (!this.state.isNodeSelected(nodeId)) {
-      this.state.selectNode(nodeId, { additive });
-    } else if (additive) {
+    if (additive) {
       this.state.selectNode(nodeId, { additive: true });
       return;
     }
 
+    if (!this.state.isNodeSelected(nodeId)) {
+      this.state.selectNode(nodeId);
+    }
+
     const node = this.state.nodes().find((item) => item.id === nodeId);
+    event.preventDefault();
     if (!node?.layout) {
       return;
     }
@@ -195,6 +247,11 @@ export class CanvasComponent {
 
   protected onOutputPortClick(nodeId: string, portId: string, event: Event): void {
     event.stopPropagation();
+    const additive = event instanceof MouseEvent && event.shiftKey;
+    if (additive) {
+      this.state.selectNode(nodeId, { additive: true });
+      return;
+    }
     this.state.beginBindingFrom(nodeId, portId);
   }
 
@@ -204,7 +261,8 @@ export class CanvasComponent {
       this.state.tryCompleteBindingTo(nodeId, portId);
       return;
     }
-    this.state.selectNode(nodeId);
+    const additive = event instanceof MouseEvent && event.shiftKey;
+    this.state.selectNode(nodeId, { additive });
   }
 
   protected isPendingOutput(nodeId: string, portId: string): boolean {

@@ -92,8 +92,22 @@ export class ExportService {
       return { ir, files: [...uiFiles, ...databaseFiles] };
     }
 
+    if (!this.shouldGenerateServerFiles(ir)) {
+      return { ir, files: uiFiles };
+    }
+
     const serverFiles = this.generateServerFiles(ir);
     return { ir, files: [...uiFiles, ...serverFiles] };
+  }
+
+  private shouldGenerateServerFiles(ir: ExportIR): boolean {
+    if (ir.dataSources.some((source) => source.type.startsWith('infra.server.'))) {
+      return true;
+    }
+
+    return ir.dataSources.some((source) =>
+      ['infra.postgresql', 'infra.mongodb', 'infra.supabase', 'infra.mysql'].includes(source.type),
+    );
   }
 
   private generateDatabaseFiles(ir: ExportIR) {

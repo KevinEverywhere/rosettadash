@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import { dismissPlacementPromptIfVisible, openBuilder, selectCanvasNodeHeader } from './test-helpers';
 
 test.describe('Builder export wizard', () => {
   test.beforeEach(async ({ page }) => {
@@ -239,9 +239,13 @@ test.describe('Builder export wizard', () => {
 
   test('exports only the selected node scope from the wizard', async ({ page }) => {
     await page.getByTestId('palette-add-infra.postgresql').click();
+    await dismissPlacementPromptIfVisible(page);
     await page.getByTestId('palette-add-infra.server.nest').click();
+    await dismissPlacementPromptIfVisible(page);
     await page.getByTestId('palette-add-visual.table').click();
+    await dismissPlacementPromptIfVisible(page);
     await page.getByTestId('palette-add-visual.kpi').click();
+    await dismissPlacementPromptIfVisible(page);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);
     const tableNode = page.getByTestId('canvas-node').nth(2);
@@ -249,7 +253,9 @@ test.describe('Builder export wizard', () => {
     await postgresNode.getByTestId(/^port-output-.*-rowset$/).click();
     await tableNode.getByTestId(/^port-input-.*-data$/).click();
 
-    await page.getByTestId('canvas-node').filter({ hasText: 'KPI Card' }).click();
+    const kpiNode = page.getByTestId('canvas-node').filter({ hasText: 'KPI Card' });
+    await selectCanvasNodeHeader(page, kpiNode);
+    await expect(kpiNode).toHaveAttribute('data-selected', 'true');
 
     await page.getByTestId('export-button').click();
     await expect(page.getByTestId('export-wizard')).toBeVisible();

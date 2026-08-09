@@ -1,0 +1,40 @@
+import {
+  computeCompanionLayout,
+  getGroupingGuide,
+  listMissingCompanionTypes,
+  resolveCompanionPlacement,
+} from './component-grouping-guides';
+
+describe('component-grouping-guides', () => {
+  it('returns a guide for table and date-range types', () => {
+    expect(getGroupingGuide('visual.table')?.companionTypes).toContain('visual.input.date-range');
+    expect(getGroupingGuide('visual.input.date-range')?.animationKey).toBe('filter-table');
+  });
+
+  it('lists missing companion types on the canvas', () => {
+    const missing = listMissingCompanionTypes('visual.table', ['visual.table']);
+    expect(missing).toContain('visual.input.date-range');
+    expect(missing).toContain('infra.postgresql');
+    expect(missing).not.toContain('visual.table');
+  });
+
+  it('places date-range above table when table is the source', () => {
+    expect(resolveCompanionPlacement('visual.table', 'visual.input.date-range')).toBe('above');
+  });
+
+  it('places table below date-range when date-range is the source', () => {
+    expect(resolveCompanionPlacement('visual.input.date-range', 'visual.table')).toBe('below');
+  });
+
+  it('computes snapped companion layout above the source node', () => {
+    const layout = computeCompanionLayout(
+      { x: 48, y: 96, width: 220, height: 72 },
+      'visual.table',
+      'visual.input.date-range',
+    );
+
+    expect(layout.x).toBe(48);
+    expect(layout.y).toBe(16);
+    expect(layout.width).toBe(220);
+  });
+});

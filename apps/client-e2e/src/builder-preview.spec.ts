@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder, waitForPreviewData } from './test-helpers';
+import { openBuilder, selectCanvasNode, waitForPreviewData } from './test-helpers';
 
 test.describe('Builder preview', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,7 +12,7 @@ test.describe('Builder preview', () => {
     await page.getByTestId('palette-add-visual.input.text').click();
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
-    await page.getByTestId('canvas-node').click();
+    await selectCanvasNode(page, page.getByTestId('canvas-node'));
     await page.getByTestId('inspector-prop-placeholder').fill('Customer name');
 
     await page.getByTestId('mode-preview').click();

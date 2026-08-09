@@ -12,12 +12,16 @@ import {
   TimeRangePreset,
   areDataTypesCompatible,
   buildCompositeTemplate,
+  computeCompanionLayout,
   defaultComponentRegistry,
   evaluateDefaults,
+  getGroupingGuide,
+  listMissingCompanionTypes,
   listCompositeTemplates,
   normalizeDomainContext,
   slugifyDomainId,
   suggestionsForSelectedNode,
+  type PlacementPrompt,
 } from '@dashbuilder/core';
 import {
   CANVAS_GRID_SIZE,
@@ -56,6 +60,7 @@ export class BuilderStateService {
   readonly suggestions = signal<DefaultSuggestion[]>([]);
   readonly dismissedSuggestionIds = signal<Set<string>>(new Set());
   readonly previewRoleId = signal('viewer');
+  readonly placementPrompt = signal<PlacementPrompt | null>(null);
 
   readonly selectedNodeId = computed(() => this.selectedNodeIds()[0] ?? null);
 
@@ -178,13 +183,18 @@ export class BuilderStateService {
     this.markDirty();
   }
 
-  addNodeFromDefinition(definition: ComponentDefinition): ComponentNode {
+  addNodeFromDefinition(
+    definition: ComponentDefinition,
+    options?: { layout?: Partial<NodeLayout>; skipPlacementPrompt?: boolean },
+  ): ComponentNode {
     const node = defaultComponentRegistry.createNode(definition.type, {
       layout: {
-        x: snapToCanvasGrid(24),
-        y: snapToCanvasGrid(this.nodes().length * CANVAS_GRID_SIZE * 6 + 24),
-        width: clampCanvasNodeWidth(220),
-        height: clampCanvasNodeHeight(72),
+        x: snapToCanvasGrid(options?.layout?.x ?? 24),
+        y: snapToCanvasGrid(
+          options?.layout?.y ?? this.nodes().length * CANVAS_GRID_SIZE * 6 + 24,
+        ),
+        width: clampCanvasNodeWidth(options?.layout?.width ?? 220),
+        height: clampCanvasNodeHeight(options?.layout?.height ?? 72),
       },
     });
     this.nodes.update((nodes) => [...nodes, node]);
@@ -195,8 +205,41 @@ export class BuilderStateService {
         dismissedIds: this.dismissedSuggestionIds(),
       }),
     );
+    if (!options?.skipPlacementPrompt) {
+      this.refreshPlacementPrompt(node.id);
+    }
     this.markDirty();
     return node;
+  }
+
+  addCompanionFromPrompt(companionType: string): ComponentNode | null {
+    const prompt = this.placementPrompt();
+    if (!prompt) {
+      return null;
+    }
+
+    const source = this.nodes().find((node) => node.id === prompt.sourceNodeId);
+    const definition = defaultComponentRegistry.get(companionType);
+    if (!source?.layout || !definition) {
+      return null;
+    }
+
+    const layout = computeCompanionLayout(source.layout, prompt.sourceType, companionType, {
+      gridSize: CANVAS_GRID_SIZE,
+      defaultWidth: clampCanvasNodeWidth(220),
+      defaultHeight: clampCanvasNodeHeight(72),
+    });
+
+    const node = this.addNodeFromDefinition(definition, {
+      layout,
+      skipPlacementPrompt: true,
+    });
+    this.refreshPlacementPrompt(prompt.sourceNodeId);
+    return node;
+  }
+
+  dismissPlacementPrompt(): void {
+    this.placementPrompt.set(null);
   }
 
   updateNodeProperty(nodeId: string, key: string, value: unknown): void {
@@ -636,5 +679,49 @@ export class BuilderStateService {
         dismissedIds: this.dismissedSuggestionIds(),
       }),
     );
+  }
+
+  private refreshPlacementPrompt(sourceNodeId: string): void {
+    const source = this.nodes().find((node) => node.id === sourceNodeId);
+    if (!source) {
+      this.placementPrompt.set(null);
+      return;
+    }
+
+    const guide = getGroupingGuide(source.type);
+    if (!guide) {
+      this.placementPrompt.set(null);
+      return;
+    }
+
+    const canvasTypes = this.nodes().map((node) => node.type);
+    const missingTypes = listMissingCompanionTypes(source.type, canvasTypes);
+    if (missingTypes.length === 0) {
+      this.placementPrompt.set(null);
+      return;
+    }
+
+    const companions = missingTypes
+      .map((type) => {
+        const definition = defaultComponentRegistry.get(type);
+        if (!definition) {
+          return null;
+        }
+        return { type, label: definition.label };
+      })
+      .filter(Boolean) as PlacementPrompt['companions'];
+
+    if (companions.length === 0) {
+      this.placementPrompt.set(null);
+      return;
+    }
+
+    this.placementPrompt.set({
+      sourceNodeId,
+      sourceType: source.type,
+      message: guide.placementMessage,
+      animationKey: guide.animationKey,
+      companions,
+    });
   }
 }

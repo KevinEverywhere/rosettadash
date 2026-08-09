@@ -16,7 +16,8 @@ Planning guide for **single components** and **pages built from component groups
 | Single-component export mode in wizard | Shipped (DAS-41) — full / single / selection scopes |
 | Page templates library | Shipped (DAS-40) — analytics, CRUD, settings, empty |
 | Canvas snap, resize, multi-select | Shipped (DAS-42) |
-| Grouping guides & animated hints | Planned (DAS-43) |
+| Grouping guides & animated hints | Shipped (DAS-43) |
+| Palette accordion groups (2–7 rule) | Follow-up ticket |
 
 **Registry source of truth:** `packages/core/src/lib/registry/p0-components.ts` (24 types today).
 
@@ -213,22 +214,23 @@ Create a Jira ticket **before** each branch:
 4. ~~**Layout polish** — snap, resize, multi-select on canvas~~ — DAS-42
 5. **Undo/redo** — command pattern over graph mutations
 6. **Pie chart + flex layout** — expand visualization and layout palette
-7. **Grouping guides & animated placement hints** — palette info/link affordances, companion-component prompts (e.g. video + controls) — DAS-43
+7. ~~**Grouping guides & animated placement hints**~~ — DAS-43
+8. **Palette accordion groups** — 2–7 functional groups, default collapsed — follow-up ticket
 
-### Future — component grouping guides (DAS-43)
+### Component grouping guides (DAS-43)
 
-Usability enhancement for the palette and canvas (not yet implemented):
+Shipped usability layer on the palette and canvas:
 
-| Affordance | Purpose |
-|------------|---------|
-| **Info (i) icon** on palette rows | Short description + link to animated example |
-| **Chain/link icon** | Shows components that are usually grouped with this type |
-| **Placement-time prompt** | When adding a node that expects companions, animate suggested follow-up adds on the canvas |
-| **Defaults engine tie-in** | Extend companion metadata beyond today's patch/bind suggestions |
+| Affordance | Behavior |
+|------------|----------|
+| **Info (i) icon** | Palette row panel with summary + CSS animation preview |
+| **Chain/link icon** | Lists typical companions with one-click add |
+| **Placement prompt** | Canvas card after add when companions are missing; dismiss + add buttons |
+| **Defaults engine** | Companion hints on `nodeAdded` via `packages/core/src/lib/grouping/` |
 
-Example: adding a **video** component prompts adding **video controls** beside it, with a short looping animation demonstrating typical layout.
+Registry: `getGroupingGuide`, `listMissingCompanionTypes`, `computeCompanionLayout`.
 
-Branch when started: `feature/DAS-43-component-grouping-guides`.
+**Follow-up:** Palette accordion reorganization (2–7 items per group, default collapsed) — separate ticket.
 
 ---
 

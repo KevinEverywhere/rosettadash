@@ -22,6 +22,13 @@ export function validateComposite(
     });
   }
 
+  if (options.mode !== 'draft' && composite.nodes.length === 0) {
+    issues.push({
+      code: 'EMPTY_COMPOSITE',
+      message: 'Add at least one component before exporting',
+    });
+  }
+
   const nodeIds = new Set<string>();
   for (const node of composite.nodes) {
     if (nodeIds.has(node.id)) {

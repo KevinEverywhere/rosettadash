@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import { openBuilder, selectCanvasNode } from './test-helpers';
 
 test.describe('Builder smoke', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,7 +12,7 @@ test.describe('Builder smoke', () => {
     await page.getByTestId('palette-add-visual.input.text').click();
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
-    await page.getByTestId('canvas-node').click();
+    await selectCanvasNode(page, page.getByTestId('canvas-node'));
     await page.getByTestId('inspector-prop-placeholder').fill('Email address');
 
     await expect(page.getByTestId('save-status')).toContainText('Unsaved');
@@ -23,7 +23,7 @@ test.describe('Builder smoke', () => {
     await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
-    await page.getByTestId('canvas-node').click();
+    await selectCanvasNode(page, page.getByTestId('canvas-node'));
     await expect(page.getByTestId('inspector-prop-placeholder')).toHaveValue('Email address');
   });
 });

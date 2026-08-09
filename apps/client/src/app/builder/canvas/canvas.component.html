@@ -68,6 +68,12 @@
           >
             <header
               class="canvas__node-header"
+              role="group"
+              tabindex="0"
+              [attr.aria-label]="node.label + ' header'"
+              (click)="stopHeaderEvent($event)"
+              (keydown.enter)="stopHeaderEvent($event)"
+              (keydown.space)="stopHeaderEvent($event)"
               (pointerdown)="onHeaderPointerDown(node.id, $event)"
               (pointermove)="onHeaderPointerMove($event)"
               (pointerup)="onHeaderPointerUp($event)"
@@ -129,6 +135,53 @@
           </article>
         }
       </div>
+
+      @if (state.placementPrompt(); as prompt) {
+        <aside
+          class="canvas__placement-prompt"
+          data-testid="canvas-placement-prompt"
+          [style.left.px]="promptLeft(prompt)"
+          [style.top.px]="promptTop(prompt)"
+          (mousedown)="$event.stopPropagation()"
+        >
+          <header class="canvas__placement-header">
+            <strong>Typical grouping</strong>
+            <button
+              type="button"
+              class="canvas__placement-dismiss"
+              data-testid="canvas-placement-dismiss"
+              aria-label="Dismiss grouping guide"
+              (click)="dismissPlacementPrompt($event)"
+            >
+              ×
+            </button>
+          </header>
+          <p class="canvas__placement-message">{{ prompt.message }}</p>
+          <div
+            class="grouping-animation"
+            [class]="'grouping-animation grouping-animation--' + prompt.animationKey"
+          >
+            @for (block of promptAnimationBlocks(prompt); track block) {
+              <div class="grouping-animation__block">{{ block }}</div>
+            }
+          </div>
+          <p class="grouping-animation__label">{{ promptAnimationLabel(prompt) }}</p>
+          <ul class="canvas__placement-actions">
+            @for (companion of prompt.companions; track companion.type) {
+              <li>
+                <button
+                  type="button"
+                  class="canvas__placement-add"
+                  [attr.data-testid]="'canvas-placement-add-' + companion.type"
+                  (click)="addCompanionFromPrompt(companion.type, $event)"
+                >
+                  + Add {{ companion.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </aside>
+      }
     }
   </div>
 </section>

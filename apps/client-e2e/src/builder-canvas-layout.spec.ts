@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import {
+  dismissPlacementPromptIfVisible,
+  openBuilder,
+  selectCanvasNodeHeader,
+} from './test-helpers';
 
 test.describe('Builder canvas layout', () => {
   test.beforeEach(async ({ page }) => {
@@ -8,16 +12,18 @@ test.describe('Builder canvas layout', () => {
 
   test('supports shift+click multi-select and shows resize handle', async ({ page }) => {
     await page.getByTestId('palette-add-visual.kpi').click();
+    await dismissPlacementPromptIfVisible(page);
     await page.getByTestId('palette-add-visual.input.text').click();
+    await dismissPlacementPromptIfVisible(page);
     await expect(page.getByTestId('canvas-node')).toHaveCount(2);
 
     const nodes = page.getByTestId('canvas-node');
-    await nodes.nth(0).click();
+    await selectCanvasNodeHeader(page, nodes.nth(0));
     await expect(nodes.nth(0)).toHaveAttribute('data-selected', 'true');
     await expect(nodes.nth(1)).toHaveAttribute('data-selected', 'false');
     await expect(page.getByTestId('canvas-resize-handle')).toHaveCount(1);
 
-    await nodes.nth(1).click({ modifiers: ['Shift'] });
+    await selectCanvasNodeHeader(page, nodes.nth(1), { shiftKey: true });
     await expect(nodes.nth(0)).toHaveAttribute('data-selected', 'true');
     await expect(nodes.nth(1)).toHaveAttribute('data-selected', 'true');
     await expect(page.getByTestId('canvas-multi-select-hint')).toBeVisible();

@@ -1,5 +1,6 @@
 import type { ComponentRegistry } from '../registry/component-registry';
 import { defaultComponentRegistry } from '../registry/component-registry';
+import { getGroupingGuide, listMissingCompanionTypes } from '../grouping';
 import type {
   DefaultSuggestion,
   DefaultsContext,
@@ -119,7 +120,34 @@ function suggestionsForNodeAdded(
     });
   }
 
+  suggestions.push(...companionHintsForNode(context, node, registry));
+
   return suggestions;
+}
+
+function companionHintsForNode(
+  context: DefaultsContext,
+  node: DefaultsContext['nodes'][number],
+  registry: ComponentRegistry,
+): DefaultSuggestion[] {
+  const guide = getGroupingGuide(node.type);
+  if (!guide) {
+    return [];
+  }
+
+  const canvasTypes = context.nodes.map((entry) => entry.type);
+  const missing = listMissingCompanionTypes(node.type, canvasTypes).slice(0, 2);
+
+  return missing.map((companionType) => {
+    const companion = registry.get(companionType);
+    return {
+      id: `companion:${node.id}:${companionType}`,
+      nodeId: node.id,
+      kind: 'hint',
+      title: 'Typical grouping',
+      message: `Consider adding ${companion?.label ?? companionType}. ${guide.placementMessage}`,
+    };
+  });
 }
 
 function suggestionsForBindingCreated(

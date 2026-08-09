@@ -182,6 +182,30 @@ describe('BuilderStateService', () => {
     expect(service.nodes()).toHaveLength(1);
   });
 
+  it('shows a placement prompt when adding a grouped component', () => {
+    const table = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.table'),
+    );
+
+    const prompt = service.placementPrompt();
+    expect(prompt?.sourceNodeId).toBe(table.id);
+    expect(prompt?.companions.some((entry) => entry.type === 'visual.input.date-range')).toBe(true);
+  });
+
+  it('adds a companion from the placement prompt near the source node', () => {
+    const table = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.table'),
+    );
+
+    const companion = service.addCompanionFromPrompt('visual.input.date-range');
+    expect(companion).not.toBeNull();
+    expect(service.nodes()).toHaveLength(2);
+
+    const dateRange = service.nodes().find((node) => node.type === 'visual.input.date-range');
+    const tableNode = service.nodes().find((node) => node.id === table.id);
+    expect(dateRange?.layout?.y).toBeLessThan(tableNode?.layout?.y ?? 0);
+  });
+
   it('stores defaults-engine suggestions when a table is added', () => {
     const table = service.addNodeFromDefinition(
       defaultComponentRegistry.getOrThrow('visual.table'),
@@ -209,6 +233,8 @@ describe('BuilderStateService', () => {
 
     expect(service.selectedNode()?.properties['table']).toBe('records');
     expect(service.selectedNode()?.meta?.suggestedBy).toBe('defaults-engine');
-    expect(service.suggestionsForNode(postgres.id)).toHaveLength(0);
+    expect(
+      service.suggestionsForNode(postgres.id).some((entry) => entry.id === `postgres-table:${postgres.id}`),
+    ).toBe(false);
   });
 });

@@ -384,6 +384,24 @@ describe('ExportService', () => {
     expect(result.files.length).toBeGreaterThan(10);
   });
 
+  it('returns UI-only bundle files for a visual-only scoped composite', () => {
+    const kpi = defaultComponentRegistry.createNode('visual.kpi', { id: 'kpi1' });
+
+    const result = service.buildBundleExport({
+      id: 'c1',
+      name: 'KPI only',
+      version: 1,
+      exportTargets: { ui: 'react', server: 'nest', database: 'postgresql' },
+      nodes: [kpi],
+      bindings: [],
+    });
+
+    expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(true);
+    expect(result.files.some((file) => file.path.includes('KpiCard'))).toBe(true);
+    expect(result.files.some((file) => file.path === 'server/src/main.ts')).toBe(false);
+    expect(result.files.some((file) => file.path.includes('DataTable'))).toBe(false);
+  });
+
   it('returns combined Angular and NestJS files for a valid composite', () => {
     const pg = defaultComponentRegistry.createNode('infra.postgresql', {
       id: 'pg1',
