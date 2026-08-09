@@ -118,6 +118,13 @@
   }
 }
 
+.export-wizard__targets-subheading {
+  margin: 1rem 0 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--db-text);
+}
+
 .export-wizard__ui-targets {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

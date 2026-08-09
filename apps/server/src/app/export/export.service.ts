@@ -66,8 +66,8 @@ export class ExportService {
   buildBundleExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const uiFiles = this.generateUiFiles(ir);
-    const files = [...uiFiles, ...generateNestInfraFiles(ir)];
-    return { ir, files };
+    const serverFiles = this.generateServerFiles(ir);
+    return { ir, files: [...uiFiles, ...serverFiles] };
   }
 
   private generateUiFiles(ir: ExportIR) {
@@ -80,6 +80,19 @@ export class ExportService {
         return generateSvelteUiFiles(ir);
       default:
         return generateReactUiFiles(ir);
+    }
+  }
+
+  private generateServerFiles(ir: ExportIR) {
+    switch (ir.targets.server) {
+      case 'express':
+        return generateExpressInfraFiles(ir);
+      case 'next':
+        return generateNextInfraFiles(ir);
+      case 'nuxt':
+        return generateNuxtInfraFiles(ir);
+      default:
+        return generateNestInfraFiles(ir);
     }
   }
 }

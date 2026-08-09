@@ -14,6 +14,11 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-ui-angular')).toBeVisible();
     await expect(page.getByTestId('export-wizard-ui-vue')).toBeVisible();
     await expect(page.getByTestId('export-wizard-ui-svelte')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-server-targets')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-server-nest')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-server-express')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-server-next')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-server-nuxt')).toBeVisible();
   });
 
   test('shows validation errors for an empty composite', async ({ page }) => {
@@ -118,6 +123,32 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-targets')).toContainText('svelte UI');
     await expect(page.getByTestId('export-wizard-files')).toContainText('src/Dashboard.svelte');
     await expect(page.getByTestId('export-wizard-files')).not.toContainText('src/Dashboard.tsx');
+    await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
+  });
+
+  test('previews Express server files when Express target is selected', async ({ page }) => {
+    await page.getByTestId('palette-add-infra.postgresql').click();
+    await page.getByTestId('palette-add-infra.server.nest').click();
+    await page.getByTestId('palette-add-visual.table').click();
+    await expect(page.getByTestId('canvas-node')).toHaveCount(3);
+
+    const postgresNode = page.getByTestId('canvas-node').nth(0);
+    const tableNode = page.getByTestId('canvas-node').nth(2);
+
+    await postgresNode.getByTestId(/^port-output-.*-rowset$/).click();
+    await tableNode.getByTestId(/^port-input-.*-data$/).click();
+
+    await page.getByTestId('export-button').click();
+    await expect(page.getByTestId('export-wizard')).toBeVisible();
+    await page.getByTestId('export-wizard-server-express').click();
+    await expect(page.getByTestId('export-wizard-server-express')).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await expect(page.getByTestId('export-wizard-loading')).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByTestId('export-wizard-targets')).toContainText('express');
+    await expect(page.getByTestId('export-wizard-files')).toContainText('server/src/index.ts');
+    await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
     await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
   });
 });

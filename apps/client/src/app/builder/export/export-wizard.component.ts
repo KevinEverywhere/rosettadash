@@ -12,9 +12,16 @@ import {
 import { ExportZipService } from './export-zip.service';
 
 type UiTarget = 'react' | 'angular' | 'vue' | 'svelte';
+type ServerTarget = 'nest' | 'express' | 'next' | 'nuxt';
 
 interface UiTargetOption {
   id: UiTarget;
+  label: string;
+  description: string;
+}
+
+interface ServerTargetOption {
+  id: ServerTarget;
   label: string;
   description: string;
 }
@@ -39,9 +46,17 @@ export class ExportWizardComponent {
     { id: 'svelte', label: 'Svelte', description: 'Svelte 5 runes + SFCs' },
   ];
 
+  protected readonly serverTargetOptions: ServerTargetOption[] = [
+    { id: 'nest', label: 'NestJS', description: 'Modules + controllers' },
+    { id: 'express', label: 'Express', description: 'Routers + middleware' },
+    { id: 'next', label: 'Next.js', description: 'App Router API routes' },
+    { id: 'nuxt', label: 'Nuxt', description: 'Nitro server routes' },
+  ];
+
   protected readonly loading = signal(false);
   protected readonly downloading = signal(false);
   protected readonly uiTarget = signal<UiTarget>('react');
+  protected readonly serverTarget = signal<ServerTarget>('nest');
   protected readonly bundle = signal<ExportBundleResponse | null>(null);
   protected readonly validationIssues = signal<ValidationIssue[]>([]);
   protected readonly errorMessage = signal<string | null>(null);
@@ -63,6 +78,14 @@ export class ExportWizardComponent {
       return;
     }
     this.uiTarget.set(target);
+    void this.refreshPreview();
+  }
+
+  protected setServerTarget(target: ServerTarget): void {
+    if (this.serverTarget() === target) {
+      return;
+    }
+    this.serverTarget.set(target);
     void this.refreshPreview();
   }
 
@@ -106,7 +129,7 @@ export class ExportWizardComponent {
   protected targetsLabel(): string {
     const current = this.bundle();
     const ui = current?.ir.targets.ui ?? this.uiTarget();
-    const server = current?.ir.targets.server ?? 'nest';
+    const server = current?.ir.targets.server ?? this.serverTarget();
     const database = current?.ir.targets.database ?? 'postgresql';
     return `${ui} UI + ${server} + ${database}`;
   }
@@ -116,10 +139,10 @@ export class ExportWizardComponent {
     return {
       ...payload,
       exportTargets: {
-        server: 'nest',
         database: 'postgresql',
         ...payload.exportTargets,
         ui: this.uiTarget(),
+        server: this.serverTarget(),
       },
     };
   }

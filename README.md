@@ -144,7 +144,7 @@ Example body:
 | POST | `/api/export/express` | Build ExportIR and generate Express + PostgreSQL server files |
 | POST | `/api/export/next` | Build ExportIR and generate Next.js + PostgreSQL server files |
 | POST | `/api/export/nuxt` | Build ExportIR and generate Nuxt + PostgreSQL server files |
-| POST | `/api/export/bundle` | Build ExportIR and generate combined React + NestJS file list |
+| POST | `/api/export/bundle` | Build ExportIR and generate combined UI + server file list (targets from composite `exportTargets`) |
 
 ## Scripts
 
@@ -178,10 +178,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-25](https://planetkevin.atlassian.net/browse/DAS-25)** — Svelte UI exporter (4th UI framework)  
-Branch: `feature/DAS-25-svelte-ui-exporter`
-
-**Future:** three.js 3D dashboard displays (TBD).
+**[DAS-26](https://planetkevin.atlassian.net/browse/DAS-26)** — Export wizard server target picker  
+Branch: `feature/DAS-26-export-wizard-server-targets`
 
 ## License
 

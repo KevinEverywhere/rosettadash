@@ -17,7 +17,7 @@
       <header class="export-wizard__header">
         <div>
           <h2 id="export-wizard-title">Export dashboard</h2>
-          <p>Choose a UI framework, preview generated files, then download a zip bundle.</p>
+          <p>Choose UI and server targets, preview generated files, then download a zip bundle.</p>
         </div>
         <button
           type="button"
@@ -49,6 +49,29 @@
                 [attr.data-testid]="'export-wizard-ui-' + option.id"
                 [disabled]="loading()"
                 (click)="setUiTarget(option.id)"
+              >
+                <span class="export-wizard__ui-target-label">{{ option.label }}</span>
+                <span class="export-wizard__ui-target-desc">{{ option.description }}</span>
+              </button>
+            }
+          </div>
+          <h3 class="export-wizard__targets-subheading">Server framework</h3>
+          <div
+            class="export-wizard__ui-targets"
+            data-testid="export-wizard-server-targets"
+            role="radiogroup"
+            aria-label="Server framework"
+          >
+            @for (option of serverTargetOptions; track option.id) {
+              <button
+                type="button"
+                class="export-wizard__ui-target"
+                role="radio"
+                [class.export-wizard__ui-target--active]="serverTarget() === option.id"
+                [attr.aria-checked]="serverTarget() === option.id"
+                [attr.data-testid]="'export-wizard-server-' + option.id"
+                [disabled]="loading()"
+                (click)="setServerTarget(option.id)"
               >
                 <span class="export-wizard__ui-target-label">{{ option.label }}</span>
                 <span class="export-wizard__ui-target-desc">{{ option.description }}</span>

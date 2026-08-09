@@ -382,6 +382,36 @@ describe('ExportService', () => {
     expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(false);
   });
 
+  it('returns combined React and Express files for a valid composite', () => {
+    const pg = defaultComponentRegistry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+    const server = defaultComponentRegistry.createNode('infra.server.nest', { id: 's1' });
+
+    const result = service.buildBundleExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'react', server: 'express', database: 'postgresql' },
+      nodes: [pg, table, server],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'pg1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(true);
+    expect(result.files.some((file) => file.path === 'server/src/index.ts')).toBe(true);
+    expect(result.files.some((file) => file.path === 'server/src/main.ts')).toBe(false);
+  });
+
   it('throws ExportBuildError for invalid composites', () => {
     const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
 
