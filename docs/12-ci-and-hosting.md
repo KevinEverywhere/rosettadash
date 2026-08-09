@@ -11,6 +11,8 @@ npm start
 # → http://localhost:4200
 ```
 
+**Container option:** developers without a local Node toolchain can use Docker — see **[Docker Containers](./14-docker-containers.md)** (`npm run docker:dev` or `npm run docker:app`).
+
 No public server or cloud hosting is required to use the product.
 
 Full startup and component guide: **[Local Development & Components](./13-local-development-and-components.md)**.
@@ -77,13 +79,12 @@ npm run e2e            # or npm run verify:all
 | `Executable doesn't exist at .../ms-playwright/...` after running `setup:e2e` | Nx may be replaying a **cached failed e2e run** from before browsers were installed. Run `npm run e2e:fresh` once, or `npx nx reset` then `npm run e2e`. E2e caching is disabled in `apps/client-e2e/project.json` going forward. |
 | `Executable doesn't exist at .../ms-playwright/...` (first time) | Run `npm run setup:e2e` or `npx playwright install chromium` |
 | All e2e tests timeout on "Loading project…" | E2E uses ports **4201** / **3001** (not 4200/3000). Cancel stuck `verify:all` or `nx e2e` runs and re-run `npm run e2e`. |
-| E2e waits forever on "another nx process" | Cancel stuck `nx serve` / `verify:all` runs; re-run `npm run e2e`. |
+| E2e `Timed out waiting … config.webServer` | Usually stale servers on :3001/:4201, or pre-`serve-e2e` Nx lock while `npm start` was running | Cancel stuck runs; re-run `npm run e2e` — `npm start` can stay up |
 | Preview test fails on "Data source: API" | Server must include `POST /api/preview/data` (DAS-11+). Re-run e2e so Playwright starts fresh servers. |
 
 Playwright config (`apps/client-e2e/playwright.config.ts`):
 
-- Starts NestJS on **:3001** and Angular on **:4201** via `webServer` (health URL checks)
-- Does **not** reuse existing dev servers (avoids stale or mismatched `npm start` processes)
+- Starts NestJS on **:3001** and Angular on **:4201** via dedicated `serve-e2e` Nx targets (avoids blocking on dev `serve` while `npm start` is running)
 - Runs **one worker** (shared in-memory API)
 
 Nx e2e depends on **build only**, not `serve`, to avoid double-starting servers.

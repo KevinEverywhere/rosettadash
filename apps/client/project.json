@@ -54,6 +54,10 @@
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
+      "options": {
+        "host": "0.0.0.0",
+        "port": 4200
+      },
       "configurations": {
         "production": {
           "buildTarget": "client:build:production"
@@ -62,6 +66,16 @@
           "buildTarget": "client:build:development",
           "proxyConfig": "apps/client/proxy.conf.json"
         }
+      }
+    },
+    "serve-e2e": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "options": {
+        "host": "127.0.0.1",
+        "port": 4201,
+        "buildTarget": "client:build:development",
+        "proxyConfig": "apps/client/proxy.conf.e2e.json"
       }
     },
     "lint": {

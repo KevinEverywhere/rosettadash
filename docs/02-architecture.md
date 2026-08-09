@@ -181,6 +181,7 @@ See [04-export-pipeline.md](./04-export-pipeline.md) for detail.
 | Environment | Client | Server |
 |-------------|--------|--------|
 | Local dev | `ng serve` | `nest start --watch` |
+| Local Docker | Dev container (`npm run docker:dev`) or app image (`npm run docker:app`) | Same compose stack — see [Docker Containers](./14-docker-containers.md) |
 | Staging/prod | Static hosting or SSR | Node container |
 
 Exact hosting TBD; not blocking initial development.

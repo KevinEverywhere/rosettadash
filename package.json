@@ -14,7 +14,11 @@
     "setup:e2e": "playwright install chromium",
     "e2e": "nx e2e client-e2e",
     "e2e:fresh": "nx e2e client-e2e --skip-nx-cache",
-    "verify:all": "npm run verify && npm run e2e"
+    "verify:all": "npm run verify && npm run e2e",
+    "docker:dev": "docker compose --profile dev up --build",
+    "docker:dev:down": "docker compose --profile dev down",
+    "docker:app": "docker compose --profile app up --build",
+    "docker:app:down": "docker compose --profile app down"
   },
   "private": true,
   "packageManager": "npm@11.17.0",

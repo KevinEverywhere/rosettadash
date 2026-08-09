@@ -12,6 +12,8 @@ This guide covers **everything you need running locally** (client, server, tests
 
 Optional: [Cursor](https://cursor.com) or VS Code with Angular/NestJS extensions.
 
+**Docker alternative:** skip local Node and use [Docker Containers](./14-docker-containers.md) (`npm run docker:dev`).
+
 ---
 
 ## First-time setup
@@ -108,7 +110,7 @@ npm run e2e:fresh      # bypass Nx cache — use once after setup:e2e if failure
 npm run verify:all     # verify + e2e
 ```
 
-E2E uses **ports 4201 and 3001** so it can run while `npm start` is still on 4200/3000. You do **not** need to stop `npm start` before running e2e.
+E2E uses **ports 4201 and 3001** so it can run while `npm start` is still on 4200/3000. E2E starts dedicated `serve-e2e` Nx targets so it does not block on the dev `serve` lock.
 
 See [CI and Hosting](./12-ci-and-hosting.md) for troubleshooting hung tests or stale Nx processes.
 
@@ -250,7 +252,7 @@ npm run e2e
 | Export wizard shows validation errors | Composite not export-ready | Add PostgreSQL + NestJS infra, bind required ports (e.g. `rowset` → table `data`) |
 | `Executable doesn't exist` in e2e (first time) | Playwright browsers not installed | `npm run setup:e2e` |
 | `Executable doesn't exist` after `setup:e2e` | Nx replaying a cached failed e2e run | `npm run e2e:fresh` or `npx nx reset` then `npm run e2e` |
-| E2E hangs / port in use | Stale `nx serve` or old e2e run | Cancel stuck terminals; re-run `npm run e2e` |
+| E2E hangs / `Timed out waiting … config.webServer` | Stale e2e servers on :3001/:4201, or old `nx serve` lock before `serve-e2e` targets | Cancel stuck terminals; `lsof -i :3001 -i :4201`; re-run `npm run e2e` (no need to stop `npm start`) |
 | Save fails with 400 | Composite schema/validation error | Read `issues` in network response; fix in inspector |
 
 ---
@@ -258,6 +260,7 @@ npm run e2e
 ## Related documents
 
 - [README](../README.md) — quick start
+- [Docker Containers](./14-docker-containers.md) — run without local Node
 - [Architecture](./02-architecture.md)
 - [Component Model](./03-component-model.md)
 - [Component Taxonomy](./08-component-taxonomy.md)

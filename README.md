@@ -47,6 +47,20 @@ npx playwright install chromium
 
 Full guide: **[docs/13-local-development-and-components.md](docs/13-local-development-and-components.md)** (startup, troubleshooting, adding components).
 
+### Run with Docker (no local Node required)
+
+If you prefer containers, see **[docs/14-docker-containers.md](docs/14-docker-containers.md)**.
+
+```bash
+# Dev: hot reload on http://localhost:4200
+npm run docker:dev
+
+# App: production-style build on http://localhost:8080
+npm run docker:app
+```
+
+Requires [Docker](https://docs.docker.com/get-docker/) with Compose v2.
+
 ### Start the builder (client + server)
 
 You need **both** processes for save, preview, and export:
@@ -174,17 +188,22 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 - [Local development & component how-to](docs/13-local-development-and-components.md)
 - [CI and hosting](docs/12-ci-and-hosting.md)
+- [Docker containers (local)](docs/14-docker-containers.md)
 
 ## Workflow
 
-1. Pick a Jira ticket in [DAS](https://planetkevin.atlassian.net/jira/software/projects/DAS/boards/68/backlog).
-2. Branch from `development`: `feature/DAS-<n>-<description>`.
-3. Run `npm run verify` before committing.
-4. Open PR to `development`. Kevin commits and merges.
+**Gate:** Jira ticket + matching branch **before any work.** See [Workflow & Branching](docs/07-workflow-and-branching.md).
+
+1. **Create Jira ticket** in [DAS](https://planetkevin.atlassian.net/jira/software/projects/DAS/boards/68/backlog) (agents use Jira MCP).
+2. **Branch** from `development`: `feature/DAS-<n>-<description>` (must match ticket key).
+3. Implement on that branch only.
+4. Run `npm run verify` before committing.
+5. Kevin commits and merges to `development`.
 
 ## Current ticket
 
-Phase 5 (DAS-32–DAS-36) is **complete** on `development`. Next up: Phase 6 — see [Planned Tickets](docs/11-planned-tickets.md) and [Roadmap](docs/10-roadmap.md).
+**[DAS-37](https://planetkevin.atlassian.net/browse/DAS-37)** — Docker local containers  
+Branch: `feature/DAS-37-docker-local-containers`
 
 ## License
 

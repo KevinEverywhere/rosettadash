@@ -65,6 +65,14 @@
         }
       }
     },
+    "serve-e2e": {
+      "continuous": true,
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "node dist/apps/server/main.js"
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint"
     },

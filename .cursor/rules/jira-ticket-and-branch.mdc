@@ -1,0 +1,44 @@
+---
+description: Mandatory Jira ticket and feature branch before any DashBuilder work
+alwaysApply: true
+---
+
+# Jira ticket + branch gate (mandatory)
+
+**No code, docs, or config changes until both exist and match.**
+
+## Required order (never skip or reorder)
+
+1. **Create the Jira ticket** in project **DAS** (`create_ticket` via Jira MCP).
+   - Include summary, acceptance criteria, and planned branch name.
+   - Confirm the ticket key (e.g. `DAS-37`) before continuing.
+
+2. **Create the feature branch** from `development`:
+   ```
+   feature/DAS-<ticket-number>-<kebab-case-summary>
+   ```
+   - Branch number **must match** the Jira key exactly.
+
+3. **Then implement** — one ticket, one branch at a time.
+
+4. **Verify** — `npm run verify` (and `npm run verify:all` for builder UI changes).
+
+5. **Draft commit message** — Kevin commits; agents do not commit unless explicitly asked.
+
+## Hard stops — do NOT
+
+- Start implementation on `development`, `main`, or a branch without a DAS ticket number.
+- Use branch names that do not match the Jira key (e.g. `feature/docker-local-containers`).
+- Assume a ticket exists because git commits or docs mention `DAS-n` — **verify in Jira**.
+- Create docs/links to Jira tickets that have not been created yet.
+- Skip Jira because the task seems small (docs-only, Docker, fixes — all need tickets).
+
+## If Jira and git are out of sync
+
+Stop and reconcile Jira first (create or fix tickets), then branch, then code.
+
+## Other policies
+
+- Agents **never push** to remote.
+- Integration branch: `development`.
+- See `docs/07-workflow-and-branching.md` and `docs/11-planned-tickets.md`.

@@ -5,7 +5,19 @@
 - **Project:** [DAS — Dashbuilder](https://planetkevin.atlassian.net/jira/software/projects/DAS/boards/68/backlog)
 - **Board:** [Backlog / Board 68](https://planetkevin.atlassian.net/jira/software/projects/DAS/boards/68/backlog)
 
-All work is tracked in Jira before implementation.
+All work is tracked in Jira **before** any implementation. A Jira issue and matching feature branch are **mandatory gates** — not optional, not "when asked."
+
+## Mandatory gate (agents)
+
+**Do not write code, edit docs, or change config until:**
+
+1. A **DAS Jira ticket exists** (created via Jira MCP `create_ticket`, key confirmed).
+2. A **feature branch** exists: `feature/DAS-<n>-<kebab-summary>` where `<n>` matches the Jira key.
+3. You are **on that branch**, branched from `development`.
+
+Using ticket numbers in commits or docs without a real Jira issue is forbidden. If git history references tickets that Jira lacks, **create the Jira tickets first**, then continue.
+
+See also: `.cursor/rules/jira-ticket-and-branch.mdc` (always-applied agent rule).
 
 ## Branching policy
 
@@ -33,11 +45,12 @@ Examples:
 
 ### Workflow steps
 
-1. **Create or select Jira ticket** — define scope and acceptance criteria.
-2. **Create feature branch** from `development`.
-3. **Implement** on the feature branch — one ticket/branch at a time.
-4. **Open PR** targeting `development`.
-5. **Kevin commits and merges** — agents assist with messages and code; Kevin is sole committer/merger.
+1. **Create Jira ticket** in DAS (MCP `create_ticket`) — scope, acceptance criteria, branch name in description.
+2. **Confirm ticket key** (e.g. `DAS-37`) — do not proceed on assumption.
+3. **Create feature branch** from `development`: `feature/DAS-<n>-<kebab-case-summary>`.
+4. **Implement** on that branch only — one ticket at a time.
+5. **Run `npm run verify`** (and `npm run verify:all` for UI/e2e-affecting changes).
+6. **Kevin commits and merges** — agents draft messages; Kevin is sole committer/merger.
 
 ## Pre-commit verification
 
@@ -114,21 +127,28 @@ domain model, and workflow conventions for DashBuilder.
 
 ## Agent responsibilities
 
-| Agent | Human (Kevin) |
-|-------|---------------|
-| Draft code and docs | Commit locally |
+| Agent (required) | Human (Kevin) |
+|------------------|---------------|
+| **Create Jira ticket before any work** | Prioritize backlog |
+| **Create matching feature branch before any work** | Merge locally |
+| Draft code and docs on the ticket branch only | Commit locally |
 | Propose commit messages | Approve/edit and commit |
-| Create Jira tickets (when asked) | Prioritize backlog |
-| Create feature branches (local) | Merge locally |
-| Run tests locally | Run `npm run verify` before each commit |
-| | Push `development` or `main` when decided |
-| | Final review |
+| Run `npm run verify` / suggest `verify:all` | Final review |
+| **Never push** | Push `development` or `main` when decided |
+
+### Agent checklist (every task)
+
+- [ ] Jira ticket created and key confirmed
+- [ ] Branch `feature/DAS-<n>-…` checked out from `development`
+- [ ] Ticket number in branch matches Jira key
+- [ ] No work started on wrong branch or without ticket
 
 ## Repository notes
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current phase:** Phase 6 (not yet ticketed) — Phase 5 complete through [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36)
+- **Current ticket:** [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) — Docker local containers
+- **Current branch:** `feature/DAS-37-docker-local-containers`
 
 ## Related documents
 

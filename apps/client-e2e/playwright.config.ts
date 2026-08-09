@@ -18,14 +18,14 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: `PORT=${e2eServerPort} npx nx serve server`,
+      command: `PORT=${e2eServerPort} HOST=127.0.0.1 npx nx serve-e2e server`,
       url: `http://localhost:${e2eServerPort}/api/health`,
       reuseExistingServer: false,
       cwd: workspaceRoot,
       timeout: 120_000,
     },
     {
-      command: `npx nx serve client --port=${e2eClientPort} --proxyConfig=apps/client/proxy.conf.e2e.json`,
+      command: `npx nx serve-e2e client --port=${e2eClientPort}`,
       url: `http://localhost:${e2eClientPort}`,
       reuseExistingServer: false,
       cwd: workspaceRoot,
