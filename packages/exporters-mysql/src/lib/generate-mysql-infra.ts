@@ -1,4 +1,10 @@
 import type { ExportIR } from '@dashbuilder/core';
+import {
+  generateScopeModuleSource,
+  hasQueryScope,
+  resolveExportQueryScope,
+  scopedMysqlListRowsLines,
+} from '@dashbuilder/core';
 import type { GeneratedFile, MysqlExportOptions, TableResource } from './types';
 import { MysqlExportError } from './types';
 import {
@@ -27,11 +33,13 @@ export function generateMysqlInfraFiles(
   const root = options.rootDir ?? 'database/src';
   const connectionEnvKey = resolveConnectionEnvKey(ir);
   const tableResources = resolveTableResources(ir);
+  const queryScope = resolveExportQueryScope(ir.domain, ir.meta.generatedAt);
+  const includeScopedQueries = hasQueryScope(queryScope);
 
   const files: GeneratedFile[] = [
     {
       path: '.env.example',
-      content: generateEnvExample(ir, connectionEnvKey),
+      content: generateEnvExample(ir, connectionEnvKey, queryScope),
       encoding: 'utf-8',
       description: 'Environment variable template for exported MySQL layer',
     },
@@ -43,7 +51,7 @@ export function generateMysqlInfraFiles(
     },
     {
       path: `${root}/queries/list-rows.ts`,
-      content: generateListRowsHelper(),
+      content: generateListRowsHelper(includeScopedQueries),
       encoding: 'utf-8',
       description: 'Shared list-rows query helper',
     },
@@ -73,6 +81,15 @@ export function generateMysqlInfraFiles(
       content: generateTableModule(resource),
       encoding: 'utf-8',
       description: `List query for table ${resource.tableName}`,
+    });
+  }
+
+  if (includeScopedQueries && queryScope) {
+    files.push({
+      path: `${root}/domain/scope.ts`,
+      content: generateScopeModuleSource(queryScope),
+      encoding: 'utf-8',
+      description: 'Default domain query scope from ExportIR',
     });
   }
 
@@ -107,10 +124,21 @@ function generatePoolModule(connectionEnvKey: string): string {
   ]);
 }
 
-function generateListRowsHelper(): string {
+function generateListRowsHelper(scoped: boolean): string {
+  const scopeImport = scoped ? [`import { resolveRuntimeScope } from '../domain/scope';`, ``] : [];
+  const body = scoped
+    ? scopedMysqlListRowsLines({ indent: '  ' })
+    : [
+        `  const [rows] = await pool.query(`,
+        `    \`SELECT * FROM \\\`\${tableName}\\\` LIMIT ?\`,`,
+        `    [limit],`,
+        `  );`,
+        `  return rows as Record<string, unknown>[];`,
+      ];
+
   return joinLines([
     `import type { Pool } from 'mysql2/promise';`,
-    ``,
+    ...scopeImport,
     `export async function listRows(`,
     `  pool: Pool,`,
     `  tableName: string,`,
@@ -119,11 +147,7 @@ function generateListRowsHelper(): string {
     `  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {`,
     `    throw new Error(\`Unsafe MySQL table identifier: \${tableName}\`);`,
     `  }`,
-    `  const [rows] = await pool.query(`,
-    `    \`SELECT * FROM \\\`\${tableName}\\\` LIMIT ?\`,`,
-    `    [limit],`,
-    `  );`,
-    `  return rows as Record<string, unknown>[];`,
+    ...body,
     `}`,
     ``,
   ]);

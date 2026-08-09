@@ -235,6 +235,24 @@
   color: var(--db-text-muted);
 }
 
+.preview-role-gate--hidden {
+  opacity: 0.55;
+  border-style: solid;
+  background: color-mix(in srgb, var(--db-surface) 80%, transparent);
+}
+
+.preview-role-gate__status {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #15803d;
+
+  &--hidden {
+    color: var(--db-text-muted);
+    font-weight: 500;
+  }
+}
+
 .preview-chip {
   padding: 0.125rem 0.375rem;
   border-radius: 999px;

@@ -58,10 +58,14 @@ export function buildDashboardContext(
     };
 
     for (const [key, value] of Object.entries(component.properties)) {
-      if (typeof value === 'string') {
-        props[key] = `'${value.replace(/'/g, "\\'")}'`;
+      const propKey =
+        component.type === 'domain.role-gate' && key === 'roles' ? 'allowedRoles' : key;
+      if (Array.isArray(value)) {
+        props[propKey] = JSON.stringify(value);
+      } else if (typeof value === 'string') {
+        props[propKey] = `'${value.replace(/'/g, "\\'")}'`;
       } else if (typeof value === 'number' || typeof value === 'boolean') {
-        props[key] = String(value);
+        props[propKey] = String(value);
       }
     }
 

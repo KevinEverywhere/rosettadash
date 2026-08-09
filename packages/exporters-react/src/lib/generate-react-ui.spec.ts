@@ -82,6 +82,47 @@ describe('generateReactUiFiles', () => {
     expect(files.filter((file) => file.path.startsWith('src/components/'))).toHaveLength(3);
   });
 
+  it('generates role auth stubs and role gate components when present', () => {
+    const roleGate = registry.createNode('domain.role-gate', {
+      id: 'rg1',
+      properties: { roles: ['admin'] },
+    });
+    const kpi = registry.createNode('visual.kpi', { id: 'k1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Role Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [roleGate, kpi],
+        bindings: [],
+        domainContext: {
+          roles: [
+            { id: 'viewer', name: 'Viewer' },
+            { id: 'admin', name: 'Admin' },
+          ],
+        },
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const paths = files.map((file) => file.path);
+
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'src/auth/roles.ts',
+        'src/auth/useCurrentRole.ts',
+        expect.stringMatching(/^src\/components\/.*RoleGate.*\.tsx$/),
+      ]),
+    );
+
+    const roleGateFile = files.find((file) => file.path.includes('RoleGate'));
+    expect(roleGateFile?.content).toContain('useCurrentRole');
+    expect(roleGateFile?.content).toContain('allowedRoles');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

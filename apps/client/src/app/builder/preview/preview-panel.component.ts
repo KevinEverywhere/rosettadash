@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { BuilderStateService } from '../builder-state.service';
 import { PreviewDataService } from './preview-data.service';
 import { PreviewNodeComponent } from './preview-node.component';
@@ -12,6 +12,8 @@ import { PreviewNodeComponent } from './preview-node.component';
 export class PreviewPanelComponent {
   protected readonly state = inject(BuilderStateService);
   protected readonly previewData = inject(PreviewDataService);
+
+  protected readonly previewRoleOptions = computed(() => this.state.previewRoleOptions());
 
   constructor() {
     effect(() => {
@@ -67,5 +69,9 @@ export class PreviewPanelComponent {
       }
       return (left.layout?.x ?? 0) - (right.layout?.x ?? 0);
     });
+  }
+
+  protected updatePreviewRole(roleId: string): void {
+    this.state.setPreviewRoleId(roleId);
   }
 }

@@ -66,4 +66,43 @@
       }
     </select>
   </div>
+
+  <div class="domain-context__roles" data-testid="domain-roles-section">
+    <div class="domain-context__roles-header">
+      <label for="domain-role-preset">Roles</label>
+      @if (availablePresets().length) {
+        <select
+          id="domain-role-preset"
+          data-testid="domain-role-preset"
+          (change)="addPresetRole($any($event.target).value); $any($event.target).value = ''"
+        >
+          <option value="">Add preset…</option>
+          @for (preset of availablePresets(); track preset.id) {
+            <option [value]="preset.id">{{ preset.name }}</option>
+          }
+        </select>
+      }
+    </div>
+
+    @if (roles().length) {
+      <ul class="domain-context__role-list">
+        @for (role of roles(); track role.id) {
+          <li class="domain-context__role-item" [attr.data-testid]="'domain-role-' + role.id">
+            <span>{{ role.name }}</span>
+            <code>{{ role.id }}</code>
+            <button
+              type="button"
+              class="domain-context__role-remove"
+              [attr.data-testid]="'remove-domain-role-' + role.id"
+              (click)="removeRole(role.id)"
+            >
+              Remove
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="domain-context__hint">Add roles to configure role gates and export stubs.</p>
+    }
+  </div>
 </section>

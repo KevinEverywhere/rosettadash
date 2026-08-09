@@ -141,10 +141,21 @@
     </div>
   }
   @case ('domain.role-gate') {
-    <div class="preview-role-gate" data-testid="preview-role-gate">
+    <div
+      class="preview-role-gate"
+      data-testid="preview-role-gate"
+      [class.preview-role-gate--hidden]="!roleGateVisible()"
+    >
       <span class="preview-field__label">{{ node().label }}</span>
-      <p class="preview-role-gate__hint">Visible for roles:</p>
-      <code>{{ node().properties['roles'] | json }}</code>
+      @if (roleGateVisible()) {
+        <p class="preview-role-gate__status" data-testid="preview-role-gate-visible">Visible</p>
+        <p class="preview-role-gate__hint">Allowed roles:</p>
+        <code>{{ roleGateAllowedRoles() | json }}</code>
+      } @else {
+        <p class="preview-role-gate__status preview-role-gate__status--hidden" data-testid="preview-role-gate-hidden">
+          Hidden for current preview role
+        </p>
+      }
     </div>
   }
   @default {

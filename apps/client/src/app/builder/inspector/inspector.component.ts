@@ -6,6 +6,8 @@ import {
   DefaultSuggestion,
   PropertySchema,
   defaultComponentRegistry,
+  parseRoleGateAllowedRoles,
+  resolveRoleOptions,
 } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import { DomainContextPanelComponent } from './domain-context-panel.component';
@@ -42,6 +44,17 @@ export class InspectorComponent {
   );
   protected readonly hasComposite = computed(() => this.state.composite() !== null);
   protected readonly isEditingNode = computed(() => this.node() !== null);
+  protected readonly isRoleGateNode = computed(() => this.node()?.type === 'domain.role-gate');
+  protected readonly roleGateOptions = computed(() =>
+    resolveRoleOptions(this.state.domainContext()?.roles),
+  );
+  protected readonly roleGateAllowedRoles = computed(() => {
+    const node = this.node();
+    if (!node) {
+      return [] as string[];
+    }
+    return parseRoleGateAllowedRoles(node.properties['roles']);
+  });
 
   protected addToCanvas(): void {
     const definition = this.state.selectedDefinition();
@@ -96,5 +109,13 @@ export class InspectorComponent {
 
   protected dismissSuggestion(suggestionId: string): void {
     this.state.dismissSuggestion(suggestionId);
+  }
+
+  protected isRoleAllowed(roleId: string): boolean {
+    return this.roleGateAllowedRoles().includes(roleId);
+  }
+
+  protected toggleRoleGateRole(roleId: string, enabled: boolean): void {
+    this.state.toggleRoleGateRole(roleId, enabled);
   }
 }

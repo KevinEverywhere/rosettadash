@@ -64,10 +64,33 @@
         </section>
       }
 
+      @if (isEditingNode() && isRoleGateNode()) {
+        <section class="inspector__section" data-testid="inspector-role-gate">
+          <h4>Allowed roles</h4>
+          <ul class="inspector__role-options">
+            @for (role of roleGateOptions(); track role.id) {
+              <li>
+                <label>
+                  <input
+                    type="checkbox"
+                    [attr.data-testid]="'role-gate-option-' + role.id"
+                    [checked]="isRoleAllowed(role.id)"
+                    (change)="toggleRoleGateRole(role.id, $any($event.target).checked)"
+                  />
+                  {{ role.name }}
+                  <span class="inspector__chip">{{ role.id }}</span>
+                </label>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
       @if (isEditingNode() && def.properties.length) {
         <section class="inspector__section">
           <h4>Properties</h4>
           @for (prop of def.properties; track prop.key) {
+            @if (!(isRoleGateNode() && prop.key === 'roles')) {
             <div class="inspector__field">
               <label [for]="prop.key">{{ prop.label }}</label>
               @switch (prop.type) {
@@ -109,6 +132,7 @@
                 }
               }
             </div>
+            }
           }
           <button type="button" class="inspector__btn inspector__btn--danger" (click)="removeNode()">
             Remove from canvas

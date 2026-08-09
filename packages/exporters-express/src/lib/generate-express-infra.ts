@@ -1,4 +1,10 @@
 import type { ExportIR } from '@dashbuilder/core';
+import {
+  generateScopeModuleSource,
+  hasQueryScope,
+  resolveExportQueryScope,
+  scopedPostgresListRowsLines,
+} from '@dashbuilder/core';
 import type { ExpressExportOptions, GeneratedFile, RouteResource } from './types';
 import { ExpressExportError } from './types';
 import {
@@ -29,11 +35,13 @@ export function generateExpressInfraFiles(
   const globalPrefix = resolveGlobalPrefix(ir);
   const routeResources = resolveRouteResources(ir);
   const connectionEnvKey = resolvePrimaryConnectionEnvKey(ir);
+  const queryScope = resolveExportQueryScope(ir.domain, ir.meta.generatedAt);
+  const includeScopedQueries = hasQueryScope(queryScope);
 
   const files: GeneratedFile[] = [
     {
       path: '.env.example',
-      content: generateEnvExample(ir),
+      content: generateEnvExample(ir, queryScope),
       encoding: 'utf-8',
       description: 'Environment variable template for exported Express server',
     },
@@ -45,7 +53,7 @@ export function generateExpressInfraFiles(
     },
     {
       path: `${root}/database/pool.ts`,
-      content: generatePoolModule(connectionEnvKey),
+      content: generatePoolModule(connectionEnvKey, includeScopedQueries),
       encoding: 'utf-8',
       description: 'PostgreSQL pool helper',
     },
@@ -80,6 +88,15 @@ export function generateExpressInfraFiles(
       content: generateRouteModule(fallback),
       encoding: 'utf-8',
       description: 'Fallback list route when ExportIR has no routes',
+    });
+  }
+
+  if (includeScopedQueries && queryScope) {
+    files.push({
+      path: `${root}/domain/scope.ts`,
+      content: generateScopeModuleSource(queryScope),
+      encoding: 'utf-8',
+      description: 'Default domain query scope from ExportIR',
     });
   }
 
@@ -132,10 +149,21 @@ function generateIndexTs(
   ]);
 }
 
-function generatePoolModule(connectionEnvKey: string): string {
+function generatePoolModule(connectionEnvKey: string, scoped: boolean): string {
+  const scopeImport = scoped ? [`import { resolveRuntimeScope } from '../domain/scope';`, ``] : [];
+  const queryRowsBody = scoped
+    ? scopedPostgresListRowsLines({ queryReceiver: 'client', indent: '  ' })
+    : [
+        `  const result = await client.query(`,
+        `    \`SELECT * FROM \${quoteIdentifier(tableName)} ORDER BY 1 LIMIT $1\`,`,
+        `    [limit],`,
+        `  );`,
+        `  return result.rows;`,
+      ];
+
   return joinLines([
     `import { Pool } from 'pg';`,
-    ``,
+    ...scopeImport,
     `let pool: Pool | undefined;`,
     ``,
     `export function createPool(): Pool {`,
@@ -155,11 +183,7 @@ function generatePoolModule(connectionEnvKey: string): string {
     `  tableName: string,`,
     `  limit = 100,`,
     `): Promise<Record<string, unknown>[]> {`,
-    `  const result = await client.query(`,
-    `    \`SELECT * FROM \${quoteIdentifier(tableName)} ORDER BY 1 LIMIT $1\`,`,
-    `    [limit],`,
-    `  );`,
-    `  return result.rows;`,
+    ...queryRowsBody,
     `}`,
     ``,
     `function quoteIdentifier(value: string): string {`,

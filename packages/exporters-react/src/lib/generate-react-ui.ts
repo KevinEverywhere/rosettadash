@@ -1,4 +1,5 @@
 import type { ExportIR } from '@dashbuilder/core';
+import { collectExportRoleIds, irHasRoleGates } from '@dashbuilder/core';
 import { buildDashboardContext } from './binding-resolver';
 import { generateComponentFile } from './component-templates';
 import type { GeneratedFile, ReactExportOptions } from './types';
@@ -67,6 +68,23 @@ export function generateReactUiFiles(
     });
   }
 
+  if (irHasRoleGates(ir) || (ir.domain?.roles?.length ?? 0) > 0) {
+    files.push(
+      {
+        path: `${root}/auth/roles.ts`,
+        content: generateRolesFile(ir),
+        encoding: 'utf-8',
+        description: 'Domain role definitions for exported dashboard',
+      },
+      {
+        path: `${root}/auth/useCurrentRole.ts`,
+        content: generateUseCurrentRoleFile(collectExportRoleIds(ir)),
+        encoding: 'utf-8',
+        description: 'Stub hook for resolving the active user role',
+      },
+    );
+  }
+
   files.push({
     path: `${root}/Dashboard.tsx`,
     content: generateDashboardFile(ir, exportNames, componentImports),
@@ -92,6 +110,65 @@ function generateTypesFile(): string {
     `}`,
     ``,
     `export type Row = Record<string, string | number | boolean | null | undefined>;`,
+    ``,
+    `export type RoleId = string;`,
+    ``,
+  ]);
+}
+
+function generateRolesFile(ir: ExportIR): string {
+  const roleIds = collectExportRoleIds(ir);
+  const domainRoles = ir.domain?.roles ?? [];
+  const entries =
+    domainRoles.length > 0
+      ? domainRoles.map((role) => `  { id: '${role.id}', name: '${role.name.replace(/'/g, "\\'")}' },`)
+      : roleIds.map((roleId) => `  '${roleId}',`);
+
+  if (domainRoles.length > 0) {
+    return joinLines([
+      `export interface DomainRole {`,
+      `  id: string;`,
+      `  name: string;`,
+      `}`,
+      ``,
+      `export const DOMAIN_ROLES: DomainRole[] = [`,
+      ...entries,
+      `];`,
+      ``,
+    ]);
+  }
+
+  return joinLines([
+    `export const DOMAIN_ROLES = [`,
+    ...entries,
+    `] as const;`,
+    ``,
+    `export type DomainRole = (typeof DOMAIN_ROLES)[number];`,
+    ``,
+  ]);
+}
+
+function generateUseCurrentRoleFile(roleIds: string[]): string {
+  const fallback = roleIds[0] ?? 'viewer';
+  return joinLines([
+    `'use client';`,
+    ``,
+    `import { useMemo } from 'react';`,
+    ``,
+    `const FALLBACK_ROLE = '${fallback}';`,
+    ``,
+    `export function useCurrentRole(): string {`,
+    `  return useMemo(() => {`,
+    `    if (typeof window === 'undefined') {`,
+    `      return process.env.NEXT_PUBLIC_DASHBUILDER_ROLE ?? FALLBACK_ROLE;`,
+    `    }`,
+    `    return (`,
+    `      window.localStorage.getItem('dashbuilder.role') ??`,
+    `      process.env.NEXT_PUBLIC_DASHBUILDER_ROLE ??`,
+    `      FALLBACK_ROLE`,
+    `    );`,
+    `  }, []);`,
+    `}`,
     ``,
   ]);
 }
@@ -124,6 +201,9 @@ function generateTokensCss(ir: ExportIR): string {
     `.kpi-card, .chart-card, .table-card { padding: 1rem; }`,
     `.bar-chart { display: flex; align-items: flex-end; gap: 0.25rem; height: 8rem; }`,
     `.bar { flex: 1; background: var(--db-accent); min-height: 0.25rem; }`,
+    `.role-gate { padding: 1rem; border: 1px dashed var(--db-border); border-radius: 0.5rem; }`,
+    `.role-gate__header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }`,
+    `.role-gate__badge { font-size: 0.75rem; color: var(--db-muted); }`,
     `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);
@@ -238,6 +318,7 @@ function generateReadme(ir: ExportIR): string {
     `- \`src/Dashboard.tsx\` — composed page wired from builder bindings`,
     `- \`src/components/*.tsx\` — P0 visual components`,
     `- \`src/hooks/*.ts\` — data hooks targeting exported API routes`,
+    `- \`src/auth/*.ts\` — role definitions and current-role stub (when role gates exist)`,
     `- \`src/styles/tokens.css\` — neutral dashboard styling`,
     ``,
     `## Environment`,

@@ -6,11 +6,23 @@
     </div>
     @if (previewData.loading()) {
       <span class="preview__status" data-testid="preview-loading">Loading mock data…</span>
-    } @else {
+    }     @else {
       <span class="preview__status" data-testid="preview-data-source">
         Data source: {{ previewData.source() === 'api' ? 'API' : 'Fallback' }}
       </span>
     }
+    <label class="preview__role-switch">
+      Preview as
+      <select
+        data-testid="preview-role-select"
+        [value]="state.previewRoleId()"
+        (change)="updatePreviewRole($any($event.target).value)"
+      >
+        @for (role of previewRoleOptions(); track role.id) {
+          <option [value]="role.id">{{ role.name }}</option>
+        }
+      </select>
+    </label>
   </header>
 
   <div class="preview__surface">

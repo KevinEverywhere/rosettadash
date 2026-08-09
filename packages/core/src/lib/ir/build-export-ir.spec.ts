@@ -121,6 +121,26 @@ describe('buildExportIR', () => {
     expect(ir.domain).toBeUndefined();
   });
 
+  it('includes visibilityRoles on role gate components', () => {
+    const roleGate = registry.createNode('domain.role-gate', {
+      id: 'rg1',
+      properties: { roles: ['admin', 'editor'] },
+    });
+
+    const ir = buildExportIR(
+      {
+        id: 'c1',
+        name: 'Role Dashboard',
+        nodes: [roleGate],
+        bindings: [],
+        version: 1,
+      },
+      registry,
+    );
+
+    expect(ir.components[0]?.visibilityRoles).toEqual(['admin', 'editor']);
+  });
+
   it('throws ExportBuildError when composite fails strict validation', () => {
     const table = registry.createNode('visual.table', { id: 't1' });
 

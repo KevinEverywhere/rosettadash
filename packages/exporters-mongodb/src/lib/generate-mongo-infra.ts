@@ -1,4 +1,10 @@
 import type { ExportIR } from '@dashbuilder/core';
+import {
+  generateScopeModuleSource,
+  hasQueryScope,
+  resolveExportQueryScope,
+  scopedMongoListDocumentsLines,
+} from '@dashbuilder/core';
 import type { CollectionResource, GeneratedFile, MongoExportOptions } from './types';
 import { MongoExportError } from './types';
 import {
@@ -27,11 +33,13 @@ export function generateMongoInfraFiles(
   const root = options.rootDir ?? 'database/src';
   const connectionEnvKey = resolvePrimaryConnectionEnvKey(ir);
   const collectionResources = resolveCollectionResources(ir);
+  const queryScope = resolveExportQueryScope(ir.domain, ir.meta.generatedAt);
+  const includeScopedQueries = hasQueryScope(queryScope);
 
   const files: GeneratedFile[] = [
     {
       path: '.env.example',
-      content: generateEnvExample(ir),
+      content: generateEnvExample(ir, queryScope),
       encoding: 'utf-8',
       description: 'Environment variable template for exported MongoDB layer',
     },
@@ -43,7 +51,7 @@ export function generateMongoInfraFiles(
     },
     {
       path: `${root}/queries/list-documents.ts`,
-      content: generateListDocumentsHelper(),
+      content: generateListDocumentsHelper(includeScopedQueries),
       encoding: 'utf-8',
       description: 'Shared list-documents query helper',
     },
@@ -73,6 +81,15 @@ export function generateMongoInfraFiles(
       content: generateCollectionModule(resource),
       encoding: 'utf-8',
       description: `List query for collection ${resource.collectionName}`,
+    });
+  }
+
+  if (includeScopedQueries && queryScope) {
+    files.push({
+      path: `${root}/domain/scope.ts`,
+      content: generateScopeModuleSource(queryScope),
+      encoding: 'utf-8',
+      description: 'Default domain query scope from ExportIR',
     });
   }
 
@@ -108,10 +125,19 @@ function generateClientModule(connectionEnvKey: string): string {
   ]);
 }
 
-function generateListDocumentsHelper(): string {
+function generateListDocumentsHelper(scoped: boolean): string {
+  const scopeImport = scoped ? [`import { resolveRuntimeScope } from '../domain/scope';`, ``] : [];
+  const body = scoped
+    ? scopedMongoListDocumentsLines({ indent: '  ' })
+    : [
+        `  const db = client.db();`,
+        `  const cursor = db.collection(collectionName).find({}).limit(limit);`,
+        `  return cursor.toArray();`,
+      ];
+
   return joinLines([
     `import type { MongoClient } from 'mongodb';`,
-    ``,
+    ...scopeImport,
     `export async function listDocuments(`,
     `  client: MongoClient,`,
     `  collectionName: string,`,
@@ -120,9 +146,7 @@ function generateListDocumentsHelper(): string {
     `  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(collectionName)) {`,
     `    throw new Error(\`Unsafe MongoDB collection identifier: \${collectionName}\`);`,
     `  }`,
-    `  const db = client.db();`,
-    `  const cursor = db.collection(collectionName).find({}).limit(limit);`,
-    `  return cursor.toArray();`,
+    ...body,
     `}`,
     ``,
   ]);

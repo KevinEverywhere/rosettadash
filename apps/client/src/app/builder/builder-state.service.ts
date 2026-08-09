@@ -7,6 +7,7 @@ import {
   DefaultSuggestion,
   DomainContext,
   Project,
+  RoleDefinition,
   TimeRangePreset,
   areDataTypesCompatible,
   defaultComponentRegistry,
@@ -45,6 +46,7 @@ export class BuilderStateService {
   readonly errorMessage = signal<string | null>(null);
   readonly suggestions = signal<DefaultSuggestion[]>([]);
   readonly dismissedSuggestionIds = signal<Set<string>>(new Set());
+  readonly previewRoleId = signal('viewer');
 
   readonly selectedNode = computed(() => {
     const id = this.selectedNodeId();
@@ -65,6 +67,19 @@ export class BuilderStateService {
   });
 
   readonly domainContext = computed(() => this.composite()?.domainContext);
+
+  readonly previewRoleOptions = computed(() => {
+    const roles = this.domainContext()?.roles;
+    if (roles?.length) {
+      return roles;
+    }
+    return [
+      { id: 'viewer', name: 'Viewer' },
+      { id: 'editor', name: 'Editor' },
+      { id: 'admin', name: 'Admin' },
+      { id: 'owner', name: 'Owner' },
+    ] satisfies RoleDefinition[];
+  });
 
   selectDefinition(definition: ComponentDefinition): void {
     this.selectedDefinition.set(definition);
@@ -298,6 +313,10 @@ export class BuilderStateService {
     }
   }
 
+  setPreviewRoleId(roleId: string): void {
+    this.previewRoleId.set(roleId);
+  }
+
   previewNodes = computed(() =>
     this.nodes().filter((node) => {
       const definition = defaultComponentRegistry.get(node.type);
@@ -382,6 +401,55 @@ export class BuilderStateService {
     const normalized = normalizeDomainContext(current);
     this.composite.set({ ...composite, domainContext: normalized });
     this.markDirty();
+  }
+
+  addDomainRole(role: RoleDefinition): void {
+    const composite = this.composite();
+    if (!composite) {
+      return;
+    }
+
+    const current = composite.domainContext ?? {};
+    const roles = [...(current.roles ?? [])];
+    if (roles.some((entry) => entry.id === role.id)) {
+      return;
+    }
+
+    roles.push(role);
+    const normalized = normalizeDomainContext({ ...current, roles });
+    this.composite.set({ ...composite, domainContext: normalized });
+    this.markDirty();
+  }
+
+  removeDomainRole(roleId: string): void {
+    const composite = this.composite();
+    if (!composite?.domainContext?.roles?.length) {
+      return;
+    }
+
+    const current = composite.domainContext;
+    const roles = current.roles?.filter((role) => role.id !== roleId) ?? [];
+    const normalized = normalizeDomainContext({ ...current, roles });
+    this.composite.set({ ...composite, domainContext: normalized });
+    this.markDirty();
+  }
+
+  toggleRoleGateRole(roleId: string, enabled: boolean): void {
+    const node = this.selectedNode();
+    if (!node || node.type !== 'domain.role-gate') {
+      return;
+    }
+
+    const current = Array.isArray(node.properties['roles'])
+      ? node.properties['roles'].filter((entry): entry is string => typeof entry === 'string')
+      : [];
+    const next = enabled
+      ? current.includes(roleId)
+        ? current
+        : [...current, roleId]
+      : current.filter((entry) => entry !== roleId);
+
+    this.updateNodeProperty(node.id, 'roles', next);
   }
 
   suggestionsForNode(nodeId: string): DefaultSuggestion[] {

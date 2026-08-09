@@ -121,4 +121,88 @@ describe('generateNestInfraFiles', () => {
     expect(() => generateNestInfraFiles(ir)).toThrow(NestExportError);
     expect(() => generateNestInfraFiles(ir)).toThrow(/PostgreSQL data source/);
   });
+
+  it('generates role guard stubs when role gates are present', () => {
+    const roleGate = registry.createNode('domain.role-gate', {
+      id: 'rg1',
+      properties: { roles: ['admin'] },
+    });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Role Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest', database: 'postgresql' },
+        nodes: [roleGate, postgres, server],
+        bindings: [],
+        domainContext: {
+          roles: [
+            { id: 'admin', name: 'Admin' },
+            { id: 'viewer', name: 'Viewer' },
+          ],
+        },
+      },
+      registry,
+    );
+
+    const files = generateNestInfraFiles(ir);
+    const paths = files.map((file) => file.path);
+
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'server/src/auth/roles.guard.ts',
+        'server/src/auth/roles.decorator.ts',
+        'server/src/auth/auth.module.ts',
+      ]),
+    );
+
+    const controller = files.find((file) => file.path === 'server/src/sales/sales.controller.ts');
+    expect(controller?.content).toContain('@UseGuards(RolesGuard)');
+    expect(controller?.content).toContain("@Roles('admin', 'viewer')");
+  });
+
+  it('generates scoped postgres queries when domain context is present', () => {
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Scoped Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest', database: 'postgresql' },
+        nodes: [postgres, server],
+        bindings: [],
+        domainContext: {
+          client: { id: 'acme', name: 'Acme Corp' },
+          project: { id: 'rev-ops', name: 'Revenue Ops' },
+          defaultTimeRange: 'last-7-days',
+        },
+      },
+      registry,
+      { generatedAt: '2026-08-08T00:00:00.000Z' },
+    );
+
+    const files = generateNestInfraFiles(ir);
+    const paths = files.map((file) => file.path);
+
+    expect(paths).toContain('server/src/domain/scope.ts');
+
+    const database = files.find((file) => file.path === 'server/src/database/database.service.ts');
+    expect(database?.content).toContain('resolveRuntimeScope');
+    expect(database?.content).toContain('client_id');
+    expect(database?.content).toContain('created_at >=');
+
+    const env = files.find((file) => file.path === '.env.example');
+    expect(env?.content).toContain('DASHBUILDER_CLIENT_ID=');
+  });
 });

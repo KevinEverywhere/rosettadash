@@ -1,4 +1,10 @@
 import type { ExportIR } from '@dashbuilder/core';
+import {
+  generateScopeModuleSource,
+  hasQueryScope,
+  resolveExportQueryScope,
+  scopedSupabaseListRowsLines,
+} from '@dashbuilder/core';
 import type { GeneratedFile, SupabaseExportOptions, TableResource } from './types';
 import { SupabaseExportError } from './types';
 import {
@@ -29,11 +35,13 @@ export function generateSupabaseInfraFiles(
   const urlEnvKey = resolveUrlEnvKey(ir);
   const anonKeyEnvKey = resolveAnonKeyEnvKey(ir);
   const tableResources = resolveTableResources(ir);
+  const queryScope = resolveExportQueryScope(ir.domain, ir.meta.generatedAt);
+  const includeScopedQueries = hasQueryScope(queryScope);
 
   const files: GeneratedFile[] = [
     {
       path: '.env.example',
-      content: generateEnvExample(ir, urlEnvKey, anonKeyEnvKey),
+      content: generateEnvExample(ir, urlEnvKey, anonKeyEnvKey, queryScope),
       encoding: 'utf-8',
       description: 'Environment variable template for exported Supabase layer',
     },
@@ -45,7 +53,7 @@ export function generateSupabaseInfraFiles(
     },
     {
       path: `${root}/queries/list-rows.ts`,
-      content: generateListRowsHelper(),
+      content: generateListRowsHelper(includeScopedQueries),
       encoding: 'utf-8',
       description: 'Shared list-rows query helper',
     },
@@ -78,6 +86,15 @@ export function generateSupabaseInfraFiles(
     });
   }
 
+  if (includeScopedQueries && queryScope) {
+    files.push({
+      path: `${root}/domain/scope.ts`,
+      content: generateScopeModuleSource(queryScope),
+      encoding: 'utf-8',
+      description: 'Default domain query scope from ExportIR',
+    });
+  }
+
   return files;
 }
 
@@ -106,10 +123,21 @@ function generateClientModule(urlEnvKey: string, anonKeyEnvKey: string): string 
   ]);
 }
 
-function generateListRowsHelper(): string {
+function generateListRowsHelper(scoped: boolean): string {
+  const scopeImport = scoped ? [`import { resolveRuntimeScope } from '../domain/scope';`, ``] : [];
+  const body = scoped
+    ? scopedSupabaseListRowsLines({ indent: '  ' })
+    : [
+        `  const { data, error } = await client.from(tableName).select('*').limit(limit);`,
+        `  if (error) {`,
+        `    throw error;`,
+        `  }`,
+        `  return (data ?? []) as Record<string, unknown>[];`,
+      ];
+
   return joinLines([
     `import type { SupabaseClient } from '@supabase/supabase-js';`,
-    ``,
+    ...scopeImport,
     `export async function listRows(`,
     `  client: SupabaseClient,`,
     `  tableName: string,`,
@@ -118,11 +146,7 @@ function generateListRowsHelper(): string {
     `  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(tableName)) {`,
     `    throw new Error(\`Unsafe Supabase table identifier: \${tableName}\`);`,
     `  }`,
-    `  const { data, error } = await client.from(tableName).select('*').limit(limit);`,
-    `  if (error) {`,
-    `    throw error;`,
-    `  }`,
-    `  return (data ?? []) as Record<string, unknown>[];`,
+    ...body,
     `}`,
     ``,
   ]);

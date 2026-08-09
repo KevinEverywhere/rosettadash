@@ -34,6 +34,7 @@ export interface IRComponent {
   layout?: NodeLayout;
   inputs: Port[];
   outputs: Port[];
+  visibilityRoles?: string[];
 }
 
 export interface IRLayout {

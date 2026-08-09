@@ -1,4 +1,12 @@
 import type { ExportIR } from '@dashbuilder/core';
+import {
+  collectExportRoleIds,
+  generateScopeModuleSource,
+  hasQueryScope,
+  irHasRoleGates,
+  resolveExportQueryScope,
+  scopedPostgresListRowsLines,
+} from '@dashbuilder/core';
 import type { GeneratedFile, NestExportOptions, RouteResource } from './types';
 import { NestExportError } from './types';
 import {
@@ -27,11 +35,15 @@ export function generateNestInfraFiles(
   const globalPrefix = resolveGlobalPrefix(ir);
   const routeResources = resolveRouteResources(ir);
   const connectionEnvKey = resolvePrimaryConnectionEnvKey(ir);
+  const roleIds = collectExportRoleIds(ir);
+  const includeRoleAuth = irHasRoleGates(ir) || roleIds.length > 0;
+  const queryScope = resolveExportQueryScope(ir.domain, ir.meta.generatedAt);
+  const includeScopedQueries = hasQueryScope(queryScope);
 
   const files: GeneratedFile[] = [
     {
       path: '.env.example',
-      content: generateEnvExample(ir),
+      content: generateEnvExample(ir, queryScope),
       encoding: 'utf-8',
       description: 'Environment variable template for exported NestJS server',
     },
@@ -43,7 +55,7 @@ export function generateNestInfraFiles(
     },
     {
       path: `${root}/app.module.ts`,
-      content: generateAppModule(routeResources),
+      content: generateAppModule(routeResources, includeRoleAuth),
       encoding: 'utf-8',
       description: 'Root application module',
     },
@@ -55,7 +67,7 @@ export function generateNestInfraFiles(
     },
     {
       path: `${root}/database/database.service.ts`,
-      content: generateDatabaseService(connectionEnvKey),
+      content: generateDatabaseService(connectionEnvKey, includeScopedQueries),
       encoding: 'utf-8',
       description: 'PostgreSQL query helper',
     },
@@ -70,7 +82,7 @@ export function generateNestInfraFiles(
   for (const resource of routeResources) {
     files.push({
       path: `${root}/${resource.resourceName}/${resource.resourceName}.controller.ts`,
-      content: generateController(resource),
+      content: generateController(resource, includeRoleAuth ? roleIds : []),
       encoding: 'utf-8',
       description: `Route handler for ${resource.method} /${globalPrefix}/${resource.resourceName}`,
     });
@@ -95,7 +107,7 @@ export function generateNestInfraFiles(
     files.push(
       {
         path: `${root}/records/records.controller.ts`,
-        content: generateController(fallback),
+        content: generateController(fallback, includeRoleAuth ? roleIds : []),
         encoding: 'utf-8',
         description: 'Fallback list route when ExportIR has no routes',
       },
@@ -104,6 +116,38 @@ export function generateNestInfraFiles(
         content: generateFeatureModule(fallback),
         encoding: 'utf-8',
         description: 'Fallback records module',
+      },
+    );
+  }
+
+  if (includeScopedQueries && queryScope) {
+    files.push({
+      path: `${root}/domain/scope.ts`,
+      content: generateScopeModuleSource(queryScope),
+      encoding: 'utf-8',
+      description: 'Default domain query scope from ExportIR',
+    });
+  }
+
+  if (includeRoleAuth) {
+    files.push(
+      {
+        path: `${root}/auth/roles.decorator.ts`,
+        content: generateRolesDecorator(),
+        encoding: 'utf-8',
+        description: 'Roles decorator for route authorization stubs',
+      },
+      {
+        path: `${root}/auth/roles.guard.ts`,
+        content: generateRolesGuard(roleIds),
+        encoding: 'utf-8',
+        description: 'Role guard stub reading x-dashbuilder-role header',
+      },
+      {
+        path: `${root}/auth/auth.module.ts`,
+        content: generateAuthModule(),
+        encoding: 'utf-8',
+        description: 'Auth module exporting role guard',
       },
     );
   }
@@ -131,7 +175,7 @@ function generateMainTs(globalPrefix: string): string {
   ]);
 }
 
-function generateAppModule(routeResources: RouteResource[]): string {
+function generateAppModule(routeResources: RouteResource[], includeRoleAuth: boolean): string {
   const modules =
     routeResources.length > 0
       ? routeResources
@@ -139,15 +183,19 @@ function generateAppModule(routeResources: RouteResource[]): string {
 
   const imports = modules.map((resource) => `import { ${resource.moduleName} } from './${resource.resourceName}/${resource.resourceName}.module';`);
   const moduleList = modules.map((resource) => `    ${resource.moduleName},`).join('\n');
+  const authImport = includeRoleAuth ? [`import { AuthModule } from './auth/auth.module';`] : [];
+  const authModule = includeRoleAuth ? [`    AuthModule,`] : [];
 
   return joinLines([
     `import { Module } from '@nestjs/common';`,
     `import { DatabaseModule } from './database/database.module';`,
+    ...authImport,
     ...imports,
     ``,
     `@Module({`,
     `  imports: [`,
     `    DatabaseModule,`,
+    ...authModule,
     moduleList,
     `  ],`,
     `})`,
@@ -171,11 +219,26 @@ function generateDatabaseModule(): string {
   ]);
 }
 
-function generateDatabaseService(connectionEnvKey: string): string {
+function generateDatabaseService(connectionEnvKey: string, scoped: boolean): string {
+  const scopeImport = scoped ? [`import { resolveRuntimeScope } from '../domain/scope';`, ``] : [];
+  const queryRowsBody = scoped
+    ? scopedPostgresListRowsLines({
+        queryReceiver: 'this.pool',
+        quoteIdentifierRef: 'this.quoteIdentifier',
+        indent: '    ',
+      })
+    : [
+        `    const result = await this.pool.query(`,
+        `      \`SELECT * FROM \${this.quoteIdentifier(tableName)} ORDER BY 1 LIMIT $1\`,`,
+        `      [limit],`,
+        `    );`,
+        `    return result.rows;`,
+      ];
+
   return joinLines([
     `import { Injectable, OnModuleDestroy } from '@nestjs/common';`,
     `import { Pool } from 'pg';`,
-    ``,
+    ...scopeImport,
     `@Injectable()`,
     `export class DatabaseService implements OnModuleDestroy {`,
     `  private readonly pool: Pool;`,
@@ -189,11 +252,7 @@ function generateDatabaseService(connectionEnvKey: string): string {
     `  }`,
     ``,
     `  async queryRows(tableName: string, limit = 100): Promise<Record<string, unknown>[]> {`,
-    `    const result = await this.pool.query(`,
-    `      \`SELECT * FROM \${this.quoteIdentifier(tableName)} ORDER BY 1 LIMIT $1\`,`,
-    `      [limit],`,
-    `    );`,
-    `    return result.rows;`,
+    ...queryRowsBody,
     `  }`,
     ``,
     `  async onModuleDestroy(): Promise<void> {`,
@@ -211,12 +270,27 @@ function generateDatabaseService(connectionEnvKey: string): string {
   ]);
 }
 
-function generateController(resource: RouteResource): string {
+function generateController(resource: RouteResource, requiredRoles: string[]): string {
+  const commonImport =
+    requiredRoles.length > 0
+      ? `import { Controller, Get, UseGuards } from '@nestjs/common';`
+      : `import { Controller, Get } from '@nestjs/common';`;
+  const roleImports =
+    requiredRoles.length > 0
+      ? [`import { Roles } from '../auth/roles.decorator';`, `import { RolesGuard } from '../auth/roles.guard';`]
+      : [];
+  const guardLines =
+    requiredRoles.length > 0
+      ? [`@UseGuards(RolesGuard)`, `@Roles(${requiredRoles.map((role) => `'${role}'`).join(', ')})`]
+      : [];
+
   return joinLines([
-    `import { Controller, Get } from '@nestjs/common';`,
+    commonImport,
+    ...roleImports,
     `import { DatabaseService } from '../database/database.service';`,
     ``,
     `@Controller('${resource.resourceName}')`,
+    ...guardLines,
     `export class ${resource.controllerName} {`,
     `  constructor(private readonly database: DatabaseService) {}`,
     ``,
@@ -242,6 +316,62 @@ function generateFeatureModule(resource: RouteResource): string {
   ]);
 }
 
+function generateRolesDecorator(): string {
+  return joinLines([
+    `import { SetMetadata } from '@nestjs/common';`,
+    ``,
+    `export const ROLES_KEY = 'dashbuilder.roles';`,
+    `export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);`,
+    ``,
+  ]);
+}
+
+function generateRolesGuard(roleIds: string[]): string {
+  const knownRoles = roleIds.length > 0 ? roleIds : ['viewer'];
+  return joinLines([
+    `import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';`,
+    `import { Reflector } from '@nestjs/core';`,
+    `import { ROLES_KEY } from './roles.decorator';`,
+    ``,
+    `@Injectable()`,
+    `export class RolesGuard implements CanActivate {`,
+    `  constructor(private readonly reflector: Reflector) {}`,
+    ``,
+    `  canActivate(context: ExecutionContext): boolean {`,
+    `    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [`,
+    `      context.getHandler(),`,
+    `      context.getClass(),`,
+    `    ]);`,
+    ``,
+    `    if (!requiredRoles?.length) {`,
+    `      return true;`,
+    `    }`,
+    ``,
+    `    const request = context.switchToHttp().getRequest<{ headers?: Record<string, string | string[] | undefined> }>();`,
+    `    const header = request.headers?.['x-dashbuilder-role'];`,
+    `    const role = Array.isArray(header) ? header[0] : header ?? '${knownRoles[0]}';`,
+    `    return requiredRoles.includes(role);`,
+    `  }`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateAuthModule(): string {
+  return joinLines([
+    `import { Global, Module } from '@nestjs/common';`,
+    `import { RolesGuard } from './roles.guard';`,
+    ``,
+    `@Global()`,
+    `@Module({`,
+    `  providers: [RolesGuard],`,
+    `  exports: [RolesGuard],`,
+    `})`,
+    `export class AuthModule {}`,
+    ``,
+  ]);
+}
+
 function generateReadme(ir: ExportIR, globalPrefix: string, connectionEnvKey: string): string {
   const routes =
     ir.routes.length > 0
@@ -258,6 +388,9 @@ function generateReadme(ir: ExportIR, globalPrefix: string, connectionEnvKey: st
     `- \`server/src/main.ts\` — NestJS bootstrap with \`/${globalPrefix}\` global prefix`,
     `- \`server/src/database/*\` — PostgreSQL pool module using \`${connectionEnvKey}\``,
     `- \`server/src/*/*.controller.ts\` — list endpoints derived from ExportIR routes`,
+    ...(irHasRoleGates(ir) || (ir.domain?.roles?.length ?? 0) > 0
+      ? [`- \`server/src/auth/*\` — role guard stub using \`x-dashbuilder-role\` header`]
+      : []),
     `- \`.env.example\` — required environment variables`,
     ``,
     `## Routes`,

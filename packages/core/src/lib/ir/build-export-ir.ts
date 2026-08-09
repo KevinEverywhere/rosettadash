@@ -3,6 +3,7 @@ import type { Composite, ValidationIssue } from '../model/types';
 import { validateComposite } from '../validation/validate-composite';
 import type { DomainContext } from '../domain/domain-context';
 import { normalizeDomainContext } from '../domain/domain-context';
+import { visibilityRolesForComponent } from '../domain/role-visibility';
 import type {
   BuildExportIROptions,
   ExportIR,
@@ -43,6 +44,15 @@ export function buildExportIR(
     const definition = registry.getOrThrow(node.type);
 
     if (definition.category === 'visual' || definition.category === 'domain') {
+      const visibilityRoles = visibilityRolesForComponent({
+        id: node.id,
+        type: node.type,
+        label: node.label,
+        category: definition.category,
+        properties: { ...node.properties },
+        inputs: node.ports.inputs.map((port) => ({ ...port })),
+        outputs: node.ports.outputs.map((port) => ({ ...port })),
+      });
       components.push({
         id: node.id,
         type: node.type,
@@ -52,6 +62,7 @@ export function buildExportIR(
         layout: node.layout ? { ...node.layout } : undefined,
         inputs: node.ports.inputs.map((port) => ({ ...port })),
         outputs: node.ports.outputs.map((port) => ({ ...port })),
+        visibilityRoles,
       });
       continue;
     }

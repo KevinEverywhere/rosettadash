@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TIME_RANGE_PRESET_OPTIONS, TimeRangePreset } from '@dashbuilder/core';
+import { TIME_RANGE_PRESET_OPTIONS, TimeRangePreset, DEFAULT_ROLE_PRESETS } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 
 @Component({
@@ -22,6 +22,13 @@ export class DomainContextPanelComponent {
   protected readonly defaultTimeRange = computed(
     () => this.domain()?.defaultTimeRange ?? '',
   );
+  protected readonly roles = computed(() => this.domain()?.roles ?? []);
+  protected readonly rolePresets = DEFAULT_ROLE_PRESETS;
+
+  protected availablePresets = computed(() => {
+    const existing = new Set(this.roles().map((role) => role.id));
+    return this.rolePresets.filter((preset) => !existing.has(preset.id));
+  });
 
   protected updateClientName(value: string): void {
     this.state.patchDomainContext({ clientName: value });
@@ -43,5 +50,16 @@ export class DomainContextPanelComponent {
     this.state.patchDomainContext({
       defaultTimeRange: (value || '') as TimeRangePreset | '',
     });
+  }
+
+  protected addPresetRole(presetId: string): void {
+    const preset = this.rolePresets.find((role) => role.id === presetId);
+    if (preset) {
+      this.state.addDomainRole(preset);
+    }
+  }
+
+  protected removeRole(roleId: string): void {
+    this.state.removeDomainRole(roleId);
   }
 }

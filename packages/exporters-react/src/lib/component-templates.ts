@@ -10,6 +10,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
+  'domain.role-gate',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -32,6 +33,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateLineChart(exportName);
     case 'visual.chart.bar':
       return generateBarChart(exportName);
+    case 'domain.role-gate':
+      return generateRoleGate(exportName);
     default:
       throw new ReactExportError(`Missing React template for ${component.type}`);
   }
@@ -359,6 +362,41 @@ function generateBarChart(name: string): string {
     `    }`,
     `    return value >= range.start && value <= range.end;`,
     `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateRoleGate(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `import { useCurrentRole } from '../auth/useCurrentRole';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  label?: string;`,
+    `  allowedRoles?: string[];`,
+    `  children?: React.ReactNode;`,
+    `}`,
+    ``,
+    `export function ${name}({ id, label = 'Protected section', allowedRoles = [], children }: ${name}Props) {`,
+    `  const role = useCurrentRole();`,
+    `  const visible = allowedRoles.length === 0 || allowedRoles.includes(role);`,
+    ``,
+    `  if (!visible) {`,
+    `    return null;`,
+    `  }`,
+    ``,
+    `  return (`,
+    `    <section className="role-gate" id={id} data-allowed-roles={allowedRoles.join(',')}>`,
+    `      <header className="role-gate__header">`,
+    `        <h3>{label}</h3>`,
+    `        <span className="role-gate__badge">Role: {role}</span>`,
+    `      </header>`,
+    `      <div className="role-gate__content">{children ?? <p>Protected content</p>}</div>`,
+    `    </section>`,
+    `  );`,
     `}`,
     ``,
   ]);

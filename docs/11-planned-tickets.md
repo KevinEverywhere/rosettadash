@@ -20,22 +20,25 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 |--------|------------------|---------|
 | [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | Rule-based defaults engine + inspector suggestions |
 | [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | Domain context on composites, preview, and ExportIR |
+| [DAS-34](https://planetkevin.atlassian.net/browse/DAS-34) | `feature/DAS-34-role-visibility` | Role visibility in builder + export stubs |
+| [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | Scoped query filters in exporters |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | In progress |
+| [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | In progress |
 
 ## Delivery status
 
 - **Phase 4 multi-target export:** complete
-- **Defaults engine:** rule-based suggestions in core + inspector UI — complete (DAS-32)
-- **Domain context:** client/project scope + default time range — **DAS-33 in progress**
+- **Defaults engine:** complete (DAS-32)
+- **Domain context:** complete (DAS-33)
+- **Role visibility:** complete (DAS-34)
+- **Scoped query filters:** domain-aware WHERE clauses in database exports — **DAS-35 in progress**
 
 ## Phase 5 — planned (not yet ticketed)
 
-- Role gates and scoped queries in export
 - Onboarding composite template
 
 ## Future — 3D dashboards (not yet ticketed)
