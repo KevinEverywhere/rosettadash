@@ -184,8 +184,7 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-35](https://planetkevin.atlassian.net/browse/DAS-35)** — Scoped query filters in exporters  
-Branch: `feature/DAS-35-scoped-query-filters`
+Phase 5 (DAS-32–DAS-36) is **complete** on `development`. Next up: Phase 6 — see [Planned Tickets](docs/11-planned-tickets.md) and [Roadmap](docs/10-roadmap.md).
 
 ## License
 

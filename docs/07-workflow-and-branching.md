@@ -128,8 +128,7 @@ domain model, and workflow conventions for DashBuilder.
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35)
-- **Current branch:** `feature/DAS-35-scoped-query-filters`
+- **Current phase:** Phase 6 (not yet ticketed) — Phase 5 complete through [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36)
 
 ## Related documents
 

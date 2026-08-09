@@ -13,11 +13,6 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29) | `feature/DAS-29-export-wizard-database-targets` | Export wizard database target picker |
 | [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | `feature/DAS-30-mysql-exporter` | MySQL database exporter package |
 | [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | Export target matrix testing |
-
-## Phase 5 — Smart defaults & domain
-
-| Ticket | Branch (planned) | Summary |
-|--------|------------------|---------|
 | [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | Rule-based defaults engine + inspector suggestions |
 | [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | Domain context on composites, preview, and ExportIR |
 | [DAS-34](https://planetkevin.atlassian.net/browse/DAS-34) | `feature/DAS-34-role-visibility` | Role visibility in builder + export stubs |
@@ -28,18 +23,22 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | `feature/DAS-36-onboarding-template` | In progress |
+| — | — | Phase 6 not yet ticketed |
 
 ## Delivery status
 
 - **Phase 4 multi-target export:** complete
-- **Defaults engine:** complete (DAS-32)
-- **Domain context:** complete (DAS-33)
-- **Role visibility:** complete (DAS-34)
-- **Scoped query filters:** complete (DAS-35)
-- **Onboarding composite template:** domain onboarding flow + export stubs — **DAS-36 in progress**
+- **Phase 5 smart defaults & domain:** complete (DAS-32 through DAS-36)
+- **Phase 6 advanced UX:** not started
 
-## Phase 5 — planned (not yet ticketed)
+## Phase 6 — planned (not yet ticketed)
+
+Suggested order (create Jira tickets when ready):
+
+1. **Composite templates library** — palette or modal to browse/apply templates (onboarding is first; save custom composites as templates)
+2. **Undo/redo** — builder history stack for node/property/binding edits
+3. **Canvas layout polish** — snap grid, resize handles, multi-select
+4. **Export README improvements** — per-target setup docs in generated bundles
 
 ## Future — 3D dashboards (not yet ticketed)
 

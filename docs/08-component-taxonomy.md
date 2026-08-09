@@ -116,7 +116,7 @@ Initial palette organization for DashBuilder. Components are grouped for palette
 
 ### P0 — MVP palette
 
-Text input, select, date range, data table, KPI card, line/bar chart, grid, tabs, modal, role gate, PostgreSQL, NestJS server, env config.
+Text input, select, date range, data table, KPI card, line/bar chart, grid, tabs, modal, role gate, person invite, role assign, PostgreSQL, NestJS server, env config.
 
 ### P1 — Early expansion
 

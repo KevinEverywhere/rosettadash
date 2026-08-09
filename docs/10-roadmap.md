@@ -64,14 +64,14 @@ See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 
 - **three.js**-based 3D dashboard display components — integration approach TBD (preview renderer vs export target vs both)
 
-## Phase 5 — Smart defaults & domain
+## Phase 5 — Smart defaults & domain (complete)
 
-- Defaults engine (rule-based suggestions)
-- Domain context: client, project, roles
-- Role gates and scoped queries in export
-- Onboarding composite template
+- [x] Defaults engine (rule-based suggestions) — DAS-32
+- [x] Domain context: client, project, roles — DAS-33
+- [x] Role gates and scoped queries in export — DAS-34, DAS-35
+- [x] Onboarding composite template — DAS-36
 
-**Exit criteria:** Builder suggests chart type and pagination; exported app respects role visibility.
+**Exit criteria met:** Builder suggests chart type and pagination; exported app respects role visibility; onboarding template applies invite → role → confirm flow with Nest export stubs.
 
 ## Phase 6 — Advanced UX
 

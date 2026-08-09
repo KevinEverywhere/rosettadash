@@ -58,9 +58,9 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | merged to `development` | Defaults engine + inspector suggestions |
 | [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | merged to `development` | Domain context on composites, preview, and ExportIR |
 | [DAS-34](https://planetkevin.atlassian.net/browse/DAS-34) | merged to `development` | Role visibility in builder + export stubs |
+| [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | merged to `development` | Scoped query filters in exporters |
+| [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | merged to `development` | Onboarding composite template + export stubs |
 
 ## Active work
 
-| Ticket | Branch | Status |
-|--------|--------|--------|
-| [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | In progress |
+Phase 5 is complete. See [Planned Tickets](./11-planned-tickets.md) for Phase 6 backlog.
