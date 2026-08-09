@@ -1,4 +1,5 @@
 import type { DataType } from './data-types';
+import type { DomainContext } from '../domain/domain-context';
 
 export type NodeCategory = 'visual' | 'layout' | 'logic' | 'domain' | 'infra';
 
@@ -86,6 +87,7 @@ export interface Composite {
   nodes: ComponentNode[];
   bindings: Binding[];
   exportTargets?: ExportTargetConfig;
+  domainContext?: DomainContext;
   version: number;
 }
 

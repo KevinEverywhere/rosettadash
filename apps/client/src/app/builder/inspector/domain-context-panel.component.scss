@@ -1,0 +1,42 @@
+.domain-context {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--db-border);
+
+  h4 {
+    margin: 0 0 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--db-text-muted);
+  }
+}
+
+.domain-context__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--db-text-muted);
+}
+
+.domain-context__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.8125rem;
+
+  label {
+    font-weight: 500;
+  }
+
+  input,
+  select {
+    padding: 0.375rem 0.5rem;
+    border: 1px solid var(--db-border);
+    border-radius: 0.375rem;
+    background: var(--db-surface);
+    font: inherit;
+  }
+}

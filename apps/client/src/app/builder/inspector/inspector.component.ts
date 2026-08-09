@@ -8,10 +8,11 @@ import {
   defaultComponentRegistry,
 } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
+import { DomainContextPanelComponent } from './domain-context-panel.component';
 
 @Component({
   selector: 'app-inspector',
-  imports: [JsonPipe, FormsModule],
+  imports: [JsonPipe, FormsModule, DomainContextPanelComponent],
   templateUrl: './inspector.component.html',
   styleUrl: './inspector.component.scss',
 })
@@ -39,6 +40,7 @@ export class InspectorComponent {
   protected readonly hasSelection = computed(
     () => this.definition() !== null,
   );
+  protected readonly hasComposite = computed(() => this.state.composite() !== null);
   protected readonly isEditingNode = computed(() => this.node() !== null);
 
   protected addToCanvas(): void {

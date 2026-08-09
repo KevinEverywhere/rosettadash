@@ -21,18 +21,26 @@ export class PreviewPanelComponent {
 
       const project = this.state.project();
       const composite = this.state.composite();
+      const domainContext = composite?.domainContext;
       const dateRangeNode = this.state
         .nodes()
         .find((node) => node.type === 'visual.input.date-range');
       const preset =
         typeof dateRangeNode?.properties['preset'] === 'string'
           ? dateRangeNode.properties['preset']
-          : 'last-7-days';
+          : domainContext?.defaultTimeRange ?? 'last-7-days';
 
       void this.previewData.load({
         projectName: project?.name,
         compositeName: composite?.name,
         dateRangePreset: preset,
+        domainContext: domainContext
+          ? {
+              client: domainContext.client,
+              project: domainContext.project,
+              defaultTimeRange: domainContext.defaultTimeRange,
+            }
+          : undefined,
         limit: 10,
         nodes: this.state.nodes().map((node) => ({
           id: node.id,

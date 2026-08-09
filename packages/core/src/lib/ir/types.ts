@@ -1,3 +1,4 @@
+import type { DomainContext } from '../domain/domain-context';
 import type { DataType } from '../model/data-types';
 import type {
   ExportTargetConfig,
@@ -86,6 +87,7 @@ export interface ExportIR {
   routes: IRRoute[];
   events: IREventBinding[];
   styles: IRStyleTokens;
+  domain?: DomainContext;
 }
 
 export interface BuildExportIROptions {

@@ -33,6 +33,10 @@
 
 .inspector__content {
   padding: 1rem;
+
+  &--domain {
+    padding-bottom: 0;
+  }
 }
 
 .inspector__btn {

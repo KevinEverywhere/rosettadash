@@ -5,10 +5,14 @@ import {
   ComponentNode,
   Composite,
   DefaultSuggestion,
+  DomainContext,
   Project,
+  TimeRangePreset,
   areDataTypesCompatible,
   defaultComponentRegistry,
   evaluateDefaults,
+  normalizeDomainContext,
+  slugifyDomainId,
   suggestionsForSelectedNode,
 } from '@dashbuilder/core';
 
@@ -59,6 +63,8 @@ export class BuilderStateService {
       (binding) => binding.sourceNodeId === nodeId || binding.targetNodeId === nodeId,
     );
   });
+
+  readonly domainContext = computed(() => this.composite()?.domainContext);
 
   selectDefinition(definition: ComponentDefinition): void {
     this.selectedDefinition.set(definition);
@@ -309,6 +315,73 @@ export class BuilderStateService {
   markDirty(): void {
     this.dirty.set(true);
     this.saveStatus.set('idle');
+  }
+
+  patchDomainContext(patch: {
+    clientName?: string;
+    clientId?: string;
+    projectName?: string;
+    projectId?: string;
+    defaultTimeRange?: TimeRangePreset | '';
+  }): void {
+    const composite = this.composite();
+    if (!composite) {
+      return;
+    }
+
+    const current: DomainContext = { ...(composite.domainContext ?? {}) };
+
+    if (patch.clientName !== undefined) {
+      if (patch.clientName.trim()) {
+        current.client = {
+          id:
+            patch.clientId?.trim() ||
+            current.client?.id?.trim() ||
+            slugifyDomainId(patch.clientName) ||
+            'client',
+          name: patch.clientName.trim(),
+        };
+      } else {
+        delete current.client;
+      }
+    } else if (patch.clientId !== undefined && current.client) {
+      current.client = {
+        ...current.client,
+        id: patch.clientId.trim() || slugifyDomainId(current.client.name) || 'client',
+      };
+    }
+
+    if (patch.projectName !== undefined) {
+      if (patch.projectName.trim()) {
+        current.project = {
+          id:
+            patch.projectId?.trim() ||
+            current.project?.id?.trim() ||
+            slugifyDomainId(patch.projectName) ||
+            'project',
+          name: patch.projectName.trim(),
+        };
+      } else {
+        delete current.project;
+      }
+    } else if (patch.projectId !== undefined && current.project) {
+      current.project = {
+        ...current.project,
+        id: patch.projectId.trim() || slugifyDomainId(current.project.name) || 'project',
+      };
+    }
+
+    if (patch.defaultTimeRange !== undefined) {
+      if (patch.defaultTimeRange) {
+        current.defaultTimeRange = patch.defaultTimeRange;
+      } else {
+        delete current.defaultTimeRange;
+      }
+    }
+
+    const normalized = normalizeDomainContext(current);
+    this.composite.set({ ...composite, domainContext: normalized });
+    this.markDirty();
   }
 
   suggestionsForNode(nodeId: string): DefaultSuggestion[] {

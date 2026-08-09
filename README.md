@@ -184,8 +184,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-32](https://planetkevin.atlassian.net/browse/DAS-32)** — Rule-based defaults engine  
-Branch: `feature/DAS-32-defaults-engine`
+**[DAS-33](https://planetkevin.atlassian.net/browse/DAS-33)** — Domain context on composites  
+Branch: `feature/DAS-33-domain-context`
 
 ## License
 

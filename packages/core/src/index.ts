@@ -2,6 +2,7 @@ export * from './lib/constants';
 export * from './lib/health';
 export * from './lib/model/data-types';
 export * from './lib/model/types';
+export * from './lib/domain';
 export * from './lib/registry/component-registry';
 export * from './lib/registry/p0-components';
 export * from './lib/validation/validate-composite';

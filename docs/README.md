@@ -55,4 +55,10 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29) | merged to `development` | Export wizard database picker |
 | [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | merged to `development` | MySQL database exporter |
 | [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | merged to `development` | Export target matrix testing |
-| [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | Defaults engine + inspector suggestions |
+| [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | merged to `development` | Defaults engine + inspector suggestions |
+
+## Active work
+
+| Ticket | Branch | Status |
+|--------|--------|--------|
+| [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | In progress |

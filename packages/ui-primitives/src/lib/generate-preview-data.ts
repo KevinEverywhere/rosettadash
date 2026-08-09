@@ -18,10 +18,17 @@ export interface PreviewNodeInput {
   properties?: Record<string, unknown>;
 }
 
+export interface PreviewDomainContext {
+  client?: { id: string; name: string };
+  project?: { id: string; name: string };
+  defaultTimeRange?: string;
+}
+
 export interface PreviewDataRequest {
   projectName?: string;
   compositeName?: string;
   dateRangePreset?: string;
+  domainContext?: PreviewDomainContext;
   limit?: number;
   nodes?: PreviewNodeInput[];
   bindings?: PreviewBindingInput[];
@@ -119,13 +126,14 @@ function rowsToChartPoints(rows: PreviewRow[]): PreviewChartPoint[] {
 function generateBaseRows(request: PreviewDataRequest, random: () => number): PreviewRow[] {
   const limit = Math.min(Math.max(request.limit ?? 10, 3), 12);
   const baseDate = new Date('2026-08-08T12:00:00.000Z');
+  const clientName = request.domainContext?.client?.name?.trim();
 
   return Array.from({ length: limit }, (_, index) => {
     const prefix = pick(COMPANY_PREFIXES, random);
     const suffix = pick(COMPANY_SUFFIXES, random);
     return {
       id: String(index + 1),
-      name: `${prefix} ${suffix}`,
+      name: clientName ? `${clientName} ${suffix}` : `${prefix} ${suffix}`,
       status: pick(STATUSES, random),
       amount: Math.round(20_000 + random() * 60_000),
       date: formatIsoDate(baseDate, -(index + 1)),
@@ -156,16 +164,20 @@ export function resolvePreviewGraph(
 ): PreviewDataBundle {
   const nodes = request.nodes ?? [];
   const bindings = request.bindings ?? [];
+  const domain = request.domainContext;
+  const domainPreset = domain?.defaultTimeRange ?? 'last-7-days';
   const seedKey = [
     request.projectName ?? 'project',
     request.compositeName ?? 'composite',
-    request.dateRangePreset ?? 'last-7-days',
+    domain?.client?.id ?? domain?.client?.name ?? '',
+    domain?.project?.id ?? domain?.project?.name ?? '',
+    request.dateRangePreset ?? domainPreset,
   ].join(':');
   const random = createRandom(hashSeed(seedKey));
 
   const dateRangeNode = nodes.find((node) => node.type === 'visual.input.date-range');
   const activePreset =
-    request.dateRangePreset ?? readPreset(dateRangeNode, 'last-7-days');
+    request.dateRangePreset ?? readPreset(dateRangeNode, domainPreset);
   const dateRangeLabel = PRESET_LABELS[activePreset] ?? PRESET_LABELS['last-7-days'];
 
   const baseRows = generateBaseRows(request, random);
@@ -237,7 +249,10 @@ export function resolvePreviewGraph(
       { label: 'Revenue', value: 'revenue' },
       { label: 'Orders', value: 'orders' },
       { label: 'Customers', value: 'customers' },
-      { label: `${request.projectName ?? 'Project'} KPI`, value: 'project-kpi' },
+      {
+        label: `${domain?.project?.name ?? request.projectName ?? 'Project'} KPI`,
+        value: 'project-kpi',
+      },
     ],
     kpiValue: Math.round(90_000 + random() * 80_000),
     kpiDelta: Math.round((random() * 12 + 2) * 10) / 10,

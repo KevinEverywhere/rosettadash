@@ -1,6 +1,8 @@
 import type { ComponentRegistry } from '../registry/component-registry';
 import type { Composite, ValidationIssue } from '../model/types';
 import { validateComposite } from '../validation/validate-composite';
+import type { DomainContext } from '../domain/domain-context';
+import { normalizeDomainContext } from '../domain/domain-context';
 import type {
   BuildExportIROptions,
   ExportIR,
@@ -93,7 +95,12 @@ export function buildExportIR(
     routes: buildRoutes(composite, registry),
     events,
     styles: { preset: 'neutral' },
+    domain: mapDomainContext(composite.domainContext),
   };
+}
+
+function mapDomainContext(context: DomainContext | undefined) {
+  return normalizeDomainContext(context);
 }
 
 function resolveTargets(

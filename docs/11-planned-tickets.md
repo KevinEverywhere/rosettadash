@@ -19,21 +19,22 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
 | [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | Rule-based defaults engine + inspector suggestions |
+| [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | Domain context on composites, preview, and ExportIR |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | In progress |
+| [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | In progress |
 
 ## Delivery status
 
 - **Phase 4 multi-target export:** complete
-- **Defaults engine:** rule-based suggestions in core + inspector UI — **DAS-32 in progress**
+- **Defaults engine:** rule-based suggestions in core + inspector UI — complete (DAS-32)
+- **Domain context:** client/project scope + default time range — **DAS-33 in progress**
 
 ## Phase 5 — planned (not yet ticketed)
 
-- Domain context: client, project, roles
 - Role gates and scoped queries in export
 - Onboarding composite template
 

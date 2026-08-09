@@ -78,6 +78,49 @@ describe('buildExportIR', () => {
     ]);
   });
 
+  it('includes normalized domain context on the export IR', () => {
+    const text = registry.createNode('visual.input.text', { id: 'n1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'c1',
+        name: 'Scoped Dashboard',
+        nodes: [text],
+        bindings: [],
+        version: 1,
+        domainContext: {
+          client: { id: '', name: 'Acme Corp' },
+          project: { id: 'rev-ops', name: 'Revenue Ops' },
+          defaultTimeRange: 'last-30-days',
+        },
+      },
+      registry,
+    );
+
+    expect(ir.domain).toEqual({
+      client: { id: 'acme-corp', name: 'Acme Corp' },
+      project: { id: 'rev-ops', name: 'Revenue Ops' },
+      defaultTimeRange: 'last-30-days',
+    });
+  });
+
+  it('omits domain from IR when context is empty', () => {
+    const text = registry.createNode('visual.input.text', { id: 'n1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'c1',
+        name: 'Minimal',
+        nodes: [text],
+        bindings: [],
+        version: 1,
+      },
+      registry,
+    );
+
+    expect(ir.domain).toBeUndefined();
+  });
+
   it('throws ExportBuildError when composite fails strict validation', () => {
     const table = registry.createNode('visual.table', { id: 't1' });
 

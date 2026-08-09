@@ -3,6 +3,12 @@
     <h2>Inspector</h2>
   </header>
 
+  @if (hasComposite()) {
+    <div class="inspector__content inspector__content--domain">
+      <app-domain-context-panel />
+    </div>
+  }
+
   @if (!hasSelection()) {
     <div class="inspector__empty">
       <p>Select a palette component to preview, or click a canvas node to edit.</p>
