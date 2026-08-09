@@ -45,12 +45,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | Scoped query filters in exporters |
 | [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | `feature/DAS-36-onboarding-template` | Onboarding composite template + export stubs |
 | [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) | `feature/DAS-37-docker-local-containers` | Docker Compose local dev + Jira/branch workflow enforcement |
+| [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | Docs refresh + component/page design planning |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | In progress — docs refresh + component/page design planning |
+| [DAS-39](https://planetkevin.atlassian.net/browse/DAS-39) | `feature/DAS-39-p1-form-inputs` | In progress — number, checkbox, textarea inputs |
 
 ## Delivery status
 
@@ -58,13 +59,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 4 multi-target export:** complete (DAS-17–DAS-31)
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
-- **Phase 6 component & page design:** in progress (DAS-38 docs); implementation tickets TBD
+- **Phase 6 component & page design:** in progress (DAS-38 docs complete; DAS-39 P1 form inputs active)
 
 ## Phase 6 — planned (create Jira ticket before each)
 
 See [Component & Page Design](./15-component-and-page-design.md) for patterns and suggested order:
 
-1. P1 form inputs (number, checkbox, textarea)
+1. ~~P1 form inputs (number, checkbox, textarea)~~ — DAS-39
 2. Page template library (analytics, CRUD, settings)
 3. Export wizard: single-component and selection export modes
 4. Canvas layout polish (snap, resize, multi-select)

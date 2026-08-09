@@ -30,9 +30,9 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | In progress — docs refresh + component/page design planning |
+| [DAS-39](https://planetkevin.atlassian.net/browse/DAS-39) | `feature/DAS-39-p1-form-inputs` | In progress — P1 form inputs (number, checkbox, textarea) |
 
-Completed tickets **DAS-1 through DAS-37** are listed in [Planned Tickets](./11-planned-tickets.md).
+Completed tickets **DAS-1 through DAS-38** are listed in [Planned Tickets](./11-planned-tickets.md).
 
 ## Current capabilities (at a glance)
 

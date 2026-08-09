@@ -44,6 +44,24 @@ describe('validateComposite', () => {
     expect(result.issues).toHaveLength(0);
   });
 
+  it('validates P1 form input nodes', () => {
+    const composite: Composite = {
+      id: 'c1',
+      name: 'Form',
+      nodes: [
+        registry.createNode('visual.input.number', { id: 'num-1' }),
+        registry.createNode('visual.input.checkbox', { id: 'chk-1' }),
+        registry.createNode('visual.input.textarea', { id: 'area-1' }),
+      ],
+      bindings: [],
+      version: 1,
+    };
+
+    const result = validateComposite(composite, registry);
+    expect(result.valid).toBe(true);
+    expect(result.issues).toHaveLength(0);
+  });
+
   it('flags unbound required inputs', () => {
     const composite: Composite = {
       id: 'c1',

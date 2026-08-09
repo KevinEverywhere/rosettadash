@@ -17,7 +17,7 @@ Planning guide for **single components** and **pages built from component groups
 | Page templates library | Not started |
 | Full P1/P2 taxonomy | Not started |
 
-**Registry source of truth:** `packages/core/src/lib/registry/p0-components.ts` (21 types today).
+**Registry source of truth:** `packages/core/src/lib/registry/p0-components.ts` (24 types today).
 
 ---
 
@@ -70,6 +70,9 @@ These types are registered, previewable, and covered by exporters (visual → UI
 |----------|------|
 | `visual.input.text` | Single-line input |
 | `visual.input.select` | Dropdown (options port) |
+| `visual.input.number` | Numeric input (min/max/step) |
+| `visual.input.checkbox` | Boolean toggle |
+| `visual.input.textarea` | Multi-line text |
 | `visual.input.date-range` | Time filter driver |
 | `visual.table` | Data table |
 | `visual.kpi` | Single metric card |
@@ -93,7 +96,7 @@ These types are registered, previewable, and covered by exporters (visual → UI
 
 ### Next single components (suggested P1 order)
 
-1. `visual.input.number`, `visual.input.checkbox` — complete basic form set
+1. ~~`visual.input.number`, `visual.input.checkbox`, `visual.input.textarea`~~ — shipped (DAS-39)
 2. `visual.chart.pie` — second chart family
 3. `layout.flex` — simpler layout than grid for many pages
 4. `visual.detail` — row drill-down from table selection

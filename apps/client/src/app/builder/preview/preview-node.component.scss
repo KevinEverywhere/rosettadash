@@ -11,6 +11,23 @@
   width: 100%;
 }
 
+.preview-field--checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.preview-checkbox {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+}
+
+.preview-textarea {
+  min-height: 4rem;
+  resize: vertical;
+}
+
 .preview-field__label {
   font-size: 0.75rem;
   font-weight: 600;

@@ -36,6 +36,12 @@ export function buildDashboardContext(
     if (dataType === 'string') {
       return `  const [${varName}, ${setter}] = useState<string>('');`;
     }
+    if (dataType === 'number') {
+      return `  const [${varName}, ${setter}] = useState<number>(0);`;
+    }
+    if (dataType === 'boolean') {
+      return `  const [${varName}, ${setter}] = useState<boolean>(false);`;
+    }
     return `  const [${varName}, ${setter}] = useState<unknown>();`;
   });
 
@@ -104,7 +110,12 @@ function wireComponentOutputs(
       continue;
     }
 
-    if (output.dataType === 'date-range' || output.dataType === 'string') {
+    if (
+      output.dataType === 'date-range' ||
+      output.dataType === 'string' ||
+      output.dataType === 'number' ||
+      output.dataType === 'boolean'
+    ) {
       props['value'] = state.varName;
       props['onChange'] = state.setter;
     }

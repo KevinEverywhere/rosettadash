@@ -123,6 +123,50 @@ describe('generateReactUiFiles', () => {
     expect(roleGateFile?.content).toContain('allowedRoles');
   });
 
+  it('generates React files for P1 form input components', () => {
+    const numberInput = registry.createNode('visual.input.number', { id: 'n1' });
+    const checkbox = registry.createNode('visual.input.checkbox', {
+      id: 'c1',
+      properties: { label: 'Accept terms', defaultChecked: true },
+    });
+    const textarea = registry.createNode('visual.input.textarea', { id: 't1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Form Inputs',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [numberInput, checkbox, textarea],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const paths = files.map((file) => file.path);
+
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/^src\/components\/NumberInput\.tsx$/),
+        expect.stringMatching(/^src\/components\/Checkbox\.tsx$/),
+        expect.stringMatching(/^src\/components\/Textarea\.tsx$/),
+      ]),
+    );
+
+    const numberFile = files.find((file) => file.path.endsWith('NumberInput.tsx'));
+    expect(numberFile?.content).toContain('type="number"');
+
+    const checkboxFile = files.find((file) => file.path.endsWith('Checkbox.tsx'));
+    expect(checkboxFile?.content).toContain('type="checkbox"');
+
+    const dashboard = files.find((file) => file.path === 'src/Dashboard.tsx');
+    expect(dashboard?.content).toContain('Accept terms');
+
+    const textareaFile = files.find((file) => file.path.endsWith('Textarea.tsx'));
+    expect(textareaFile?.content).toContain('<textarea');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

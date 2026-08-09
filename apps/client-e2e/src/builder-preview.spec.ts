@@ -39,4 +39,16 @@ test.describe('Builder preview', () => {
     await expect(page.getByTestId('preview-table')).toBeVisible();
     await expect(page.getByTestId('preview-line-chart')).toBeVisible();
   });
+
+  test('shows P1 form input previews', async ({ page }) => {
+    await page.getByTestId('palette-add-visual.input.number').click();
+    await page.getByTestId('palette-add-visual.input.checkbox').click();
+    await page.getByTestId('palette-add-visual.input.textarea').click();
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+    await expect(page.getByTestId('preview-number-input')).toBeVisible();
+    await expect(page.getByTestId('preview-checkbox')).toBeVisible();
+    await expect(page.getByTestId('preview-textarea')).toBeVisible();
+  });
 });

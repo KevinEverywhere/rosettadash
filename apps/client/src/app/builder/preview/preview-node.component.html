@@ -23,6 +23,49 @@
       </select>
     </label>
   }
+  @case ('visual.input.number') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <input
+        type="number"
+        class="preview-input"
+        data-testid="preview-number-input"
+        [placeholder]="readString('placeholder')"
+        [attr.min]="readNumber('min', 0)"
+        [attr.max]="readNumber('max', 100)"
+        [attr.step]="readNumber('step', 1)"
+        [attr.required]="readBoolean('required') ? true : null"
+        readonly
+      />
+    </label>
+  }
+  @case ('visual.input.checkbox') {
+    <label class="preview-field preview-field--checkbox">
+      <input
+        type="checkbox"
+        class="preview-checkbox"
+        data-testid="preview-checkbox"
+        [checked]="readBoolean('defaultChecked')"
+        disabled
+      />
+      <span class="preview-field__label">{{
+        readString('label') || node().label
+      }}</span>
+    </label>
+  }
+  @case ('visual.input.textarea') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <textarea
+        class="preview-input preview-textarea"
+        data-testid="preview-textarea"
+        [placeholder]="readString('placeholder')"
+        [attr.rows]="readNumber('rows', 4)"
+        [attr.required]="readBoolean('required') ? true : null"
+        readonly
+      ></textarea>
+    </label>
+  }
   @case ('visual.input.date-range') {
     <div class="preview-date-range" data-testid="preview-date-range">
       <span class="preview-field__label">{{ node().label }}</span>

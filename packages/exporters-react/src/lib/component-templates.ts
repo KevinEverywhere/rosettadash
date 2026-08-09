@@ -5,6 +5,9 @@ import { joinLines } from './utils';
 const SUPPORTED_TYPES = new Set([
   'visual.input.text',
   'visual.input.select',
+  'visual.input.number',
+  'visual.input.checkbox',
+  'visual.input.textarea',
   'visual.input.date-range',
   'visual.table',
   'visual.kpi',
@@ -25,6 +28,12 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateTextInput(exportName);
     case 'visual.input.select':
       return generateSelectInput(exportName);
+    case 'visual.input.number':
+      return generateNumberInput(exportName);
+    case 'visual.input.checkbox':
+      return generateCheckboxInput(exportName);
+    case 'visual.input.textarea':
+      return generateTextareaInput(exportName);
     case 'visual.input.date-range':
       return generateDateRangeFilter(exportName);
     case 'visual.table':
@@ -107,6 +116,127 @@ function generateSelectInput(name: string): string {
     `          </option>`,
     `        ))}`,
     `      </select>`,
+    `    </label>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateNumberInput(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  placeholder?: string;`,
+    `  required?: boolean;`,
+    `  min?: number;`,
+    `  max?: number;`,
+    `  step?: number;`,
+    `  value?: number;`,
+    `  onChange?: (value: number) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  placeholder = '',`,
+    `  required = false,`,
+    `  min = 0,`,
+    `  max = 100,`,
+    `  step = 1,`,
+    `  value = 0,`,
+    `  onChange,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <label className="field" htmlFor={id}>`,
+    `      <input`,
+    `        id={id}`,
+    `        className="input"`,
+    `        type="number"`,
+    `        placeholder={placeholder}`,
+    `        required={required}`,
+    `        min={min}`,
+    `        max={max}`,
+    `        step={step}`,
+    `        value={value}`,
+    `        onChange={(event) => onChange?.(Number(event.target.value))}`,
+    `      />`,
+    `    </label>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateCheckboxInput(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  label?: string;`,
+    `  defaultChecked?: boolean;`,
+    `  value?: boolean;`,
+    `  onChange?: (value: boolean) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  label = '',`,
+    `  defaultChecked = false,`,
+    `  value = defaultChecked,`,
+    `  onChange,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <label className="field field--checkbox" htmlFor={id}>`,
+    `      <input`,
+    `        id={id}`,
+    `        className="checkbox"`,
+    `        type="checkbox"`,
+    `        checked={value}`,
+    `        onChange={(event) => onChange?.(event.target.checked)}`,
+    `      />`,
+    `      {label ? <span>{label}</span> : null}`,
+    `    </label>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateTextareaInput(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  placeholder?: string;`,
+    `  required?: boolean;`,
+    `  rows?: number;`,
+    `  value?: string;`,
+    `  onChange?: (value: string) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  placeholder = '',`,
+    `  required = false,`,
+    `  rows = 4,`,
+    `  value = '',`,
+    `  onChange,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <label className="field" htmlFor={id}>`,
+    `      <textarea`,
+    `        id={id}`,
+    `        className="textarea"`,
+    `        placeholder={placeholder}`,
+    `        required={required}`,
+    `        rows={rows}`,
+    `        value={value}`,
+    `        onChange={(event) => onChange?.(event.target.value)}`,
+    `      />`,
     `    </label>`,
     `  );`,
     `}`,

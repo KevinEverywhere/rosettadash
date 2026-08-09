@@ -3,6 +3,9 @@ import type { IRComponent } from '@dashbuilder/core';
 const DEFAULT_NAMES: Record<string, string> = {
   'visual.input.text': 'TextInput',
   'visual.input.select': 'SelectInput',
+  'visual.input.number': 'NumberInput',
+  'visual.input.checkbox': 'CheckboxInput',
+  'visual.input.textarea': 'TextareaInput',
   'visual.input.date-range': 'DateRangeFilter',
   'visual.table': 'DataTable',
   'visual.kpi': 'KpiCard',
