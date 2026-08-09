@@ -158,6 +158,35 @@
       }
     </div>
   }
+  @case ('domain.person-invite') {
+    <div class="preview-onboarding" data-testid="preview-person-invite">
+      <span class="preview-field__label">{{ readString('title', 'Invite team member') }}</span>
+      <input
+        type="email"
+        class="preview-input"
+        data-testid="preview-person-invite-email"
+        [placeholder]="readString('emailPlaceholder', 'name@company.com')"
+        readonly
+      />
+      <button type="button" class="preview-onboarding__button" data-testid="preview-person-invite-submit">
+        {{ readString('submitLabel', 'Send invite') }}
+      </button>
+    </div>
+  }
+  @case ('domain.role-assign') {
+    <div class="preview-onboarding" data-testid="preview-role-assign">
+      <span class="preview-field__label">{{ readString('title', 'Assign role') }}</span>
+      <p class="preview-onboarding__summary">{{ readString('summaryLabel', 'Review access before confirming') }}</p>
+      <select class="preview-input" data-testid="preview-role-assign-select">
+        @for (role of roleAssignOptions(); track role.id) {
+          <option [value]="role.id">{{ role.name }}</option>
+        }
+      </select>
+      <button type="button" class="preview-onboarding__button" data-testid="preview-role-assign-confirm">
+        {{ readString('confirmLabel', 'Confirm access') }}
+      </button>
+    </div>
+  }
   @default {
     <div class="preview-fallback" data-testid="preview-fallback">
       <span>{{ node().label }}</span>

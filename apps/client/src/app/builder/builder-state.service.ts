@@ -10,6 +10,7 @@ import {
   RoleDefinition,
   TimeRangePreset,
   areDataTypesCompatible,
+  buildOnboardingComposite,
   defaultComponentRegistry,
   evaluateDefaults,
   normalizeDomainContext,
@@ -165,6 +166,35 @@ export class BuilderStateService {
     this.dirty.set(false);
     this.saveStatus.set('saved');
     this.clearPendingBinding();
+  }
+
+  applyOnboardingTemplate(): void {
+    const composite = this.composite();
+    if (!composite) {
+      return;
+    }
+
+    const template = buildOnboardingComposite(defaultComponentRegistry, {
+      id: composite.id,
+      version: composite.version,
+    });
+
+    this.composite.set({
+      ...composite,
+      name: template.name,
+      description: template.description,
+      templateId: template.templateId,
+      nodes: template.nodes,
+      bindings: template.bindings,
+      exportTargets: template.exportTargets,
+      domainContext: template.domainContext,
+    });
+    this.nodes.set([...template.nodes]);
+    this.bindings.set([...(template.bindings ?? [])]);
+    this.selectedNodeId.set(null);
+    this.selectedDefinition.set(null);
+    this.clearPendingBinding();
+    this.markDirty();
   }
 
   buildCompositePayload(): Composite {

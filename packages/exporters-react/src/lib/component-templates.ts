@@ -11,6 +11,8 @@ const SUPPORTED_TYPES = new Set([
   'visual.chart.line',
   'visual.chart.bar',
   'domain.role-gate',
+  'domain.person-invite',
+  'domain.role-assign',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -35,6 +37,10 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateBarChart(exportName);
     case 'domain.role-gate':
       return generateRoleGate(exportName);
+    case 'domain.person-invite':
+      return generatePersonInvite(exportName);
+    case 'domain.role-assign':
+      return generateRoleAssign(exportName);
     default:
       throw new ReactExportError(`Missing React template for ${component.type}`);
   }
@@ -362,6 +368,85 @@ function generateBarChart(name: string): string {
     `    }`,
     `    return value >= range.start && value <= range.end;`,
     `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generatePersonInvite(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  title?: string;`,
+    `  emailPlaceholder?: string;`,
+    `  submitLabel?: string;`,
+    `  onSubmit?: (email: string) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  title = 'Invite team member',`,
+    `  emailPlaceholder = 'name@company.com',`,
+    `  submitLabel = 'Send invite',`,
+    `  onSubmit,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <section className="onboarding-step" id={id}>`,
+    `      <h3>{title}</h3>`,
+    `      <label className="field">`,
+    `        <input className="input" type="email" placeholder={emailPlaceholder} />`,
+    `      </label>`,
+    `      <button type="button" className="button" onClick={() => onSubmit?.('')}>`,
+    `        {submitLabel}`,
+    `      </button>`,
+    `    </section>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateRoleAssign(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  title?: string;`,
+    `  confirmLabel?: string;`,
+    `  summaryLabel?: string;`,
+    `  roles?: Array<{ id: string; name: string }>;`,
+    `  onConfirm?: (roleId: string) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  title = 'Assign role',`,
+    `  confirmLabel = 'Confirm access',`,
+    `  summaryLabel = 'Review access before confirming',`,
+    `  roles = [],`,
+    `  onConfirm,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <section className="onboarding-step" id={id}>`,
+    `      <h3>{title}</h3>`,
+    `      <p className="onboarding-step__summary">{summaryLabel}</p>`,
+    `      <label className="field">`,
+    `        <select className="input" defaultValue={roles[0]?.id ?? ''}>`,
+    `          {roles.map((role) => (`,
+    `            <option key={role.id} value={role.id}>`,
+    `              {role.name}`,
+    `            </option>`,
+    `          ))}`,
+    `        </select>`,
+    `      </label>`,
+    `      <button type="button" className="button" onClick={() => onConfirm?.(roles[0]?.id ?? '')}>`,
+    `        {confirmLabel}`,
+    `      </button>`,
+    `    </section>`,
+    `  );`,
     `}`,
     ``,
   ]);

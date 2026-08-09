@@ -4,6 +4,7 @@ import { validateComposite } from '../validation/validate-composite';
 import type { DomainContext } from '../domain/domain-context';
 import { normalizeDomainContext } from '../domain/domain-context';
 import { visibilityRolesForComponent } from '../domain/role-visibility';
+import { compositeHasOnboardingFlow, onboardingRoutePaths } from '../domain/onboarding';
 import type {
   BuildExportIROptions,
   ExportIR,
@@ -97,6 +98,7 @@ export function buildExportIR(
       compositeName: composite.name,
       version: composite.version,
       generatedAt: options.generatedAt ?? new Date().toISOString(),
+      ...(composite.templateId ? { templateId: composite.templateId } : {}),
     },
     targets: resolveTargets(composite.exportTargets, options.defaultTargets),
     envVars,
@@ -327,11 +329,32 @@ function buildRoutes(composite: Composite, registry: ComponentRegistry) {
 
   registry.getOrThrow(serverNode.type);
 
-  return [
+  const routes = [
     {
       id: `${serverNode.id}:list-${tableName}`,
       method: 'GET' as const,
       path: `/${prefix}/${tableName}`,
+      handlerNodeId: serverNode.id,
+    },
+  ];
+
+  if (!compositeHasOnboardingFlow(composite)) {
+    return routes;
+  }
+
+  const onboardingPaths = onboardingRoutePaths(prefix);
+  return [
+    ...routes,
+    {
+      id: `${serverNode.id}:onboarding-invite`,
+      method: 'POST' as const,
+      path: onboardingPaths.invitePath,
+      handlerNodeId: serverNode.id,
+    },
+    {
+      id: `${serverNode.id}:onboarding-role`,
+      method: 'PATCH' as const,
+      path: onboardingPaths.assignRolePath,
       handlerNodeId: serverNode.id,
     },
   ];

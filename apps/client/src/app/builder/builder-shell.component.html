@@ -42,6 +42,15 @@
       </span>
       <button
         type="button"
+        class="builder__template"
+        data-testid="apply-onboarding-template"
+        [disabled]="state.loading()"
+        (click)="applyOnboardingTemplate()"
+      >
+        Onboarding template
+      </button>
+      <button
+        type="button"
         class="builder__export"
         data-testid="export-button"
         [disabled]="state.loading()"

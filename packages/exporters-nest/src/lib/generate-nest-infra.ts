@@ -3,6 +3,7 @@ import {
   collectExportRoleIds,
   generateScopeModuleSource,
   hasQueryScope,
+  irHasOnboardingFlow,
   irHasRoleGates,
   resolveExportQueryScope,
   scopedPostgresListRowsLines,
@@ -37,6 +38,7 @@ export function generateNestInfraFiles(
   const connectionEnvKey = resolvePrimaryConnectionEnvKey(ir);
   const roleIds = collectExportRoleIds(ir);
   const includeRoleAuth = irHasRoleGates(ir) || roleIds.length > 0;
+  const includeOnboarding = irHasOnboardingFlow(ir);
   const queryScope = resolveExportQueryScope(ir.domain, ir.meta.generatedAt);
   const includeScopedQueries = hasQueryScope(queryScope);
 
@@ -55,7 +57,7 @@ export function generateNestInfraFiles(
     },
     {
       path: `${root}/app.module.ts`,
-      content: generateAppModule(routeResources, includeRoleAuth),
+      content: generateAppModule(routeResources, includeRoleAuth, includeOnboarding),
       encoding: 'utf-8',
       description: 'Root application module',
     },
@@ -152,6 +154,23 @@ export function generateNestInfraFiles(
     );
   }
 
+  if (includeOnboarding) {
+    files.push(
+      {
+        path: `${root}/onboarding/onboarding.controller.ts`,
+        content: generateOnboardingController(includeRoleAuth ? roleIds : []),
+        encoding: 'utf-8',
+        description: 'Onboarding invite and role assignment route stubs',
+      },
+      {
+        path: `${root}/onboarding/onboarding.module.ts`,
+        content: generateOnboardingModule(),
+        encoding: 'utf-8',
+        description: 'Onboarding feature module',
+      },
+    );
+  }
+
   return files;
 }
 
@@ -175,27 +194,40 @@ function generateMainTs(globalPrefix: string): string {
   ]);
 }
 
-function generateAppModule(routeResources: RouteResource[], includeRoleAuth: boolean): string {
+function generateAppModule(
+  routeResources: RouteResource[],
+  includeRoleAuth: boolean,
+  includeOnboarding: boolean,
+): string {
   const modules =
     routeResources.length > 0
       ? routeResources
       : [{ moduleName: 'RecordsModule', resourceName: 'records' } as RouteResource];
 
-  const imports = modules.map((resource) => `import { ${resource.moduleName} } from './${resource.resourceName}/${resource.resourceName}.module';`);
+  const imports = modules.map(
+    (resource) =>
+      `import { ${resource.moduleName} } from './${resource.resourceName}/${resource.resourceName}.module';`,
+  );
   const moduleList = modules.map((resource) => `    ${resource.moduleName},`).join('\n');
   const authImport = includeRoleAuth ? [`import { AuthModule } from './auth/auth.module';`] : [];
   const authModule = includeRoleAuth ? [`    AuthModule,`] : [];
+  const onboardingImport = includeOnboarding
+    ? [`import { OnboardingModule } from './onboarding/onboarding.module';`]
+    : [];
+  const onboardingModule = includeOnboarding ? [`    OnboardingModule,`] : [];
 
   return joinLines([
     `import { Module } from '@nestjs/common';`,
     `import { DatabaseModule } from './database/database.module';`,
     ...authImport,
+    ...onboardingImport,
     ...imports,
     ``,
     `@Module({`,
     `  imports: [`,
     `    DatabaseModule,`,
     ...authModule,
+    ...onboardingModule,
     moduleList,
     `  ],`,
     `})`,
@@ -372,6 +404,56 @@ function generateAuthModule(): string {
   ]);
 }
 
+function generateOnboardingController(requiredRoles: string[]): string {
+  const imports =
+    requiredRoles.length > 0
+      ? [
+          `import { Body, Controller, Patch, Post, UseGuards } from '@nestjs/common';`,
+          `import { Roles } from '../auth/roles.decorator';`,
+          `import { RolesGuard } from '../auth/roles.guard';`,
+        ]
+      : [`import { Body, Controller, Patch, Post } from '@nestjs/common';`];
+  const guardLines =
+    requiredRoles.length > 0
+      ? [
+          `@UseGuards(RolesGuard)`,
+          `@Roles(${requiredRoles.map((role) => `'${role}'`).join(', ')})`,
+        ]
+      : [];
+
+  return joinLines([
+    ...imports,
+    ``,
+    `@Controller('onboarding')`,
+    ...guardLines,
+    `export class OnboardingController {`,
+    `  @Post('invite')`,
+    `  invite(@Body() body: { email?: string }) {`,
+    `    return { ok: true, email: body.email ?? '', status: 'invited' };`,
+    `  }`,
+    ``,
+    `  @Patch('role')`,
+    `  assignRole(@Body() body: { personId?: string; roleId?: string }) {`,
+    `    return { ok: true, personId: body.personId ?? '', roleId: body.roleId ?? '' };`,
+    `  }`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateOnboardingModule(): string {
+  return joinLines([
+    `import { Module } from '@nestjs/common';`,
+    `import { OnboardingController } from './onboarding.controller';`,
+    ``,
+    `@Module({`,
+    `  controllers: [OnboardingController],`,
+    `})`,
+    `export class OnboardingModule {}`,
+    ``,
+  ]);
+}
+
 function generateReadme(ir: ExportIR, globalPrefix: string, connectionEnvKey: string): string {
   const routes =
     ir.routes.length > 0
@@ -390,6 +472,9 @@ function generateReadme(ir: ExportIR, globalPrefix: string, connectionEnvKey: st
     `- \`server/src/*/*.controller.ts\` — list endpoints derived from ExportIR routes`,
     ...(irHasRoleGates(ir) || (ir.domain?.roles?.length ?? 0) > 0
       ? [`- \`server/src/auth/*\` — role guard stub using \`x-dashbuilder-role\` header`]
+      : []),
+    ...(irHasOnboardingFlow(ir)
+      ? [`- \`server/src/onboarding/*\` — invite and role assignment route stubs`]
       : []),
     `- \`.env.example\` — required environment variables`,
     ``,

@@ -12,6 +12,7 @@ export interface ExportIRMeta {
   compositeName: string;
   version: number;
   generatedAt: string;
+  templateId?: string;
 }
 
 export interface IRStyleTokens {

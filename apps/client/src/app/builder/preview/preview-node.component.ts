@@ -1,6 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { ComponentNode, parseRoleGateAllowedRoles, roleGateAllowsRole } from '@dashbuilder/core';
+import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import { PreviewDataService } from './preview-data.service';
 
@@ -77,6 +77,10 @@ export class PreviewNodeComponent {
     }
     return roleGateAllowsRole(this.roleGateAllowedRoles(), this.state.previewRoleId());
   });
+
+  protected readonly roleAssignOptions = computed(() =>
+    resolveRoleOptions(this.state.domainContext()?.roles),
+  );
 
   protected readString(key: string, fallback = ''): string {
     const value = this.node().properties[key];

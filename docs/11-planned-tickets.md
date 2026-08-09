@@ -22,12 +22,13 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-33](https://planetkevin.atlassian.net/browse/DAS-33) | `feature/DAS-33-domain-context` | Domain context on composites, preview, and ExportIR |
 | [DAS-34](https://planetkevin.atlassian.net/browse/DAS-34) | `feature/DAS-34-role-visibility` | Role visibility in builder + export stubs |
 | [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | Scoped query filters in exporters |
+| [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | `feature/DAS-36-onboarding-template` | Onboarding composite template + export stubs |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | In progress |
+| [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | `feature/DAS-36-onboarding-template` | In progress |
 
 ## Delivery status
 
@@ -35,11 +36,10 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 - **Defaults engine:** complete (DAS-32)
 - **Domain context:** complete (DAS-33)
 - **Role visibility:** complete (DAS-34)
-- **Scoped query filters:** domain-aware WHERE clauses in database exports — **DAS-35 in progress**
+- **Scoped query filters:** complete (DAS-35)
+- **Onboarding composite template:** domain onboarding flow + export stubs — **DAS-36 in progress**
 
 ## Phase 5 — planned (not yet ticketed)
-
-- Onboarding composite template
 
 ## Future — 3D dashboards (not yet ticketed)
 

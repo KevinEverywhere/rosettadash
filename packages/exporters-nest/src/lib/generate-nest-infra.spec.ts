@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, buildOnboardingComposite, defaultComponentRegistry } from '@dashbuilder/core';
 import { generateNestInfraFiles } from './generate-nest-infra';
 import { NestExportError } from './types';
 
@@ -204,5 +204,26 @@ describe('generateNestInfraFiles', () => {
 
     const env = files.find((file) => file.path === '.env.example');
     expect(env?.content).toContain('DASHBUILDER_CLIENT_ID=');
+  });
+
+  it('generates onboarding route stubs for onboarding composites', () => {
+    const composite = buildOnboardingComposite(registry, { id: 'comp1', version: 1 });
+    const ir = buildExportIR(composite, registry, { generatedAt: '2026-08-08T00:00:00.000Z' });
+    const files = generateNestInfraFiles(ir);
+    const paths = files.map((file) => file.path);
+
+    expect(paths).toEqual(
+      expect.arrayContaining([
+        'server/src/onboarding/onboarding.controller.ts',
+        'server/src/onboarding/onboarding.module.ts',
+      ]),
+    );
+
+    const controller = files.find((file) => file.path === 'server/src/onboarding/onboarding.controller.ts');
+    expect(controller?.content).toContain("@Post('invite')");
+    expect(controller?.content).toContain("@Patch('role')");
+
+    const appModule = files.find((file) => file.path === 'server/src/app.module.ts');
+    expect(appModule?.content).toContain('OnboardingModule');
   });
 });

@@ -169,6 +169,50 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'domain.person-invite',
+    category: 'domain',
+    label: 'Person Invite',
+    description: 'Onboarding step to invite a person by email',
+    isVisual: true,
+    inputs: [],
+    outputs: [
+      { id: 'email', name: 'email', dataType: 'string' },
+      { id: 'submit', name: 'submit', dataType: 'event' },
+    ],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Invite team member' },
+      {
+        key: 'emailPlaceholder',
+        label: 'Email placeholder',
+        type: 'string',
+        default: 'name@company.com',
+      },
+      { key: 'submitLabel', label: 'Submit label', type: 'string', default: 'Send invite' },
+    ],
+  },
+  {
+    type: 'domain.role-assign',
+    category: 'domain',
+    label: 'Role Assign',
+    description: 'Onboarding step to assign a role and confirm access',
+    isVisual: true,
+    inputs: [{ id: 'roles', name: 'roles', dataType: 'rowset' }],
+    outputs: [
+      { id: 'roleId', name: 'roleId', dataType: 'string' },
+      { id: 'confirm', name: 'confirm', dataType: 'event' },
+    ],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Assign role' },
+      { key: 'confirmLabel', label: 'Confirm label', type: 'string', default: 'Confirm access' },
+      {
+        key: 'summaryLabel',
+        label: 'Summary label',
+        type: 'string',
+        default: 'Review access before confirming',
+      },
+    ],
+  },
+  {
     type: 'infra.env',
     category: 'infra',
     label: 'Environment Config',

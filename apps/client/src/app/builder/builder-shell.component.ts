@@ -35,6 +35,10 @@ export class BuilderShellComponent implements OnInit {
     void this.projectService.save();
   }
 
+  protected applyOnboardingTemplate(): void {
+    this.state.applyOnboardingTemplate();
+  }
+
   protected setWorkspaceMode(mode: WorkspaceMode): void {
     this.state.setWorkspaceMode(mode);
   }

@@ -58,7 +58,9 @@ export function resolveRouteResources(ir: ExportIR): RouteResource[] {
   const postgresSources = resolvePostgresSources(ir);
   const defaultTable = postgresSources[0]?.table ?? 'records';
 
-  return ir.routes.map((route) => {
+  return ir.routes
+    .filter((route) => route.method === 'GET')
+    .map((route) => {
     const resourceName = routeResourceName(route, globalPrefix);
     const tableName = assertSafeTableName(
       postgresSources.find((source) => source.table)?.table || defaultTable || 'records',

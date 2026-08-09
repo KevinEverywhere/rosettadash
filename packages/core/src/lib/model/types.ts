@@ -84,6 +84,7 @@ export interface Composite {
   id: string;
   name: string;
   description?: string;
+  templateId?: string;
   nodes: ComponentNode[];
   bindings: Binding[];
   exportTargets?: ExportTargetConfig;
