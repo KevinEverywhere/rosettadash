@@ -45,4 +45,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19) | merged to `development` | Export wizard UI targets |
 | [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | merged to `development` | Vue UI exporter |
 | [DAS-21](https://planetkevin.atlassian.net/browse/DAS-21) | merged to `development` | Export wizard UI polish |
-| [DAS-22](https://planetkevin.atlassian.net/browse/DAS-22) | `feature/DAS-22-express-server-exporter` | Express server exporter |
+| [DAS-22](https://planetkevin.atlassian.net/browse/DAS-22) | merged to `development` | Express server exporter |
+| [DAS-23](https://planetkevin.atlassian.net/browse/DAS-23) | `feature/DAS-23-next-server-exporter` | Next.js server exporter |

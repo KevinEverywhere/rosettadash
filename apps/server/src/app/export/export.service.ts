@@ -3,6 +3,7 @@ import { Composite, ExportIR, buildExportIR, defaultComponentRegistry } from '@d
 import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
 import { generateExpressInfraFiles } from '@dashbuilder/exporters-express';
 import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
+import { generateNextInfraFiles } from '@dashbuilder/exporters-next';
 import { generateReactUiFiles } from '@dashbuilder/exporters-react';
 import { generateVueUiFiles } from '@dashbuilder/exporters-vue';
 
@@ -39,6 +40,12 @@ export class ExportService {
   buildExpressExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const files = generateExpressInfraFiles(ir);
+    return { ir, files };
+  }
+
+  buildNextExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = generateNextInfraFiles(ir);
     return { ir, files };
   }
 

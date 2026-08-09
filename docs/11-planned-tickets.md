@@ -27,22 +27,23 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-19](https://planetkevin.atlassian.net/browse/DAS-19) | `feature/DAS-19-export-wizard-ui-targets` | Export wizard UI target picker |
 | [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | `feature/DAS-20-vue-ui-exporter` | Vue UI exporter package |
 | [DAS-21](https://planetkevin.atlassian.net/browse/DAS-21) | `feature/DAS-21-export-wizard-ui-polish` | Export wizard UI target polish |
+| [DAS-22](https://planetkevin.atlassian.net/browse/DAS-22) | `feature/DAS-22-express-server-exporter` | Express server exporter package |
 
 ## Phase 4 — Multi-target export
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-22](https://planetkevin.atlassian.net/browse/DAS-22) | `feature/DAS-22-express-server-exporter` | Express server exporter package |
+| [DAS-23](https://planetkevin.atlassian.net/browse/DAS-23) | `feature/DAS-23-next-server-exporter` | Next.js server exporter package |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-22](https://planetkevin.atlassian.net/browse/DAS-22) | `feature/DAS-22-express-server-exporter` | In progress |
+| [DAS-23](https://planetkevin.atlassian.net/browse/DAS-23) | `feature/DAS-23-next-server-exporter` | In progress |
 
 ## Phase 4 — planned (not yet ticketed)
 
-- Next.js / Nuxt server exporters
+- Nuxt server exporter
 - MongoDB, Supabase, MySQL exporters
 - Export target matrix testing
 

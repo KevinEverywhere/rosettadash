@@ -19,6 +19,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `exporters-react` | `packages/exporters-react` | React UI code generator from ExportIR |
 | `exporters-nest` | `packages/exporters-nest` | NestJS + PostgreSQL server generator from ExportIR |
 | `exporters-express` | `packages/exporters-express` | Express + PostgreSQL server generator from ExportIR |
+| `exporters-next` | `packages/exporters-next` | Next.js + PostgreSQL server generator from ExportIR |
 
 ## Run locally
 
@@ -136,6 +137,7 @@ Example body:
 | POST | `/api/export/react` | Build ExportIR and generate React UI source files |
 | POST | `/api/export/nest` | Build ExportIR and generate NestJS + PostgreSQL server files |
 | POST | `/api/export/express` | Build ExportIR and generate Express + PostgreSQL server files |
+| POST | `/api/export/next` | Build ExportIR and generate Next.js + PostgreSQL server files |
 | POST | `/api/export/bundle` | Build ExportIR and generate combined React + NestJS file list |
 
 ## Scripts
@@ -170,8 +172,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-22](https://planetkevin.atlassian.net/browse/DAS-22)** — Express server exporter package  
-Branch: `feature/DAS-22-express-server-exporter`
+**[DAS-23](https://planetkevin.atlassian.net/browse/DAS-23)** — Next.js server exporter package  
+Branch: `feature/DAS-23-next-server-exporter`
 
 ## License
 

@@ -1,0 +1,15 @@
+{
+  "name": "exporters-next",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/exporters-next/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/exporters-next/tsconfig.lib.json"
+      }
+    }
+  }
+}
