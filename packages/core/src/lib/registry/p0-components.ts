@@ -217,6 +217,18 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'infra.mysql',
+    category: 'infra',
+    label: 'MySQL',
+    isVisual: false,
+    inputs: [{ id: 'env', name: 'env', dataType: 'any' }],
+    outputs: [{ id: 'rowset', name: 'rowset', dataType: 'rowset' }],
+    properties: [
+      { key: 'connectionEnvKey', label: 'Connection env key', type: 'string', default: 'MYSQL_URL', required: true },
+      { key: 'table', label: 'Table name', type: 'string', default: '' },
+    ],
+  },
+  {
     type: 'infra.server.nest',
     category: 'infra',
     label: 'NestJS Server',

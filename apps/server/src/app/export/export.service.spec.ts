@@ -324,6 +324,36 @@ describe('ExportService', () => {
     expect(result.files.some((file) => file.path === 'database/src/tables/sales.ts')).toBe(true);
   });
 
+  it('returns generated MySQL files for a valid composite', () => {
+    const mysql = defaultComponentRegistry.createNode('infra.mysql', {
+      id: 'my1',
+      properties: { connectionEnvKey: 'MYSQL_URL', table: 'sales' },
+    });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+    const server = defaultComponentRegistry.createNode('infra.server.nest', { id: 's1' });
+
+    const result = service.buildMysqlExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'react', server: 'nest', database: 'mysql' },
+      nodes: [mysql, table, server],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'my1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.ir.meta.compositeName).toBe('Export me');
+    expect(result.files.some((file) => file.path === 'database/src/mysql.pool.ts')).toBe(true);
+    expect(result.files.some((file) => file.path === 'database/src/tables/sales.ts')).toBe(true);
+  });
+
   it('returns combined React and NestJS files for a valid composite', () => {
     const pg = defaultComponentRegistry.createNode('infra.postgresql', {
       id: 'pg1',
@@ -531,6 +561,36 @@ describe('ExportService', () => {
 
     expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(true);
     expect(result.files.some((file) => file.path === 'database/src/supabase.client.ts')).toBe(true);
+    expect(result.files.some((file) => file.path === 'server/src/main.ts')).toBe(false);
+  });
+
+  it('returns combined React and MySQL database files for a valid composite', () => {
+    const mysql = defaultComponentRegistry.createNode('infra.mysql', {
+      id: 'my1',
+      properties: { connectionEnvKey: 'MYSQL_URL', table: 'sales' },
+    });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+    const server = defaultComponentRegistry.createNode('infra.server.nest', { id: 's1' });
+
+    const result = service.buildBundleExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'react', server: 'nest', database: 'mysql' },
+      nodes: [mysql, table, server],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'my1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(true);
+    expect(result.files.some((file) => file.path === 'database/src/mysql.pool.ts')).toBe(true);
     expect(result.files.some((file) => file.path === 'server/src/main.ts')).toBe(false);
   });
 

@@ -169,6 +169,24 @@ function mapInfraDataSource(node: Composite['nodes'][number]): IRDataSource {
     };
   }
 
+  if (node.type === 'infra.mysql') {
+    const connectionEnvKey =
+      typeof node.properties['connectionEnvKey'] === 'string'
+        ? node.properties['connectionEnvKey']
+        : 'MYSQL_URL';
+    const table =
+      typeof node.properties['table'] === 'string' ? node.properties['table'] : undefined;
+
+    return {
+      id: node.id,
+      type: node.type,
+      label: node.label,
+      connectionEnvKey,
+      table,
+      properties: { ...node.properties },
+    };
+  }
+
   return {
     id: node.id,
     type: node.type,
@@ -207,6 +225,15 @@ function collectEnvVars(node: Composite['nodes'][number], envVarKeys: Set<string
         ? node.properties['anonKeyEnvKey']
         : 'SUPABASE_ANON_KEY',
     );
+    return;
+  }
+
+  if (node.type === 'infra.mysql') {
+    const key =
+      typeof node.properties['connectionEnvKey'] === 'string'
+        ? node.properties['connectionEnvKey']
+        : 'MYSQL_URL';
+    envVarKeys.add(key);
     return;
   }
 
@@ -265,6 +292,7 @@ function buildRoutes(composite: Composite, registry: ComponentRegistry) {
   const pgNode = composite.nodes.find((node) => node.type === 'infra.postgresql');
   const mongoNode = composite.nodes.find((node) => node.type === 'infra.mongodb');
   const supabaseNode = composite.nodes.find((node) => node.type === 'infra.supabase');
+  const mysqlNode = composite.nodes.find((node) => node.type === 'infra.mysql');
   const tableName =
     (pgNode && typeof pgNode.properties['table'] === 'string' ? pgNode.properties['table'] : undefined) ??
     (mongoNode && typeof mongoNode.properties['collection'] === 'string'
@@ -272,6 +300,9 @@ function buildRoutes(composite: Composite, registry: ComponentRegistry) {
       : undefined) ??
     (supabaseNode && typeof supabaseNode.properties['table'] === 'string'
       ? supabaseNode.properties['table']
+      : undefined) ??
+    (mysqlNode && typeof mysqlNode.properties['table'] === 'string'
+      ? mysqlNode.properties['table']
       : undefined) ??
     tableNodes[0]?.label.toLowerCase().replace(/\s+/g, '-') ??
     'records';

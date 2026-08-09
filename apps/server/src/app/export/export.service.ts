@@ -3,6 +3,7 @@ import { Composite, ExportIR, buildExportIR, defaultComponentRegistry } from '@d
 import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
 import { generateExpressInfraFiles } from '@dashbuilder/exporters-express';
 import { generateMongoInfraFiles } from '@dashbuilder/exporters-mongodb';
+import { generateMysqlInfraFiles } from '@dashbuilder/exporters-mysql';
 import { generateSupabaseInfraFiles } from '@dashbuilder/exporters-supabase';
 import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
 import { generateNextInfraFiles } from '@dashbuilder/exporters-next';
@@ -77,6 +78,12 @@ export class ExportService {
     return { ir, files };
   }
 
+  buildMysqlExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = generateMysqlInfraFiles(ir);
+    return { ir, files };
+  }
+
   buildBundleExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const uiFiles = this.generateUiFiles(ir);
@@ -95,6 +102,8 @@ export class ExportService {
         return generateMongoInfraFiles(ir);
       case 'supabase':
         return generateSupabaseInfraFiles(ir);
+      case 'mysql':
+        return generateMysqlInfraFiles(ir);
       default:
         return [];
     }

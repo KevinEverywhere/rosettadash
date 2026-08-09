@@ -13,7 +13,7 @@ import { ExportZipService } from './export-zip.service';
 
 type UiTarget = 'react' | 'angular' | 'vue' | 'svelte';
 type ServerTarget = 'nest' | 'express' | 'next' | 'nuxt';
-type DatabaseTarget = 'postgresql' | 'mongodb' | 'supabase';
+type DatabaseTarget = 'postgresql' | 'mongodb' | 'supabase' | 'mysql';
 
 interface UiTargetOption {
   id: UiTarget;
@@ -64,6 +64,7 @@ export class ExportWizardComponent {
     { id: 'postgresql', label: 'PostgreSQL', description: 'SQL via server exporter' },
     { id: 'mongodb', label: 'MongoDB', description: 'Document collections layer' },
     { id: 'supabase', label: 'Supabase', description: 'PostgREST table layer' },
+    { id: 'mysql', label: 'MySQL', description: 'Relational tables layer' },
   ];
 
   protected readonly loading = signal(false);

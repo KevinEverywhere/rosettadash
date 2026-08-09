@@ -24,6 +24,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `exporters-svelte` | `packages/exporters-svelte` | Svelte UI code generator from ExportIR |
 | `exporters-mongodb` | `packages/exporters-mongodb` | MongoDB database layer generator from ExportIR |
 | `exporters-supabase` | `packages/exporters-supabase` | Supabase database layer generator from ExportIR |
+| `exporters-mysql` | `packages/exporters-mysql` | MySQL database layer generator from ExportIR |
 
 ## Run locally
 
@@ -148,6 +149,7 @@ Example body:
 | POST | `/api/export/nuxt` | Build ExportIR and generate Nuxt + PostgreSQL server files |
 | POST | `/api/export/mongodb` | Build ExportIR and generate MongoDB database layer files |
 | POST | `/api/export/supabase` | Build ExportIR and generate Supabase database layer files |
+| POST | `/api/export/mysql` | Build ExportIR and generate MySQL database layer files |
 | POST | `/api/export/bundle` | Build ExportIR and generate combined UI + server file list (targets from composite `exportTargets`) |
 
 ## Scripts
@@ -182,8 +184,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-29](https://planetkevin.atlassian.net/browse/DAS-29)** — Export wizard database target picker  
-Branch: `feature/DAS-29-export-wizard-database-targets`
+**[DAS-30](https://planetkevin.atlassian.net/browse/DAS-30)** — MySQL database exporter package  
+Branch: `feature/DAS-30-mysql-exporter`
 
 ## License
 

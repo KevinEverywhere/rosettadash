@@ -23,6 +23,7 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-database-postgresql')).toBeVisible();
     await expect(page.getByTestId('export-wizard-database-mongodb')).toBeVisible();
     await expect(page.getByTestId('export-wizard-database-supabase')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-database-mysql')).toBeVisible();
   });
 
   test('shows validation errors for an empty composite', async ({ page }) => {
@@ -206,6 +207,32 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-files')).toContainText(
       'database/src/supabase.client.ts',
     );
+    await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
+    await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
+  });
+
+  test('previews MySQL database files when MySQL target is selected', async ({ page }) => {
+    await page.getByTestId('palette-add-infra.mysql').click();
+    await page.getByTestId('palette-add-infra.server.nest').click();
+    await page.getByTestId('palette-add-visual.table').click();
+    await expect(page.getByTestId('canvas-node')).toHaveCount(3);
+
+    const mysqlNode = page.getByTestId('canvas-node').nth(0);
+    const tableNode = page.getByTestId('canvas-node').nth(2);
+
+    await mysqlNode.getByTestId(/^port-output-.*-rowset$/).click();
+    await tableNode.getByTestId(/^port-input-.*-data$/).click();
+
+    await page.getByTestId('export-button').click();
+    await expect(page.getByTestId('export-wizard')).toBeVisible();
+    await page.getByTestId('export-wizard-database-mysql').click();
+    await expect(page.getByTestId('export-wizard-database-mysql')).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await expect(page.getByTestId('export-wizard-loading')).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByTestId('export-wizard-targets')).toContainText('mysql');
+    await expect(page.getByTestId('export-wizard-files')).toContainText('database/src/mysql.pool.ts');
     await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
     await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
   });

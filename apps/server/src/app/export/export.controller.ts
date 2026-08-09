@@ -4,6 +4,7 @@ import { ExportBuildError } from '@dashbuilder/core';
 import { AngularExportError } from '@dashbuilder/exporters-angular';
 import { ExpressExportError } from '@dashbuilder/exporters-express';
 import { MongoExportError } from '@dashbuilder/exporters-mongodb';
+import { MysqlExportError } from '@dashbuilder/exporters-mysql';
 import { SupabaseExportError } from '@dashbuilder/exporters-supabase';
 import { NestExportError } from '@dashbuilder/exporters-nest';
 import { NextExportError } from '@dashbuilder/exporters-next';
@@ -31,6 +32,7 @@ export class ExportController {
       error instanceof NextExportError ||
       error instanceof NuxtExportError ||
       error instanceof MongoExportError ||
+      error instanceof MysqlExportError ||
       error instanceof SupabaseExportError ||
       error instanceof AngularExportError ||
       error instanceof VueExportError ||
@@ -137,6 +139,15 @@ export class ExportController {
   buildSupabaseExport(@Body() composite: Composite) {
     try {
       return this.exportService.buildSupabaseExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('mysql')
+  buildMysqlExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildMysqlExport(composite);
     } catch (error) {
       this.handleExportError(error);
     }

@@ -128,8 +128,8 @@ domain model, and workflow conventions for DashBuilder.
 
 - **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29)
-- **Current branch:** `feature/DAS-29-export-wizard-database-targets`
+- **Current ticket:** [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30)
+- **Current branch:** `feature/DAS-30-mysql-exporter`
 
 ## Related documents
 
