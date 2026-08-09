@@ -3,6 +3,8 @@ import type { Composite } from '@dashbuilder/core';
 import { ExportBuildError } from '@dashbuilder/core';
 import { AngularExportError } from '@dashbuilder/exporters-angular';
 import { ExpressExportError } from '@dashbuilder/exporters-express';
+import { MongoExportError } from '@dashbuilder/exporters-mongodb';
+import { SupabaseExportError } from '@dashbuilder/exporters-supabase';
 import { NestExportError } from '@dashbuilder/exporters-nest';
 import { NextExportError } from '@dashbuilder/exporters-next';
 import { NuxtExportError } from '@dashbuilder/exporters-nuxt';
@@ -28,6 +30,8 @@ export class ExportController {
       error instanceof ExpressExportError ||
       error instanceof NextExportError ||
       error instanceof NuxtExportError ||
+      error instanceof MongoExportError ||
+      error instanceof SupabaseExportError ||
       error instanceof AngularExportError ||
       error instanceof VueExportError ||
       error instanceof SvelteExportError
@@ -115,6 +119,24 @@ export class ExportController {
   buildNuxtExport(@Body() composite: Composite) {
     try {
       return this.exportService.buildNuxtExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('mongodb')
+  buildMongoExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildMongoExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('supabase')
+  buildSupabaseExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildSupabaseExport(composite);
     } catch (error) {
       this.handleExportError(error);
     }

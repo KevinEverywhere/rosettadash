@@ -126,6 +126,49 @@ function mapInfraDataSource(node: Composite['nodes'][number]): IRDataSource {
     };
   }
 
+  if (node.type === 'infra.mongodb') {
+    const connectionEnvKey =
+      typeof node.properties['connectionEnvKey'] === 'string'
+        ? node.properties['connectionEnvKey']
+        : 'MONGODB_URI';
+    const collection =
+      typeof node.properties['collection'] === 'string'
+        ? node.properties['collection']
+        : undefined;
+
+    return {
+      id: node.id,
+      type: node.type,
+      label: node.label,
+      connectionEnvKey,
+      collection,
+      properties: { ...node.properties },
+    };
+  }
+
+  if (node.type === 'infra.supabase') {
+    const connectionEnvKey =
+      typeof node.properties['urlEnvKey'] === 'string'
+        ? node.properties['urlEnvKey']
+        : 'SUPABASE_URL';
+    const anonKeyEnvKey =
+      typeof node.properties['anonKeyEnvKey'] === 'string'
+        ? node.properties['anonKeyEnvKey']
+        : 'SUPABASE_ANON_KEY';
+    const table =
+      typeof node.properties['table'] === 'string' ? node.properties['table'] : undefined;
+
+    return {
+      id: node.id,
+      type: node.type,
+      label: node.label,
+      connectionEnvKey,
+      anonKeyEnvKey,
+      table,
+      properties: { ...node.properties },
+    };
+  }
+
   return {
     id: node.id,
     type: node.type,
@@ -141,6 +184,29 @@ function collectEnvVars(node: Composite['nodes'][number], envVarKeys: Set<string
         ? node.properties['connectionEnvKey']
         : 'DATABASE_URL';
     envVarKeys.add(key);
+    return;
+  }
+
+  if (node.type === 'infra.mongodb') {
+    const key =
+      typeof node.properties['connectionEnvKey'] === 'string'
+        ? node.properties['connectionEnvKey']
+        : 'MONGODB_URI';
+    envVarKeys.add(key);
+    return;
+  }
+
+  if (node.type === 'infra.supabase') {
+    envVarKeys.add(
+      typeof node.properties['urlEnvKey'] === 'string'
+        ? node.properties['urlEnvKey']
+        : 'SUPABASE_URL',
+    );
+    envVarKeys.add(
+      typeof node.properties['anonKeyEnvKey'] === 'string'
+        ? node.properties['anonKeyEnvKey']
+        : 'SUPABASE_ANON_KEY',
+    );
     return;
   }
 
@@ -197,10 +263,18 @@ function buildRoutes(composite: Composite, registry: ComponentRegistry) {
 
   const tableNodes = composite.nodes.filter((node) => node.type === 'visual.table');
   const pgNode = composite.nodes.find((node) => node.type === 'infra.postgresql');
+  const mongoNode = composite.nodes.find((node) => node.type === 'infra.mongodb');
+  const supabaseNode = composite.nodes.find((node) => node.type === 'infra.supabase');
   const tableName =
-    pgNode && typeof pgNode.properties['table'] === 'string'
-      ? pgNode.properties['table']
-      : tableNodes[0]?.label.toLowerCase().replace(/\s+/g, '-') ?? 'records';
+    (pgNode && typeof pgNode.properties['table'] === 'string' ? pgNode.properties['table'] : undefined) ??
+    (mongoNode && typeof mongoNode.properties['collection'] === 'string'
+      ? mongoNode.properties['collection']
+      : undefined) ??
+    (supabaseNode && typeof supabaseNode.properties['table'] === 'string'
+      ? supabaseNode.properties['table']
+      : undefined) ??
+    tableNodes[0]?.label.toLowerCase().replace(/\s+/g, '-') ??
+    'records';
 
   registry.getOrThrow(serverNode.type);
 

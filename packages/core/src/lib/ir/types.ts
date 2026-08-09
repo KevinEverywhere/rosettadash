@@ -48,7 +48,9 @@ export interface IRDataSource {
   type: string;
   label: string;
   connectionEnvKey?: string;
+  anonKeyEnvKey?: string;
   table?: string;
+  collection?: string;
   properties: Record<string, unknown>;
 }
 

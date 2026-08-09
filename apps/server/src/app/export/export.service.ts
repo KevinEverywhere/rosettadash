@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Composite, ExportIR, buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
 import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
 import { generateExpressInfraFiles } from '@dashbuilder/exporters-express';
+import { generateMongoInfraFiles } from '@dashbuilder/exporters-mongodb';
+import { generateSupabaseInfraFiles } from '@dashbuilder/exporters-supabase';
 import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
 import { generateNextInfraFiles } from '@dashbuilder/exporters-next';
 import { generateNuxtInfraFiles } from '@dashbuilder/exporters-nuxt';
@@ -60,6 +62,18 @@ export class ExportService {
   buildNuxtExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const files = generateNuxtInfraFiles(ir);
+    return { ir, files };
+  }
+
+  buildMongoExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = generateMongoInfraFiles(ir);
+    return { ir, files };
+  }
+
+  buildSupabaseExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = generateSupabaseInfraFiles(ir);
     return { ir, files };
   }
 

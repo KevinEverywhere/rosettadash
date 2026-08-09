@@ -262,6 +262,68 @@ describe('ExportService', () => {
     expect(result.files.some((file) => file.path === 'server/api/sales.get.ts')).toBe(true);
   });
 
+  it('returns generated MongoDB files for a valid composite', () => {
+    const mongo = defaultComponentRegistry.createNode('infra.mongodb', {
+      id: 'mg1',
+      properties: { connectionEnvKey: 'MONGODB_URI', collection: 'sales' },
+    });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+    const server = defaultComponentRegistry.createNode('infra.server.nest', { id: 's1' });
+
+    const result = service.buildMongoExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'react', server: 'nest', database: 'mongodb' },
+      nodes: [mongo, table, server],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'mg1',
+          sourcePortId: 'documents',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.ir.meta.compositeName).toBe('Export me');
+    expect(result.files.some((file) => file.path === 'database/src/mongo.client.ts')).toBe(true);
+    expect(result.files.some((file) => file.path === 'database/src/collections/sales.ts')).toBe(
+      true,
+    );
+  });
+
+  it('returns generated Supabase files for a valid composite', () => {
+    const supabase = defaultComponentRegistry.createNode('infra.supabase', {
+      id: 'sb1',
+      properties: { urlEnvKey: 'SUPABASE_URL', anonKeyEnvKey: 'SUPABASE_ANON_KEY', table: 'sales' },
+    });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+    const server = defaultComponentRegistry.createNode('infra.server.nest', { id: 's1' });
+
+    const result = service.buildSupabaseExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'react', server: 'nest', database: 'supabase' },
+      nodes: [supabase, table, server],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'sb1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.ir.meta.compositeName).toBe('Export me');
+    expect(result.files.some((file) => file.path === 'database/src/supabase.client.ts')).toBe(true);
+    expect(result.files.some((file) => file.path === 'database/src/tables/sales.ts')).toBe(true);
+  });
+
   it('returns combined React and NestJS files for a valid composite', () => {
     const pg = defaultComponentRegistry.createNode('infra.postgresql', {
       id: 'pg1',

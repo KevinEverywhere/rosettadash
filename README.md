@@ -22,6 +22,8 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `exporters-next` | `packages/exporters-next` | Next.js + PostgreSQL server generator from ExportIR |
 | `exporters-nuxt` | `packages/exporters-nuxt` | Nuxt + PostgreSQL server generator from ExportIR |
 | `exporters-svelte` | `packages/exporters-svelte` | Svelte UI code generator from ExportIR |
+| `exporters-mongodb` | `packages/exporters-mongodb` | MongoDB database layer generator from ExportIR |
+| `exporters-supabase` | `packages/exporters-supabase` | Supabase database layer generator from ExportIR |
 
 ## Run locally
 
@@ -144,6 +146,8 @@ Example body:
 | POST | `/api/export/express` | Build ExportIR and generate Express + PostgreSQL server files |
 | POST | `/api/export/next` | Build ExportIR and generate Next.js + PostgreSQL server files |
 | POST | `/api/export/nuxt` | Build ExportIR and generate Nuxt + PostgreSQL server files |
+| POST | `/api/export/mongodb` | Build ExportIR and generate MongoDB database layer files |
+| POST | `/api/export/supabase` | Build ExportIR and generate Supabase database layer files |
 | POST | `/api/export/bundle` | Build ExportIR and generate combined UI + server file list (targets from composite `exportTargets`) |
 
 ## Scripts
@@ -178,8 +182,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-26](https://planetkevin.atlassian.net/browse/DAS-26)** — Export wizard server target picker  
-Branch: `feature/DAS-26-export-wizard-server-targets`
+**[DAS-28](https://planetkevin.atlassian.net/browse/DAS-28)** — Supabase database exporter package  
+Branch: `feature/DAS-28-supabase-exporter`
 
 ## License
 

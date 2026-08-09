@@ -192,6 +192,31 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'infra.mongodb',
+    category: 'infra',
+    label: 'MongoDB',
+    isVisual: false,
+    inputs: [{ id: 'env', name: 'env', dataType: 'any' }],
+    outputs: [{ id: 'documents', name: 'documents', dataType: 'rowset' }],
+    properties: [
+      { key: 'connectionEnvKey', label: 'Connection env key', type: 'string', default: 'MONGODB_URI', required: true },
+      { key: 'collection', label: 'Collection name', type: 'string', default: '' },
+    ],
+  },
+  {
+    type: 'infra.supabase',
+    category: 'infra',
+    label: 'Supabase',
+    isVisual: false,
+    inputs: [{ id: 'env', name: 'env', dataType: 'any' }],
+    outputs: [{ id: 'rowset', name: 'rowset', dataType: 'rowset' }],
+    properties: [
+      { key: 'urlEnvKey', label: 'Supabase URL env key', type: 'string', default: 'SUPABASE_URL', required: true },
+      { key: 'anonKeyEnvKey', label: 'Anon key env key', type: 'string', default: 'SUPABASE_ANON_KEY', required: true },
+      { key: 'table', label: 'Table name', type: 'string', default: '' },
+    ],
+  },
+  {
     type: 'infra.server.nest',
     category: 'infra',
     label: 'NestJS Server',
