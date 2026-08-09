@@ -5,6 +5,7 @@ import { AngularExportError } from '@dashbuilder/exporters-angular';
 import { ExpressExportError } from '@dashbuilder/exporters-express';
 import { NestExportError } from '@dashbuilder/exporters-nest';
 import { NextExportError } from '@dashbuilder/exporters-next';
+import { NuxtExportError } from '@dashbuilder/exporters-nuxt';
 import { ReactExportError } from '@dashbuilder/exporters-react';
 import { VueExportError } from '@dashbuilder/exporters-vue';
 import { ExportService } from './export.service';
@@ -25,6 +26,7 @@ export class ExportController {
       error instanceof NestExportError ||
       error instanceof ExpressExportError ||
       error instanceof NextExportError ||
+      error instanceof NuxtExportError ||
       error instanceof AngularExportError ||
       error instanceof VueExportError
     ) {
@@ -93,6 +95,15 @@ export class ExportController {
   buildNextExport(@Body() composite: Composite) {
     try {
       return this.exportService.buildNextExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('nuxt')
+  buildNuxtExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildNuxtExport(composite);
     } catch (error) {
       this.handleExportError(error);
     }

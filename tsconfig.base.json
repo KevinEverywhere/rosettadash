@@ -22,7 +22,8 @@
       "@dashbuilder/exporters-angular": ["./packages/exporters-angular/src/index.ts"],
       "@dashbuilder/exporters-vue": ["./packages/exporters-vue/src/index.ts"],
       "@dashbuilder/exporters-express": ["./packages/exporters-express/src/index.ts"],
-      "@dashbuilder/exporters-next": ["./packages/exporters-next/src/index.ts"]
+      "@dashbuilder/exporters-next": ["./packages/exporters-next/src/index.ts"],
+      "@dashbuilder/exporters-nuxt": ["./packages/exporters-nuxt/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

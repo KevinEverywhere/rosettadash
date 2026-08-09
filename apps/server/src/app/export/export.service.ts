@@ -4,6 +4,7 @@ import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
 import { generateExpressInfraFiles } from '@dashbuilder/exporters-express';
 import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
 import { generateNextInfraFiles } from '@dashbuilder/exporters-next';
+import { generateNuxtInfraFiles } from '@dashbuilder/exporters-nuxt';
 import { generateReactUiFiles } from '@dashbuilder/exporters-react';
 import { generateVueUiFiles } from '@dashbuilder/exporters-vue';
 
@@ -46,6 +47,12 @@ export class ExportService {
   buildNextExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const files = generateNextInfraFiles(ir);
+    return { ir, files };
+  }
+
+  buildNuxtExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = generateNuxtInfraFiles(ir);
     return { ir, files };
   }
 

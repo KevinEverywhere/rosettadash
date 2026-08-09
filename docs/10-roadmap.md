@@ -49,10 +49,20 @@ See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 
 - Angular and Vue UI exporters
 - Next.js, Nuxt, Express server exporters
+- **Svelte UI exporter** (fourth UI framework, after Phase 4 server exporters)
 - MongoDB, Supabase, MySQL exporters
 - Export target matrix testing
 
 **Exit criteria:** Same composite exports to at least 3 UI × 2 server combinations.
+
+## Phase 4b — Extended UI targets
+
+- Svelte UI exporter + export wizard picker update
+- Align export IR `ui` target union with Svelte
+
+## Future — 3D visualization (planning)
+
+- **three.js**-based 3D dashboard display components — integration approach TBD (preview renderer vs export target vs both)
 
 ## Phase 5 — Smart defaults & domain
 

@@ -124,7 +124,11 @@ Remaining form inputs, pie chart, flex layout, timer, MongoDB, Next.js, React ex
 
 ### P2 — Full catalog
 
-Animation, drag-drop lists, remaining charts, all DB/server targets, Vue/Nuxt exports.
+Animation, drag-drop lists, remaining charts, all DB/server targets, Vue/Nuxt exports, **Svelte export (planned)**.
+
+### P2 — Later
+
+three.js 3D dashboard displays (scope TBD).
 
 ## Adding new components
 

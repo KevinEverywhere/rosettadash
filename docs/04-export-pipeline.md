@@ -39,7 +39,7 @@ interface ExportIR {
     generatedAt: string;
   };
   targets: {
-    ui: 'react' | 'angular' | 'vue';
+    ui: 'react' | 'angular' | 'vue' | 'svelte';
     server: 'next' | 'nuxt' | 'nest' | 'express';
     database?: 'mongodb' | 'postgresql' | 'supabase' | 'mysql';
   };
@@ -61,7 +61,7 @@ Parallel invocation of registered exporters:
 
 ```
 ExportIR
-  ├── UIExporter[react|angular|vue]     → components/, styles/
+  ├── UIExporter[react|angular|vue|svelte]     → components/, styles/
   ├── ServerExporter[next|nuxt|nest|express] → api/, modules/
   └── DatabaseExporter[...]             → db/, migrations/, env
 ```

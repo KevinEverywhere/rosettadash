@@ -28,24 +28,37 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-20](https://planetkevin.atlassian.net/browse/DAS-20) | `feature/DAS-20-vue-ui-exporter` | Vue UI exporter package |
 | [DAS-21](https://planetkevin.atlassian.net/browse/DAS-21) | `feature/DAS-21-export-wizard-ui-polish` | Export wizard UI target polish |
 | [DAS-22](https://planetkevin.atlassian.net/browse/DAS-22) | `feature/DAS-22-express-server-exporter` | Express server exporter package |
+| [DAS-23](https://planetkevin.atlassian.net/browse/DAS-23) | `feature/DAS-23-next-server-exporter` | Next.js server exporter package |
 
 ## Phase 4 — Multi-target export
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-23](https://planetkevin.atlassian.net/browse/DAS-23) | `feature/DAS-23-next-server-exporter` | Next.js server exporter package |
+| [DAS-24](https://planetkevin.atlassian.net/browse/DAS-24) | `feature/DAS-24-nuxt-server-exporter` | Nuxt server exporter package |
+| [DAS-25](https://planetkevin.atlassian.net/browse/DAS-25) | `feature/DAS-25-svelte-ui-exporter` | Svelte UI exporter (4th UI framework) |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-23](https://planetkevin.atlassian.net/browse/DAS-23) | `feature/DAS-23-next-server-exporter` | In progress |
+| [DAS-24](https://planetkevin.atlassian.net/browse/DAS-24) | `feature/DAS-24-nuxt-server-exporter` | In progress |
+
+## UI framework delivery order
+
+1. React — DAS-14 (done)
+2. Angular — DAS-18 (done)
+3. Vue — DAS-20 (done)
+4. **Svelte — DAS-25 (planned next after server exporters)**
 
 ## Phase 4 — planned (not yet ticketed)
 
-- Nuxt server exporter
 - MongoDB, Supabase, MySQL exporters
 - Export target matrix testing
+- Export wizard server-target picker (Nest / Express / Next / Nuxt)
+
+## Future — 3D dashboards (not yet ticketed)
+
+- **three.js** integration for 3D dashboard displays — scope and component model TBD
 
 ## Related documents
 

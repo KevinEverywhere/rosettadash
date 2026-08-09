@@ -1,0 +1,15 @@
+{
+  "name": "exporters-nuxt",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/exporters-nuxt/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/exporters-nuxt/tsconfig.lib.json"
+      }
+    }
+  }
+}
