@@ -13,6 +13,7 @@ import { ExportZipService } from './export-zip.service';
 
 type UiTarget = 'react' | 'angular' | 'vue' | 'svelte';
 type ServerTarget = 'nest' | 'express' | 'next' | 'nuxt';
+type DatabaseTarget = 'postgresql' | 'mongodb' | 'supabase';
 
 interface UiTargetOption {
   id: UiTarget;
@@ -22,6 +23,12 @@ interface UiTargetOption {
 
 interface ServerTargetOption {
   id: ServerTarget;
+  label: string;
+  description: string;
+}
+
+interface DatabaseTargetOption {
+  id: DatabaseTarget;
   label: string;
   description: string;
 }
@@ -53,10 +60,17 @@ export class ExportWizardComponent {
     { id: 'nuxt', label: 'Nuxt', description: 'Nitro server routes' },
   ];
 
+  protected readonly databaseTargetOptions: DatabaseTargetOption[] = [
+    { id: 'postgresql', label: 'PostgreSQL', description: 'SQL via server exporter' },
+    { id: 'mongodb', label: 'MongoDB', description: 'Document collections layer' },
+    { id: 'supabase', label: 'Supabase', description: 'PostgREST table layer' },
+  ];
+
   protected readonly loading = signal(false);
   protected readonly downloading = signal(false);
   protected readonly uiTarget = signal<UiTarget>('react');
   protected readonly serverTarget = signal<ServerTarget>('nest');
+  protected readonly databaseTarget = signal<DatabaseTarget>('postgresql');
   protected readonly bundle = signal<ExportBundleResponse | null>(null);
   protected readonly validationIssues = signal<ValidationIssue[]>([]);
   protected readonly errorMessage = signal<string | null>(null);
@@ -86,6 +100,14 @@ export class ExportWizardComponent {
       return;
     }
     this.serverTarget.set(target);
+    void this.refreshPreview();
+  }
+
+  protected setDatabaseTarget(target: DatabaseTarget): void {
+    if (this.databaseTarget() === target) {
+      return;
+    }
+    this.databaseTarget.set(target);
     void this.refreshPreview();
   }
 
@@ -130,7 +152,7 @@ export class ExportWizardComponent {
     const current = this.bundle();
     const ui = current?.ir.targets.ui ?? this.uiTarget();
     const server = current?.ir.targets.server ?? this.serverTarget();
-    const database = current?.ir.targets.database ?? 'postgresql';
+    const database = current?.ir.targets.database ?? this.databaseTarget();
     return `${ui} UI + ${server} + ${database}`;
   }
 
@@ -139,10 +161,10 @@ export class ExportWizardComponent {
     return {
       ...payload,
       exportTargets: {
-        database: 'postgresql',
         ...payload.exportTargets,
         ui: this.uiTarget(),
         server: this.serverTarget(),
+        database: this.databaseTarget(),
       },
     };
   }

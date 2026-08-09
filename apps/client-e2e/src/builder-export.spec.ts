@@ -19,6 +19,10 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-server-express')).toBeVisible();
     await expect(page.getByTestId('export-wizard-server-next')).toBeVisible();
     await expect(page.getByTestId('export-wizard-server-nuxt')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-database-targets')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-database-postgresql')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-database-mongodb')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-database-supabase')).toBeVisible();
   });
 
   test('shows validation errors for an empty composite', async ({ page }) => {
@@ -148,6 +152,60 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-loading')).toBeHidden({ timeout: 30_000 });
     await expect(page.getByTestId('export-wizard-targets')).toContainText('express');
     await expect(page.getByTestId('export-wizard-files')).toContainText('server/src/index.ts');
+    await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
+    await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
+  });
+
+  test('previews MongoDB database files when MongoDB target is selected', async ({ page }) => {
+    await page.getByTestId('palette-add-infra.mongodb').click();
+    await page.getByTestId('palette-add-infra.server.nest').click();
+    await page.getByTestId('palette-add-visual.table').click();
+    await expect(page.getByTestId('canvas-node')).toHaveCount(3);
+
+    const mongoNode = page.getByTestId('canvas-node').nth(0);
+    const tableNode = page.getByTestId('canvas-node').nth(2);
+
+    await mongoNode.getByTestId(/^port-output-.*-documents$/).click();
+    await tableNode.getByTestId(/^port-input-.*-data$/).click();
+
+    await page.getByTestId('export-button').click();
+    await expect(page.getByTestId('export-wizard')).toBeVisible();
+    await page.getByTestId('export-wizard-database-mongodb').click();
+    await expect(page.getByTestId('export-wizard-database-mongodb')).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await expect(page.getByTestId('export-wizard-loading')).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByTestId('export-wizard-targets')).toContainText('mongodb');
+    await expect(page.getByTestId('export-wizard-files')).toContainText('database/src/mongo.client.ts');
+    await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
+    await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
+  });
+
+  test('previews Supabase database files when Supabase target is selected', async ({ page }) => {
+    await page.getByTestId('palette-add-infra.supabase').click();
+    await page.getByTestId('palette-add-infra.server.nest').click();
+    await page.getByTestId('palette-add-visual.table').click();
+    await expect(page.getByTestId('canvas-node')).toHaveCount(3);
+
+    const supabaseNode = page.getByTestId('canvas-node').nth(0);
+    const tableNode = page.getByTestId('canvas-node').nth(2);
+
+    await supabaseNode.getByTestId(/^port-output-.*-rowset$/).click();
+    await tableNode.getByTestId(/^port-input-.*-data$/).click();
+
+    await page.getByTestId('export-button').click();
+    await expect(page.getByTestId('export-wizard')).toBeVisible();
+    await page.getByTestId('export-wizard-database-supabase').click();
+    await expect(page.getByTestId('export-wizard-database-supabase')).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await expect(page.getByTestId('export-wizard-loading')).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByTestId('export-wizard-targets')).toContainText('supabase');
+    await expect(page.getByTestId('export-wizard-files')).toContainText(
+      'database/src/supabase.client.ts',
+    );
     await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
     await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
   });

@@ -51,4 +51,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-25](https://planetkevin.atlassian.net/browse/DAS-25) | merged to `development` | Svelte UI exporter |
 | [DAS-26](https://planetkevin.atlassian.net/browse/DAS-26) | merged to `development` | Export wizard server picker |
 | [DAS-27](https://planetkevin.atlassian.net/browse/DAS-27) | merged to `development` | MongoDB database exporter |
-| [DAS-28](https://planetkevin.atlassian.net/browse/DAS-28) | `feature/DAS-28-supabase-exporter` | Supabase database exporter |
+| [DAS-28](https://planetkevin.atlassian.net/browse/DAS-28) | merged to `development` | Supabase database exporter |
+| [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29) | `feature/DAS-29-export-wizard-database-targets` | Export wizard database picker |

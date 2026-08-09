@@ -182,8 +182,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-28](https://planetkevin.atlassian.net/browse/DAS-28)** — Supabase database exporter package  
-Branch: `feature/DAS-28-supabase-exporter`
+**[DAS-29](https://planetkevin.atlassian.net/browse/DAS-29)** — Export wizard database target picker  
+Branch: `feature/DAS-29-export-wizard-database-targets`
 
 ## License
 

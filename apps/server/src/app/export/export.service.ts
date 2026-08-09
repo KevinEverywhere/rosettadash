@@ -80,8 +80,24 @@ export class ExportService {
   buildBundleExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const uiFiles = this.generateUiFiles(ir);
+    const databaseFiles = this.generateDatabaseFiles(ir);
+    if (databaseFiles.length > 0) {
+      return { ir, files: [...uiFiles, ...databaseFiles] };
+    }
+
     const serverFiles = this.generateServerFiles(ir);
     return { ir, files: [...uiFiles, ...serverFiles] };
+  }
+
+  private generateDatabaseFiles(ir: ExportIR) {
+    switch (ir.targets.database) {
+      case 'mongodb':
+        return generateMongoInfraFiles(ir);
+      case 'supabase':
+        return generateSupabaseInfraFiles(ir);
+      default:
+        return [];
+    }
   }
 
   private generateUiFiles(ir: ExportIR) {

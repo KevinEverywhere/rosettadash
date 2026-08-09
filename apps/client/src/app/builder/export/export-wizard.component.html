@@ -17,7 +17,7 @@
       <header class="export-wizard__header">
         <div>
           <h2 id="export-wizard-title">Export dashboard</h2>
-          <p>Choose UI and server targets, preview generated files, then download a zip bundle.</p>
+          <p>Choose UI, server, and database targets, preview generated files, then download a zip bundle.</p>
         </div>
         <button
           type="button"
@@ -72,6 +72,29 @@
                 [attr.data-testid]="'export-wizard-server-' + option.id"
                 [disabled]="loading()"
                 (click)="setServerTarget(option.id)"
+              >
+                <span class="export-wizard__ui-target-label">{{ option.label }}</span>
+                <span class="export-wizard__ui-target-desc">{{ option.description }}</span>
+              </button>
+            }
+          </div>
+          <h3 class="export-wizard__targets-subheading">Database</h3>
+          <div
+            class="export-wizard__ui-targets export-wizard__ui-targets--database"
+            data-testid="export-wizard-database-targets"
+            role="radiogroup"
+            aria-label="Database"
+          >
+            @for (option of databaseTargetOptions; track option.id) {
+              <button
+                type="button"
+                class="export-wizard__ui-target"
+                role="radio"
+                [class.export-wizard__ui-target--active]="databaseTarget() === option.id"
+                [attr.aria-checked]="databaseTarget() === option.id"
+                [attr.data-testid]="'export-wizard-database-' + option.id"
+                [disabled]="loading()"
+                (click)="setDatabaseTarget(option.id)"
               >
                 <span class="export-wizard__ui-target-label">{{ option.label }}</span>
                 <span class="export-wizard__ui-target-desc">{{ option.description }}</span>
