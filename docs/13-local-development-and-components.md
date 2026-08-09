@@ -252,7 +252,8 @@ npm run e2e
 | Export wizard shows validation errors | Composite not export-ready | Add PostgreSQL + NestJS infra, bind required ports (e.g. `rowset` → table `data`) |
 | `Executable doesn't exist` in e2e (first time) | Playwright browsers not installed | `npm run setup:e2e` |
 | `Executable doesn't exist` after `setup:e2e` | Nx replaying a cached failed e2e run | `npm run e2e:fresh` or `npx nx reset` then `npm run e2e` |
-| E2E hangs / `Timed out waiting … config.webServer` | Stale e2e servers on :3001/:4201, or old `nx serve` lock before `serve-e2e` targets | Cancel stuck terminals; `lsof -i :3001 -i :4201`; re-run `npm run e2e` (no need to stop `npm start`) |
+| E2E hangs / `Timed out waiting … config.webServer` | Stale e2e servers on :3001/:4201, or old `nx serve` lock before `serve-e2e` targets | `npm run e2e:prep` prints PIDs; `kill <pid>` then re-run `npm run e2e` |
+| `…/api/health is already used` | Stale e2e server on :3001 (or :4201) | Same — `npm run e2e:prep` or `lsof -i :3001 -i :4201` |
 | Save fails with 400 | Composite schema/validation error | Read `issues` in network response; fix in inspector |
 
 ---
