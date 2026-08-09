@@ -133,4 +133,34 @@ describe('BuilderStateService', () => {
     expect(service.bindings()).toHaveLength(0);
     expect(service.nodes()).toHaveLength(1);
   });
+
+  it('stores defaults-engine suggestions when a table is added', () => {
+    const table = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.table'),
+    );
+
+    expect(service.suggestionsForNode(table.id).some((s) => s.id === `bind-required:${table.id}:data`)).toBe(
+      true,
+    );
+  });
+
+  it('applies patch suggestions and marks the node as defaults-engine suggested', () => {
+    const postgres = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('infra.postgresql'),
+    );
+
+    const suggestion = service
+      .suggestionsForNode(postgres.id)
+      .find((entry) => entry.id === `postgres-table:${postgres.id}`);
+    expect(suggestion).toBeDefined();
+    if (!suggestion) {
+      return;
+    }
+
+    service.applySuggestion(suggestion.id);
+
+    expect(service.selectedNode()?.properties['table']).toBe('records');
+    expect(service.selectedNode()?.meta?.suggestedBy).toBe('defaults-engine');
+    expect(service.suggestionsForNode(postgres.id)).toHaveLength(0);
+  });
 });

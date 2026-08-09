@@ -54,4 +54,5 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the upcoming Jira ticket 
 | [DAS-28](https://planetkevin.atlassian.net/browse/DAS-28) | merged to `development` | Supabase database exporter |
 | [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29) | merged to `development` | Export wizard database picker |
 | [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | merged to `development` | MySQL database exporter |
-| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | Export target matrix testing |
+| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | merged to `development` | Export target matrix testing |
+| [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | Defaults engine + inspector suggestions |

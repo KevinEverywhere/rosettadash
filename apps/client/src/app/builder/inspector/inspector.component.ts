@@ -3,6 +3,7 @@ import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   Binding,
+  DefaultSuggestion,
   PropertySchema,
   defaultComponentRegistry,
 } from '@dashbuilder/core';
@@ -28,6 +29,13 @@ export class InspectorComponent {
 
   protected readonly node = computed(() => this.state.selectedNode());
   protected readonly nodeBindings = computed(() => this.state.bindingsForSelectedNode());
+  protected readonly nodeSuggestions = computed(() => {
+    const node = this.state.selectedNode();
+    if (!node) {
+      return [] as DefaultSuggestion[];
+    }
+    return this.state.suggestionsForNode(node.id);
+  });
   protected readonly hasSelection = computed(
     () => this.definition() !== null,
   );
@@ -78,5 +86,13 @@ export class InspectorComponent {
 
   protected removeBinding(bindingId: string): void {
     this.state.removeBinding(bindingId);
+  }
+
+  protected applySuggestion(suggestionId: string): void {
+    this.state.applySuggestion(suggestionId);
+  }
+
+  protected dismissSuggestion(suggestionId: string): void {
+    this.state.dismissSuggestion(suggestionId);
   }
 }

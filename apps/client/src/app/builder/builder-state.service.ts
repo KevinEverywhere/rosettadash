@@ -4,9 +4,12 @@ import {
   ComponentDefinition,
   ComponentNode,
   Composite,
+  DefaultSuggestion,
   Project,
   areDataTypesCompatible,
   defaultComponentRegistry,
+  evaluateDefaults,
+  suggestionsForSelectedNode,
 } from '@dashbuilder/core';
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
@@ -36,6 +39,8 @@ export class BuilderStateService {
   readonly saveStatus = signal<SaveStatus>('idle');
   readonly loading = signal(true);
   readonly errorMessage = signal<string | null>(null);
+  readonly suggestions = signal<DefaultSuggestion[]>([]);
+  readonly dismissedSuggestionIds = signal<Set<string>>(new Set());
 
   readonly selectedNode = computed(() => {
     const id = this.selectedNodeId();
@@ -64,6 +69,7 @@ export class BuilderStateService {
   selectNode(nodeId: string): void {
     this.selectedNodeId.set(nodeId);
     this.selectedDefinition.set(null);
+    this.refreshSuggestionsForSelection();
   }
 
   clearSelection(): void {
@@ -84,6 +90,11 @@ export class BuilderStateService {
     this.nodes.update((nodes) => [...nodes, node]);
     this.selectedNodeId.set(node.id);
     this.selectedDefinition.set(null);
+    this.mergeSuggestions(
+      evaluateDefaults(this.defaultsContext(), { type: 'nodeAdded', nodeId: node.id }, defaultComponentRegistry, {
+        dismissedIds: this.dismissedSuggestionIds(),
+      }),
+    );
     this.markDirty();
     return node;
   }
@@ -173,6 +184,14 @@ export class BuilderStateService {
 
     if (result.ok) {
       this.bindingMessage.set(null);
+      this.mergeSuggestions(
+        evaluateDefaults(
+          this.defaultsContext(),
+          { type: 'bindingCreated', bindingId: result.binding.id },
+          defaultComponentRegistry,
+          { dismissedIds: this.dismissedSuggestionIds() },
+        ),
+      );
       this.markDirty();
       return;
     }
@@ -290,5 +309,69 @@ export class BuilderStateService {
   markDirty(): void {
     this.dirty.set(true);
     this.saveStatus.set('idle');
+  }
+
+  suggestionsForNode(nodeId: string): DefaultSuggestion[] {
+    return this.suggestions().filter((suggestion) => suggestion.nodeId === nodeId);
+  }
+
+  applySuggestion(suggestionId: string): void {
+    const suggestion = this.suggestions().find((entry) => entry.id === suggestionId);
+    if (!suggestion?.patches?.length) {
+      return;
+    }
+
+    for (const patch of suggestion.patches) {
+      this.updateNodeProperty(suggestion.nodeId, patch.key, patch.value);
+    }
+
+    this.nodes.update((nodes) =>
+      nodes.map((node) =>
+        node.id === suggestion.nodeId
+          ? { ...node, meta: { ...node.meta, suggestedBy: 'defaults-engine' } }
+          : node,
+      ),
+    );
+
+    this.dismissSuggestion(suggestionId);
+  }
+
+  dismissSuggestion(suggestionId: string): void {
+    this.dismissedSuggestionIds.update((ids) => new Set([...ids, suggestionId]));
+    this.suggestions.update((entries) => entries.filter((entry) => entry.id !== suggestionId));
+  }
+
+  private defaultsContext() {
+    return {
+      nodes: this.nodes(),
+      bindings: this.bindings(),
+    };
+  }
+
+  private mergeSuggestions(incoming: DefaultSuggestion[]): void {
+    if (incoming.length === 0) {
+      return;
+    }
+
+    this.suggestions.update((current) => {
+      const merged = new Map(current.map((entry) => [entry.id, entry]));
+      for (const suggestion of incoming) {
+        merged.set(suggestion.id, suggestion);
+      }
+      return [...merged.values()];
+    });
+  }
+
+  private refreshSuggestionsForSelection(): void {
+    const nodeId = this.selectedNodeId();
+    if (!nodeId) {
+      return;
+    }
+
+    this.mergeSuggestions(
+      suggestionsForSelectedNode(this.defaultsContext(), nodeId, defaultComponentRegistry, {
+        dismissedIds: this.dismissedSuggestionIds(),
+      }),
+    );
   }
 }

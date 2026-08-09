@@ -184,8 +184,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-31](https://planetkevin.atlassian.net/browse/DAS-31)** — Export target matrix testing  
-Branch: `feature/DAS-31-export-target-matrix-tests`
+**[DAS-32](https://planetkevin.atlassian.net/browse/DAS-32)** — Rule-based defaults engine  
+Branch: `feature/DAS-32-defaults-engine`
 
 ## License
 

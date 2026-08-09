@@ -22,6 +22,42 @@
         }
       </section>
 
+      @if (isEditingNode() && nodeSuggestions().length) {
+        <section class="inspector__section" data-testid="inspector-suggestions">
+          <h4>Suggestions</h4>
+          <ul class="inspector__suggestions">
+            @for (suggestion of nodeSuggestions(); track suggestion.id) {
+              <li class="inspector__suggestion" [attr.data-testid]="'inspector-suggestion-' + suggestion.id">
+                <div class="inspector__suggestion-copy">
+                  <strong>{{ suggestion.title }}</strong>
+                  <p>{{ suggestion.message }}</p>
+                </div>
+                <div class="inspector__suggestion-actions">
+                  @if (suggestion.kind === 'patch' && suggestion.patches?.length) {
+                    <button
+                      type="button"
+                      class="inspector__btn inspector__btn--apply"
+                      [attr.data-testid]="'apply-suggestion-' + suggestion.id"
+                      (click)="applySuggestion(suggestion.id)"
+                    >
+                      Apply
+                    </button>
+                  }
+                  <button
+                    type="button"
+                    class="inspector__btn inspector__btn--ghost"
+                    [attr.data-testid]="'dismiss-suggestion-' + suggestion.id"
+                    (click)="dismissSuggestion(suggestion.id)"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
       @if (isEditingNode() && def.properties.length) {
         <section class="inspector__section">
           <h4>Properties</h4>

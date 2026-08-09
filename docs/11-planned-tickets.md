@@ -12,26 +12,30 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-28](https://planetkevin.atlassian.net/browse/DAS-28) | `feature/DAS-28-supabase-exporter` | Supabase database exporter package |
 | [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29) | `feature/DAS-29-export-wizard-database-targets` | Export wizard database target picker |
 | [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | `feature/DAS-30-mysql-exporter` | MySQL database exporter package |
+| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | Export target matrix testing |
 
-## Phase 4 — Multi-target export
+## Phase 5 — Smart defaults & domain
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | Export target matrix testing |
+| [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | Rule-based defaults engine + inspector suggestions |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | In progress |
+| [DAS-32](https://planetkevin.atlassian.net/browse/DAS-32) | `feature/DAS-32-defaults-engine` | In progress |
 
 ## Delivery status
 
-- **UI frameworks:** React, Angular, Vue, Svelte — complete
-- **Server exporters:** Nest, Express, Next, Nuxt — complete
-- **Database exporters:** PostgreSQL (via server exporters), MongoDB, Supabase, MySQL — complete
-- **Export wizard:** UI + server + database pickers — complete
-- **Export target matrix:** parameterized bundle tests — **DAS-31 in progress**
+- **Phase 4 multi-target export:** complete
+- **Defaults engine:** rule-based suggestions in core + inspector UI — **DAS-32 in progress**
+
+## Phase 5 — planned (not yet ticketed)
+
+- Domain context: client, project, roles
+- Role gates and scoped queries in export
+- Onboarding composite template
 
 ## Future — 3D dashboards (not yet ticketed)
 
