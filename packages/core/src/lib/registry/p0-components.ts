@@ -202,4 +202,15 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
       { key: 'globalPrefix', label: 'API prefix', type: 'string', default: 'api' },
     ],
   },
+  {
+    type: 'infra.server.express',
+    category: 'infra',
+    label: 'Express Server',
+    isVisual: false,
+    inputs: [{ id: 'database', name: 'database', dataType: 'any' }],
+    outputs: [{ id: 'api', name: 'api', dataType: 'any' }],
+    properties: [
+      { key: 'globalPrefix', label: 'API prefix', type: 'string', default: 'api' },
+    ],
+  },
 ];

@@ -185,7 +185,7 @@ function mapEventBindings(
 }
 
 function buildRoutes(composite: Composite, registry: ComponentRegistry) {
-  const serverNode = composite.nodes.find((node) => node.type === 'infra.server.nest');
+  const serverNode = composite.nodes.find((node) => node.type.startsWith('infra.server.'));
   if (!serverNode) {
     return [];
   }

@@ -18,6 +18,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `ui-primitives` | `packages/ui-primitives` | Preview mock data and generators |
 | `exporters-react` | `packages/exporters-react` | React UI code generator from ExportIR |
 | `exporters-nest` | `packages/exporters-nest` | NestJS + PostgreSQL server generator from ExportIR |
+| `exporters-express` | `packages/exporters-express` | Express + PostgreSQL server generator from ExportIR |
 
 ## Run locally
 
@@ -134,6 +135,7 @@ Example body:
 | POST | `/api/export/ir` | Build ExportIR from a strictly validated composite (400 on validation errors) |
 | POST | `/api/export/react` | Build ExportIR and generate React UI source files |
 | POST | `/api/export/nest` | Build ExportIR and generate NestJS + PostgreSQL server files |
+| POST | `/api/export/express` | Build ExportIR and generate Express + PostgreSQL server files |
 | POST | `/api/export/bundle` | Build ExportIR and generate combined React + NestJS file list |
 
 ## Scripts
@@ -168,8 +170,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-21](https://planetkevin.atlassian.net/browse/DAS-21)** — Export wizard UI target polish (React / Angular / Vue)  
-Branch: `feature/DAS-21-export-wizard-ui-polish`
+**[DAS-22](https://planetkevin.atlassian.net/browse/DAS-22)** — Express server exporter package  
+Branch: `feature/DAS-22-express-server-exporter`
 
 ## License
 
