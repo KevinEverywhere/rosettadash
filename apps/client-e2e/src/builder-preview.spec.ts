@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder, selectCanvasNode, waitForPreviewData } from './test-helpers';
+import { addFromPalette, openBuilder, selectCanvasNode, waitForPreviewData } from './test-helpers';
 
 test.describe('Builder preview', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,7 +9,7 @@ test.describe('Builder preview', () => {
   test('renders visual components in preview mode and reflects property edits', async ({
     page,
   }) => {
-    await page.getByTestId('palette-add-visual.input.text').click();
+    await addFromPalette(page, 'visual.input.text');
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
     await selectCanvasNode(page, page.getByTestId('canvas-node'));
@@ -31,8 +31,8 @@ test.describe('Builder preview', () => {
   });
 
   test('shows table and chart previews for P0 visual components', async ({ page }) => {
-    await page.getByTestId('palette-add-visual.table').click();
-    await page.getByTestId('palette-add-visual.chart.line').click();
+    await addFromPalette(page, 'visual.table');
+    await addFromPalette(page, 'visual.chart.line');
 
     await page.getByTestId('mode-preview').click();
     await waitForPreviewData(page);
@@ -41,9 +41,9 @@ test.describe('Builder preview', () => {
   });
 
   test('shows P1 form input previews', async ({ page }) => {
-    await page.getByTestId('palette-add-visual.input.number').click();
-    await page.getByTestId('palette-add-visual.input.checkbox').click();
-    await page.getByTestId('palette-add-visual.input.textarea').click();
+    await addFromPalette(page, 'visual.input.number');
+    await addFromPalette(page, 'visual.input.checkbox');
+    await addFromPalette(page, 'visual.input.textarea');
 
     await page.getByTestId('mode-preview').click();
     await waitForPreviewData(page);

@@ -8,11 +8,25 @@ describe('PaletteComponent', () => {
     }).compileComponents();
   });
 
-  it('renders component groups from the registry', () => {
+  it('renders functional accordion groups from core taxonomy', () => {
     const fixture = TestBed.createComponent(PaletteComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.palette__group').length).toBeGreaterThan(0);
+    expect(element.querySelectorAll('.palette__group').length).toBe(7);
+    expect(element.querySelector('[data-testid="palette-group-data-display"]')).toBeTruthy();
+    expect(element.querySelector('[data-testid="palette-group-panel-data-display"]')).toBeFalsy();
+  });
+
+  it('expands a group and shows component rows', () => {
+    const fixture = TestBed.createComponent(PaletteComponent);
+    fixture.detectChanges();
+    const element = fixture.nativeElement as HTMLElement;
+    const toggle = element.querySelector(
+      '[data-testid="palette-group-toggle-data-display"]',
+    ) as HTMLButtonElement;
+    toggle.click();
+    fixture.detectChanges();
+    expect(element.querySelector('[data-testid="palette-group-panel-data-display"]')).toBeTruthy();
     expect(element.textContent).toContain('Data Table');
   });
 
@@ -20,6 +34,11 @@ describe('PaletteComponent', () => {
     const fixture = TestBed.createComponent(PaletteComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
+    const toggle = element.querySelector(
+      '[data-testid="palette-group-toggle-data-display"]',
+    ) as HTMLButtonElement;
+    toggle.click();
+    fixture.detectChanges();
     const infoButton = element.querySelector('[data-testid="palette-info-visual.table"]') as HTMLButtonElement;
     expect(infoButton).toBeTruthy();
     infoButton.click();

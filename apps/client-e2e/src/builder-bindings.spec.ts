@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import { addFromPalette, openBuilder } from './test-helpers';
 
 test.describe('Builder bindings', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,8 +7,8 @@ test.describe('Builder bindings', () => {
   });
 
   test('connects compatible ports, saves, and restores after reload', async ({ page }) => {
-    await page.getByTestId('palette-add-visual.input.date-range').click();
-    await page.getByTestId('palette-add-visual.chart.line').click();
+    await addFromPalette(page, 'visual.input.date-range');
+    await addFromPalette(page, 'visual.chart.line');
     await expect(page.getByTestId('canvas-node')).toHaveCount(2);
 
     const nodes = page.getByTestId('canvas-node');
@@ -37,8 +37,8 @@ test.describe('Builder bindings', () => {
   });
 
   test('shows an error for incompatible port types', async ({ page }) => {
-    await page.getByTestId('palette-add-visual.input.text').click();
-    await page.getByTestId('palette-add-visual.chart.line').click();
+    await addFromPalette(page, 'visual.input.text');
+    await addFromPalette(page, 'visual.chart.line');
 
     const textNode = page.getByTestId('canvas-node').nth(0);
     const chartNode = page.getByTestId('canvas-node').nth(1);

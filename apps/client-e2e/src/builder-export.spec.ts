@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissPlacementPromptIfVisible, openBuilder, selectCanvasNodeHeader } from './test-helpers';
+import { addFromPalette, dismissPlacementPromptIfVisible, openBuilder, selectCanvasNodeHeader } from './test-helpers';
 
 test.describe('Builder export wizard', () => {
   test.beforeEach(async ({ page }) => {
@@ -36,9 +36,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews files and enables download for an export-ready composite', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.postgresql');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);
@@ -63,9 +63,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews Angular UI files when Angular target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.postgresql');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);
@@ -86,9 +86,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews Vue UI files when Vue target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.postgresql');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);
@@ -109,9 +109,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews Svelte UI files when Svelte target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.postgresql');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);
@@ -132,9 +132,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews Express server files when Express target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.postgresql');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);
@@ -158,9 +158,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews MongoDB database files when MongoDB target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.mongodb').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.mongodb');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const mongoNode = page.getByTestId('canvas-node').nth(0);
@@ -184,9 +184,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews Supabase database files when Supabase target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.supabase').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.supabase');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const supabaseNode = page.getByTestId('canvas-node').nth(0);
@@ -212,9 +212,9 @@ test.describe('Builder export wizard', () => {
   });
 
   test('previews MySQL database files when MySQL target is selected', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.mysql').click();
-    await page.getByTestId('palette-add-infra.server.nest').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.mysql');
+    await addFromPalette(page, 'infra.server.nest');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const mysqlNode = page.getByTestId('canvas-node').nth(0);
@@ -238,13 +238,13 @@ test.describe('Builder export wizard', () => {
   });
 
   test('exports only the selected node scope from the wizard', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
+    await addFromPalette(page, 'infra.postgresql');
     await dismissPlacementPromptIfVisible(page);
-    await page.getByTestId('palette-add-infra.server.nest').click();
+    await addFromPalette(page, 'infra.server.nest');
     await dismissPlacementPromptIfVisible(page);
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'visual.table');
     await dismissPlacementPromptIfVisible(page);
-    await page.getByTestId('palette-add-visual.kpi').click();
+    await addFromPalette(page, 'visual.kpi');
     await dismissPlacementPromptIfVisible(page);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);

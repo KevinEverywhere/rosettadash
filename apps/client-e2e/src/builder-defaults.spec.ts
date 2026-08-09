@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import { addFromPalette, openBuilder } from './test-helpers';
 
 test.describe('Builder defaults engine', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,7 +7,7 @@ test.describe('Builder defaults engine', () => {
   });
 
   test('shows postgres table suggestion and applies it from the inspector', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
+    await addFromPalette(page, 'infra.postgresql');
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
     await expect(page.getByTestId('inspector-suggestions')).toBeVisible();
@@ -21,8 +21,8 @@ test.describe('Builder defaults engine', () => {
   });
 
   test('shows a date-range hint after binding rowset data to a table', async ({ page }) => {
-    await page.getByTestId('palette-add-infra.postgresql').click();
-    await page.getByTestId('palette-add-visual.table').click();
+    await addFromPalette(page, 'infra.postgresql');
+    await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-node')).toHaveCount(2);
 
     const postgresNode = page.getByTestId('canvas-node').nth(0);

@@ -1,26 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import {
   ComponentDefinition,
-  NodeCategory,
   defaultComponentRegistry,
   getGroupingGuide,
   groupingAnimationLabel,
+  resolvePaletteGroups,
+  type ResolvedPaletteGroup,
 } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
-
-interface PaletteGroup {
-  category: NodeCategory;
-  label: string;
-  items: ComponentDefinition[];
-}
-
-const CATEGORY_LABELS: Record<NodeCategory, string> = {
-  visual: 'Form & Display',
-  layout: 'Layout',
-  logic: 'Logic',
-  domain: 'Domain & Access',
-  infra: 'Infrastructure',
-};
 
 type GuidePanelMode = 'info' | 'link';
 
@@ -34,17 +21,11 @@ export class PaletteComponent {
 
   protected readonly openGuideType = signal<string | null>(null);
   protected readonly openGuideMode = signal<GuidePanelMode | null>(null);
+  protected readonly expandedGroupIds = signal<ReadonlySet<string>>(new Set());
 
-  protected readonly groups = computed<PaletteGroup[]>(() => {
-    const categories: NodeCategory[] = ['visual', 'layout', 'domain', 'infra'];
-    return categories
-      .map((category) => ({
-        category,
-        label: CATEGORY_LABELS[category],
-        items: defaultComponentRegistry.listByCategory(category),
-      }))
-      .filter((group) => group.items.length > 0);
-  });
+  protected readonly groups = computed<ResolvedPaletteGroup[]>(() =>
+    resolvePaletteGroups(defaultComponentRegistry),
+  );
 
   protected readonly selectedType = computed(
     () =>
@@ -60,6 +41,31 @@ export class PaletteComponent {
   protected add(definition: ComponentDefinition, event: Event): void {
     event.stopPropagation();
     this.state.addNodeFromDefinition(definition);
+  }
+
+  protected isGroupExpanded(groupId: string): boolean {
+    return this.expandedGroupIds().has(groupId);
+  }
+
+  protected toggleGroup(groupId: string, event?: Event): void {
+    event?.stopPropagation();
+    this.expandedGroupIds.update((current) => {
+      const next = new Set(current);
+      if (next.has(groupId)) {
+        next.delete(groupId);
+      } else {
+        next.add(groupId);
+      }
+      return next;
+    });
+  }
+
+  protected onGroupHeaderKeydown(groupId: string, event: KeyboardEvent): void {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return;
+    }
+    event.preventDefault();
+    this.toggleGroup(groupId, event);
   }
 
   protected hasGuide(type: string): boolean {

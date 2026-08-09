@@ -1,4 +1,37 @@
 import { expect, Page } from '@playwright/test';
+import { findPaletteGroupIdForType } from '../../../packages/core/src/lib/palette/palette-groups';
+
+export async function expandPaletteGroup(page: Page, groupId: string): Promise<void> {
+  const panel = page.getByTestId(`palette-group-panel-${groupId}`);
+  if (await panel.isVisible().catch(() => false)) {
+    return;
+  }
+  await page.getByTestId(`palette-group-toggle-${groupId}`).click();
+  await expect(panel).toBeVisible();
+}
+
+export async function expandPaletteGroupForType(page: Page, type: string): Promise<void> {
+  const groupId = findPaletteGroupIdForType(type);
+  if (!groupId) {
+    throw new Error(`No palette group registered for type: ${type}`);
+  }
+  await expandPaletteGroup(page, groupId);
+}
+
+export async function addFromPalette(page: Page, type: string): Promise<void> {
+  await expandPaletteGroupForType(page, type);
+  await page.getByTestId(`palette-add-${type}`).click();
+}
+
+export async function openPaletteInfo(page: Page, type: string): Promise<void> {
+  await expandPaletteGroupForType(page, type);
+  await page.getByTestId(`palette-info-${type}`).click();
+}
+
+export async function openPaletteLink(page: Page, type: string): Promise<void> {
+  await expandPaletteGroupForType(page, type);
+  await page.getByTestId(`palette-link-${type}`).click();
+}
 
 export async function dismissPlacementPromptIfVisible(page: Page): Promise<void> {
   const prompt = page.getByTestId('canvas-placement-prompt');

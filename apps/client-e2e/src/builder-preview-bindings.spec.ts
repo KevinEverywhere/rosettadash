@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder, waitForPreviewData } from './test-helpers';
+import { addFromPalette, openBuilder, waitForPreviewData } from './test-helpers';
 
 test.describe('Builder preview binding flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,9 +7,9 @@ test.describe('Builder preview binding flow', () => {
   });
 
   test('filters table and chart from date range bindings in preview', async ({ page }) => {
-    await page.getByTestId('palette-add-visual.input.date-range').click();
-    await page.getByTestId('palette-add-visual.table').click();
-    await page.getByTestId('palette-add-visual.chart.line').click();
+    await addFromPalette(page, 'visual.input.date-range');
+    await addFromPalette(page, 'visual.table');
+    await addFromPalette(page, 'visual.chart.line');
     await expect(page.getByTestId('canvas-node')).toHaveCount(3);
 
     const nodes = page.getByTestId('canvas-node');

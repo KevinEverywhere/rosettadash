@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import {
+  addFromPalette,
   dismissPlacementPromptIfVisible,
   openBuilder,
   selectCanvasNodeHeader,
@@ -11,9 +12,9 @@ test.describe('Builder canvas layout', () => {
   });
 
   test('supports shift+click multi-select and shows resize handle', async ({ page }) => {
-    await page.getByTestId('palette-add-visual.kpi').click();
+    await addFromPalette(page, 'visual.kpi');
     await dismissPlacementPromptIfVisible(page);
-    await page.getByTestId('palette-add-visual.input.text').click();
+    await addFromPalette(page, 'visual.input.text');
     await dismissPlacementPromptIfVisible(page);
     await expect(page.getByTestId('canvas-node')).toHaveCount(2);
 

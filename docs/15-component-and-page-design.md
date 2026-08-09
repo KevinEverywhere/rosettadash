@@ -17,7 +17,7 @@ Planning guide for **single components** and **pages built from component groups
 | Page templates library | Shipped (DAS-40) — analytics, CRUD, settings, empty |
 | Canvas snap, resize, multi-select | Shipped (DAS-42) |
 | Grouping guides & animated hints | Shipped (DAS-43) |
-| Palette accordion groups (2–7 rule) | Follow-up ticket |
+| Palette accordion groups (2–7 rule) | DAS-44 |
 
 **Registry source of truth:** `packages/core/src/lib/registry/p0-components.ts` (24 types today).
 
@@ -215,7 +215,7 @@ Create a Jira ticket **before** each branch:
 5. **Undo/redo** — command pattern over graph mutations
 6. **Pie chart + flex layout** — expand visualization and layout palette
 7. ~~**Grouping guides & animated placement hints**~~ — DAS-43
-8. **Palette accordion groups** — 2–7 functional groups, default collapsed — follow-up ticket
+8. ~~**Palette accordion groups** — 2–7 functional groups, default collapsed~~ — DAS-44
 
 ### Component grouping guides (DAS-43)
 
@@ -230,7 +230,19 @@ Shipped usability layer on the palette and canvas:
 
 Registry: `getGroupingGuide`, `listMissingCompanionTypes`, `computeCompanionLayout`.
 
-**Follow-up:** Palette accordion reorganization (2–7 items per group, default collapsed) — separate ticket.
+### Palette accordion groups (DAS-44)
+
+Functional accordion groups replace flat registry categories in the builder palette:
+
+| Behavior | Detail |
+|----------|--------|
+| **Taxonomy** | `PALETTE_GROUP_DEFINITIONS` in `packages/core/src/lib/palette/` — 7 groups, 2–7 items each |
+| **Default state** | All groups collapsed on load |
+| **Multi-open** | Expanding one group does not collapse others |
+| **Accessibility** | Group headers are buttons with `aria-expanded` and Enter/Space support |
+| **DAS-43 preserved** | Info, link, and + add affordances unchanged on expanded rows |
+
+Helpers: `resolvePaletteGroups`, `findPaletteGroupIdForType`, `validatePaletteGroupDefinitions`.
 
 ---
 

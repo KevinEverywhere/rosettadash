@@ -12,4 +12,5 @@ export * from './lib/ir';
 export * from './lib/defaults';
 export * from './lib/export';
 export * from './lib/grouping';
+export * from './lib/palette';
 export * from './lib/templates';

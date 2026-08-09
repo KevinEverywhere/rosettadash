@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder, selectCanvasNode } from './test-helpers';
+import { addFromPalette, openBuilder, selectCanvasNode } from './test-helpers';
 
 test.describe('Builder smoke', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,7 +9,7 @@ test.describe('Builder smoke', () => {
   test('adds a component, edits a property, saves, and restores after reload', async ({
     page,
   }) => {
-    await page.getByTestId('palette-add-visual.input.text').click();
+    await addFromPalette(page, 'visual.input.text');
     await expect(page.getByTestId('canvas-node')).toHaveCount(1);
 
     await selectCanvasNode(page, page.getByTestId('canvas-node'));

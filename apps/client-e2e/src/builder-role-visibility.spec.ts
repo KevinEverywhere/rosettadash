@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import { addFromPalette, openBuilder } from './test-helpers';
 
 test.describe('Builder role visibility', () => {
   test.beforeEach(async ({ page }) => {
@@ -10,7 +10,7 @@ test.describe('Builder role visibility', () => {
     await page.getByTestId('domain-role-preset').selectOption('admin');
     await page.getByTestId('domain-role-preset').selectOption('viewer');
 
-    await page.getByTestId('palette-add-domain.role-gate').click();
+    await addFromPalette(page, 'domain.role-gate');
 
     await page.getByTestId('mode-preview').click();
     await page.getByTestId('preview-role-select').selectOption('viewer');
