@@ -184,8 +184,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-30](https://planetkevin.atlassian.net/browse/DAS-30)** — MySQL database exporter package  
-Branch: `feature/DAS-30-mysql-exporter`
+**[DAS-31](https://planetkevin.atlassian.net/browse/DAS-31)** — Export target matrix testing  
+Branch: `feature/DAS-31-export-target-matrix-tests`
 
 ## License
 

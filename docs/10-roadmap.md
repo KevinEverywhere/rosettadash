@@ -51,9 +51,9 @@ See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 - Next.js, Nuxt, Express server exporters
 - **Svelte UI exporter** (fourth UI framework, after Phase 4 server exporters)
 - MongoDB, Supabase, MySQL exporters
-- Export target matrix testing
+- Export target matrix testing — DAS-31
 
-**Exit criteria:** Same composite exports to at least 3 UI × 2 server combinations.
+**Exit criteria:** Same composite exports to at least 3 UI × 2 server combinations; full matrix covered by parameterized bundle tests (DAS-31).
 
 ## Phase 4b — Extended UI targets
 

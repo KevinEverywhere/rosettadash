@@ -11,29 +11,27 @@ Forward-looking Jira ticket plan for DashBuilder. **One branch at a time** — o
 | [DAS-27](https://planetkevin.atlassian.net/browse/DAS-27) | `feature/DAS-27-mongodb-exporter` | MongoDB database exporter package |
 | [DAS-28](https://planetkevin.atlassian.net/browse/DAS-28) | `feature/DAS-28-supabase-exporter` | Supabase database exporter package |
 | [DAS-29](https://planetkevin.atlassian.net/browse/DAS-29) | `feature/DAS-29-export-wizard-database-targets` | Export wizard database target picker |
+| [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | `feature/DAS-30-mysql-exporter` | MySQL database exporter package |
 
 ## Phase 4 — Multi-target export
 
 | Ticket | Branch (planned) | Summary |
 |--------|------------------|---------|
-| [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | `feature/DAS-30-mysql-exporter` | MySQL database exporter package |
+| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | Export target matrix testing |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-30](https://planetkevin.atlassian.net/browse/DAS-30) | `feature/DAS-30-mysql-exporter` | In progress |
+| [DAS-31](https://planetkevin.atlassian.net/browse/DAS-31) | `feature/DAS-31-export-target-matrix-tests` | In progress |
 
 ## Delivery status
 
 - **UI frameworks:** React, Angular, Vue, Svelte — complete
 - **Server exporters:** Nest, Express, Next, Nuxt — complete
-- **Database exporters:** PostgreSQL (via server exporters), MongoDB, Supabase — complete; **MySQL — DAS-30 in progress**
+- **Database exporters:** PostgreSQL (via server exporters), MongoDB, Supabase, MySQL — complete
 - **Export wizard:** UI + server + database pickers — complete
-
-## Phase 4 — planned (not yet ticketed)
-
-- Export target matrix testing
+- **Export target matrix:** parameterized bundle tests — **DAS-31 in progress**
 
 ## Future — 3D dashboards (not yet ticketed)
 
