@@ -14,8 +14,9 @@ Planning guide for **single components** and **pages built from component groups
 | Onboarding composite template | Shipped |
 | Docker Compose local dev | Shipped (DAS-37) |
 | Single-component export mode in wizard | Shipped (DAS-41) — full / single / selection scopes |
-| Page templates library | Not started |
-| Full P1/P2 taxonomy | Not started |
+| Page templates library | Shipped (DAS-40) — analytics, CRUD, settings, empty |
+| Canvas snap, resize, multi-select | Shipped (DAS-42) |
+| Grouping guides & animated hints | Planned (DAS-43) |
 
 **Registry source of truth:** `packages/core/src/lib/registry/p0-components.ts` (24 types today).
 
@@ -52,7 +53,7 @@ See [Component Model](./03-component-model.md) for graph-level detail.
 
 ### Single-component export
 
-**Export scopes** in the wizard: **Full composite**, **Selected node** (upstream deps), **Selection neighborhood** (binding-connected subgraph). Requires a canvas selection for scoped modes.
+**Export scopes** in the wizard: **Full composite**, **Selected node** (primary selection + upstream deps), **Selection neighborhood** (all selected nodes + binding-connected subgraph). Multi-select on the canvas (Shift+click) feeds multiple seed nodes into scoped export.
 
 Export modes (see [Component Model — Piecemeal vs grouped export](./03-component-model.md#piecemeal-vs-grouped-export)):
 
@@ -208,12 +209,28 @@ Create a Jira ticket **before** each branch:
 
 1. ~~**P1 form inputs** — number, checkbox, textarea (registry + preview + React)~~ — DAS-39
 2. ~~**Page template library** — apply template from builder; 5 fixtures~~ — DAS-40
-3. **Export wizard: single/selection modes** — UX for piecemeal export
-4. **Layout polish** — snap, resize, multi-select on canvas
+3. ~~**Export wizard: single/selection modes** — UX for piecemeal export~~ — DAS-41
+4. ~~**Layout polish** — snap, resize, multi-select on canvas~~ — DAS-42
 5. **Undo/redo** — command pattern over graph mutations
 6. **Pie chart + flex layout** — expand visualization and layout palette
+7. **Grouping guides & animated placement hints** — palette info/link affordances, companion-component prompts (e.g. video + controls) — DAS-43
 
-### Definition of done — new single component
+### Future — component grouping guides (DAS-43)
+
+Usability enhancement for the palette and canvas (not yet implemented):
+
+| Affordance | Purpose |
+|------------|---------|
+| **Info (i) icon** on palette rows | Short description + link to animated example |
+| **Chain/link icon** | Shows components that are usually grouped with this type |
+| **Placement-time prompt** | When adding a node that expects companions, animate suggested follow-up adds on the canvas |
+| **Defaults engine tie-in** | Extend companion metadata beyond today's patch/bind suggestions |
+
+Example: adding a **video** component prompts adding **video controls** beside it, with a short looping animation demonstrating typical layout.
+
+Branch when started: `feature/DAS-43-component-grouping-guides`.
+
+---
 
 - [ ] Type registered in `packages/core` with validation tests
 - [ ] Preview renderer in Angular client

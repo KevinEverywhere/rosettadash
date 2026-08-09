@@ -6,6 +6,7 @@ import {
   Composite,
   DefaultSuggestion,
   DomainContext,
+  NodeLayout,
   Project,
   RoleDefinition,
   TimeRangePreset,
@@ -18,6 +19,12 @@ import {
   slugifyDomainId,
   suggestionsForSelectedNode,
 } from '@dashbuilder/core';
+import {
+  CANVAS_GRID_SIZE,
+  clampCanvasNodeHeight,
+  clampCanvasNodeWidth,
+  snapToCanvasGrid,
+} from './canvas/canvas-layout';
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 export type WorkspaceMode = 'design' | 'preview';
@@ -38,7 +45,7 @@ export class BuilderStateService {
   readonly nodes = signal<ComponentNode[]>([]);
   readonly bindings = signal<Binding[]>([]);
   readonly selectedDefinition = signal<ComponentDefinition | null>(null);
-  readonly selectedNodeId = signal<string | null>(null);
+  readonly selectedNodeIds = signal<string[]>([]);
   readonly pendingBindingSource = signal<PendingBindingSource | null>(null);
   readonly bindingMessage = signal<string | null>(null);
   readonly workspaceMode = signal<WorkspaceMode>('design');
@@ -50,12 +57,19 @@ export class BuilderStateService {
   readonly dismissedSuggestionIds = signal<Set<string>>(new Set());
   readonly previewRoleId = signal('viewer');
 
+  readonly selectedNodeId = computed(() => this.selectedNodeIds()[0] ?? null);
+
   readonly selectedNode = computed(() => {
     const id = this.selectedNodeId();
     if (!id) {
       return null;
     }
     return this.nodes().find((node) => node.id === id) ?? null;
+  });
+
+  readonly selectedNodes = computed(() => {
+    const ids = new Set(this.selectedNodeIds());
+    return this.nodes().filter((node) => ids.has(node.id));
   });
 
   readonly bindingsForSelectedNode = computed(() => {
@@ -85,33 +99,96 @@ export class BuilderStateService {
 
   selectDefinition(definition: ComponentDefinition): void {
     this.selectedDefinition.set(definition);
-    this.selectedNodeId.set(null);
+    this.selectedNodeIds.set([]);
     this.clearPendingBinding();
   }
 
-  selectNode(nodeId: string): void {
-    this.selectedNodeId.set(nodeId);
+  selectNode(nodeId: string, options?: { additive?: boolean }): void {
+    const additive = options?.additive ?? false;
+    if (additive) {
+      this.selectedNodeIds.update((ids) =>
+        ids.includes(nodeId) ? ids.filter((id) => id !== nodeId) : [...ids, nodeId],
+      );
+    } else {
+      this.selectedNodeIds.set([nodeId]);
+    }
     this.selectedDefinition.set(null);
     this.refreshSuggestionsForSelection();
   }
 
+  isNodeSelected(nodeId: string): boolean {
+    return this.selectedNodeIds().includes(nodeId);
+  }
+
   clearSelection(): void {
     this.selectedDefinition.set(null);
-    this.selectedNodeId.set(null);
+    this.selectedNodeIds.set([]);
     this.clearPendingBinding();
+  }
+
+  updateNodeLayout(nodeId: string, layout: Partial<NodeLayout>): void {
+    this.nodes.update((nodes) =>
+      nodes.map((node) => {
+        if (node.id !== nodeId) {
+          return node;
+        }
+        const current = node.layout ?? { x: 24, y: 24, width: 220, height: 72 };
+        const next: NodeLayout = {
+          ...current,
+          ...layout,
+        };
+        if (layout.x !== undefined) {
+          next.x = snapToCanvasGrid(layout.x);
+        }
+        if (layout.y !== undefined) {
+          next.y = snapToCanvasGrid(layout.y);
+        }
+        if (layout.width !== undefined) {
+          next.width = clampCanvasNodeWidth(layout.width);
+        }
+        if (layout.height !== undefined) {
+          next.height = clampCanvasNodeHeight(layout.height);
+        }
+        return { ...node, layout: next };
+      }),
+    );
+    this.markDirty();
+  }
+
+  moveSelectedNodes(deltaX: number, deltaY: number): void {
+    const selected = new Set(this.selectedNodeIds());
+    if (selected.size === 0) {
+      return;
+    }
+    this.nodes.update((nodes) =>
+      nodes.map((node) => {
+        if (!selected.has(node.id) || !node.layout) {
+          return node;
+        }
+        return {
+          ...node,
+          layout: {
+            ...node.layout,
+            x: snapToCanvasGrid(node.layout.x + deltaX),
+            y: snapToCanvasGrid(node.layout.y + deltaY),
+          },
+        };
+      }),
+    );
+    this.markDirty();
   }
 
   addNodeFromDefinition(definition: ComponentDefinition): ComponentNode {
     const node = defaultComponentRegistry.createNode(definition.type, {
       layout: {
-        x: 24,
-        y: this.nodes().length * 96 + 24,
-        width: 220,
-        height: 72,
+        x: snapToCanvasGrid(24),
+        y: snapToCanvasGrid(this.nodes().length * CANVAS_GRID_SIZE * 6 + 24),
+        width: clampCanvasNodeWidth(220),
+        height: clampCanvasNodeHeight(72),
       },
     });
     this.nodes.update((nodes) => [...nodes, node]);
-    this.selectedNodeId.set(node.id);
+    this.selectedNodeIds.set([node.id]);
     this.selectedDefinition.set(null);
     this.mergeSuggestions(
       evaluateDefaults(this.defaultsContext(), { type: 'nodeAdded', nodeId: node.id }, defaultComponentRegistry, {
@@ -134,17 +211,17 @@ export class BuilderStateService {
   }
 
   removeSelectedNode(): void {
-    const id = this.selectedNodeId();
-    if (!id) {
+    const ids = new Set(this.selectedNodeIds());
+    if (ids.size === 0) {
       return;
     }
-    this.nodes.update((nodes) => nodes.filter((node) => node.id !== id));
+    this.nodes.update((nodes) => nodes.filter((node) => !ids.has(node.id)));
     this.bindings.update((bindings) =>
       bindings.filter(
-        (binding) => binding.sourceNodeId !== id && binding.targetNodeId !== id,
+        (binding) => !ids.has(binding.sourceNodeId) && !ids.has(binding.targetNodeId),
       ),
     );
-    this.selectedNodeId.set(null);
+    this.selectedNodeIds.set([]);
     this.clearPendingBinding();
     this.markDirty();
   }
@@ -206,7 +283,7 @@ export class BuilderStateService {
     });
     this.nodes.set([...template.nodes]);
     this.bindings.set([...(template.bindings ?? [])]);
-    this.selectedNodeId.set(null);
+    this.selectedNodeIds.set([]);
     this.selectedDefinition.set(null);
     this.clearPendingBinding();
     this.markDirty();

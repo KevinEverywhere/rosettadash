@@ -83,12 +83,12 @@ export class ExportWizardComponent {
     {
       id: 'single',
       label: 'Selected node',
-      description: 'One canvas node plus upstream dependencies',
+      description: 'Primary selected node plus upstream dependencies',
     },
     {
       id: 'selection',
       label: 'Selection neighborhood',
-      description: 'Selected node and binding-connected nodes',
+      description: 'All selected nodes and binding-connected neighbors',
     },
   ];
 
@@ -151,15 +151,19 @@ export class ExportWizardComponent {
     if (scope === 'full') {
       return null;
     }
-    const selected = this.state.selectedNode();
-    if (selected) {
-      return `Using canvas selection: ${selected.label}`;
+    const selectedIds = this.state.selectedNodeIds();
+    if (selectedIds.length === 0) {
+      return 'Select a node on the canvas before exporting with this scope.';
     }
-    return 'Select a node on the canvas before exporting with this scope.';
+    if (selectedIds.length === 1) {
+      const selected = this.state.selectedNode();
+      return selected ? `Using canvas selection: ${selected.label}` : null;
+    }
+    return `Using ${selectedIds.length} selected nodes for export scope.`;
   }
 
   protected scopeSelectionMissing(): boolean {
-    return this.exportScope() !== 'full' && !this.state.selectedNodeId();
+    return this.exportScope() !== 'full' && this.state.selectedNodeIds().length === 0;
   }
 
   protected async refreshPreview(): Promise<void> {
@@ -218,7 +222,7 @@ export class ExportWizardComponent {
   private buildExportComposite(): Composite {
     const payload = this.state.buildCompositePayload();
     const scope = this.exportScope();
-    const seedNodeIds = this.state.selectedNodeId() ? [this.state.selectedNodeId()!] : [];
+    const seedNodeIds = this.state.selectedNodeIds();
 
     const scoped = resolveExportComposite(
       {

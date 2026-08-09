@@ -1,4 +1,9 @@
 import { defaultComponentRegistry } from '@dashbuilder/core';
+import {
+  CANVAS_GRID_SIZE,
+  clampCanvasNodeWidth,
+  snapToCanvasGrid,
+} from './canvas/canvas-layout';
 import { BuilderStateService } from './builder-state.service';
 
 describe('BuilderStateService', () => {
@@ -116,6 +121,49 @@ describe('BuilderStateService', () => {
     service.setWorkspaceMode('preview');
     expect(service.workspaceMode()).toBe('preview');
     expect(service.pendingBindingSource()).toBeNull();
+  });
+
+  it('supports additive multi-select and clears on clearSelection', () => {
+    const first = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.input.text'),
+    );
+    const second = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.kpi'),
+    );
+
+    service.selectNode(first.id);
+    service.selectNode(second.id, { additive: true });
+
+    expect(service.selectedNodeIds()).toEqual([first.id, second.id]);
+    expect(service.isNodeSelected(first.id)).toBe(true);
+    expect(service.isNodeSelected(second.id)).toBe(true);
+
+    service.selectNode(first.id, { additive: true });
+    expect(service.selectedNodeIds()).toEqual([second.id]);
+
+    service.clearSelection();
+    expect(service.selectedNodeIds()).toEqual([]);
+  });
+
+  it('snaps node layout updates to the canvas grid', () => {
+    const node = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.kpi'),
+    );
+
+    service.updateNodeLayout(node.id, { x: 27, y: 35, width: 210, height: 90 });
+    const updated = service.nodes().find((entry) => entry.id === node.id);
+
+    expect(updated?.layout?.x).toBe(32);
+    expect(updated?.layout?.y).toBe(32);
+    expect(updated?.layout?.width).toBe(208);
+    expect(updated?.layout?.height).toBe(96);
+  });
+
+  it('snaps values to the canvas grid helpers', () => {
+    expect(snapToCanvasGrid(7)).toBe(0);
+    expect(snapToCanvasGrid(8)).toBe(16);
+    expect(snapToCanvasGrid(25, CANVAS_GRID_SIZE)).toBe(32);
+    expect(clampCanvasNodeWidth(80)).toBe(160);
   });
 
   it('removes bindings when a node is deleted', () => {

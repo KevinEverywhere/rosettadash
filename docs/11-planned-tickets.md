@@ -48,12 +48,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | Docs refresh + component/page design planning |
 | [DAS-39](https://planetkevin.atlassian.net/browse/DAS-39) | `feature/DAS-39-p1-form-inputs` | P1 form inputs (number, checkbox, textarea) |
 | [DAS-40](https://planetkevin.atlassian.net/browse/DAS-40) | `feature/DAS-40-page-template-library` | Page template library + e2e port prep |
+| [DAS-41](https://planetkevin.atlassian.net/browse/DAS-41) | `feature/DAS-41-export-wizard-scope` | Export wizard full / single / selection scopes |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-41](https://planetkevin.atlassian.net/browse/DAS-41) | `feature/DAS-41-export-wizard-scope` | In progress — export wizard scope modes |
+| [DAS-42](https://planetkevin.atlassian.net/browse/DAS-42) | `feature/DAS-42-canvas-layout-polish` | In progress — snap, resize, multi-select |
 
 ## Delivery status
 
@@ -61,7 +62,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 4 multi-target export:** complete (DAS-17–DAS-31)
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
-- **Phase 6 component & page design:** in progress (DAS-41 export scope active)
+- **Phase 6 component & page design:** in progress (DAS-42 canvas polish active)
 
 ## Phase 6 — planned (create Jira ticket before each)
 
@@ -70,9 +71,10 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns an
 1. ~~P1 form inputs (number, checkbox, textarea)~~ — DAS-39
 2. ~~Page template library (analytics, CRUD, settings)~~ — DAS-40
 3. ~~Export wizard: single/selection modes~~ — DAS-41
-4. Canvas layout polish (snap, resize, multi-select)
+4. Canvas layout polish (snap, resize, multi-select) — DAS-42
 5. Undo/redo
 6. Pie chart + flex layout
+7. **Component grouping guides & animated placement hints** — [DAS-43](https://planetkevin.atlassian.net/browse/DAS-43) (usability backlog)
 
 ## Future — 3D dashboards (not yet ticketed)
 

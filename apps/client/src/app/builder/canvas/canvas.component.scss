@@ -36,9 +36,14 @@
 }
 
 .canvas__binding-hint,
-.canvas__binding-error {
+.canvas__binding-error,
+.canvas__selection-hint {
   margin: 0;
   font-size: 0.75rem;
+}
+
+.canvas__selection-hint {
+  color: var(--db-text-muted);
 }
 
 .canvas__binding-hint {
@@ -55,6 +60,13 @@
   min-height: 24rem;
   padding: 1rem;
   overflow: auto;
+
+  &--grid {
+    background-image:
+      linear-gradient(to right, rgb(0 0 0 / 4%) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(0 0 0 / 4%) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
 }
 
 .canvas__edges {
@@ -103,6 +115,27 @@
   gap: 0.125rem;
   padding: 0.625rem 0.75rem 0.375rem;
   border-bottom: 1px solid var(--db-border);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.canvas__resize-handle {
+  position: absolute;
+  right: -0.25rem;
+  bottom: -0.25rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  padding: 0;
+  border: 1px solid var(--db-accent);
+  border-radius: 0.125rem;
+  background: var(--db-panel-bg);
+  cursor: nwse-resize;
+  touch-action: none;
 }
 
 .canvas__node-label {

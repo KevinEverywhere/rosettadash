@@ -39,7 +39,7 @@
           <div
             class="preview__node"
             data-testid="preview-node"
-            [class.preview__node--selected]="state.selectedNodeId() === node.id"
+            [class.preview__node--selected]="state.isNodeSelected(node.id)"
             [style.left.px]="node.layout?.x ?? 24"
             [style.top.px]="node.layout?.y ?? 24"
             [style.width.px]="node.layout?.width ?? 220"
