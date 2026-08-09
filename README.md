@@ -21,6 +21,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `exporters-express` | `packages/exporters-express` | Express + PostgreSQL server generator from ExportIR |
 | `exporters-next` | `packages/exporters-next` | Next.js + PostgreSQL server generator from ExportIR |
 | `exporters-nuxt` | `packages/exporters-nuxt` | Nuxt + PostgreSQL server generator from ExportIR |
+| `exporters-svelte` | `packages/exporters-svelte` | Svelte UI code generator from ExportIR |
 
 ## Run locally
 
@@ -136,6 +137,9 @@ Example body:
 |--------|------|-------------|
 | POST | `/api/export/ir` | Build ExportIR from a strictly validated composite (400 on validation errors) |
 | POST | `/api/export/react` | Build ExportIR and generate React UI source files |
+| POST | `/api/export/angular` | Build ExportIR and generate Angular UI source files |
+| POST | `/api/export/vue` | Build ExportIR and generate Vue UI source files |
+| POST | `/api/export/svelte` | Build ExportIR and generate Svelte UI source files |
 | POST | `/api/export/nest` | Build ExportIR and generate NestJS + PostgreSQL server files |
 | POST | `/api/export/express` | Build ExportIR and generate Express + PostgreSQL server files |
 | POST | `/api/export/next` | Build ExportIR and generate Next.js + PostgreSQL server files |
@@ -174,10 +178,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-24](https://planetkevin.atlassian.net/browse/DAS-24)** — Nuxt server exporter package  
-Branch: `feature/DAS-24-nuxt-server-exporter`
+**[DAS-25](https://planetkevin.atlassian.net/browse/DAS-25)** — Svelte UI exporter (4th UI framework)  
+Branch: `feature/DAS-25-svelte-ui-exporter`
 
-**Next UI framework:** Svelte (planned DAS-25). **Future:** three.js 3D dashboard displays (TBD).
+**Future:** three.js 3D dashboard displays (TBD).
 
 ## License
 

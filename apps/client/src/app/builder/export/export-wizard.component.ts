@@ -11,7 +11,7 @@ import {
 } from './export-api.service';
 import { ExportZipService } from './export-zip.service';
 
-type UiTarget = 'react' | 'angular' | 'vue';
+type UiTarget = 'react' | 'angular' | 'vue' | 'svelte';
 
 interface UiTargetOption {
   id: UiTarget;
@@ -36,6 +36,7 @@ export class ExportWizardComponent {
     { id: 'react', label: 'React', description: 'TSX + hooks' },
     { id: 'angular', label: 'Angular', description: 'Standalone components' },
     { id: 'vue', label: 'Vue', description: 'Composition API SFCs' },
+    { id: 'svelte', label: 'Svelte', description: 'Svelte 5 runes + SFCs' },
   ];
 
   protected readonly loading = signal(false);

@@ -7,6 +7,7 @@ import { NestExportError } from '@dashbuilder/exporters-nest';
 import { NextExportError } from '@dashbuilder/exporters-next';
 import { NuxtExportError } from '@dashbuilder/exporters-nuxt';
 import { ReactExportError } from '@dashbuilder/exporters-react';
+import { SvelteExportError } from '@dashbuilder/exporters-svelte';
 import { VueExportError } from '@dashbuilder/exporters-vue';
 import { ExportService } from './export.service';
 
@@ -28,7 +29,8 @@ export class ExportController {
       error instanceof NextExportError ||
       error instanceof NuxtExportError ||
       error instanceof AngularExportError ||
-      error instanceof VueExportError
+      error instanceof VueExportError ||
+      error instanceof SvelteExportError
     ) {
       throw new BadRequestException({
         message: error.message,
@@ -68,6 +70,15 @@ export class ExportController {
   buildVueExport(@Body() composite: Composite) {
     try {
       return this.exportService.buildVueExport(composite);
+    } catch (error) {
+      this.handleExportError(error);
+    }
+  }
+
+  @Post('svelte')
+  buildSvelteExport(@Body() composite: Composite) {
+    try {
+      return this.exportService.buildSvelteExport(composite);
     } catch (error) {
       this.handleExportError(error);
     }

@@ -110,6 +110,32 @@ describe('ExportService', () => {
     expect(result.files.some((file) => file.path.endsWith('.vue'))).toBe(true);
   });
 
+  it('returns generated Svelte files for a valid composite', () => {
+    const pg = defaultComponentRegistry.createNode('infra.postgresql', { id: 'pg1' });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+
+    const result = service.buildSvelteExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'svelte', server: 'nest' },
+      nodes: [pg, table],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'pg1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.ir.meta.compositeName).toBe('Export me');
+    expect(result.files.some((file) => file.path === 'src/Dashboard.svelte')).toBe(true);
+    expect(result.files.some((file) => file.path.endsWith('.svelte'))).toBe(true);
+  });
+
   it('returns generated NestJS files for a valid composite', () => {
     const pg = defaultComponentRegistry.createNode('infra.postgresql', {
       id: 'pg1',
@@ -322,6 +348,36 @@ describe('ExportService', () => {
     });
 
     expect(result.files.some((file) => file.path === 'src/Dashboard.vue')).toBe(true);
+    expect(result.files.some((file) => file.path === 'server/src/main.ts')).toBe(true);
+    expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(false);
+  });
+
+  it('returns combined Svelte and NestJS files for a valid composite', () => {
+    const pg = defaultComponentRegistry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const table = defaultComponentRegistry.createNode('visual.table', { id: 't1' });
+    const server = defaultComponentRegistry.createNode('infra.server.nest', { id: 's1' });
+
+    const result = service.buildBundleExport({
+      id: 'c1',
+      name: 'Export me',
+      version: 1,
+      exportTargets: { ui: 'svelte', server: 'nest', database: 'postgresql' },
+      nodes: [pg, table, server],
+      bindings: [
+        {
+          id: 'b1',
+          sourceNodeId: 'pg1',
+          sourcePortId: 'rowset',
+          targetNodeId: 't1',
+          targetPortId: 'data',
+        },
+      ],
+    });
+
+    expect(result.files.some((file) => file.path === 'src/Dashboard.svelte')).toBe(true);
     expect(result.files.some((file) => file.path === 'server/src/main.ts')).toBe(true);
     expect(result.files.some((file) => file.path === 'src/Dashboard.tsx')).toBe(false);
   });

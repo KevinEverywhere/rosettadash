@@ -74,7 +74,7 @@ export interface Binding {
 }
 
 export interface ExportTargetConfig {
-  ui?: 'react' | 'angular' | 'vue';
+  ui?: 'react' | 'angular' | 'vue' | 'svelte';
   server?: 'next' | 'nuxt' | 'nest' | 'express';
   database?: 'mongodb' | 'postgresql' | 'supabase' | 'mysql';
 }

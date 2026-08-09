@@ -1,0 +1,247 @@
+import type { ExportIR } from '@dashbuilder/core';
+import { buildDashboardContext } from './binding-resolver';
+import { generateComponentFile } from './component-templates';
+import type { GeneratedFile, SvelteExportOptions } from './types';
+import { SvelteExportError } from './types';
+import { componentExportName, dataModuleName, joinLines, pascalFromId } from './utils';
+
+export function generateSvelteUiFiles(
+  ir: ExportIR,
+  options: SvelteExportOptions = {},
+): GeneratedFile[] {
+  if (ir.targets.ui !== 'svelte') {
+    throw new SvelteExportError(`Svelte exporter cannot generate UI target "${ir.targets.ui}"`);
+  }
+
+  const root = options.rootDir ?? 'src';
+  const usedNames = new Set<string>();
+  const exportNames = new Map<string, string>();
+
+  for (const component of ir.components) {
+    exportNames.set(component.id, componentExportName(component, usedNames));
+  }
+
+  for (const source of ir.dataSources) {
+    exportNames.set(source.id, pascalFromId(source.id));
+  }
+
+  const files: GeneratedFile[] = [];
+
+  for (const component of ir.components) {
+    const exportName = exportNames.get(component.id);
+    if (!exportName) {
+      continue;
+    }
+
+    files.push({
+      path: `${root}/components/${exportName}.svelte`,
+      content: generateComponentFile(component, exportName),
+      encoding: 'utf-8',
+      description: `Svelte component for ${component.label}`,
+    });
+  }
+
+  files.push({
+    path: `${root}/types.ts`,
+    content: generateTypesFile(),
+    encoding: 'utf-8',
+    description: 'Shared dashboard types',
+  });
+
+  files.push({
+    path: `${root}/styles/tokens.css`,
+    content: generateTokensCss(ir),
+    encoding: 'utf-8',
+    description: 'Neutral style tokens for exported dashboard',
+  });
+
+  for (const source of ir.dataSources.filter((entry) => entry.type === 'infra.postgresql')) {
+    const name = dataModuleName(source.id, exportNames);
+    const route = ir.routes.find((entry) => entry.method === 'GET')?.path ?? '/api/records';
+    files.push({
+      path: `${root}/lib/data/${name}.svelte.ts`,
+      content: generateDataModule(name, route),
+      encoding: 'utf-8',
+      description: `Data module for ${source.label}`,
+    });
+  }
+
+  files.push({
+    path: `${root}/Dashboard.svelte`,
+    content: generateDashboardFile(ir, exportNames),
+    encoding: 'utf-8',
+    description: 'Composed dashboard wired from ExportIR bindings',
+  });
+
+  files.push({
+    path: 'README.export.md',
+    content: generateReadme(ir),
+    encoding: 'utf-8',
+    description: 'Setup notes for exported Svelte UI fragment',
+  });
+
+  return files;
+}
+
+function generateTypesFile(): string {
+  return joinLines([
+    `export interface DateRange {`,
+    `  start: string;`,
+    `  end: string;`,
+    `}`,
+    ``,
+    `export type Row = Record<string, string | number | boolean | null | undefined>;`,
+    ``,
+  ]);
+}
+
+function generateTokensCss(ir: ExportIR): string {
+  return joinLines([
+    `:root {`,
+    `  --db-surface: #ffffff;`,
+    `  --db-border: #d9dee7;`,
+    `  --db-text: #1f2937;`,
+    `  --db-accent: #2563eb;`,
+    `  --db-muted: #6b7280;`,
+    `}`,
+    ``,
+    `.dashboard {`,
+    `  display: grid;`,
+    `  gap: 1rem;`,
+    `  padding: 1.5rem;`,
+    `  color: var(--db-text);`,
+    `  background: var(--db-surface);`,
+    `}`,
+    ``,
+    `.field, .input, .select, .table, .kpi-card, .chart-card {`,
+    `  border: 1px solid var(--db-border);`,
+    `  border-radius: 0.5rem;`,
+    `}`,
+    ``,
+    `.table { width: 100%; border-collapse: collapse; }`,
+    `.table th, .table td { padding: 0.5rem 0.75rem; text-align: left; }`,
+    `.kpi-card, .chart-card, .table-card { padding: 1rem; }`,
+    `.bar-chart { display: flex; align-items: flex-end; gap: 0.25rem; height: 8rem; }`,
+    `.bar { flex: 1; background: var(--db-accent); min-height: 0.25rem; }`,
+    `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
+    ``,
+  ]);
+}
+
+function generateDataModule(moduleName: string, route: string): string {
+  return joinLines([
+    `import type { Row } from '../../types';`,
+    ``,
+    `export function ${moduleName}() {`,
+    `  let data = $state<Row[] | undefined>();`,
+    `  let loading = $state(true);`,
+    `  let error = $state<Error | undefined>();`,
+    ``,
+    `  $effect(() => {`,
+    `    let cancelled = false;`,
+    ``,
+    `    void (async () => {`,
+    `      try {`,
+    `        const response = await fetch('${route}');`,
+    `        if (!response.ok) {`,
+    `          throw new Error(\`Request failed: \${response.status}\`);`,
+    `        }`,
+    `        if (!cancelled) {`,
+    `          data = (await response.json()) as Row[];`,
+    `        }`,
+    `      } catch (nextError) {`,
+    `        if (!cancelled) {`,
+    `          error = nextError as Error;`,
+    `        }`,
+    `      } finally {`,
+    `        if (!cancelled) {`,
+    `          loading = false;`,
+    `        }`,
+    `      }`,
+    `    })();`,
+    ``,
+    `    return () => {`,
+    `      cancelled = true;`,
+    `    };`,
+    `  });`,
+    ``,
+    `  return {`,
+    `    get data() {`,
+    `      return data;`,
+    `    },`,
+    `    get loading() {`,
+    `      return loading;`,
+    `    },`,
+    `    get error() {`,
+    `      return error;`,
+    `    },`,
+    `  };`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateDashboardFile(ir: ExportIR, exportNames: Map<string, string>): string {
+  const context = buildDashboardContext(ir, exportNames);
+  const componentImportLines = context.componentImports.map(
+    (name) => `  import ${name} from './components/${name}.svelte';`,
+  );
+  const dataImportLines = context.dataModuleImports.map(
+    (name) => `  import { ${name} } from './lib/data/${name}.svelte.ts';`,
+  );
+
+  const componentLines = context.components.map((component) => {
+    const attrs = component.bindings.map((binding) => `    ${binding}`).join('\n');
+    return [`  <${component.exportName}`, attrs, `  />`].join('\n');
+  });
+
+  return joinLines([
+    `<script lang="ts">`,
+    `  import type { DateRange } from './types';`,
+    `  import './styles/tokens.css';`,
+    ...componentImportLines,
+    ...dataImportLines,
+    ...context.stateDeclarations,
+    ...context.dataModuleCalls,
+    `</script>`,
+    ``,
+    `<main class="dashboard">`,
+    `  <header>`,
+    `    <h1>${ir.meta.compositeName}</h1>`,
+    `  </header>`,
+    ...componentLines,
+    `</main>`,
+    ``,
+  ]);
+}
+
+function generateReadme(ir: ExportIR): string {
+  const envLines =
+    ir.envVars.length === 0
+      ? ['No environment variables required for the UI fragment.']
+      : ir.envVars.map((env) => `- \`${env.key}\`${env.required ? ' (required)' : ''}`);
+
+  return joinLines([
+    `# ${ir.meta.compositeName} — Svelte UI Export`,
+    ``,
+    `Generated at ${ir.meta.generatedAt} from composite \`${ir.meta.compositeId}\` v${ir.meta.version}.`,
+    ``,
+    `## Files`,
+    ``,
+    `- \`src/Dashboard.svelte\` — composed page wired from builder bindings`,
+    `- \`src/components/*.svelte\` — P0 visual Svelte 5 components`,
+    `- \`src/lib/data/*.svelte.ts\` — runes-based data modules targeting exported API routes`,
+    `- \`src/styles/tokens.css\` — neutral dashboard styling`,
+    ``,
+    `## Environment`,
+    ``,
+    ...envLines,
+    ``,
+    `## Next steps`,
+    ``,
+    `1. Copy the generated \`src/\` folder into your Svelte 5 app.`,
+    `2. Register \`Dashboard.svelte\` on a route.`,
+    `3. Ensure server routes referenced by data modules are available.`,
+    ``,
+  ]);
+}
