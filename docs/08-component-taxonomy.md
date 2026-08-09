@@ -114,36 +114,29 @@ Initial palette organization for DashBuilder. Components are grouped for palette
 
 ## Priority tiers
 
-### P0 — MVP palette
+### P0 — MVP palette (implemented)
 
-Text input, select, date range, data table, KPI card, line/bar chart, grid, tabs, modal, role gate, person invite, role assign, PostgreSQL, NestJS server, env config.
+Registered in `packages/core`, with preview renderers and export coverage. See [Component & Page Design — P0 table](./15-component-and-page-design.md#p0-components--implemented-today) for the full list (21 types).
 
-### P1 — Early expansion
+Includes: text input, select, date range, data table, KPI card, line/bar chart, grid, tabs, modal, role gate, person invite, role assign, env config, PostgreSQL, MongoDB, Supabase, MySQL, NestJS/Express/Next/Nuxt server nodes.
 
-Remaining form inputs, pie chart, flex layout, timer, MongoDB, Next.js, React export.
+### P1 — Early expansion (planned)
+
+Remaining form inputs, pie chart, flex layout, detail panel, timer, time preset, skeleton.
 
 ### P2 — Full catalog
 
-Animation, drag-drop lists, remaining charts, all DB/server targets, Vue/Nuxt exports, **Svelte export (planned)**.
-
-### P2 — Later
-
-three.js 3D dashboard displays (scope TBD).
+Animation, drag-drop lists, remaining charts, client/project selectors, three.js 3D displays (scope TBD).
 
 ## Adding new components
 
-See **[Local Development & Components](./13-local-development-and-components.md)** for the full step-by-step (core definition → preview → exporters → tests).
+See **[Local Development & Components](./13-local-development-and-components.md)** for the step-by-step (core definition → preview → exporters → tests).
 
-Summary:
-
-1. Define type key and property schema in `packages/core`
-2. Add preview renderer in `apps/client/.../preview/preview-node.component.html`
-3. Implement React template in `packages/exporters-react` (visual) or Nest exporter (infra)
-4. Palette picks up registry automatically — no separate manifest file
-5. Add E2E `data-testid` hooks and document in this taxonomy
+For design checklists and page-level patterns, see **[Component & Page Design](./15-component-and-page-design.md)**.
 
 ## Related documents
 
 - [Component Model](./03-component-model.md)
 - [Domain Model](./05-domain-model.md)
 - [Roadmap](./10-roadmap.md)
+- [Component & Page Design](./15-component-and-page-design.md)

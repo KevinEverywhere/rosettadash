@@ -65,7 +65,7 @@ The builder itself is Angular (client + NestJS server during creation). Exported
 | React | Yes |
 | Angular | Yes |
 | Vue | Yes |
-| *Future* | Svelte, Solid, etc. via exporter plugins |
+| Svelte | Yes |
 
 | Server partner | Initial support |
 |----------------|-----------------|

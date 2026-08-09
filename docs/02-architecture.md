@@ -41,41 +41,43 @@ DashBuilder splits into two runtime contexts:
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Monorepo layout (planned)
+## Monorepo layout
 
 ```
 dashbuilder/
 ├── apps/
-│   ├── client/                 # Angular standalone app
-│   │   ├── src/app/
-│   │   │   ├── canvas/         # Drag-drop design surface
-│   │   │   ├── palette/        # Component library sidebar
-│   │   │   ├── inspector/      # Property editor
-│   │   │   ├── preview/        # Live preview renderer
-│   │   │   └── export/         # Export wizard UI
-│   │   └── ...
-│   └── server/                 # NestJS API
-│       ├── src/
-│       │   ├── projects/       # CRUD for builder projects
-│       │   ├── composites/     # Composite graph persistence
-│       │   ├── export/         # Export orchestration
-│       │   └── preview/        # Server-side preview helpers
-│       └── ...
+│   ├── client/                 # Angular standalone builder app
+│   │   └── src/app/
+│   │       ├── canvas/         # Design surface
+│   │       ├── palette/        # Component library sidebar
+│   │       ├── inspector/      # Property editor + defaults hints
+│   │       ├── preview/        # Live preview renderer
+│   │       └── export/         # Export wizard UI
+│   ├── server/                 # NestJS API
+│   │   └── src/
+│   │       ├── projects/       # Project + composite CRUD
+│   │       ├── export/         # Export orchestration
+│   │       └── preview/        # Mock preview data
+│   └── client-e2e/             # Playwright E2E
 ├── packages/
-│   ├── core/                   # Shared TypeScript
-│   │   ├── model/              # Component, Composite, Binding types
-│   │   ├── ir/                 # Intermediate representation for export
-│   │   └── validation/         # Graph validation rules
-│   ├── exporters/              # Code generators
-│   │   ├── react/
-│   │   ├── angular/
-│   │   ├── vue/
-│   │   ├── next/
-│   │   ├── nuxt/
-│   │   ├── nest/
-│   │   └── express/
-│   └── ui-primitives/          # Builder-side renderers for palette items
-└── docs/
+│   ├── core/                   # Component model, registry, IR, validation
+│   ├── ui-primitives/          # Preview mock data helpers
+│   ├── exporters-react/        # React UI code generator
+│   ├── exporters-angular/      # Angular UI code generator
+│   ├── exporters-vue/          # Vue UI code generator
+│   ├── exporters-svelte/       # Svelte UI code generator
+│   ├── exporters-nest/         # NestJS + PostgreSQL server generator
+│   ├── exporters-express/      # Express server generator
+│   ├── exporters-next/         # Next.js server generator
+│   ├── exporters-nuxt/         # Nuxt server generator
+│   ├── exporters-mongodb/      # MongoDB layer generator
+│   ├── exporters-supabase/     # Supabase layer generator
+│   └── exporters-mysql/        # MySQL layer generator
+├── docker/                     # nginx + entrypoint for app image
+├── docs/
+├── Dockerfile                  # Production-style app image
+├── Dockerfile.dev              # Dev hot-reload image
+└── docker-compose.yml          # dev + app profiles
 ```
 
 ## Builder client (Angular)
@@ -104,9 +106,9 @@ dashbuilder/
 
 ### State management
 
-- **Project state** — persisted via NestJS API
-- **Canvas state** — in-memory reactive store (signals or NgRx, TBD in implementation ticket)
-- **Undo/redo** — command pattern over graph mutations
+- **Project state** — persisted via NestJS API (in-memory MVP)
+- **Canvas state** — in-memory Angular signals in the builder client
+- **Undo/redo** — planned (Phase 6); not yet implemented
 
 ## Builder server (NestJS)
 
@@ -191,3 +193,4 @@ Exact hosting TBD; not blocking initial development.
 - [Component Model](./03-component-model.md)
 - [Export Pipeline](./04-export-pipeline.md)
 - [Technology Stack](./06-technology-stack.md)
+- [Component & Page Design](./15-component-and-page-design.md)

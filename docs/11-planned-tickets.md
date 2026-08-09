@@ -44,29 +44,32 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-34](https://planetkevin.atlassian.net/browse/DAS-34) | `feature/DAS-34-role-visibility` | Role visibility in builder + export stubs |
 | [DAS-35](https://planetkevin.atlassian.net/browse/DAS-35) | `feature/DAS-35-scoped-query-filters` | Scoped query filters in exporters |
 | [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | `feature/DAS-36-onboarding-template` | Onboarding composite template + export stubs |
+| [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) | `feature/DAS-37-docker-local-containers` | Docker Compose local dev + Jira/branch workflow enforcement |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) | `feature/DAS-37-docker-local-containers` | In progress |
+| [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | In progress — docs refresh + component/page design planning |
 
 ## Delivery status
 
-- **Phase 4 multi-target export:** complete (DAS-22–DAS-31)
+- **Phases 0–3 (foundation → export MVP):** complete (DAS-1–DAS-16)
+- **Phase 4 multi-target export:** complete (DAS-17–DAS-31)
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
-- **Docker local containers:** DAS-37 in progress
-- **Phase 6 advanced UX:** not started
+- **Docker local containers:** complete (DAS-37)
+- **Phase 6 component & page design:** in progress (DAS-38 docs); implementation tickets TBD
 
 ## Phase 6 — planned (create Jira ticket before each)
 
-Suggested order:
+See [Component & Page Design](./15-component-and-page-design.md) for patterns and suggested order:
 
-1. Composite templates library
-2. Undo/redo
-3. Canvas layout polish (snap, resize, multi-select)
-4. Export README improvements per target
-5. Docker CI smoke (optional; may fold into DAS-37)
+1. P1 form inputs (number, checkbox, textarea)
+2. Page template library (analytics, CRUD, settings)
+3. Export wizard: single-component and selection export modes
+4. Canvas layout polish (snap, resize, multi-select)
+5. Undo/redo
+6. Pie chart + flex layout
 
 ## Future — 3D dashboards (not yet ticketed)
 
@@ -75,5 +78,6 @@ Suggested order:
 ## Related documents
 
 - [Roadmap](./10-roadmap.md)
+- [Component & Page Design](./15-component-and-page-design.md)
 - [Workflow & Branching](./07-workflow-and-branching.md)
 - [Component Model](./03-component-model.md)

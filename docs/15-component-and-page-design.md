@@ -1,0 +1,236 @@
+# Component & Page Design
+
+Planning guide for **single components** and **pages built from component groups**. This doc reflects what DashBuilder ships today (DAS-1–DAS-37) and how we expand the palette and composite patterns next.
+
+## Current project state (summary)
+
+| Area | Status |
+|------|--------|
+| Builder shell (palette, canvas, inspector, save/load) | Shipped |
+| Bindings UI + preview renderers (P0 visuals) | Shipped |
+| Mock preview data API | Shipped |
+| Export IR + multi-target exporters (4 UI × 4 server × 4 DB) | Shipped |
+| Defaults engine + domain context + role visibility | Shipped |
+| Onboarding composite template | Shipped |
+| Docker Compose local dev | Shipped (DAS-37) |
+| Single-component export mode in wizard | Partial — IR supports closure; wizard UX TBD |
+| Page templates library | Not started |
+| Full P1/P2 taxonomy | Not started |
+
+**Registry source of truth:** `packages/core/src/lib/registry/p0-components.ts` (21 types today).
+
+---
+
+## Part 1 — Designing a single component
+
+A **single component** is one node in the composite graph: one type key, property schema, ports, preview renderer, and exporter template(s).
+
+### Design checklist
+
+When adding or refining a component, define each layer:
+
+| Layer | Location | Question to answer |
+|-------|----------|-------------------|
+| **Type & schema** | `packages/core` — registry + validation | What is the `type` key? Which properties and ports? Required vs optional? |
+| **Palette** | Auto from registry | Label, category, description for sidebar |
+| **Preview** | `apps/client/.../preview/` | How does it behave with mock data and bindings? |
+| **Export (UI)** | `packages/exporters-{react,angular,vue,svelte}` | Idiomatic template for each framework |
+| **Export (infra)** | `packages/exporters-{nest,express,next,nuxt,...}` | Only for infrastructure types |
+| **Tests** | Unit + e2e `data-testid` | Registry validation, exporter output, builder smoke |
+
+### Anatomy (recap)
+
+Every component node has:
+
+- **`type`** — stable string, e.g. `visual.table`, `domain.role-gate`
+- **`properties`** — schema-driven inspector fields
+- **`ports`** — typed inputs/outputs for bindings (`rowset`, `string`, `event`, etc.)
+- **`layout`** — canvas position (visual nodes only)
+- **`meta`** — optional hints (defaults engine, framework notes)
+
+See [Component Model](./03-component-model.md) for graph-level detail.
+
+### Single-component export
+
+Export modes (see [Component Model — Piecemeal vs grouped export](./03-component-model.md#piecemeal-vs-grouped-export)):
+
+| Mode | Delivers | Use when |
+|------|----------|----------|
+| **Single node** | One component + minimal deps | Dropping a KPI card or invite form into an existing app |
+| **Selection** | Selected nodes + internal bindings + required infra | A filter + table pair without the full page |
+| **Full composite** | Entire graph as a page/module | Shipping a complete dashboard screen |
+
+**Implementation note:** ExportIR already computes node closure from bindings. Follow-up tickets should expose single/selection modes clearly in the export wizard (today the wizard focuses on full-composite bundle export).
+
+### P0 components — implemented today
+
+These types are registered, previewable, and covered by exporters (visual → UI exporters; infra → server/DB exporters):
+
+| Type key | Role |
+|----------|------|
+| `visual.input.text` | Single-line input |
+| `visual.input.select` | Dropdown (options port) |
+| `visual.input.date-range` | Time filter driver |
+| `visual.table` | Data table |
+| `visual.kpi` | Single metric card |
+| `visual.chart.line` | Line chart |
+| `visual.chart.bar` | Bar chart |
+| `layout.grid` | Responsive layout container |
+| `layout.tabs` | Tabbed regions |
+| `layout.modal` | Dialog shell |
+| `domain.role-gate` | Role-based visibility wrapper |
+| `domain.person-invite` | Onboarding invite form |
+| `domain.role-assign` | Onboarding role confirmation |
+| `infra.env` | Env var definitions |
+| `infra.postgresql` | PostgreSQL connection |
+| `infra.mongodb` | MongoDB connection |
+| `infra.supabase` | Supabase connection |
+| `infra.mysql` | MySQL connection |
+| `infra.server.nest` | NestJS server target |
+| `infra.server.express` | Express server target |
+| `infra.server.next` | Next.js server target |
+| `infra.server.nuxt` | Nuxt server target |
+
+### Next single components (suggested P1 order)
+
+1. `visual.input.number`, `visual.input.checkbox` — complete basic form set
+2. `visual.chart.pie` — second chart family
+3. `layout.flex` — simpler layout than grid for many pages
+4. `visual.detail` — row drill-down from table selection
+5. `domain.time-preset` — relative period shortcuts (Last 7d, QTD)
+6. `visual.skeleton` — loading state wrapper
+
+Each should be **one Jira ticket** with registry + preview + at least React exporter + e2e hook.
+
+---
+
+## Part 2 — Designing pages from component groups
+
+A **page** (full composite) is a persisted graph: visual + layout + domain + infrastructure nodes with bindings. Users assemble pages on the canvas; export produces a routable screen plus server/DB stubs.
+
+### Page layers
+
+Think in four layers when designing a page composite:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Domain layer     role gates, client/project context    │
+├─────────────────────────────────────────────────────────┤
+│  Layout layer     grid, tabs, modal, header (future)    │
+├─────────────────────────────────────────────────────────┤
+│  Content layer    tables, charts, KPIs, forms           │
+├─────────────────────────────────────────────────────────┤
+│  Filter layer     date range, selects, time presets     │
+└─────────────────────────────────────────────────────────┘
+         │ bindings (rowset, events, visibility)
+         ▼
+┌─────────────────────────────────────────────────────────┐
+│  Infrastructure   DB + server + env (invisible nodes)   │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Reference pattern — analytics overview page
+
+Typical **filter → table + chart** dashboard (validated by DAS-12 e2e):
+
+| Node | Role |
+|------|------|
+| `visual.input.date-range` | Drives time context |
+| `visual.table` | Rowset display; bound to date filter |
+| `visual.chart.line` or `visual.chart.bar` | Aggregated series; bound to same filter |
+| `layout.grid` | Places filter, KPI row, table, chart |
+| `infra.postgresql` + `infra.server.nest` + `infra.env` | Export targets |
+
+Binding flow:
+
+```
+[date-range] ──range──► [table.dataFilter]
+[date-range] ──range──► [chart.dataFilter]
+[postgresql] ──rowset──► [table.data]
+[postgresql] ──rowset──► [chart.data]
+```
+
+### Reference pattern — onboarding page
+
+Shipped as **onboarding template** (DAS-36):
+
+| Node | Role |
+|------|------|
+| `domain.person-invite` | Collect email / invite |
+| `domain.role-assign` | Confirm role assignment |
+| `layout.tabs` or `layout.grid` | Step layout |
+| `domain.role-gate` | Admin-only sections (optional) |
+| Server + env infra | Export stubs for invite/assign API routes |
+
+### Reference pattern — role-scoped admin page
+
+| Node | Role |
+|------|------|
+| `domain.role-gate` | Wraps admin-only panels |
+| `visual.table` | Persons or settings list |
+| `domain.client-select` / `domain.project-select` | Future — scope selectors |
+| Preview role switch | Builder tests visibility (DAS-34) |
+
+### Page design rules
+
+1. **One primary data source per page** unless explicitly multi-source — keeps export IR and scoped queries predictable (DAS-35).
+2. **Filters at the top of the binding graph** — date range and selects propagate downward; avoid circular data dependencies.
+3. **Infrastructure closure** — every data-bound visual must trace to a DB node; every API route traces to a server node; env keys centralized in `infra.env`.
+4. **Role gates wrap layout subtrees**, not individual port bindings — export stubs emit conditional render or route guards.
+5. **Name composites for the page intent** — e.g. `Revenue Overview`, `Team Onboarding`; description documents target route and roles.
+
+### Page templates (planned)
+
+Reusable starting graphs (not yet in product — Phase 6 tickets):
+
+| Template | Components | Target persona |
+|----------|------------|----------------|
+| Analytics overview | date-range, KPI × 2, table, chart, grid | Viewer / editor |
+| CRUD list + detail | table, detail panel, modal, form | Editor |
+| Team onboarding | person-invite, role-assign, tabs | Admin |
+| Settings (role-gated) | role-gate, form inputs, table | Admin |
+| Empty canvas | grid + env + server + DB only | Custom |
+
+Templates should be **composites stored as JSON fixtures** applied from the builder (extend DAS-36 onboarding pattern).
+
+---
+
+## Part 3 — Implementation planning
+
+### Phase 6 — recommended ticket order
+
+Create a Jira ticket **before** each branch:
+
+1. **P1 form inputs** — number, checkbox, textarea (registry + preview + React)
+2. **Page template library** — apply template from builder; 3–5 fixtures
+3. **Export wizard: single/selection modes** — UX for piecemeal export
+4. **Layout polish** — snap, resize, multi-select on canvas
+5. **Undo/redo** — command pattern over graph mutations
+6. **Pie chart + flex layout** — expand visualization and layout palette
+
+### Definition of done — new single component
+
+- [ ] Type registered in `packages/core` with validation tests
+- [ ] Preview renderer in Angular client
+- [ ] React exporter template (minimum); Angular/Vue/Svelte when touching export matrix
+- [ ] Listed in [Component Taxonomy](./08-component-taxonomy.md) with **Implemented** status
+- [ ] E2e or unit test proving add → configure → preview/export path
+
+### Definition of done — new page template
+
+- [ ] JSON fixture with nodes, bindings, domainContext, exportTargets
+- [ ] Builder action: "Apply template" with confirmation
+- [ ] Saves and reloads correctly
+- [ ] Export bundle validates in strict mode
+- [ ] Documented in this file under reference patterns
+
+---
+
+## Related documents
+
+- [Component Model](./03-component-model.md)
+- [Component Taxonomy](./08-component-taxonomy.md)
+- [Domain Model](./05-domain-model.md)
+- [Local Development & Components](./13-local-development-and-components.md)
+- [Roadmap](./10-roadmap.md)
+- [Planned Tickets](./11-planned-tickets.md)

@@ -260,7 +260,8 @@ npm run e2e
 ## Related documents
 
 - [README](../README.md) — quick start
-- [Docker Containers](./14-docker-containers.md) — run without local Node
+- [Docker Containers](./14-docker-containers.md)
+- [Component & Page Design](./15-component-and-page-design.md) — run without local Node
 - [Architecture](./02-architecture.md)
 - [Component Model](./03-component-model.md)
 - [Component Taxonomy](./08-component-taxonomy.md)

@@ -1,10 +1,10 @@
 # Roadmap
 
-Phased delivery plan for DashBuilder. Tickets will be created in Jira (DAS project) per phase.
+Phased delivery plan for DashBuilder. Tickets are tracked in Jira (DAS project); see [Planned Tickets](./11-planned-tickets.md).
 
-## Phase 0 — Foundation
+## Phase 0 — Foundation (complete)
 
-**Tickets:** DAS-1 through DAS-8 (done), [DAS-9](https://planetkevin.atlassian.net/browse/DAS-9) (in progress)
+**Tickets:** DAS-1 through DAS-8
 
 - [x] Vision, architecture, and workflow documentation
 - [x] `development` branch as integration target
@@ -13,9 +13,9 @@ Phased delivery plan for DashBuilder. Tickets will be created in Jira (DAS proje
 - [x] CI verify baseline (`npm run verify` + GitHub Actions)
 - [x] Playwright E2E smoke test
 
-See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
-
 ## Phase 1 — Core model & builder shell (complete)
+
+**Tickets:** DAS-3 through DAS-6
 
 - [x] Component type registry and JSON schemas in `packages/core`
 - [x] Composite graph CRUD API (NestJS)
@@ -23,77 +23,81 @@ See [planned tickets](./11-planned-tickets.md) for Phase 2+ breakdown.
 - [x] Project save/load
 - [x] Basic validation rules (draft + strict modes)
 
-**Next:** Phase 2 — bindings UI and preview renderers (DAS-9+).
+## Phase 2 — Preview & P0 palette (complete)
 
-## Phase 2 — Preview & P0 palette
+**Tickets:** DAS-9 through DAS-12
 
-- [x] Bindings UI (connect ports) — DAS-9
-- [x] Preview renderers for P0 components — DAS-10
-- [x] Mock data generation (NestJS preview module) — DAS-11
-- [x] Date range → table/chart data flow in preview — DAS-12
+- [x] Bindings UI (connect ports)
+- [x] Preview renderers for P0 components
+- [x] Mock data generation (NestJS preview module)
+- [x] Date range → table/chart data flow in preview
 
-**Phase 2 exit criteria met.**
+## Phase 3 — Export MVP (complete)
 
-## Phase 3 — Export MVP
+**Tickets:** DAS-13 through DAS-16
 
-- IR builder from validated graph
-- React UI exporter (P0 components)
-- NestJS server exporter
-- PostgreSQL infra exporter
-- Export wizard + zip download
-- `.env.example` generation
+- [x] IR builder from validated graph
+- [x] React UI exporter (P0 components)
+- [x] NestJS server exporter + PostgreSQL infra exporter
+- [x] Export wizard + zip download
+- [x] `.env.example` generation
 
-**Exit criteria:** Exported React + NestJS + PostgreSQL project runs with env vars set.
+## Phase 4 — Multi-target export (complete)
 
-## Phase 4 — Multi-target export
+**Tickets:** DAS-17 through DAS-31
 
-- Angular and Vue UI exporters
-- Next.js, Nuxt, Express server exporters
-- **Svelte UI exporter** (fourth UI framework, after Phase 4 server exporters)
-- MongoDB, Supabase, MySQL exporters
-- Export target matrix testing — DAS-31
-
-**Exit criteria:** Same composite exports to at least 3 UI × 2 server combinations; full matrix covered by parameterized bundle tests (DAS-31).
-
-## Phase 4b — Extended UI targets
-
-- Svelte UI exporter + export wizard picker update
-- Align export IR `ui` target union with Svelte
-
-## Future — 3D visualization (planning)
-
-- **three.js**-based 3D dashboard display components — integration approach TBD (preview renderer vs export target vs both)
+- [x] Angular, Vue, and Svelte UI exporters
+- [x] Next.js, Nuxt, Express server exporters
+- [x] MongoDB, Supabase, MySQL exporters
+- [x] Export target matrix testing
 
 ## Phase 5 — Smart defaults & domain (complete)
 
-- [x] Defaults engine (rule-based suggestions) — DAS-32
-- [x] Domain context: client, project, roles — DAS-33
-- [x] Role gates and scoped queries in export — DAS-34, DAS-35
-- [x] Onboarding composite template — DAS-36
+**Tickets:** DAS-32 through DAS-36
 
-**Exit criteria met:** Builder suggests chart type and pagination; exported app respects role visibility; onboarding template applies invite → role → confirm flow with Nest export stubs.
+- [x] Defaults engine (rule-based suggestions)
+- [x] Domain context: client, project, roles
+- [x] Role gates and scoped queries in export
+- [x] Onboarding composite template
 
-## Phase 6 — Advanced UX
+## Infrastructure — Docker local dev (complete)
 
-- Undo/redo
-- Composite templates library
-- Drag-and-drop layout polish (snap, resize)
-- Animation and sortable list components
-- Export README with setup instructions per target
+**Ticket:** DAS-37
+
+- [x] Docker Compose profiles for dev and production-style app image
+- [x] Mandatory Jira + branch workflow documentation
+
+## Phase 6 — Component & page design (in progress)
+
+**Ticket:** DAS-38 (docs and planning)
+
+Expand from the current **21-type P0 registry** toward full taxonomy coverage and reusable **page templates** built from component groups.
+
+Planned implementation (create Jira ticket before each):
+
+- P1 single components (form inputs, pie chart, flex layout, detail panel)
+- Page template library (analytics, CRUD, settings, onboarding variants)
+- Export wizard: single-component and selection export modes
+- Canvas UX: undo/redo, snap, resize, multi-select
+- Per-target export README improvements
+
+Design reference: [Component & Page Design](./15-component-and-page-design.md).
 
 ## Phase 7 — Production hardening
 
 - Builder authentication
 - Project versioning and diff
-- E2E tests (Playwright)
 - Performance: large composite handling
 - Exporter plugin SDK documentation
+
+## Future — 3D visualization (planning)
+
+- **three.js**-based 3D dashboard display components — integration approach TBD
 
 ## Backlog ideas (unscheduled)
 
 - Real-time collaborative editing
 - Tailwind token export
-- Svelte / Solid exporters
 - CLI export (`npx dashbuilder export`)
 - Hosted preview URLs
 - Custom component SDK for third-party palette plugins
@@ -105,10 +109,12 @@ When creating Jira tickets:
 1. One deliverable per ticket where possible
 2. Include acceptance criteria checklist
 3. Reference docs sections and branch name in description
-4. Label by phase (`phase-1`, `export`, etc.) when Jira labels available
+4. Label by phase when Jira labels available
 
 ## Related documents
 
+- [Planned Tickets](./11-planned-tickets.md)
+- [Component & Page Design](./15-component-and-page-design.md)
 - [Workflow & Branching](./07-workflow-and-branching.md)
 - [Technology Stack](./06-technology-stack.md)
 - [Component Taxonomy](./08-component-taxonomy.md)

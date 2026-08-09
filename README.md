@@ -202,8 +202,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-37](https://planetkevin.atlassian.net/browse/DAS-37)** — Docker local containers  
-Branch: `feature/DAS-37-docker-local-containers`
+**[DAS-38](https://planetkevin.atlassian.net/browse/DAS-38)** — Docs refresh + component/page design planning  
+Branch: `feature/DAS-38-component-page-design-plan`
+
+See [docs/15-component-and-page-design.md](docs/15-component-and-page-design.md) for single-component and page-composite design patterns.
 
 ## License
 

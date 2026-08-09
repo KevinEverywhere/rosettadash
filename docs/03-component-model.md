@@ -169,8 +169,13 @@ Preview prioritizes fast feedback; export prioritizes idiomatic target-framework
 
 Composite `version` increments on each save. Export records which version was used. Future: diff between versions for migration notes.
 
+## Design guides
+
+For practical checklists and page-level patterns (analytics overview, onboarding, role-scoped admin), see **[Component & Page Design](./15-component-and-page-design.md)**.
+
 ## Related documents
 
 - [Export Pipeline](./04-export-pipeline.md)
 - [Component Taxonomy](./08-component-taxonomy.md)
 - [Domain Model](./05-domain-model.md)
+- [Component & Page Design](./15-component-and-page-design.md)

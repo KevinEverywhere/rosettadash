@@ -4,7 +4,7 @@ Foundational documents for the DashBuilder project. Start with the vision doc, t
 
 ## Ticket plan
 
-See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list (DAS-1–DAS-37).
+See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list (DAS-1–DAS-38).
 
 **Workflow:** Jira ticket → matching branch → implement. Never skip. See [Workflow & Branching](./07-workflow-and-branching.md).
 
@@ -20,14 +20,27 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 8. [Component Taxonomy](./08-component-taxonomy.md) — palette inventory
 9. [Glossary](./09-glossary.md) — terms
 10. [Roadmap](./10-roadmap.md) — phased delivery
-11. [CI and Hosting](./12-ci-and-hosting.md) — GitHub Actions, Nx, Pages
-12. [Local Development & Components](./13-local-development-and-components.md) — startup, e2e, adding components
-13. [Docker Containers](./14-docker-containers.md) — run locally with Docker Compose
+11. [Planned Tickets](./11-planned-tickets.md) — Jira ticket index
+12. [CI and Hosting](./12-ci-and-hosting.md) — GitHub Actions, Nx, Pages
+13. [Local Development & Components](./13-local-development-and-components.md) — startup, e2e, adding components
+14. [Docker Containers](./14-docker-containers.md) — run locally with Docker Compose
+15. [Component & Page Design](./15-component-and-page-design.md) — single components, page patterns, implementation plan
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) | `feature/DAS-37-docker-local-containers` | In progress — Docker Compose local dev |
+| [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | In progress — docs refresh + component/page design planning |
 
-Completed tickets **DAS-1 through DAS-36** are listed in [Planned Tickets](./11-planned-tickets.md).
+Completed tickets **DAS-1 through DAS-37** are listed in [Planned Tickets](./11-planned-tickets.md).
+
+## Current capabilities (at a glance)
+
+| Capability | Status |
+|------------|--------|
+| Visual builder (palette, canvas, inspector, save/load) | Shipped |
+| Bindings + live preview (P0 components) | Shipped |
+| Multi-target export (React/Angular/Vue/Svelte + 4 servers + 4 DBs) | Shipped |
+| Defaults engine, domain context, role visibility | Shipped |
+| Docker Compose local dev | Shipped |
+| Full taxonomy + page template library | Phase 6 — planned |
