@@ -1,7 +1,8 @@
 import type { Composite } from '../model/types';
 import type { ExportIR } from '../ir/types';
+import { ONBOARDING_TEMPLATE_ID } from '../templates/template-ids';
 
-export const ONBOARDING_TEMPLATE_ID = 'onboarding';
+export { ONBOARDING_TEMPLATE_ID };
 
 export function compositeHasOnboardingFlow(composite: Composite): boolean {
   if (composite.templateId === ONBOARDING_TEMPLATE_ID) {

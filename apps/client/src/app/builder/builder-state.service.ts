@@ -10,9 +10,10 @@ import {
   RoleDefinition,
   TimeRangePreset,
   areDataTypesCompatible,
-  buildOnboardingComposite,
+  buildCompositeTemplate,
   defaultComponentRegistry,
   evaluateDefaults,
+  listCompositeTemplates,
   normalizeDomainContext,
   slugifyDomainId,
   suggestionsForSelectedNode,
@@ -169,12 +170,26 @@ export class BuilderStateService {
   }
 
   applyOnboardingTemplate(): void {
+    this.applyCompositeTemplate('onboarding');
+  }
+
+  applyCompositeTemplate(templateId: string): void {
     const composite = this.composite();
     if (!composite) {
       return;
     }
 
-    const template = buildOnboardingComposite(defaultComponentRegistry, {
+    if (
+      this.dirty() &&
+      typeof globalThis.confirm === 'function' &&
+      !globalThis.confirm(
+        'Replace the current canvas with this template? Unsaved changes will be lost.',
+      )
+    ) {
+      return;
+    }
+
+    const template = buildCompositeTemplate(templateId, defaultComponentRegistry, {
       id: composite.id,
       version: composite.version,
     });

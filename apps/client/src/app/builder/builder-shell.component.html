@@ -40,15 +40,31 @@
       >
         {{ statusLabel() }}
       </span>
-      <button
-        type="button"
-        class="builder__template"
-        data-testid="apply-onboarding-template"
-        [disabled]="state.loading()"
-        (click)="applyOnboardingTemplate()"
-      >
-        Onboarding template
-      </button>
+      <div class="builder__templates">
+        <label class="builder__templates-label">
+          <span class="visually-hidden">Page template</span>
+          <select
+            class="builder__template-select"
+            data-testid="template-picker"
+            [disabled]="state.loading()"
+            [(ngModel)]="selectedTemplateId"
+          >
+            <option value="">Select template…</option>
+            @for (template of compositeTemplates; track template.id) {
+              <option [value]="template.id">{{ template.name }}</option>
+            }
+          </select>
+        </label>
+        <button
+          type="button"
+          class="builder__template"
+          data-testid="apply-template"
+          [disabled]="state.loading() || !selectedTemplateId"
+          (click)="applySelectedTemplate()"
+        >
+          Apply template
+        </button>
+      </div>
       <button
         type="button"
         class="builder__export"

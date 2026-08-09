@@ -2,7 +2,7 @@ import type { ComponentRegistry } from '../registry/component-registry';
 import { defaultComponentRegistry } from '../registry/component-registry';
 import type { Composite } from '../model/types';
 import { DEFAULT_ROLE_PRESETS } from '../domain/role-visibility';
-import { ONBOARDING_TEMPLATE_ID } from '../domain/onboarding';
+import { ONBOARDING_TEMPLATE_ID } from './template-ids';
 
 export interface BuildOnboardingCompositeOptions {
   id?: string;

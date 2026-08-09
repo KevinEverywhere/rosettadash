@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { APP_NAME } from '@dashbuilder/core';
+import { FormsModule } from '@angular/forms';
+import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
 import { BuilderProjectService } from './builder-project.service';
 import { BuilderStateService, WorkspaceMode } from './builder-state.service';
 import { CanvasComponent } from './canvas/canvas.component';
@@ -16,6 +17,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     PreviewPanelComponent,
     InspectorComponent,
     ExportWizardComponent,
+    FormsModule,
   ],
   templateUrl: './builder-shell.component.html',
   styleUrl: './builder-shell.component.scss',
@@ -26,6 +28,8 @@ export class BuilderShellComponent implements OnInit {
 
   protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
+  protected readonly compositeTemplates = listCompositeTemplates();
+  protected selectedTemplateId = '';
 
   ngOnInit(): void {
     void this.projectService.initialize();
@@ -35,8 +39,12 @@ export class BuilderShellComponent implements OnInit {
     void this.projectService.save();
   }
 
-  protected applyOnboardingTemplate(): void {
-    this.state.applyOnboardingTemplate();
+  protected applySelectedTemplate(): void {
+    if (!this.selectedTemplateId) {
+      return;
+    }
+    this.state.applyCompositeTemplate(this.selectedTemplateId);
+    this.selectedTemplateId = '';
   }
 
   protected setWorkspaceMode(mode: WorkspaceMode): void {

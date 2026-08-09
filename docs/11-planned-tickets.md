@@ -46,12 +46,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-36](https://planetkevin.atlassian.net/browse/DAS-36) | `feature/DAS-36-onboarding-template` | Onboarding composite template + export stubs |
 | [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) | `feature/DAS-37-docker-local-containers` | Docker Compose local dev + Jira/branch workflow enforcement |
 | [DAS-38](https://planetkevin.atlassian.net/browse/DAS-38) | `feature/DAS-38-component-page-design-plan` | Docs refresh + component/page design planning |
+| [DAS-39](https://planetkevin.atlassian.net/browse/DAS-39) | `feature/DAS-39-p1-form-inputs` | P1 form inputs (number, checkbox, textarea) |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-39](https://planetkevin.atlassian.net/browse/DAS-39) | `feature/DAS-39-p1-form-inputs` | In progress — number, checkbox, textarea inputs |
+| [DAS-40](https://planetkevin.atlassian.net/browse/DAS-40) | `feature/DAS-40-page-template-library` | In progress — page template library |
 
 ## Delivery status
 
@@ -66,7 +67,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 See [Component & Page Design](./15-component-and-page-design.md) for patterns and suggested order:
 
 1. ~~P1 form inputs (number, checkbox, textarea)~~ — DAS-39
-2. Page template library (analytics, CRUD, settings)
+2. ~~Page template library (analytics, CRUD, settings)~~ — DAS-40
 3. Export wizard: single-component and selection export modes
 4. Canvas layout polish (snap, resize, multi-select)
 5. Undo/redo

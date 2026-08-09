@@ -1,13 +1,18 @@
 import { test, expect } from '@playwright/test';
 import { openBuilder, waitForPreviewData } from './test-helpers';
 
+async function applyTemplate(page: import('@playwright/test').Page, templateId: string): Promise<void> {
+  await page.getByTestId('template-picker').selectOption(templateId);
+  await page.getByTestId('apply-template').click();
+}
+
 test.describe('Builder onboarding template', () => {
   test.beforeEach(async ({ page }) => {
     await openBuilder(page);
   });
 
   test('applies onboarding template and persists after save and reload', async ({ page }) => {
-    await page.getByTestId('apply-onboarding-template').click();
+    await applyTemplate(page, 'onboarding');
 
     await expect(page.getByText('5 component(s)')).toBeVisible();
     await expect(page.getByTestId('canvas-node').filter({ hasText: 'Invite person' })).toBeVisible();
@@ -24,7 +29,7 @@ test.describe('Builder onboarding template', () => {
   });
 
   test('shows onboarding preview steps', async ({ page }) => {
-    await page.getByTestId('apply-onboarding-template').click();
+    await applyTemplate(page, 'onboarding');
     await page.getByTestId('mode-preview').click();
     await waitForPreviewData(page);
 
@@ -32,5 +37,36 @@ test.describe('Builder onboarding template', () => {
     await expect(page.getByTestId('preview-role-assign')).toBeVisible();
     await expect(page.getByTestId('preview-person-invite-submit')).toContainText('Send invite');
     await expect(page.getByTestId('preview-role-assign-confirm')).toContainText('Confirm access');
+  });
+});
+
+test.describe('Builder page templates', () => {
+  test.beforeEach(async ({ page }) => {
+    await openBuilder(page);
+  });
+
+  test('applies analytics overview template with bound table and chart', async ({ page }) => {
+    await applyTemplate(page, 'analytics-overview');
+
+    await expect(page.getByText('7 component(s)')).toBeVisible();
+    await expect(page.getByTestId('canvas-node').filter({ hasText: 'Date range' })).toBeVisible();
+    await expect(page.getByTestId('canvas-node').filter({ hasText: 'Sales table' })).toBeVisible();
+    await expect(page.getByTestId('canvas-node').filter({ hasText: 'Trend chart' })).toBeVisible();
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+    await expect(page.getByTestId('preview-date-range')).toBeVisible();
+    await expect(page.getByTestId('preview-table')).toBeVisible();
+    await expect(page.getByTestId('preview-line-chart')).toBeVisible();
+  });
+
+  test('lists all templates in the picker', async ({ page }) => {
+    const options = page.getByTestId('template-picker').locator('option');
+    await expect(options).toHaveCount(6);
+    await expect(options.filter({ hasText: 'Team onboarding' })).toHaveCount(1);
+    await expect(options.filter({ hasText: 'Analytics overview' })).toHaveCount(1);
+    await expect(options.filter({ hasText: 'CRUD list' })).toHaveCount(1);
+    await expect(options.filter({ hasText: 'Admin settings' })).toHaveCount(1);
+    await expect(options.filter({ hasText: 'Empty starter' })).toHaveCount(1);
   });
 });

@@ -182,19 +182,19 @@ Shipped as **onboarding template** (DAS-36):
 4. **Role gates wrap layout subtrees**, not individual port bindings — export stubs emit conditional render or route guards.
 5. **Name composites for the page intent** — e.g. `Revenue Overview`, `Team Onboarding`; description documents target route and roles.
 
-### Page templates (planned)
+### Page templates (shipped)
 
-Reusable starting graphs (not yet in product — Phase 6 tickets):
+Reusable starting graphs applied from the builder toolbar (**Select template → Apply template**):
 
-| Template | Components | Target persona |
-|----------|------------|----------------|
-| Analytics overview | date-range, KPI × 2, table, chart, grid | Viewer / editor |
-| CRUD list + detail | table, detail panel, modal, form | Editor |
-| Team onboarding | person-invite, role-assign, tabs | Admin |
-| Settings (role-gated) | role-gate, form inputs, table | Admin |
-| Empty canvas | grid + env + server + DB only | Custom |
+| Template ID | Components | Target persona |
+|-------------|------------|----------------|
+| `onboarding` | person-invite, role-assign, KPI, infra | Admin |
+| `analytics-overview` | date-range, KPI × 2, table, line chart, infra | Viewer / editor |
+| `crud-list` | table, modal, text input, infra | Editor |
+| `settings-admin` | role-gate, table, text input, infra | Admin |
+| `empty-starter` | grid, env, postgres, nest | Custom |
 
-Templates should be **composites stored as JSON fixtures** applied from the builder (extend DAS-36 onboarding pattern).
+Fixtures live in `packages/core/src/lib/templates/`. Register new templates in `composite-template-registry.ts`.
 
 ---
 
@@ -204,8 +204,8 @@ Templates should be **composites stored as JSON fixtures** applied from the buil
 
 Create a Jira ticket **before** each branch:
 
-1. **P1 form inputs** — number, checkbox, textarea (registry + preview + React)
-2. **Page template library** — apply template from builder; 3–5 fixtures
+1. ~~**P1 form inputs** — number, checkbox, textarea (registry + preview + React)~~ — DAS-39
+2. ~~**Page template library** — apply template from builder; 5 fixtures~~ — DAS-40
 3. **Export wizard: single/selection modes** — UX for piecemeal export
 4. **Layout polish** — snap, resize, multi-select on canvas
 5. **Undo/redo** — command pattern over graph mutations
