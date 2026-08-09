@@ -13,7 +13,7 @@ Planning guide for **single components** and **pages built from component groups
 | Defaults engine + domain context + role visibility | Shipped |
 | Onboarding composite template | Shipped |
 | Docker Compose local dev | Shipped (DAS-37) |
-| Single-component export mode in wizard | Partial — IR supports closure; wizard UX TBD |
+| Single-component export mode in wizard | Shipped (DAS-41) — full / single / selection scopes |
 | Page templates library | Not started |
 | Full P1/P2 taxonomy | Not started |
 
@@ -52,6 +52,8 @@ See [Component Model](./03-component-model.md) for graph-level detail.
 
 ### Single-component export
 
+**Export scopes** in the wizard: **Full composite**, **Selected node** (upstream deps), **Selection neighborhood** (binding-connected subgraph). Requires a canvas selection for scoped modes.
+
 Export modes (see [Component Model — Piecemeal vs grouped export](./03-component-model.md#piecemeal-vs-grouped-export)):
 
 | Mode | Delivers | Use when |
@@ -60,7 +62,7 @@ Export modes (see [Component Model — Piecemeal vs grouped export](./03-compone
 | **Selection** | Selected nodes + internal bindings + required infra | A filter + table pair without the full page |
 | **Full composite** | Entire graph as a page/module | Shipping a complete dashboard screen |
 
-**Implementation note:** ExportIR already computes node closure from bindings. Follow-up tickets should expose single/selection modes clearly in the export wizard (today the wizard focuses on full-composite bundle export).
+**Implementation note:** The export wizard exposes full, single-node, and selection-neighborhood scopes via `resolveExportComposite` in `packages/core`.
 
 ### P0 components — implemented today
 

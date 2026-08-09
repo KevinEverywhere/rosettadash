@@ -31,6 +31,41 @@
       </header>
 
       <div class="export-wizard__body">
+        <section class="export-wizard__section export-wizard__section--scope">
+          <h3>Export scope</h3>
+          <div
+            class="export-wizard__ui-targets"
+            data-testid="export-wizard-scope"
+            role="radiogroup"
+            aria-label="Export scope"
+          >
+            @for (option of exportScopeOptions; track option.id) {
+              <button
+                type="button"
+                class="export-wizard__ui-target"
+                role="radio"
+                [class.export-wizard__ui-target--active]="exportScope() === option.id"
+                [attr.aria-checked]="exportScope() === option.id"
+                [attr.data-testid]="'export-wizard-scope-' + option.id"
+                [disabled]="loading()"
+                (click)="setExportScope(option.id)"
+              >
+                <span class="export-wizard__ui-target-label">{{ option.label }}</span>
+                <span class="export-wizard__ui-target-desc">{{ option.description }}</span>
+              </button>
+            }
+          </div>
+          @if (scopeHint(); as hint) {
+            <p
+              class="export-wizard__scope-hint"
+              [class.export-wizard__scope-hint--error]="scopeSelectionMissing()"
+              data-testid="export-wizard-scope-hint"
+            >
+              {{ hint }}
+            </p>
+          }
+        </section>
+
         <section class="export-wizard__section export-wizard__section--targets">
           <h3>UI framework</h3>
           <div

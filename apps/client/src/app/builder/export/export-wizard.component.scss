@@ -191,6 +191,16 @@
   color: var(--db-text-muted);
 }
 
+.export-wizard__scope-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--db-text-muted);
+
+  &--error {
+    color: #b42318;
+  }
+}
+
 .export-wizard__required {
   margin-left: 0.375rem;
   color: var(--db-text-muted);

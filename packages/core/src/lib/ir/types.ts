@@ -1,4 +1,5 @@
 import type { DomainContext } from '../domain/domain-context';
+import type { ExportScope } from '../export/resolve-export-scope';
 import type { DataType } from '../model/data-types';
 import type {
   ExportTargetConfig,
@@ -13,6 +14,8 @@ export interface ExportIRMeta {
   version: number;
   generatedAt: string;
   templateId?: string;
+  exportScope?: 'full' | 'single' | 'selection';
+  exportNodeIds?: string[];
 }
 
 export interface IRStyleTokens {
@@ -95,4 +98,6 @@ export interface ExportIR {
 export interface BuildExportIROptions {
   generatedAt?: string;
   defaultTargets?: Partial<ExportTargetConfig>;
+  exportScope?: ExportScope;
+  exportNodeIds?: string[];
 }

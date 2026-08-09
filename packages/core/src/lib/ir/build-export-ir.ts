@@ -99,6 +99,8 @@ export function buildExportIR(
       version: composite.version,
       generatedAt: options.generatedAt ?? new Date().toISOString(),
       ...(composite.templateId ? { templateId: composite.templateId } : {}),
+      ...(options.exportScope ? { exportScope: options.exportScope } : {}),
+      ...(options.exportNodeIds?.length ? { exportNodeIds: options.exportNodeIds } : {}),
     },
     targets: resolveTargets(composite.exportTargets, options.defaultTargets),
     envVars,

@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import type { Composite, ValidationIssue } from '@dashbuilder/core';
+import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
+import { resolveExportComposite } from '@dashbuilder/core';
 import { firstValueFrom } from 'rxjs';
 import { BuilderStateService } from '../builder-state.service';
 import {
@@ -29,6 +30,12 @@ interface ServerTargetOption {
 
 interface DatabaseTargetOption {
   id: DatabaseTarget;
+  label: string;
+  description: string;
+}
+
+interface ExportScopeOption {
+  id: ExportScope;
   label: string;
   description: string;
 }
@@ -67,8 +74,27 @@ export class ExportWizardComponent {
     { id: 'mysql', label: 'MySQL', description: 'Relational tables layer' },
   ];
 
+  protected readonly exportScopeOptions: ExportScopeOption[] = [
+    {
+      id: 'full',
+      label: 'Full composite',
+      description: 'Export the entire canvas graph',
+    },
+    {
+      id: 'single',
+      label: 'Selected node',
+      description: 'One canvas node plus upstream dependencies',
+    },
+    {
+      id: 'selection',
+      label: 'Selection neighborhood',
+      description: 'Selected node and binding-connected nodes',
+    },
+  ];
+
   protected readonly loading = signal(false);
   protected readonly downloading = signal(false);
+  protected readonly exportScope = signal<ExportScope>('full');
   protected readonly uiTarget = signal<UiTarget>('react');
   protected readonly serverTarget = signal<ServerTarget>('nest');
   protected readonly databaseTarget = signal<DatabaseTarget>('postgresql');
@@ -112,7 +138,39 @@ export class ExportWizardComponent {
     void this.refreshPreview();
   }
 
+  protected setExportScope(scope: ExportScope): void {
+    if (this.exportScope() === scope) {
+      return;
+    }
+    this.exportScope.set(scope);
+    void this.refreshPreview();
+  }
+
+  protected scopeHint(): string | null {
+    const scope = this.exportScope();
+    if (scope === 'full') {
+      return null;
+    }
+    const selected = this.state.selectedNode();
+    if (selected) {
+      return `Using canvas selection: ${selected.label}`;
+    }
+    return 'Select a node on the canvas before exporting with this scope.';
+  }
+
+  protected scopeSelectionMissing(): boolean {
+    return this.exportScope() !== 'full' && !this.state.selectedNodeId();
+  }
+
   protected async refreshPreview(): Promise<void> {
+    if (this.scopeSelectionMissing()) {
+      this.loading.set(false);
+      this.bundle.set(null);
+      this.validationIssues.set([]);
+      this.errorMessage.set('Select a canvas node for this export scope.');
+      return;
+    }
+
     this.loading.set(true);
     this.bundle.set(null);
     this.validationIssues.set([]);
@@ -159,15 +217,23 @@ export class ExportWizardComponent {
 
   private buildExportComposite(): Composite {
     const payload = this.state.buildCompositePayload();
-    return {
-      ...payload,
-      exportTargets: {
-        ...payload.exportTargets,
-        ui: this.uiTarget(),
-        server: this.serverTarget(),
-        database: this.databaseTarget(),
+    const scope = this.exportScope();
+    const seedNodeIds = this.state.selectedNodeId() ? [this.state.selectedNodeId()!] : [];
+
+    const scoped = resolveExportComposite(
+      {
+        ...payload,
+        exportTargets: {
+          ...payload.exportTargets,
+          ui: this.uiTarget(),
+          server: this.serverTarget(),
+          database: this.databaseTarget(),
+        },
       },
-    };
+      { scope, seedNodeIds },
+    );
+
+    return scoped;
   }
 
   private handleExportError(error: unknown): void {

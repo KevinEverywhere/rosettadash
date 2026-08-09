@@ -10,4 +10,5 @@ export type { ValidateCompositeOptions } from './lib/validation/validate-composi
 export * from './lib/validation/validate-node';
 export * from './lib/ir';
 export * from './lib/defaults';
+export * from './lib/export';
 export * from './lib/templates';

@@ -236,4 +236,28 @@ test.describe('Builder export wizard', () => {
     await expect(page.getByTestId('export-wizard-files')).not.toContainText('server/src/main.ts');
     await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
   });
+
+  test('exports only the selected node scope from the wizard', async ({ page }) => {
+    await page.getByTestId('palette-add-infra.postgresql').click();
+    await page.getByTestId('palette-add-infra.server.nest').click();
+    await page.getByTestId('palette-add-visual.table').click();
+    await page.getByTestId('palette-add-visual.kpi').click();
+
+    const postgresNode = page.getByTestId('canvas-node').nth(0);
+    const tableNode = page.getByTestId('canvas-node').nth(2);
+
+    await postgresNode.getByTestId(/^port-output-.*-rowset$/).click();
+    await tableNode.getByTestId(/^port-input-.*-data$/).click();
+
+    await page.getByTestId('canvas-node').filter({ hasText: 'KPI Card' }).click();
+
+    await page.getByTestId('export-button').click();
+    await expect(page.getByTestId('export-wizard')).toBeVisible();
+    await page.getByTestId('export-wizard-scope-single').click();
+    await expect(page.getByTestId('export-wizard-scope-hint')).toContainText('KPI Card');
+    await expect(page.getByTestId('export-wizard-loading')).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByTestId('export-wizard-files')).toBeVisible();
+    await expect(page.getByTestId('export-wizard-files')).not.toContainText('DataTable');
+    await expect(page.getByTestId('export-wizard-download')).toBeEnabled();
+  });
 });
