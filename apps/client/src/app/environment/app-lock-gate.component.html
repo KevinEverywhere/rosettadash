@@ -1,28 +1,127 @@
 <div class="app-lock-gate" data-testid="app-lock-gate">
   <div class="app-lock-gate__panel">
-    <h2>Unlock environment vault</h2>
-    <p>Enter your app password to view and edit saved API keys in this browser.</p>
+    @switch (mode()) {
+      @case ('password') {
+        <h2>Unlock environment vault</h2>
+        <p>Enter your app password to view and edit saved API keys in this browser.</p>
+        @if (appLock.passwordHint(); as hint) {
+          <p class="app-lock-gate__hint" data-testid="app-lock-hint">Hint: {{ hint }}</p>
+        }
 
-    <form (ngSubmit)="submit()">
-      <label class="app-lock-gate__label">
-        <span>Password</span>
-        <input
-          type="password"
-          autocomplete="current-password"
-          data-testid="app-lock-password"
-          [ngModel]="password()"
-          (ngModelChange)="password.set($event)"
-          name="appLockPassword"
-        />
-      </label>
+        <form (ngSubmit)="submitPassword()">
+          <label class="app-lock-gate__label">
+            <span>Password</span>
+            <input
+              type="password"
+              autocomplete="current-password"
+              data-testid="app-lock-password"
+              [ngModel]="password()"
+              (ngModelChange)="password.set($event)"
+              name="appLockPassword"
+            />
+          </label>
 
-      @if (appLock.error(); as message) {
-        <p class="app-lock-gate__error" data-testid="app-lock-error">{{ message }}</p>
+          @if (appLock.error(); as message) {
+            <p class="app-lock-gate__error" data-testid="app-lock-error">{{ message }}</p>
+          }
+
+          <button
+            type="submit"
+            class="app-lock-gate__submit"
+            data-testid="app-lock-submit"
+            [disabled]="!password().trim()"
+          >
+            Unlock
+          </button>
+        </form>
+
+        <div class="app-lock-gate__links">
+          @if (appLock.remainingRecoveryCodes() > 0) {
+            <button type="button" class="app-lock-gate__link" data-testid="app-lock-forgot-recovery" (click)="showRecovery()">
+              Use a recovery code
+            </button>
+          }
+          <button type="button" class="app-lock-gate__link" data-testid="app-lock-forgot-reset" (click)="showReset()">
+            Reset vault without password
+          </button>
+        </div>
       }
 
-      <button type="submit" class="app-lock-gate__submit" data-testid="app-lock-submit" [disabled]="!password().trim()">
-        Unlock
-      </button>
-    </form>
+      @case ('recovery') {
+        <h2>Use a recovery code</h2>
+        <p>
+          Enter one of the recovery codes you saved when app lock was enabled. Each code works once.
+        </p>
+
+        <form (ngSubmit)="submitRecoveryCode()">
+          <label class="app-lock-gate__label">
+            <span>Recovery code</span>
+            <input
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              data-testid="app-lock-recovery-code"
+              placeholder="ABCD-EFGH-IJKL"
+              [ngModel]="recoveryCode()"
+              (ngModelChange)="recoveryCode.set($event)"
+              name="appLockRecoveryCode"
+            />
+          </label>
+
+          @if (appLock.error(); as message) {
+            <p class="app-lock-gate__error" data-testid="app-lock-error">{{ message }}</p>
+          }
+
+          <button
+            type="submit"
+            class="app-lock-gate__submit"
+            data-testid="app-lock-recovery-submit"
+            [disabled]="!recoveryCode().trim()"
+          >
+            Unlock with recovery code
+          </button>
+        </form>
+
+        <button type="button" class="app-lock-gate__link app-lock-gate__link--back" (click)="backToPassword()">
+          ← Back to password
+        </button>
+      }
+
+      @case ('reset') {
+        <h2>Reset vault</h2>
+        <p>
+          This removes app lock and deletes encrypted secrets from this browser. You will need to
+          re-enter API keys from your provider dashboards.
+        </p>
+        <p class="app-lock-gate__warning">DashBuilder cannot recover your password or encrypted keys.</p>
+
+        <label class="app-lock-gate__checkbox">
+          <input
+            type="checkbox"
+            data-testid="app-lock-reset-confirm"
+            [ngModel]="confirmReset()"
+            (ngModelChange)="confirmReset.set($event)"
+          />
+          I understand saved secrets will be permanently removed from this browser
+        </label>
+
+        @if (appLock.error(); as message) {
+          <p class="app-lock-gate__error" data-testid="app-lock-error">{{ message }}</p>
+        }
+
+        <button
+          type="button"
+          class="app-lock-gate__submit app-lock-gate__submit--danger"
+          data-testid="app-lock-reset-submit"
+          (click)="resetVault()"
+        >
+          Reset vault
+        </button>
+
+        <button type="button" class="app-lock-gate__link app-lock-gate__link--back" (click)="backToPassword()">
+          ← Back to password
+        </button>
+      }
+    }
   </div>
 </div>

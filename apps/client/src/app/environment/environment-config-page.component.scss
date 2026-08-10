@@ -403,6 +403,36 @@
   text-decoration: underline;
 }
 
+.env-page__recovery-kit {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 0.75rem;
+  background: #eff6ff;
+}
+
+.env-page__recovery-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.env-page__recovery-list {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0 0 0.875rem;
+  padding: 0;
+  list-style: none;
+
+  code {
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+  }
+}
+
+.env-page__recovery-actions {
+  margin-bottom: 0.75rem;
+}
+
 .env-page__footer {
   margin-top: 0.5rem;
   padding-top: 1rem;

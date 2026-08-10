@@ -249,6 +249,15 @@ export class EnvironmentConfigService {
     this.saveMessage.set('Cleared environment values from this browser.');
   }
 
+  resetLockedVault(): void {
+    this.appLock.resetVault();
+    this.clearAll();
+    this.loaded.set(true);
+    this.saveMessage.set(
+      'Vault reset. Encrypted secrets were removed — re-enter your API keys when ready.',
+    );
+  }
+
   private async loadFromStorage(): Promise<void> {
     const sessionStorageRef = this.getSessionStorage();
     const localStorageRef = this.getLocalStorage();

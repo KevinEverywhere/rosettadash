@@ -63,7 +63,10 @@ export class EnvironmentConfigPageComponent implements OnInit {
   readonly validatingField = signal<string | null>(null);
   readonly newLockPassword = signal('');
   readonly confirmLockPassword = signal('');
+  readonly lockPasswordHint = signal('');
   readonly disableLockPassword = signal('');
+  readonly pendingRecoveryCodes = signal<string[] | null>(null);
+  readonly recoveryCodesSaved = signal(false);
 
   readonly stackProfile = computed(() => readActiveStackProfile() ?? readPendingStackProfile());
 
@@ -131,7 +134,11 @@ export class EnvironmentConfigPageComponent implements OnInit {
       }
       case 'storage':
         if (this.appLock.isEnabled()) {
-          return this.appLock.isUnlocked() ? 'Locked · unlocked' : 'Locked';
+          const recovery = this.appLock.remainingRecoveryCodes();
+          const recoveryLabel = recovery ? ` · ${recovery} recovery code(s)` : '';
+          return this.appLock.isUnlocked()
+            ? `Locked · unlocked${recoveryLabel}`
+            : `Locked${recoveryLabel}`;
         }
         return this.config.settings().rememberKeys ? 'Remembered' : 'Session only';
       case 'builder':
@@ -291,11 +298,35 @@ export class EnvironmentConfigPageComponent implements OnInit {
       this.config.saveMessage.set('Passwords must match and cannot be empty.');
       return;
     }
-    await this.appLock.enableLock(password);
+
+    const result = await this.appLock.enableLock(password, {
+      passwordHint: this.lockPasswordHint(),
+    });
     await this.config.save();
+    this.pendingRecoveryCodes.set(result.recoveryCodes);
+    this.recoveryCodesSaved.set(false);
     this.newLockPassword.set('');
     this.confirmLockPassword.set('');
-    this.config.saveMessage.set('App lock enabled for this browser.');
+    this.lockPasswordHint.set('');
+    this.config.saveMessage.set('App lock enabled. Save your recovery codes before continuing.');
+  }
+
+  confirmRecoveryCodesSaved(): void {
+    if (!this.recoveryCodesSaved()) {
+      this.config.saveMessage.set('Confirm that you saved your recovery codes.');
+      return;
+    }
+    this.pendingRecoveryCodes.set(null);
+    this.config.saveMessage.set('App lock is ready. Recovery codes will not be shown again.');
+  }
+
+  copyRecoveryCodes(): void {
+    const codes = this.pendingRecoveryCodes();
+    if (!codes?.length || typeof navigator === 'undefined' || !navigator.clipboard) {
+      return;
+    }
+    void navigator.clipboard.writeText(codes.join('\n'));
+    this.config.saveMessage.set('Recovery codes copied to clipboard.');
   }
 
   async disableAppLock(): Promise<void> {
@@ -310,10 +341,6 @@ export class EnvironmentConfigPageComponent implements OnInit {
 
   lockVault(): void {
     this.appLock.lock();
-  }
-
-  onVaultUnlocked(): void {
-    // Trigger view refresh after gate unlock.
   }
 
   clearAll(): void {

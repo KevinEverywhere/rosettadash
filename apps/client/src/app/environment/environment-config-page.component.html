@@ -83,11 +83,51 @@
                 @switch (section) {
                   @case ('storage') {
                     <p class="env-page__hint">
-                      Optional app password locks this browser’s saved API keys. Skip it if you do not
-                      need extra protection on this device.
+                      Optional app password locks this browser’s saved API keys. Save recovery codes
+                      when you enable lock — DashBuilder cannot reset your password.
                     </p>
 
-                    @if (!appLock.isEnabled()) {
+                    @if (pendingRecoveryCodes(); as recoveryCodes) {
+                      <div class="env-page__recovery-kit" data-testid="app-lock-recovery-kit">
+                        <h3 class="env-page__recovery-title">Save your recovery codes</h3>
+                        <p class="env-page__hint">
+                          Each code works once if you forget your password. Store them somewhere
+                          safe — they will not be shown again.
+                        </p>
+                        <ul class="env-page__recovery-list">
+                          @for (code of recoveryCodes; track code) {
+                            <li><code>{{ code }}</code></li>
+                          }
+                        </ul>
+                        <div class="env-page__recovery-actions">
+                          <button
+                            type="button"
+                            class="env-page__button env-page__button--secondary"
+                            data-testid="app-lock-copy-recovery"
+                            (click)="copyRecoveryCodes()"
+                          >
+                            Copy all
+                          </button>
+                        </div>
+                        <label class="env-page__checkbox env-page__field--spaced">
+                          <input
+                            type="checkbox"
+                            data-testid="app-lock-recovery-saved"
+                            [ngModel]="recoveryCodesSaved()"
+                            (ngModelChange)="recoveryCodesSaved.set($event)"
+                          />
+                          I saved my recovery codes in a safe place
+                        </label>
+                        <button
+                          type="button"
+                          class="env-page__button"
+                          data-testid="app-lock-recovery-confirm"
+                          (click)="confirmRecoveryCodesSaved()"
+                        >
+                          Continue
+                        </button>
+                      </div>
+                    } @else if (!appLock.isEnabled()) {
                       <div class="env-page__grid">
                         <label class="env-page__field">
                           <span>New app password</span>
@@ -109,6 +149,17 @@
                             (ngModelChange)="confirmLockPassword.set($event)"
                           />
                         </label>
+                        <label class="env-page__field">
+                          <span>Password hint (optional)</span>
+                          <input
+                            type="text"
+                            autocomplete="off"
+                            data-testid="app-lock-password-hint"
+                            placeholder="Not secret — memory aid only"
+                            [ngModel]="lockPasswordHint()"
+                            (ngModelChange)="lockPasswordHint.set($event)"
+                          />
+                        </label>
                       </div>
                       <button
                         type="button"
@@ -120,6 +171,14 @@
                       </button>
                     } @else {
                       <p class="env-page__hint env-page__hint--success">App lock is enabled.</p>
+                      @if (appLock.passwordHint(); as hint) {
+                        <p class="env-page__hint">Password hint: {{ hint }}</p>
+                      }
+                      @if (appLock.remainingRecoveryCodes() > 0) {
+                        <p class="env-page__hint">
+                          {{ appLock.remainingRecoveryCodes() }} unused recovery code(s) remain.
+                        </p>
+                      }
                       <button
                         type="button"
                         class="env-page__button env-page__button--secondary"

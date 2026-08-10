@@ -46,6 +46,52 @@
   font-size: 0.8125rem;
 }
 
+.app-lock-gate__hint {
+  margin: 0 0 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.8125rem;
+}
+
+.app-lock-gate__warning {
+  margin: 0 0 0.75rem;
+  color: #b45309;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.app-lock-gate__links {
+  display: grid;
+  gap: 0.375rem;
+  margin-top: 0.875rem;
+}
+
+.app-lock-gate__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--db-accent, #2563eb);
+  font: inherit;
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: pointer;
+
+  &--back {
+    margin-top: 0.75rem;
+  }
+}
+
+.app-lock-gate__checkbox {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0 0 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
 .app-lock-gate__submit {
   width: 100%;
   padding: 0.625rem 1rem;
@@ -60,5 +106,9 @@
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  &--danger {
+    background: #b91c1c;
   }
 }

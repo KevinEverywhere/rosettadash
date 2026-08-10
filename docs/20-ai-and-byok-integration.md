@@ -134,9 +134,9 @@ Location: **`/environment`** — unified **Environment & API keys** page (Welcom
 4. Clearing builder session (`clearBuilderSession`) optionally clears BYOK keys (user preference).
 5. Content Security Policy must allow configured provider endpoints only when AI panel is enabled.
 
-### App lock (DAS-71)
+### App lock (DAS-71, DAS-72)
 
-Optional **local password** on `/environment` encrypts BYOK and env secrets with a passphrase-derived key. Separate from server `BUILDER_API_KEY`. See [App Lock](./24-app-lock.md).
+Optional **local password** on `/environment` encrypts BYOK and env secrets with a passphrase-derived key. Recovery codes (DAS-72) provide one-time unlock; destructive reset clears encrypted secrets if codes are lost. Separate from server `BUILDER_API_KEY`. See [App Lock](./24-app-lock.md).
 
 ---
 
@@ -228,7 +228,7 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 
 ### Phase 20 — AI-assisted component creation (planned)
 
-**Ticket:** TBD (DAS-72 candidate)
+**Ticket:** TBD (DAS-73 candidate)
 
 - Prompt builder + action parser
 - AI drawer UI

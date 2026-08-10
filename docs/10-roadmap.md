@@ -197,14 +197,20 @@ Users bring their own AI provider API keys. DashBuilder stores keys client-side 
 - [ ] Deep-link from palette when adding server/AI nodes (Phase 20 follow-up)
 - [x] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
 
-## DAS-71 — App lock & content library (in progress)
+## DAS-72 — App lock recovery codes (in progress)
 
-**Ticket:** [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) · Branch: `feature/DAS-71-app-lock-and-content-library`
+**Ticket:** [DAS-72](https://planetkevin.atlassian.net/browse/DAS-72) · Branch: `feature/DAS-72-app-lock-recovery-codes`
+
+- [ ] Recovery codes, password hint, forgot-password reset flow
+- [ ] See [App Lock](./24-app-lock.md)
+
+## DAS-71 — Content library (in progress)
+
+**Ticket:** [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) · Branch: `feature/DAS-71-content-library`
 
 - [x] Optional local app password (PBKDF2 verifier + passphrase AES-GCM)
 - [x] Unlock gate on `/environment`
 - [ ] Content library — user-controlled save/revisit ([spec](./23-content-library.md))
-- [ ] See [App Lock](./24-app-lock.md)
 
 ## Phase 20 — AI-assisted component creation (planned)
 
