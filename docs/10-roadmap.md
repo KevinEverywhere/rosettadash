@@ -85,11 +85,12 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 
 ## Phase 7 — Production hardening (in progress)
 
-**Ticket:** Next up — project versioning / diff (Phase 7)
+**Ticket:** Next up — large composite performance (Phase 7)
 
 - [x] `logic.timer` — interval/countdown ticks (DAS-50)
 - [x] Builder authentication — optional API key gate (DAS-51)
-- Project versioning and diff
+- [x] Project versioning and diff — revision history + inspector diff (DAS-52)
+- Large composite performance
 - Performance: large composite handling
 - Exporter plugin SDK documentation
 

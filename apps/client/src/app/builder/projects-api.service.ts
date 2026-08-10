@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { Composite, Project } from '@dashbuilder/core';
+import type { Composite, CompositeDiff, CompositeVersionSummary, Project } from '@dashbuilder/core';
 import { Observable } from 'rxjs';
 
 export interface CreateProjectBody {
@@ -33,5 +33,31 @@ export class ProjectsApiService {
 
   createComposite(projectId: string, body: CreateCompositeBody): Observable<Composite> {
     return this.http.post<Composite>(`${this.base}/${projectId}/composites`, body);
+  }
+
+  listCompositeVersions(
+    projectId: string,
+    compositeId: string,
+  ): Observable<CompositeVersionSummary[]> {
+    return this.http.get<CompositeVersionSummary[]>(
+      `${this.base}/${projectId}/composites/${compositeId}/versions`,
+    );
+  }
+
+  diffCompositeVersions(
+    projectId: string,
+    compositeId: string,
+    fromVersion: number,
+    toVersion: number,
+  ): Observable<CompositeDiff> {
+    return this.http.get<CompositeDiff>(
+      `${this.base}/${projectId}/composites/${compositeId}/diff`,
+      {
+        params: {
+          from: fromVersion,
+          to: toVersion,
+        },
+      },
+    );
   }
 }

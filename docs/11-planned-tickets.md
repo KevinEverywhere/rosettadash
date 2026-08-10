@@ -59,10 +59,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-49](https://planetkevin.atlassian.net/browse/DAS-49) | `feature/DAS-49-skeleton` | Loading skeleton visual component |
 | [DAS-50](https://planetkevin.atlassian.net/browse/DAS-50) | `feature/DAS-50-logic-timer` | Logic timer + Phase 6 doc closeout |
 | [DAS-51](https://planetkevin.atlassian.net/browse/DAS-51) | `feature/DAS-51-builder-auth` | Optional builder API key authentication |
+| [DAS-52](https://planetkevin.atlassian.net/browse/DAS-52) | `feature/DAS-52-composite-version-diff` | Composite version history and diff |
 
 ## Active work
 
-_None — pick the next Phase 7 ticket from the list below._
+| Ticket | Branch | Status |
+|--------|--------|--------|
+| [DAS-52](https://planetkevin.atlassian.net/browse/DAS-52) | `feature/DAS-52-composite-version-diff` | In progress — composite version history and diff |
 
 ## Delivery status
 
@@ -71,7 +74,7 @@ _None — pick the next Phase 7 ticket from the list below._
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
 - **Phase 6 component & page design:** complete (DAS-39–DAS-49)
-- **Phase 7 production hardening:** in progress (DAS-50–DAS-51)
+- **Phase 7 production hardening:** in progress (DAS-50–DAS-52)
 
 ## Phase 6 — complete
 
@@ -93,7 +96,7 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns. A
 
 1. ~~`logic.timer`~~ — DAS-50
 2. ~~Builder authentication~~ — DAS-51
-3. Project versioning and diff
+3. ~~Project versioning and diff~~ — DAS-52
 4. Large composite performance
 5. Exporter plugin SDK documentation
 

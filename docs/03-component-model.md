@@ -167,7 +167,7 @@ Preview prioritizes fast feedback; export prioritizes idiomatic target-framework
 
 ## Versioning
 
-Composite `version` increments on each save. Export records which version was used. Future: diff between versions for migration notes.
+Composite `version` increments on each save. Export records which version was used. The builder server stores a revision snapshot on create/update and exposes list, snapshot, and diff endpoints (`/versions`, `/diff?from=&to=`). The inspector **Version history** panel summarizes changes between saved revisions.
 
 ## Design guides
 

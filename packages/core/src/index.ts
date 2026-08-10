@@ -14,3 +14,4 @@ export * from './lib/export';
 export * from './lib/grouping';
 export * from './lib/palette';
 export * from './lib/templates';
+export * from './lib/versioning';

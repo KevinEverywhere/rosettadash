@@ -11,10 +11,11 @@ import {
 } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import { DomainContextPanelComponent } from './domain-context-panel.component';
+import { VersionHistoryPanelComponent } from './version-history-panel.component';
 
 @Component({
   selector: 'app-inspector',
-  imports: [JsonPipe, FormsModule, DomainContextPanelComponent],
+  imports: [JsonPipe, FormsModule, DomainContextPanelComponent, VersionHistoryPanelComponent],
   templateUrl: './inspector.component.html',
   styleUrl: './inspector.component.scss',
 })

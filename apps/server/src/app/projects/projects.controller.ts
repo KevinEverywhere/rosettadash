@@ -6,9 +6,11 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import type { Composite } from '@dashbuilder/core';
 import {
@@ -67,6 +69,41 @@ export class ProjectsController {
     } catch (error) {
       rethrowValidation(error);
     }
+  }
+
+  @Get(':projectId/composites/:compositeId/versions')
+  listCompositeVersions(
+    @Param('projectId') projectId: string,
+    @Param('compositeId') compositeId: string,
+  ) {
+    return this.projectsService.listCompositeVersions(projectId, compositeId);
+  }
+
+  @Get(':projectId/composites/:compositeId/versions/:version')
+  getCompositeVersion(
+    @Param('projectId') projectId: string,
+    @Param('compositeId') compositeId: string,
+    @Param('version', ParseIntPipe) version: number,
+  ) {
+    return this.projectsService.getCompositeVersion(projectId, compositeId, version);
+  }
+
+  @Get(':projectId/composites/:compositeId/diff')
+  diffCompositeVersions(
+    @Param('projectId') projectId: string,
+    @Param('compositeId') compositeId: string,
+    @Query('from', ParseIntPipe) fromVersion: number,
+    @Query('to', ParseIntPipe) toVersion: number,
+  ) {
+    if (fromVersion === toVersion) {
+      throw new BadRequestException('Diff requires different from and to versions');
+    }
+    return this.projectsService.diffCompositeVersions(
+      projectId,
+      compositeId,
+      fromVersion,
+      toVersion,
+    );
   }
 
   @Get(':projectId/composites/:compositeId')

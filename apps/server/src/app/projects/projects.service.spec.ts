@@ -58,6 +58,30 @@ describe('ProjectsService', () => {
     expect(updated.name).toBe('Page 1 updated');
   });
 
+  it('stores composite version history and diffs revisions', () => {
+    const project = service.createProject({ name: 'Test' });
+    const node = defaultComponentRegistry.createNode('visual.input.text', { id: 'n1' });
+    const created = service.createComposite(project.id, {
+      name: 'Page 1',
+      nodes: [node],
+      bindings: [],
+    });
+
+    const updated = service.updateComposite(project.id, created.id, {
+      ...created,
+      name: 'Page 1 updated',
+    });
+
+    const versions = service.listCompositeVersions(project.id, created.id);
+    expect(versions).toHaveLength(2);
+    expect(versions.map((entry) => entry.version)).toEqual([1, 2]);
+
+    const diff = service.diffCompositeVersions(project.id, created.id, 1, 2);
+    expect(diff.summary.metadataChanged).toBe(true);
+    expect(diff.changes.some((change) => change.kind === 'metadata-changed')).toBe(true);
+    expect(updated.version).toBe(2);
+  });
+
   it('rejects unknown component types', () => {
     const project = service.createProject({ name: 'Test' });
 

@@ -1,0 +1,97 @@
+<section class="version-history" data-testid="version-history-panel">
+  <header class="version-history__header">
+    <h3>Version history</h3>
+    @if (state.composite(); as composite) {
+      <span class="version-history__current">Current v{{ composite.version }}</span>
+    }
+  </header>
+
+  @if (loading()) {
+    <p class="version-history__status">Loading versions…</p>
+  } @else if (errorMessage()) {
+    <p class="version-history__error">{{ errorMessage() }}</p>
+  } @else if (versions().length === 0) {
+    <p class="version-history__status">No saved versions yet.</p>
+  } @else {
+    <ul class="version-history__list">
+      @for (entry of versions(); track entry.version) {
+        <li class="version-history__item" [attr.data-testid]="'version-entry-' + entry.version">
+          <span class="version-history__label">v{{ entry.version }}</span>
+          <span class="version-history__meta">
+            {{ entry.savedAt | date: 'short' }} · {{ entry.nodeCount }} nodes ·
+            {{ entry.bindingCount }} bindings
+          </span>
+        </li>
+      }
+    </ul>
+
+    @if (versions().length > 1) {
+      <div class="version-history__compare">
+        <label class="version-history__field">
+          <span>From</span>
+          <select [(ngModel)]="fromVersion" data-testid="version-diff-from">
+            @for (entry of versions(); track entry.version) {
+              <option [ngValue]="entry.version">v{{ entry.version }}</option>
+            }
+          </select>
+        </label>
+        <label class="version-history__field">
+          <span>To</span>
+          <select [(ngModel)]="toVersion" data-testid="version-diff-to">
+            @for (entry of versions(); track entry.version) {
+              <option [ngValue]="entry.version">v{{ entry.version }}</option>
+            }
+          </select>
+        </label>
+        <button
+          type="button"
+          class="version-history__compare-btn"
+          data-testid="version-diff-compare"
+          [disabled]="fromVersion === toVersion || loading()"
+          (click)="compareVersions()"
+        >
+          Compare
+        </button>
+      </div>
+    }
+
+    @if (diff(); as result) {
+      <div class="version-history__diff" data-testid="version-diff-summary">
+        <p class="version-history__summary">
+          v{{ result.fromVersion }} → v{{ result.toVersion }}:
+          @if (result.summary.nodesAdded) {
+            <span>{{ result.summary.nodesAdded }} node(s) added</span>
+          }
+          @if (result.summary.nodesRemoved) {
+            <span>{{ result.summary.nodesRemoved }} node(s) removed</span>
+          }
+          @if (result.summary.nodesModified) {
+            <span>{{ result.summary.nodesModified }} node(s) updated</span>
+          }
+          @if (result.summary.bindingsAdded) {
+            <span>{{ result.summary.bindingsAdded }} binding(s) added</span>
+          }
+          @if (result.summary.bindingsRemoved) {
+            <span>{{ result.summary.bindingsRemoved }} binding(s) removed</span>
+          }
+          @if (result.summary.bindingsModified) {
+            <span>{{ result.summary.bindingsModified }} binding(s) updated</span>
+          }
+          @if (result.summary.metadataChanged) {
+            <span>metadata changed</span>
+          }
+          @if (result.changes.length === 0) {
+            <span>no changes</span>
+          }
+        </p>
+        @if (result.changes.length) {
+          <ul class="version-history__changes">
+            @for (change of result.changes; track $index) {
+              <li>{{ changeLabel(change) }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  }
+</section>

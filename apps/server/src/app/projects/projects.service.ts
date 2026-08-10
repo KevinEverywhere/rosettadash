@@ -1,9 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   Composite,
+  CompositeDiff,
+  CompositeRevision,
+  CompositeVersionSummary,
   Project,
   ValidationIssue,
   defaultComponentRegistry,
+  diffComposite,
   validateComposite,
 } from '@dashbuilder/core';
 
@@ -31,6 +35,7 @@ export class CompositeValidationError extends Error {
 @Injectable()
 export class ProjectsService {
   private readonly projects = new Map<string, Project>();
+  private readonly compositeRevisions = new Map<string, CompositeRevision[]>();
 
   listProjects(): Project[] {
     return [...this.projects.values()].sort((a, b) =>
@@ -74,9 +79,14 @@ export class ProjectsService {
   }
 
   deleteProject(id: string): void {
-    if (!this.projects.delete(id)) {
+    const project = this.projects.get(id);
+    if (!project) {
       throw new NotFoundException(`Project "${id}" not found`);
     }
+    for (const composite of project.composites) {
+      this.compositeRevisions.delete(this.revisionKey(id, composite.id));
+    }
+    this.projects.delete(id);
   }
 
   listComposites(projectId: string): Composite[] {
@@ -109,7 +119,46 @@ export class ProjectsService {
       updatedAt: new Date().toISOString(),
     };
     this.projects.set(projectId, updated);
+    this.storeRevision(projectId, composite);
     return composite;
+  }
+
+  listCompositeVersions(projectId: string, compositeId: string): CompositeVersionSummary[] {
+    this.getComposite(projectId, compositeId);
+    return this.getRevisionList(projectId, compositeId).map((revision) => ({
+      version: revision.version,
+      savedAt: revision.savedAt,
+      nodeCount: revision.composite.nodes.length,
+      bindingCount: revision.composite.bindings.length,
+    }));
+  }
+
+  getCompositeVersion(
+    projectId: string,
+    compositeId: string,
+    version: number,
+  ): CompositeRevision {
+    this.getComposite(projectId, compositeId);
+    const revision = this.getRevisionList(projectId, compositeId).find(
+      (entry) => entry.version === version,
+    );
+    if (!revision) {
+      throw new NotFoundException(
+        `Composite "${compositeId}" version ${version} not found in project "${projectId}"`,
+      );
+    }
+    return revision;
+  }
+
+  diffCompositeVersions(
+    projectId: string,
+    compositeId: string,
+    fromVersion: number,
+    toVersion: number,
+  ): CompositeDiff {
+    const from = this.getCompositeVersion(projectId, compositeId, fromVersion).composite;
+    const to = this.getCompositeVersion(projectId, compositeId, toVersion).composite;
+    return diffComposite(from, to);
   }
 
   updateComposite(projectId: string, compositeId: string, input: Composite): Composite {
@@ -139,6 +188,7 @@ export class ProjectsService {
       updatedAt: new Date().toISOString(),
     });
 
+    this.storeRevision(projectId, composite);
     return composite;
   }
 
@@ -155,6 +205,7 @@ export class ProjectsService {
       composites: next,
       updatedAt: new Date().toISOString(),
     });
+    this.compositeRevisions.delete(this.revisionKey(projectId, compositeId));
   }
 
   private assertValidComposite(composite: Composite): void {
@@ -162,5 +213,24 @@ export class ProjectsService {
     if (!result.valid) {
       throw new CompositeValidationError(result.issues);
     }
+  }
+
+  private revisionKey(projectId: string, compositeId: string): string {
+    return `${projectId}:${compositeId}`;
+  }
+
+  private getRevisionList(projectId: string, compositeId: string): CompositeRevision[] {
+    return this.compositeRevisions.get(this.revisionKey(projectId, compositeId)) ?? [];
+  }
+
+  private storeRevision(projectId: string, composite: Composite): void {
+    const key = this.revisionKey(projectId, composite.id);
+    const revisions = this.getRevisionList(projectId, composite.id);
+    const nextRevision: CompositeRevision = {
+      version: composite.version,
+      savedAt: new Date().toISOString(),
+      composite: structuredClone(composite),
+    };
+    this.compositeRevisions.set(key, [...revisions, nextRevision]);
   }
 }
