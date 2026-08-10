@@ -1,5 +1,10 @@
 import type { IRComponent } from '@dashbuilder/core';
 import { AngularExportError } from './types';
+import {
+  generateThreeBarChart,
+  generateThreeScatterPlot,
+  generateThreeScenePointCloud,
+} from './three-visual-templates';
 import { joinLines, selectorFromClass } from './utils';
 
 const SUPPORTED_TYPES = new Set([
@@ -14,6 +19,9 @@ const SUPPORTED_TYPES = new Set([
   'visual.chart.line',
   'visual.chart.bar',
   'visual.chart.pie',
+  'visual.display.3d-bar-chart',
+  'visual.display.3d-scatter',
+  'visual.display.3d-scene',
   'logic.timer',
 ]);
 
@@ -45,6 +53,12 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateBarChart(className);
     case 'visual.chart.pie':
       return generatePieChart(className);
+    case 'visual.display.3d-bar-chart':
+      return generateThreeBarChart(className);
+    case 'visual.display.3d-scatter':
+      return generateThreeScatterPlot(className);
+    case 'visual.display.3d-scene':
+      return generateThreeScenePointCloud(className);
     case 'logic.timer':
       return generateTimer(className);
     default:

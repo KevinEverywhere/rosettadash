@@ -175,6 +175,40 @@ describe('generateVueUiFiles', () => {
     expect(dashboard?.content).toContain('t1_selected_row');
   });
 
+  it('generates Vue three.js scatter plot stub', () => {
+    const scatter = registry.createNode('visual.display.3d-scatter', { id: 's3d1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: '3D Scatter Dashboard',
+        version: 1,
+        exportTargets: { ui: 'vue', server: 'nest' },
+        nodes: [scatter, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 's3d1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateVueUiFiles(ir);
+    const scatterFile = files.find((file) => file.content.includes('@tresjs/core'));
+    expect(scatterFile?.content).toContain('mapScatterPoints');
+    expect(scatterFile?.content).toContain('TresSphereGeometry');
+  });
+
   it('rejects non-vue UI targets', () => {
     const ir = buildExportIR(
       {

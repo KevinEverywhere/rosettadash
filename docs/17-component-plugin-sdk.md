@@ -163,7 +163,7 @@ Recommended patterns for future VR plugins:
 | **Preview** | Dedicated component registered via adapter; shared `ThreePreviewRuntime` lifecycle |
 | **Lifecycle** | Create/dispose renderer on node id change; pause when not in preview mode |
 | **Performance** | Reuse DAS-53 viewport/culling patterns; single animation loop per panel |
-| **Export** | React Three Fiber first; exporter plugin second |
+| **Export** | React (R3F), Vue (TresJS), Svelte (Threlte), Angular (three.js canvas) for VR visuals |
 
 The component SDK is the hook point — three.js should not be special-cased in core.
 

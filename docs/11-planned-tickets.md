@@ -71,7 +71,9 @@ Forward-looking Jira ticket plan for DashBuilder.
 
 ## Active work
 
-_None — merge `feature/DAS-60-3d-scene-point-cloud` when ready._
+| Ticket | Branch | Status |
+|--------|--------|--------|
+| [DAS-61](https://planetkevin.atlassian.net/browse/DAS-61) | `feature/DAS-61-multi-target-3d-export-stubs` | Multi-target 3D export stubs (Vue, Svelte, Angular) |
 
 ## Delivery status
 
@@ -84,6 +86,7 @@ _None — merge `feature/DAS-60-3d-scene-point-cloud` when ready._
 - **Phase 9 project stack setup:** complete (DAS-57)
 - **Phase 10 VR / 3D expansion:** DAS-58 and DAS-60 complete on branch
 - **Phase 11 welcome & entry:** complete (DAS-59)
+- **Phase 12 multi-target 3D export:** in progress (DAS-61)
 
 ## Phase 6 — complete
 
@@ -133,9 +136,12 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 
 1. ~~Welcome page with tech stack selection above builder~~ — DAS-59
 
+## Phase 12 — Multi-target 3D export (in progress)
+
+1. ~~Vue/Svelte/Angular 3D export stubs~~ — DAS-61 (active)
+
 ## Future — VR / 3D expansion
 
-- Vue/Svelte/Angular R3F-equivalent exporters
 - GLTF model hosts and geo globes
 
 ## Related documents

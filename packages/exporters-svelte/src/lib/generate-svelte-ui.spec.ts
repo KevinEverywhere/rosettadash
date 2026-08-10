@@ -175,6 +175,40 @@ describe('generateSvelteUiFiles', () => {
     expect(dashboard?.content).toContain('t1_selected_row');
   });
 
+  it('generates Svelte three.js scene point cloud stub', () => {
+    const scene = registry.createNode('visual.display.3d-scene', { id: 'sc3d1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: '3D Scene Dashboard',
+        version: 1,
+        exportTargets: { ui: 'svelte', server: 'nest' },
+        nodes: [scene, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 'sc3d1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateSvelteUiFiles(ir);
+    const sceneFile = files.find((file) => file.content.includes('@threlte/core'));
+    expect(sceneFile?.content).toContain('mapScatterPoints');
+    expect(sceneFile?.content).toContain('<Grid');
+  });
+
   it('rejects non-svelte UI targets', () => {
     const ir = buildExportIR(
       {
