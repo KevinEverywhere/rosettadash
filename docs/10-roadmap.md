@@ -142,6 +142,14 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Textured Earth sphere preview + orbit markers in builder
 - [x] React, Vue, Svelte, and Angular export stubs
 
+## Phase 14 — Stack styling (complete)
+
+**Ticket:** DAS-64 — extends DAS-57
+
+- [x] Styling / CSS framework dimension on `StackProfile` (Tailwind, MUI, Angular Material, neutral tokens, etc.)
+- [x] Welcome page styling picker with UI-aware compatibility matrix
+- [x] Persist styling on project; export wizard + ExportIR read stack styling
+
 ## Future — VR / 3D expansion
 
 - (none scheduled — see backlog ideas below)

@@ -1,7 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, input, output, signal, untracked } from '@angular/core';
 import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
-import { resolveEffectiveExportTargets, resolveExportComposite } from '@dashbuilder/core';
+import {
+  resolveEffectiveExportTargets,
+  resolveEffectiveStyling,
+  resolveExportComposite,
+  stylingFrameworkLabel,
+} from '@dashbuilder/core';
 import { firstValueFrom } from 'rxjs';
 import { BuilderStateService } from '../builder-state.service';
 import {
@@ -192,7 +197,8 @@ export class ExportWizardComponent {
 
     try {
       const composite = this.buildExportComposite();
-      const response = await firstValueFrom(this.exportApi.generateBundle(composite));
+      const stackProfile = this.state.project()?.stackProfile;
+      const response = await firstValueFrom(this.exportApi.generateBundle(composite, stackProfile));
       this.bundle.set(response);
     } catch (error) {
       this.handleExportError(error);
@@ -226,7 +232,10 @@ export class ExportWizardComponent {
     const ui = current?.ir.targets.ui ?? this.uiTarget();
     const server = current?.ir.targets.server ?? this.serverTarget();
     const database = current?.ir.targets.database ?? this.databaseTarget();
-    return `${ui} UI + ${server} + ${database}`;
+    const styling =
+      current?.ir.styles.framework ??
+      resolveEffectiveStyling(this.state.project()?.stackProfile, ui);
+    return `${ui} UI + ${server} + ${database} · ${stylingFrameworkLabel(styling)}`;
   }
 
   private seedTargetsFromState(): void {

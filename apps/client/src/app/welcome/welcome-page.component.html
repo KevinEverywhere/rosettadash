@@ -18,8 +18,8 @@
       <header class="welcome__stack-header">
         <h2>Choose your tech stack</h2>
         <p>
-          Pick a UI framework first. We will suggest compatible server and database partners — or
-          choose <strong>Any</strong> for scratch-pad mode.
+          Pick a UI framework first, then server and database partners. Styling options appear once
+          your framework is set — or choose <strong>Any</strong> for scratch-pad mode.
         </p>
       </header>
 
@@ -87,6 +87,30 @@
           supported combination later.
         </p>
       }
+
+      <section class="welcome__section" aria-labelledby="stack-styling-heading">
+        <h3 id="stack-styling-heading">Styling for {{ selectedUiLabel() }}</h3>
+        <p class="welcome__section-lead">
+          How do you want to style exported components? These options match your UI framework —
+          change the framework above to see a different set.
+        </p>
+        <ul class="welcome__chip-row">
+          @for (option of stylingOptions(); track option.id) {
+            <li>
+              <button
+                type="button"
+                class="welcome__chip welcome__chip--stacked"
+                [class.welcome__chip--selected]="stylingChoice() === option.id"
+                [attr.data-testid]="'stack-styling-' + option.id"
+                (click)="selectStyling(option.id)"
+              >
+                <span class="welcome__chip-label">{{ option.label }}</span>
+                <span class="welcome__chip-desc">{{ option.description }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
 
       <footer class="welcome__footer">
         <button

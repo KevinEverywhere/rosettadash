@@ -6,6 +6,8 @@ import type {
   NodeCategory,
   NodeLayout,
   Port,
+  StackProfile,
+  StylingFrameworkChoice,
 } from '../model/types';
 
 export interface ExportIRMeta {
@@ -19,7 +21,7 @@ export interface ExportIRMeta {
 }
 
 export interface IRStyleTokens {
-  preset: 'neutral';
+  framework: StylingFrameworkChoice;
 }
 
 export interface EnvVarSpec {
@@ -98,6 +100,7 @@ export interface ExportIR {
 export interface BuildExportIROptions {
   generatedAt?: string;
   defaultTargets?: Partial<ExportTargetConfig>;
+  stackProfile?: StackProfile;
   exportScope?: ExportScope;
   exportNodeIds?: string[];
 }

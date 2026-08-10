@@ -41,7 +41,7 @@ describe('role visibility helpers', () => {
         dataSources: [],
         routes: [],
         events: [],
-        styles: { preset: 'neutral' },
+        styles: { framework: 'neutral' },
         domain: {
           roles: [
             { id: 'viewer', name: 'Viewer' },

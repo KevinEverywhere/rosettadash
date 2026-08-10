@@ -1,20 +1,22 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   APP_NAME,
   DATABASE_TARGET_OPTIONS,
   getCompatibleStackDefaults,
+  getCompatibleStylingOptions,
+  getDefaultStyling,
   normalizeStackProfile,
   SERVER_TARGET_OPTIONS,
   type DatabaseTargetChoice,
   type ServerTargetChoice,
   type StackProfile,
+  type StylingFrameworkChoice,
   type UiFrameworkChoice,
   UI_FRAMEWORK_OPTIONS,
 } from '@dashbuilder/core';
 import {
   canEnterBuilder,
-  hasBuilderSession,
   writePendingStackProfile,
 } from './stack-profile-session';
 
@@ -34,6 +36,15 @@ export class WelcomePageComponent implements OnInit {
   protected readonly uiChoice = signal<UiFrameworkChoice>('react');
   protected readonly serverChoice = signal<ServerTargetChoice>('next');
   protected readonly databaseChoice = signal<DatabaseTargetChoice>('postgresql');
+  protected readonly stylingChoice = signal<StylingFrameworkChoice>('tailwind');
+
+  protected readonly stylingOptions = computed(() =>
+    getCompatibleStylingOptions(this.uiChoice()),
+  );
+
+  protected readonly selectedUiLabel = computed(
+    () => this.uiOptions.find((option) => option.id === this.uiChoice())?.label ?? 'your stack',
+  );
 
   ngOnInit(): void {
     if (canEnterBuilder()) {
@@ -57,6 +68,10 @@ export class WelcomePageComponent implements OnInit {
     this.databaseChoice.set(database);
   }
 
+  protected selectStyling(styling: StylingFrameworkChoice): void {
+    this.stylingChoice.set(styling);
+  }
+
   protected isScratchPad(): boolean {
     return this.uiChoice() === 'any';
   }
@@ -75,17 +90,19 @@ export class WelcomePageComponent implements OnInit {
     if (defaults.database) {
       this.databaseChoice.set(defaults.database);
     }
+    this.stylingChoice.set(defaults.styling ?? getDefaultStyling(ui));
   }
 
   private buildProfile(): StackProfile {
-    if (this.uiChoice() === 'any') {
-      return { ui: 'any' };
-    }
-
     return {
       ui: this.uiChoice(),
-      server: this.serverChoice(),
-      database: this.databaseChoice(),
+      ...(this.uiChoice() === 'any'
+        ? {}
+        : {
+            server: this.serverChoice(),
+            database: this.databaseChoice(),
+          }),
+      styling: this.stylingChoice(),
     };
   }
 }

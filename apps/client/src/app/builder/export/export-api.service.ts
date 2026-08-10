@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { Composite, ExportIR, ValidationIssue } from '@dashbuilder/core';
+import type { Composite, ExportBundleRequest, ExportIR, StackProfile, ValidationIssue } from '@dashbuilder/core';
 import { Observable } from 'rxjs';
 
 export interface GeneratedFile {
@@ -24,7 +24,8 @@ export interface ExportValidationErrorBody {
 export class ExportApiService {
   private readonly http = inject(HttpClient);
 
-  generateBundle(composite: Composite): Observable<ExportBundleResponse> {
-    return this.http.post<ExportBundleResponse>('/api/export/bundle', composite);
+  generateBundle(composite: Composite, stackProfile?: StackProfile): Observable<ExportBundleResponse> {
+    const body: ExportBundleRequest = stackProfile ? { composite, stackProfile } : { composite };
+    return this.http.post<ExportBundleResponse>('/api/export/bundle', body);
   }
 }

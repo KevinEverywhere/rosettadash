@@ -152,7 +152,7 @@ function generateTokensCss(ir: ExportIR): string {
     `.timer__header { display: flex; align-items: center; gap: 0.5rem; }`,
     `.timer__mode { font-size: 0.75rem; color: var(--db-muted); text-transform: capitalize; }`,
     `.timer__value { margin: 0; font-size: 1.125rem; font-weight: 600; font-variant-numeric: tabular-nums; }`,
-    `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
+    `/* styling: ${ir.styles.framework} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);
 }

@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
-import type { Composite } from '@dashbuilder/core';
+import type { Composite, ExportBundleRequest, StackProfile } from '@dashbuilder/core';
 import { ExportBuildError } from '@dashbuilder/core';
 import { AngularExportError } from '@dashbuilder/exporters-angular';
 import { ExpressExportError } from '@dashbuilder/exporters-express';
@@ -154,11 +154,26 @@ export class ExportController {
   }
 
   @Post('bundle')
-  buildBundleExport(@Body() composite: Composite) {
+  buildBundleExport(@Body() body: Composite | ExportBundleRequest) {
     try {
-      return this.exportService.buildBundleExport(composite);
+      const { composite, stackProfile } = parseExportBundleBody(body);
+      return this.exportService.buildBundleExport(composite, stackProfile);
     } catch (error) {
       this.handleExportError(error);
     }
   }
+}
+
+function parseExportBundleBody(body: Composite | ExportBundleRequest): {
+  composite: Composite;
+  stackProfile?: StackProfile;
+} {
+  if (body && typeof body === 'object' && 'composite' in body && body.composite) {
+    return {
+      composite: body.composite,
+      stackProfile: body.stackProfile,
+    };
+  }
+
+  return { composite: body as Composite };
 }

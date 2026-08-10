@@ -71,6 +71,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-61](https://planetkevin.atlassian.net/browse/DAS-61) | `feature/DAS-61-multi-target-3d-export-stubs` | Multi-target 3D export stubs (Vue, Svelte, Angular) |
 | [DAS-62](https://planetkevin.atlassian.net/browse/DAS-62) | `feature/DAS-62-gltf-model-host` | GLTF model host preview + multi-target export stubs |
 | [DAS-63](https://planetkevin.atlassian.net/browse/DAS-63) | `feature/DAS-63-geo-globe` | 3D geo globe lat/lng markers + multi-target export stubs |
+| [DAS-64](https://planetkevin.atlassian.net/browse/DAS-64) | `feature/DAS-64-stack-styling-selection` | Stack styling / CSS framework in project stack profile |
 
 ## Active work
 
@@ -91,6 +92,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 11 welcome & entry:** complete (DAS-59)
 - **Phase 12 multi-target 3D export:** complete (DAS-61, DAS-62)
 - **Phase 13 geo globe:** complete (DAS-63)
+- **Phase 14 stack styling:** complete (DAS-64)
 
 ## Phase 6 — complete
 
@@ -148,6 +150,10 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 ## Phase 13 — Geo globe (complete)
 
 1. ~~3D geo globe lat/lng marker mapping + export stubs~~ — DAS-63
+
+## Phase 14 — Stack styling (complete)
+
+1. ~~CSS / styling framework in project stack profile (extends DAS-57)~~ — DAS-64
 
 ## Future — VR / 3D expansion
 

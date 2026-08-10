@@ -233,7 +233,7 @@ function generateTokensCss(ir: ExportIR): string {
     `.role-gate { padding: 1rem; border: 1px dashed var(--db-border); border-radius: 0.5rem; }`,
     `.role-gate__header { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }`,
     `.role-gate__badge { font-size: 0.75rem; color: var(--db-muted); }`,
-    `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
+    `/* styling: ${ir.styles.framework} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);
 }

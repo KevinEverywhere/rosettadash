@@ -23,13 +23,14 @@ describe('ProjectsService', () => {
       ui: 'react',
       server: 'next',
       database: 'postgresql',
+      styling: 'tailwind',
     });
 
     const scratch = service.createProject({
       name: 'Scratch pad',
-      stackProfile: { ui: 'any', server: 'nest', database: 'mongodb' },
+      stackProfile: { ui: 'any', server: 'nest', database: 'mongodb', styling: 'tailwind' },
     });
-    expect(scratch.stackProfile).toEqual({ ui: 'any' });
+    expect(scratch.stackProfile).toEqual({ ui: 'any', styling: 'tailwind' });
   });
 
   it('creates a valid composite', () => {

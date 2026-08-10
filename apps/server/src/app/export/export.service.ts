@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   Composite,
   ExportIR,
+  StackProfile,
   builtInExporterManifest,
   buildExportIR,
   defaultComponentRegistry,
@@ -23,8 +24,8 @@ export class ExportService {
   /** Plugin metadata registry — see docs/16-exporter-plugin-sdk.md */
   readonly exporterManifest = builtInExporterManifest;
 
-  buildIr(composite: Composite) {
-    return buildExportIR(composite, defaultComponentRegistry);
+  buildIr(composite: Composite, stackProfile?: StackProfile) {
+    return buildExportIR(composite, defaultComponentRegistry, { stackProfile });
   }
 
   buildReactExport(composite: Composite) {
@@ -93,8 +94,8 @@ export class ExportService {
     return { ir, files };
   }
 
-  buildBundleExport(composite: Composite) {
-    const ir = this.buildIr(composite);
+  buildBundleExport(composite: Composite, stackProfile?: StackProfile) {
+    const ir = this.buildIr(composite, stackProfile);
     const uiFiles = this.generateUiFiles(ir);
     const databaseFiles = this.generateDatabaseFiles(ir);
     if (databaseFiles.length > 0) {

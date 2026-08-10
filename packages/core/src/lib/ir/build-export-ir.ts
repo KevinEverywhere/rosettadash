@@ -5,6 +5,7 @@ import type { DomainContext } from '../domain/domain-context';
 import { normalizeDomainContext } from '../domain/domain-context';
 import { visibilityRolesForComponent } from '../domain/role-visibility';
 import { compositeHasOnboardingFlow, onboardingRoutePaths } from '../domain/onboarding';
+import { resolveEffectiveStyling } from '../export/stack-profile';
 import type {
   BuildExportIROptions,
   ExportIR,
@@ -92,6 +93,8 @@ export function buildExportIR(
     description: `Environment variable for ${key}`,
   }));
 
+  const targets = resolveTargets(composite.exportTargets, options.defaultTargets);
+
   return {
     meta: {
       compositeId: composite.id,
@@ -102,14 +105,16 @@ export function buildExportIR(
       ...(options.exportScope ? { exportScope: options.exportScope } : {}),
       ...(options.exportNodeIds?.length ? { exportNodeIds: options.exportNodeIds } : {}),
     },
-    targets: resolveTargets(composite.exportTargets, options.defaultTargets),
+    targets,
     envVars,
     components,
     layouts,
     dataSources,
     routes: buildRoutes(composite, registry),
     events,
-    styles: { preset: 'neutral' },
+    styles: {
+      framework: resolveEffectiveStyling(options.stackProfile, targets.ui),
+    },
     domain: mapDomainContext(composite.domainContext),
   };
 }

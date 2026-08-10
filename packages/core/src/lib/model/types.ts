@@ -80,10 +80,42 @@ export interface ExportTargetConfig {
   database?: 'mongodb' | 'postgresql' | 'supabase' | 'mysql';
 }
 
+/** @deprecated Legacy single-choice styling value — migrated to {@link StackStylingProfile}. */
+export type StylingFrameworkChoice =
+  | 'neutral'
+  | 'tailwind'
+  | 'mui'
+  | 'angular-material'
+  | 'vuetify'
+  | 'plain-css'
+  | 'plain-scss';
+
+/** Global design tokens / utility layers (combinable). */
+export type StylingFoundation = 'neutral-tokens' | 'tailwind';
+
+/** Optional UI component library (at most one per stack). */
+export type StylingComponentLibrary = 'mui' | 'angular-material' | 'vuetify';
+
+/** How custom component styles are authored (combinable). */
+export type StylingAuthoring =
+  | 'css-modules'
+  | 'styled-components'
+  | 'plain-css'
+  | 'plain-scss';
+
+/** Composable styling preferences — users may enable multiple non-exclusive options. */
+export interface StackStylingProfile {
+  foundation: StylingFoundation[];
+  componentLibrary?: StylingComponentLibrary;
+  authoring: StylingAuthoring[];
+  inlineStyles: boolean;
+}
+
 export interface StackProfile {
   ui: 'react' | 'angular' | 'vue' | 'svelte' | 'any';
   server?: ExportTargetConfig['server'];
   database?: ExportTargetConfig['database'];
+  styling?: StylingFrameworkChoice;
 }
 
 export interface Composite {

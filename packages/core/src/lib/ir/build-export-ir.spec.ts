@@ -177,5 +177,27 @@ describe('buildExportIR', () => {
       server: 'nest',
       database: 'postgresql',
     });
+    expect(ir.styles.framework).toBe('tailwind');
+  });
+
+  it('uses project stack styling when provided in build options', () => {
+    const text = registry.createNode('visual.input.text', { id: 'n1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'c1',
+        name: 'Styled Dashboard',
+        nodes: [text],
+        bindings: [],
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+      },
+      registry,
+      {
+        stackProfile: { ui: 'react', styling: 'mui', server: 'next', database: 'postgresql' },
+      },
+    );
+
+    expect(ir.styles.framework).toBe('mui');
   });
 });
