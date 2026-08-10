@@ -54,33 +54,27 @@
 
   <div class="domain-context__field">
     <label for="domain-default-time-range">Default time range</label>
-    <select
-      id="domain-default-time-range"
-      data-testid="domain-default-time-range"
+    <app-select
+      testId="domain-default-time-range"
+      emptyOptionLabel="None"
+      placeholder="None"
+      [options]="timeRangeOptions"
       [ngModel]="defaultTimeRange()"
       (ngModelChange)="updateDefaultTimeRange($event)"
-    >
-      <option value="">None</option>
-      @for (option of presetOptions; track option.value) {
-        <option [value]="option.value">{{ option.label }}</option>
-      }
-    </select>
+    />
   </div>
 
   <div class="domain-context__roles" data-testid="domain-roles-section">
     <div class="domain-context__roles-header">
       <label for="domain-role-preset">Roles</label>
       @if (availablePresets().length) {
-        <select
-          id="domain-role-preset"
-          data-testid="domain-role-preset"
-          (change)="addPresetRole($any($event.target).value); $any($event.target).value = ''"
-        >
-          <option value="">Add preset…</option>
-          @for (preset of availablePresets(); track preset.id) {
-            <option [value]="preset.id">{{ preset.name }}</option>
-          }
-        </select>
+        <app-select
+          testId="domain-role-preset"
+          placeholder="Add preset…"
+          [options]="availablePresetOptions()"
+          [resetAfterSelect]="true"
+          (valueChange)="addPresetRole($event)"
+        />
       }
     </div>
 

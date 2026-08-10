@@ -3,12 +3,14 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
 import { canEnterBuilder } from '../welcome/stack-profile-session';
+import { AppSelectComponent } from '../shared/app-select/app-select.component';
 import { BuilderAuthGateComponent } from './builder-auth-gate.component';
 import { BuilderAuthService } from './builder-auth.service';
 import { BuilderProjectService } from './builder-project.service';
 import { BuilderViewportGateComponent } from './builder-viewport-gate.component';
 import { BuilderStateService, WorkspaceMode } from './builder-state.service';
 import { DisplayAvailabilityService } from './display-availability.service';
+import { BuilderWorkspaceLayoutService } from './builder-workspace-layout.service';
 import { CanvasComponent } from './canvas/canvas.component';
 import { ExportWizardComponent } from './export/export-wizard.component';
 import { InspectorComponent } from './inspector/inspector.component';
@@ -25,6 +27,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     ExportWizardComponent,
     BuilderAuthGateComponent,
     BuilderViewportGateComponent,
+    AppSelectComponent,
     FormsModule,
     RouterLink,
   ],
@@ -37,10 +40,15 @@ export class BuilderShellComponent implements OnInit {
   protected readonly auth = inject(BuilderAuthService);
   protected readonly state = inject(BuilderStateService);
   protected readonly viewport = inject(DisplayAvailabilityService);
+  protected readonly layout = inject(BuilderWorkspaceLayoutService);
 
   protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
   protected readonly compositeTemplates = listCompositeTemplates();
+  protected readonly templateSelectOptions = this.compositeTemplates.map((template) => ({
+    value: template.id,
+    label: template.name,
+  }));
   protected selectedTemplateId = '';
 
   async ngOnInit(): Promise<void> {

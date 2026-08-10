@@ -1,5 +1,7 @@
 import { Component, computed, effect, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import type { Binding, DomainContext } from '@dashbuilder/core';
+import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 import { PreviewDataService } from './preview-data.service';
 import { PreviewNodeComponent } from './preview-node.component';
@@ -28,7 +30,7 @@ interface PreviewLoadPayload {
 
 @Component({
   selector: 'app-preview-panel',
-  imports: [PreviewNodeComponent],
+  imports: [FormsModule, PreviewNodeComponent, AppSelectComponent],
   templateUrl: './preview-panel.component.html',
   styleUrl: './preview-panel.component.scss',
 })
@@ -37,6 +39,10 @@ export class PreviewPanelComponent {
   protected readonly previewData = inject(PreviewDataService);
 
   protected readonly previewRoleOptions = computed(() => this.state.previewRoleOptions());
+
+  protected readonly previewRoleSelectOptions = computed(() =>
+    this.previewRoleOptions().map((role) => ({ value: role.id, label: role.name })),
+  );
 
   protected readonly sortedPreviewNodes = computed(() =>
     [...this.state.previewNodes()].sort((left, right) => {

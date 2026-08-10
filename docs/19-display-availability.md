@@ -2,7 +2,7 @@
 
 DashBuilder supports different form factors with explicit availability rules. Users on unsupported viewports see a dedicated guidance screen instead of a broken builder layout.
 
-**Ticket:** [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66)
+**Tickets:** [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66), [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67)
 
 ## Builder requirement
 
@@ -21,7 +21,7 @@ See `packages/core/src/lib/viewport/display-availability.ts` (`BUILDER_MIN_WIDTH
 
 | Condition | Builder | Welcome / stack setup |
 |-----------|---------|------------------------|
-| Landscape, width ≥ 1024px | Full workspace | Full stack picker |
+| Landscape, width ≥ 1024px | Full or compact workspace (see below) | Full stack picker |
 | Portrait, longer edge ≥ 1024px (touch) | Blocked — rotate to landscape | Full stack picker |
 | Portrait, longer edge < 1024px | Blocked — larger display required | Full stack picker |
 | Landscape, width < 1024px | Blocked — larger display required | Full stack picker |
@@ -60,6 +60,19 @@ When rotation cannot help — phones, small tablets in any orientation, narrow d
 
 Phones and small tablets do **not** render the palette / canvas / inspector grid.
 
+## Compact builder layout (DAS-67)
+
+When the builder is allowed and viewport width is **1024–1280px**, the workspace switches to **compact mode**:
+
+- Canvas uses the full workspace width by default
+- **Components** and **Inspector** toolbar toggles open side panels as drawers
+- Selecting a canvas node auto-opens the inspector on compact layouts
+- Template picker and undo/redo labels hide to save toolbar space; Export and Save remain
+
+Above **1280px**, the standard three-column layout is used (16rem palette, flexible canvas, 22rem inspector).
+
+See `packages/core/src/lib/viewport/workspace-layout.ts` (`COMPACT_BUILDER_MAX_WIDTH_PX`).
+
 ## Welcome page behavior
 
 The welcome page at `/` remains available on all form factors so users can:
@@ -74,8 +87,8 @@ Continuing to `/builder` on a blocked viewport shows the gate instead of the wor
 
 | Phase | Scope |
 |-------|--------|
-| **DAS-66 (now)** | 1024px landscape gate + unified fallback UX; no broken builder on phones or small tablets |
-| **Next branch** | Tighten builder layout for landscape tablet and other smaller supported displays (collapsible panels) |
+| **DAS-66** | 1024px landscape gate + unified fallback UX |
+| **DAS-67 (now)** | Compact builder with collapsible palette/inspector drawers (1024–1280px) |
 | **Future** | Phone-native authoring for phone-targeted components and dashboards |
 
 ## Implementation notes

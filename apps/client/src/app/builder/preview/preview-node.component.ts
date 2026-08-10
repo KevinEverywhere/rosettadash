@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
 import { PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
+import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 import { ComponentPreviewAdapterRegistry } from './component-preview-adapter.registry';
 import { PreviewDataService } from './preview-data.service';
@@ -9,7 +10,7 @@ import { PreviewPluginComponent } from './preview-plugin.component';
 
 @Component({
   selector: 'app-preview-node',
-  imports: [CurrencyPipe, JsonPipe, PreviewPluginComponent],
+  imports: [CurrencyPipe, JsonPipe, PreviewPluginComponent, AppSelectComponent],
   templateUrl: './preview-node.component.html',
   styleUrl: './preview-node.component.scss',
 })
@@ -227,6 +228,10 @@ export class PreviewNodeComponent {
 
   protected readonly roleAssignOptions = computed(() =>
     resolveRoleOptions(this.state.domainContext()?.roles),
+  );
+
+  protected readonly roleAssignSelectOptions = computed(() =>
+    this.roleAssignOptions().map((role) => ({ value: role.id, label: role.name })),
   );
 
   protected readString(key: string, fallback = ''): string {

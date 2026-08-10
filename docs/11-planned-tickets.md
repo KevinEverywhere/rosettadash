@@ -78,7 +78,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66) | `feature/DAS-66-mobile-tablet-viewport-gate` | 1024px landscape gate; unified message for phones and small tablets |
+| [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67) | `feature/DAS-67-compact-builder-layout` | Collapsible palette/inspector for tablet and small desktop |
 
 ## Delivery status
 
@@ -94,7 +94,8 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 12 multi-target 3D export:** complete (DAS-61, DAS-62)
 - **Phase 13 geo globe:** complete (DAS-63)
 - **Phase 14 stack styling:** complete (DAS-64)
-- **Phase 15 display availability:** in progress (DAS-66)
+- **Phase 15 display availability:** complete (DAS-66)
+- **Phase 16 compact builder layout:** in progress (DAS-67)
 
 ## Phase 6 — complete
 
@@ -157,11 +158,14 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 
 1. ~~CSS / styling framework in project stack profile (extends DAS-57)~~ — DAS-64
 
-## Phase 15 — Display availability (in progress)
+## Phase 15 — Display availability (complete)
 
-1. Minimum 1024px landscape viewport gate + unified fallback UX — DAS-66
+1. ~~Minimum 1024px landscape viewport gate + unified fallback UX~~ — DAS-66
 2. [Display Availability](./19-display-availability.md) documentation
-3. Responsive collapsible builder panels for supported landscape tablets — next branch
+
+## Phase 16 — Compact builder layout (in progress)
+
+1. Collapsible palette/inspector drawers for 1024–1280px viewports — DAS-67
 
 ## Future — VR / 3D expansion
 

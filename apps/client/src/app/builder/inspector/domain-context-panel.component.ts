@@ -1,17 +1,25 @@
 import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TIME_RANGE_PRESET_OPTIONS, TimeRangePreset, DEFAULT_ROLE_PRESETS } from '@dashbuilder/core';
+import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 
 @Component({
   selector: 'app-domain-context-panel',
-  imports: [FormsModule],
+  imports: [FormsModule, AppSelectComponent],
   templateUrl: './domain-context-panel.component.html',
   styleUrl: './domain-context-panel.component.scss',
 })
 export class DomainContextPanelComponent {
   protected readonly state = inject(BuilderStateService);
-  protected readonly presetOptions = TIME_RANGE_PRESET_OPTIONS;
+  protected readonly timeRangeOptions = TIME_RANGE_PRESET_OPTIONS.map((option) => ({
+    value: option.value,
+    label: option.label,
+  }));
+
+  protected readonly availablePresetOptions = computed(() =>
+    this.availablePresets().map((preset) => ({ value: preset.id, label: preset.name })),
+  );
 
   protected readonly domain = computed(() => this.state.domainContext());
 
@@ -53,6 +61,10 @@ export class DomainContextPanelComponent {
   }
 
   protected addPresetRole(presetId: string): void {
+    if (!presetId) {
+      return;
+    }
+
     const preset = this.rolePresets.find((role) => role.id === presetId);
     if (preset) {
       this.state.addDomainRole(preset);

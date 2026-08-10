@@ -32,7 +32,8 @@
   }
 
   input,
-  select {
+  select,
+  app-select {
     padding: 0.375rem 0.5rem;
     border: 1px solid var(--db-border);
     border-radius: 0.375rem;

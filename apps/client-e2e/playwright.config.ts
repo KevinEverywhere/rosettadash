@@ -15,6 +15,8 @@ export default defineConfig({
   use: {
     baseURL,
     trace: 'on-first-retry',
+    // Above COMPACT_BUILDER_MAX_WIDTH_PX (1280) so default tests use the full three-panel layout.
+    viewport: { width: 1400, height: 900 },
   },
   webServer: [
     {
@@ -35,7 +37,11 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // Device preset defaults to 1280px wide, which triggers compact layout.
+        viewport: { width: 1400, height: 900 },
+      },
     },
   ],
 });

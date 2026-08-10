@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder, waitForPreviewData } from './test-helpers';
+import { openBuilder, selectAppOption, waitForPreviewData } from './test-helpers';
 
 async function applyTemplate(page: import('@playwright/test').Page, templateId: string): Promise<void> {
-  await page.getByTestId('template-picker').selectOption(templateId);
+  await selectAppOption(page, 'template-picker', templateId);
   await page.getByTestId('apply-template').click();
 }
 
@@ -61,12 +61,12 @@ test.describe('Builder page templates', () => {
   });
 
   test('lists all templates in the picker', async ({ page }) => {
-    const options = page.getByTestId('template-picker').locator('option');
-    await expect(options).toHaveCount(6);
-    await expect(options.filter({ hasText: 'Team onboarding' })).toHaveCount(1);
-    await expect(options.filter({ hasText: 'Analytics overview' })).toHaveCount(1);
-    await expect(options.filter({ hasText: 'CRUD list' })).toHaveCount(1);
-    await expect(options.filter({ hasText: 'Admin settings' })).toHaveCount(1);
-    await expect(options.filter({ hasText: 'Empty starter' })).toHaveCount(1);
+    await page.getByTestId('template-picker-trigger').click();
+    await expect(page.getByTestId('template-picker-menu')).toBeVisible();
+    await expect(page.getByTestId('template-picker-option-onboarding')).toBeVisible();
+    await expect(page.getByTestId('template-picker-option-analytics-overview')).toBeVisible();
+    await expect(page.getByTestId('template-picker-option-crud-list')).toBeVisible();
+    await expect(page.getByTestId('template-picker-option-settings-admin')).toBeVisible();
+    await expect(page.getByTestId('template-picker-option-empty-starter')).toBeVisible();
   });
 });

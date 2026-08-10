@@ -1,7 +1,15 @@
 import { expect, Page } from '@playwright/test';
 import { findPaletteGroupIdForType } from '../../../packages/core/src/lib/palette/palette-groups';
 
+export async function selectAppOption(page: Page, testId: string, value: string): Promise<void> {
+  await page.getByTestId(`${testId}-trigger`).click();
+  const option = page.getByTestId(`${testId}-option-${value}`);
+  await expect(option).toBeVisible();
+  await option.click();
+}
+
 export async function expandPaletteGroup(page: Page, groupId: string): Promise<void> {
+  await ensurePaletteVisible(page);
   const panel = page.getByTestId(`palette-group-panel-${groupId}`);
   if (await panel.isVisible().catch(() => false)) {
     return;
@@ -56,6 +64,7 @@ export async function selectCanvasNodeHeader(
   node: ReturnType<Page['getByTestId']>,
   options?: { shiftKey?: boolean },
 ): Promise<void> {
+  await dismissCompactPanelsIfOpen(page);
   const header = node.locator('.canvas__node-header');
   if (options?.shiftKey) {
     await page.keyboard.down('Shift');
@@ -95,7 +104,37 @@ export async function openBuilder(page: Page): Promise<void> {
   await page.goto('/builder');
   await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
   await expect(page.getByTestId('builder-shell')).toBeVisible();
+  await expectBuilderPaletteReady(page);
+}
+
+async function expectBuilderPaletteReady(page: Page): Promise<void> {
+  const compactToggle = page.getByTestId('toggle-palette');
+  if (await compactToggle.isVisible().catch(() => false)) {
+    return;
+  }
+
   await expect(page.getByTestId('palette')).toBeVisible({ timeout: 30_000 });
+}
+
+async function ensurePaletteVisible(page: Page): Promise<void> {
+  const palette = page.getByTestId('palette');
+  if (await palette.isVisible().catch(() => false)) {
+    return;
+  }
+
+  const compactToggle = page.getByTestId('toggle-palette');
+  if (await compactToggle.isVisible().catch(() => false)) {
+    await compactToggle.click();
+    await expect(palette).toBeVisible();
+  }
+}
+
+async function dismissCompactPanelsIfOpen(page: Page): Promise<void> {
+  const backdrop = page.getByTestId('builder-panel-backdrop');
+  if (await backdrop.isVisible().catch(() => false)) {
+    await backdrop.click();
+    await expect(backdrop).toBeHidden();
+  }
 }
 
 export async function openBuilderViaWelcome(page: Page): Promise<void> {
@@ -106,7 +145,7 @@ export async function openBuilderViaWelcome(page: Page): Promise<void> {
   await page.getByTestId('welcome-continue').click();
   await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
   await expect(page.getByTestId('builder-shell')).toBeVisible();
-  await expect(page.getByTestId('palette')).toBeVisible({ timeout: 30_000 });
+  await expectBuilderPaletteReady(page);
 }
 
 /** @deprecated Use {@link openBuilderViaWelcome}. */

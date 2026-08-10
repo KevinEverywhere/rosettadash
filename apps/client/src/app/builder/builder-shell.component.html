@@ -1,4 +1,8 @@
-<div class="builder" data-testid="builder-shell">
+<div
+  class="builder"
+  data-testid="builder-shell"
+  [class.builder--compact]="layout.compact()"
+>
   @if (viewport.blocked()) {
     <app-builder-viewport-gate [availability]="viewport.availability()" />
   } @else if (auth.checking()) {
@@ -16,6 +20,30 @@
     </div>
 
     <div class="builder__actions">
+      @if (layout.compact()) {
+        <div class="builder__panel-toggles">
+          <button
+            type="button"
+            class="builder__panel-toggle"
+            data-testid="toggle-palette"
+            [class.builder__panel-toggle--active]="layout.paletteOpen()"
+            [attr.aria-pressed]="layout.paletteOpen()"
+            (click)="layout.togglePalette()"
+          >
+            Components
+          </button>
+          <button
+            type="button"
+            class="builder__panel-toggle"
+            data-testid="toggle-inspector"
+            [class.builder__panel-toggle--active]="layout.inspectorOpen()"
+            [attr.aria-pressed]="layout.inspectorOpen()"
+            (click)="layout.toggleInspector()"
+          >
+            Inspector
+          </button>
+        </div>
+      }
       <div class="builder__modes" role="tablist" aria-label="Workspace mode">
         <button
           type="button"
@@ -73,20 +101,16 @@
         {{ statusLabel() }}
       </span>
       <div class="builder__templates">
-        <label class="builder__templates-label">
+        <div class="builder__templates-label">
           <span class="visually-hidden">Page template</span>
-          <select
-            class="builder__template-select"
-            data-testid="template-picker"
-            [disabled]="state.loading()"
-            [(ngModel)]="selectedTemplateId"
-          >
-            <option value="">Select template…</option>
-            @for (template of compositeTemplates; track template.id) {
-              <option [value]="template.id">{{ template.name }}</option>
-            }
-          </select>
-        </label>
+        <app-select
+          testId="template-picker"
+          placeholder="Select template…"
+          [options]="templateSelectOptions"
+          [disabled]="state.loading()"
+          [(ngModel)]="selectedTemplateId"
+        />
+        </div>
         <button
           type="button"
           class="builder__template"
@@ -121,14 +145,32 @@
   @if (state.loading()) {
     <div class="builder__loading" data-testid="builder-loading">Loading project…</div>
   } @else {
-    <div class="builder__workspace">
-      <app-palette class="builder__palette" />
+    <div
+      class="builder__workspace"
+      [class.builder__workspace--compact]="layout.compact()"
+    >
+      @if (layout.compact() && (layout.paletteOpen() || layout.inspectorOpen())) {
+        <button
+          type="button"
+          class="builder__backdrop"
+          data-testid="builder-panel-backdrop"
+          aria-label="Close panels"
+          (click)="layout.closePanels()"
+        ></button>
+      }
+      <app-palette
+        class="builder__palette"
+        [class.builder__palette--open]="layout.compact() && layout.paletteOpen()"
+      />
       @if (state.workspaceMode() === 'design') {
         <app-canvas class="builder__canvas" data-testid="design-workspace" />
       } @else {
         <app-preview-panel class="builder__canvas" data-testid="preview-workspace" />
       }
-      <app-inspector class="builder__inspector" />
+      <app-inspector
+        class="builder__inspector"
+        [class.builder__inspector--open]="layout.compact() && layout.inspectorOpen()"
+      />
     </div>
   }
   }

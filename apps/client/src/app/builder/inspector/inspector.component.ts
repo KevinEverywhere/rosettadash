@@ -9,13 +9,17 @@ import {
   parseRoleGateAllowedRoles,
   resolveRoleOptions,
 } from '@dashbuilder/core';
+import {
+  AppSelectComponent,
+  AppSelectOption,
+} from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 import { DomainContextPanelComponent } from './domain-context-panel.component';
 import { VersionHistoryPanelComponent } from './version-history-panel.component';
 
 @Component({
   selector: 'app-inspector',
-  imports: [JsonPipe, FormsModule, DomainContextPanelComponent, VersionHistoryPanelComponent],
+  imports: [JsonPipe, FormsModule, DomainContextPanelComponent, VersionHistoryPanelComponent, AppSelectComponent],
   templateUrl: './inspector.component.html',
   styleUrl: './inspector.component.scss',
 })
@@ -117,6 +121,26 @@ export class InspectorComponent {
       return;
     }
     this.state.updateNodeProperty(node.id, schema.key, value);
+  }
+
+  protected selectOptions(schema: PropertySchema): readonly AppSelectOption[] {
+    return (schema.options ?? []).map((option) => ({
+      label: option.label,
+      value: String(option.value),
+    }));
+  }
+
+  protected readSelectProperty(key: string): string {
+    const value = this.readProperty(key);
+    if (value === null || value === undefined) {
+      return '';
+    }
+    return String(value);
+  }
+
+  protected updateSelectProperty(schema: PropertySchema, value: string): void {
+    const match = schema.options?.find((option) => String(option.value) === value);
+    this.updateProperty(schema, match?.value ?? value);
   }
 
   protected readProperty(key: string): unknown {

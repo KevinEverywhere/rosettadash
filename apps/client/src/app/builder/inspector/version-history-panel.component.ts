@@ -1,14 +1,15 @@
 import { DatePipe } from '@angular/common';
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import type { CompositeDiff, CompositeDiffChange, CompositeVersionSummary } from '@dashbuilder/core';
 import { firstValueFrom } from 'rxjs';
+import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 import { ProjectsApiService } from '../projects-api.service';
 
 @Component({
   selector: 'app-version-history-panel',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, AppSelectComponent],
   templateUrl: './version-history-panel.component.html',
   styleUrl: './version-history-panel.component.scss',
 })
@@ -23,6 +24,29 @@ export class VersionHistoryPanelComponent {
 
   protected fromVersion = 1;
   protected toVersion = 1;
+
+  protected readonly versionSelectOptions = computed(() =>
+    this.versions().map((entry) => ({
+      value: String(entry.version),
+      label: `v${entry.version}`,
+    })),
+  );
+
+  protected get fromVersionValue(): string {
+    return String(this.fromVersion);
+  }
+
+  protected set fromVersionValue(value: string) {
+    this.fromVersion = Number(value);
+  }
+
+  protected get toVersionValue(): string {
+    return String(this.toVersion);
+  }
+
+  protected set toVersionValue(value: string) {
+    this.toVersion = Number(value);
+  }
 
   constructor() {
     effect(() => {

@@ -13,15 +13,15 @@
     </label>
   }
   @case ('visual.input.select') {
-    <label class="preview-field">
+    <div class="preview-field">
       <span class="preview-field__label">{{ node().label }}</span>
-      <select class="preview-input" data-testid="preview-select">
-        <option value="">{{ readString('placeholder', 'Select…') }}</option>
-        @for (option of selectOptions(); track option.value) {
-          <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select>
-    </label>
+      <app-select
+        class="preview-input"
+        testId="preview-select"
+        [placeholder]="readString('placeholder', 'Select…')"
+        [options]="selectOptions()"
+      />
+    </div>
   }
   @case ('visual.input.number') {
     <label class="preview-field">
@@ -348,11 +348,11 @@
     <div class="preview-onboarding" data-testid="preview-role-assign">
       <span class="preview-field__label">{{ readString('title', 'Assign role') }}</span>
       <p class="preview-onboarding__summary">{{ readString('summaryLabel', 'Review access before confirming') }}</p>
-      <select class="preview-input" data-testid="preview-role-assign-select">
-        @for (role of roleAssignOptions(); track role.id) {
-          <option [value]="role.id">{{ role.name }}</option>
-        }
-      </select>
+      <app-select
+        class="preview-input"
+        testId="preview-role-assign-select"
+        [options]="roleAssignSelectOptions()"
+      />
       <button type="button" class="preview-onboarding__button" data-testid="preview-role-assign-confirm">
         {{ readString('confirmLabel', 'Confirm access') }}
       </button>

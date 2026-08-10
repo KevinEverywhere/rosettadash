@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { addFromPalette, expandInspectorSection, openBuilder, selectCanvasNode } from './test-helpers';
+import { addFromPalette, expandInspectorSection, openBuilder, selectAppOption, selectCanvasNode } from './test-helpers';
 
 test.describe('Builder role visibility', () => {
   test.beforeEach(async ({ page }) => {
@@ -10,16 +10,16 @@ test.describe('Builder role visibility', () => {
     await addFromPalette(page, 'visual.input.text');
     await selectCanvasNode(page, page.getByTestId('canvas-node'));
     await expandInspectorSection(page, 'domain');
-    await page.getByTestId('domain-role-preset').selectOption('admin');
-    await page.getByTestId('domain-role-preset').selectOption('viewer');
+    await selectAppOption(page, 'domain-role-preset', 'admin');
+    await selectAppOption(page, 'domain-role-preset', 'viewer');
 
     await addFromPalette(page, 'domain.role-gate');
 
     await page.getByTestId('mode-preview').click();
-    await page.getByTestId('preview-role-select').selectOption('viewer');
+    await selectAppOption(page, 'preview-role-select', 'viewer');
     await expect(page.getByTestId('preview-role-gate-hidden')).toBeVisible();
 
-    await page.getByTestId('preview-role-select').selectOption('admin');
+    await selectAppOption(page, 'preview-role-select', 'admin');
     await expect(page.getByTestId('preview-role-gate-visible')).toBeVisible();
   });
 });

@@ -27,22 +27,22 @@
 
     @if (versions().length > 1) {
       <div class="version-history__compare">
-        <label class="version-history__field">
+        <div class="version-history__field">
           <span>From</span>
-          <select [(ngModel)]="fromVersion" data-testid="version-diff-from">
-            @for (entry of versions(); track entry.version) {
-              <option [ngValue]="entry.version">v{{ entry.version }}</option>
-            }
-          </select>
-        </label>
-        <label class="version-history__field">
+          <app-select
+            testId="version-diff-from"
+            [options]="versionSelectOptions()"
+            [(ngModel)]="fromVersionValue"
+          />
+        </div>
+        <div class="version-history__field">
           <span>To</span>
-          <select [(ngModel)]="toVersion" data-testid="version-diff-to">
-            @for (entry of versions(); track entry.version) {
-              <option [ngValue]="entry.version">v{{ entry.version }}</option>
-            }
-          </select>
-        </label>
+          <app-select
+            testId="version-diff-to"
+            [options]="versionSelectOptions()"
+            [(ngModel)]="toVersionValue"
+          />
+        </div>
         <button
           type="button"
           class="version-history__compare-btn"

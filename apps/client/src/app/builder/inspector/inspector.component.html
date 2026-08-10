@@ -1,4 +1,4 @@
-<aside class="inspector">
+<aside class="inspector" data-testid="inspector">
   <header class="inspector__header">
     <h2>Inspector</h2>
   </header>
@@ -218,15 +218,12 @@
                         />
                       }
                       @case ('select') {
-                        <select
-                          [id]="prop.key"
-                          [ngModel]="readProperty(prop.key)"
-                          (ngModelChange)="updateProperty(prop, $event)"
-                        >
-                          @for (option of prop.options ?? []; track option.value) {
-                            <option [ngValue]="option.value">{{ option.label }}</option>
-                          }
-                        </select>
+                        <app-select
+                          [testId]="'inspector-prop-' + prop.key"
+                          [options]="selectOptions(prop)"
+                          [ngModel]="readSelectProperty(prop.key)"
+                          (ngModelChange)="updateSelectProperty(prop, $event)"
+                        />
                       }
                       @default {
                         <input
