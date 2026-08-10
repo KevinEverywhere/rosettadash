@@ -79,6 +79,27 @@ This image is intended for **local/demo** use. It is not a hardened production d
 
 ---
 
+## Optional builder authentication
+
+The NestJS API supports an optional shared API key gate (DAS-51). **Disabled by default** so local dev and e2e keep working without credentials.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `BUILDER_AUTH_ENABLED` | `false` | When `true`, all `/api/*` routes except health and auth config/login require a key |
+| `BUILDER_API_KEY` | unset | Shared secret; required when auth is enabled |
+
+Clients send the key via `Authorization: Bearer <key>` or `x-dashbuilder-api-key`. The Angular builder stores the key in `sessionStorage` after a successful login prompt.
+
+Example (dev profile):
+
+```bash
+BUILDER_AUTH_ENABLED=true BUILDER_API_KEY=dev-secret docker compose --profile dev up --build
+```
+
+Compose sets `BUILDER_AUTH_ENABLED=false` by default; uncomment `BUILDER_API_KEY` in `docker-compose.yml` when enabling auth.
+
+---
+
 ## Health checks
 
 Both compose services define Docker `HEALTHCHECK` against `/api/health`.

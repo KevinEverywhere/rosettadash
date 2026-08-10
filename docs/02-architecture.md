@@ -55,6 +55,7 @@ dashbuilder/
 │   │       └── export/         # Export wizard UI
 │   ├── server/                 # NestJS API
 │   │   └── src/
+│   │       ├── auth/           # Optional API key gate
 │   │       ├── projects/       # Project + composite CRUD
 │   │       ├── export/         # Export orchestration
 │   │       └── preview/        # Mock preview data
@@ -174,7 +175,7 @@ See [04-export-pipeline.md](./04-export-pipeline.md) for detail.
 ## Security considerations
 
 - **Secrets never in exports** — only env var placeholders and `.env.example`
-- **Builder server** — auth TBD; projects may be user-scoped
+- **Builder server** — optional API key auth via `BUILDER_AUTH_ENABLED` + `BUILDER_API_KEY` (DAS-51); projects may become user-scoped later
 - **Preview DB connections** — sandboxed, read-only by default during design
 - **Export validation** — block export if hard-coded credentials detected
 

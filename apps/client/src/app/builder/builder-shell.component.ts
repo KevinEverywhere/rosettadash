@@ -1,6 +1,8 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
+import { BuilderAuthGateComponent } from './builder-auth-gate.component';
+import { BuilderAuthService } from './builder-auth.service';
 import { BuilderProjectService } from './builder-project.service';
 import { BuilderStateService, WorkspaceMode } from './builder-state.service';
 import { CanvasComponent } from './canvas/canvas.component';
@@ -17,6 +19,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     PreviewPanelComponent,
     InspectorComponent,
     ExportWizardComponent,
+    BuilderAuthGateComponent,
     FormsModule,
   ],
   templateUrl: './builder-shell.component.html',
@@ -24,6 +27,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
 })
 export class BuilderShellComponent implements OnInit {
   private readonly projectService = inject(BuilderProjectService);
+  protected readonly auth = inject(BuilderAuthService);
   protected readonly state = inject(BuilderStateService);
 
   protected readonly appName = APP_NAME;
@@ -31,8 +35,18 @@ export class BuilderShellComponent implements OnInit {
   protected readonly compositeTemplates = listCompositeTemplates();
   protected selectedTemplateId = '';
 
-  ngOnInit(): void {
-    void this.projectService.initialize();
+  async ngOnInit(): Promise<void> {
+    await this.auth.initialize();
+    if (this.auth.authenticated()) {
+      await this.projectService.initialize();
+    }
+  }
+
+  protected async onLogin(apiKey: string): Promise<void> {
+    const ok = await this.auth.login(apiKey);
+    if (ok) {
+      await this.projectService.initialize();
+    }
   }
 
   protected save(): void {
@@ -69,7 +83,12 @@ export class BuilderShellComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   protected onDocumentKeydown(event: KeyboardEvent): void {
-    if (this.state.loading() || this.exportWizardOpen()) {
+    if (
+      this.auth.checking() ||
+      (this.auth.authEnabled() && !this.auth.authenticated()) ||
+      this.state.loading() ||
+      this.exportWizardOpen()
+    ) {
       return;
     }
 

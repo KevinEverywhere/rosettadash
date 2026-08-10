@@ -85,10 +85,10 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 
 ## Phase 7 — Production hardening (in progress)
 
-**Ticket:** DAS-50 (logic timer — first Phase 7 component)
+**Ticket:** Next up — project versioning / diff (Phase 7)
 
-- [ ] `logic.timer` — interval/countdown ticks (DAS-50, in progress)
-- Builder authentication
+- [x] `logic.timer` — interval/countdown ticks (DAS-50)
+- [x] Builder authentication — optional API key gate (DAS-51)
 - Project versioning and diff
 - Performance: large composite handling
 - Exporter plugin SDK documentation

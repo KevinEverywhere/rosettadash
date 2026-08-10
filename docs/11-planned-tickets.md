@@ -57,12 +57,12 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-47](https://planetkevin.atlassian.net/browse/DAS-47) | `feature/DAS-47-detail-panel` | Detail panel for table drill-down |
 | [DAS-48](https://planetkevin.atlassian.net/browse/DAS-48) | `feature/DAS-48-time-preset` | Domain time preset filter |
 | [DAS-49](https://planetkevin.atlassian.net/browse/DAS-49) | `feature/DAS-49-skeleton` | Loading skeleton visual component |
+| [DAS-50](https://planetkevin.atlassian.net/browse/DAS-50) | `feature/DAS-50-logic-timer` | Logic timer + Phase 6 doc closeout |
+| [DAS-51](https://planetkevin.atlassian.net/browse/DAS-51) | `feature/DAS-51-builder-auth` | Optional builder API key authentication |
 
 ## Active work
 
-| Ticket | Branch | Status |
-|--------|--------|--------|
-| [DAS-50](https://planetkevin.atlassian.net/browse/DAS-50) | `feature/DAS-50-logic-timer` | In progress — interval/countdown timer component |
+_None — pick the next Phase 7 ticket from the list below._
 
 ## Delivery status
 
@@ -71,7 +71,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
 - **Phase 6 component & page design:** complete (DAS-39–DAS-49)
-- **Phase 7 production hardening:** not started
+- **Phase 7 production hardening:** in progress (DAS-50–DAS-51)
 
 ## Phase 6 — complete
 
@@ -91,8 +91,8 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns. A
 
 ## Phase 7 — planned (create Jira ticket before each)
 
-1. `logic.timer` — DAS-50 (in progress)
-2. Builder authentication
+1. ~~`logic.timer`~~ — DAS-50
+2. ~~Builder authentication~~ — DAS-51
 3. Project versioning and diff
 4. Large composite performance
 5. Exporter plugin SDK documentation

@@ -1,4 +1,12 @@
 <div class="builder" data-testid="builder-shell">
+  @if (auth.checking()) {
+    <div class="builder__loading" data-testid="auth-checking">Checking access…</div>
+  } @else if (auth.authEnabled() && !auth.authenticated()) {
+    <app-builder-auth-gate
+      [error]="auth.loginError()"
+      (login)="onLogin($event)"
+    />
+  } @else {
   <header class="builder__toolbar">
     <div class="builder__brand">
       <span class="builder__logo">{{ appName }}</span>
@@ -120,6 +128,7 @@
       }
       <app-inspector class="builder__inspector" />
     </div>
+  }
   }
 </div>
 
