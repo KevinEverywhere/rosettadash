@@ -1,4 +1,4 @@
-import type { ComponentGroupingGuide, InstructionStep } from './types';
+import type { ComponentGroupingGuide, GroupingAnimationKey } from './types';
 
 type InstructionEnrichment = Partial<
   Pick<ComponentGroupingGuide, 'steps' | 'outcomeSummary' | 'animationBlocks' | 'animationKey'>
@@ -7,6 +7,76 @@ type InstructionEnrichment = Partial<
   outcomeSummary: string;
   animationBlocks: string[];
 };
+
+function animationBlocksForKey(key: GroupingAnimationKey): string[] {
+  switch (key) {
+    case 'filter-table':
+      return ['Date Range', 'Data Table'];
+    case 'filter-chart':
+      return ['Date Range', 'Chart'];
+    case 'data-stack':
+      return ['Database', 'Server', 'Table'];
+    case 'form-row':
+      return ['Text Input', 'Checkbox'];
+    case 'access-flow':
+      return ['Role Gate', 'Role Assign', 'Invite'];
+    case 'server-data':
+      return ['NestJS Server', 'PostgreSQL', 'Table'];
+    default:
+      return ['Component', 'Companion'];
+  }
+}
+
+/** Builds a standard 5-step guide from grouping metadata when no hand-authored guide exists. */
+export function buildInstructionFromGuide(guide: ComponentGroupingGuide): InstructionEnrichment {
+  return {
+    outcomeSummary: guide.summary,
+    animationBlocks: animationBlocksForKey(guide.animationKey),
+    steps: [
+      {
+        order: 1,
+        title: 'Add the component',
+        body: guide.summary,
+        highlight: 'source',
+      },
+      {
+        order: 2,
+        title: 'Configure in inspector',
+        body: 'Set labels, defaults, and properties for your dashboard context.',
+      },
+      {
+        order: 3,
+        title: 'Add what it goes with',
+        body: guide.placementMessage,
+        highlight: 'target',
+      },
+      {
+        order: 4,
+        title: 'Wire bindings',
+        body: 'Connect output ports to companion input ports on the canvas.',
+        highlight: 'bind',
+      },
+      {
+        order: 5,
+        title: 'Preview or export',
+        body: 'Switch to Preview mode to validate behavior, then export when ready.',
+      },
+    ],
+  };
+}
+
+export function resolveInstructionEnrichment(
+  type: string,
+  baseGuide: ComponentGroupingGuide | undefined,
+): InstructionEnrichment | undefined {
+  if (INSTRUCTION_ENRICHMENTS[type]) {
+    return INSTRUCTION_ENRICHMENTS[type];
+  }
+  if (!baseGuide) {
+    return undefined;
+  }
+  return buildInstructionFromGuide(baseGuide);
+}
 
 const INSTRUCTION_ENRICHMENTS: Record<string, InstructionEnrichment> = {
   'visual.input.date-range': {
@@ -356,25 +426,16 @@ const INSTRUCTION_ENRICHMENTS: Record<string, InstructionEnrichment> = {
   },
 };
 
-export const INSTRUCTION_GUIDE_TYPES = Object.keys(INSTRUCTION_ENRICHMENTS);
+export const HAND_AUTHORED_INSTRUCTION_TYPES = Object.keys(INSTRUCTION_ENRICHMENTS);
 
 export function getInstructionEnrichment(type: string): InstructionEnrichment | undefined {
   return INSTRUCTION_ENRICHMENTS[type];
 }
 
 export function mergeInstructionGuide(guide: ComponentGroupingGuide): ComponentGroupingGuide {
-  const enrichment = getInstructionEnrichment(guide.type);
+  const enrichment = resolveInstructionEnrichment(guide.type, guide);
   if (!enrichment) {
     return guide;
   }
   return { ...guide, ...enrichment };
-}
-
-export function getInstructionSteps(type: string): InstructionStep[] {
-  const enrichment = getInstructionEnrichment(type);
-  return enrichment?.steps ? [...enrichment.steps].sort((a, b) => a.order - b.order) : [];
-}
-
-export function hasInstructionGuide(type: string): boolean {
-  return getInstructionSteps(type).length >= 3;
 }

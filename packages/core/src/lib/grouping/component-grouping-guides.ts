@@ -3,15 +3,11 @@ import type {
   CompanionPlacement,
   ComponentGroupingGuide,
   GroupingAnimationKey,
+  InstructionStep,
   ResolvedCompanionLayout,
 } from './types';
 import type { NodeLayout } from '../model/types';
-import {
-  INSTRUCTION_GUIDE_TYPES,
-  getInstructionSteps,
-  hasInstructionGuide,
-  mergeInstructionGuide,
-} from './component-instruction-guides';
+import { mergeInstructionGuide } from './component-instruction-guides';
 
 const GROUPING_GUIDES: ComponentGroupingGuide[] = [
   {
@@ -203,6 +199,83 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     companionTypes: ['visual.input.text', 'visual.kpi'],
     placementMessage: 'Add inputs or KPI cards as flex children.',
   },
+  {
+    type: 'visual.input.text',
+    summary: 'Single-line text field for search boxes, labels, and form values.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.input.checkbox', 'visual.input.number', 'layout.flex', 'layout.modal'],
+    placementMessage: 'Group with other inputs in a flex toolbar or modal form.',
+  },
+  {
+    type: 'visual.input.select',
+    summary: 'Dropdown for choosing one option from static or data-bound lists.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.table', 'visual.input.text', 'layout.flex'],
+    placementMessage: 'Bind options from a table rowset or pair with text filters.',
+  },
+  {
+    type: 'visual.input.number',
+    summary: 'Numeric input with min, max, and step for quantities and thresholds.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.input.text', 'visual.kpi', 'layout.flex'],
+    placementMessage: 'Use beside text inputs in filter rows or KPI toolbars.',
+  },
+  {
+    type: 'visual.input.checkbox',
+    summary: 'Boolean toggle for flags, loading states, and form consent.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.skeleton', 'visual.input.text', 'layout.modal'],
+    placementMessage: 'Bind to skeleton.loading or group in modal forms.',
+  },
+  {
+    type: 'visual.input.textarea',
+    summary: 'Multi-line text for notes, descriptions, and long-form input.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.input.text', 'layout.modal', 'domain.person-invite'],
+    placementMessage: 'Place in modals or onboarding forms with related inputs.',
+  },
+  {
+    type: 'infra.env',
+    summary: 'Environment variable map — connection strings and secrets for export.',
+    animationKey: 'server-data',
+    companionTypes: ['infra.postgresql', 'infra.server.nest'],
+    placementMessage: 'Wire env outputs to database and server infra nodes.',
+  },
+  {
+    type: 'infra.server.express',
+    summary: 'Express API server — REST routes backed by your database infra.',
+    animationKey: 'server-data',
+    companionTypes: ['infra.postgresql', 'visual.table'],
+    placementMessage: 'Add PostgreSQL and a Table to complete the backend stack.',
+  },
+  {
+    type: 'infra.server.next',
+    summary: 'Next.js App Router API routes for PostgreSQL-backed dashboards.',
+    animationKey: 'server-data',
+    companionTypes: ['infra.postgresql', 'visual.table'],
+    placementMessage: 'Add PostgreSQL and a Table for API + UI export.',
+  },
+  {
+    type: 'infra.server.nuxt',
+    summary: 'Nuxt server routes for PostgreSQL-backed dashboard APIs.',
+    animationKey: 'server-data',
+    companionTypes: ['infra.postgresql', 'visual.table'],
+    placementMessage: 'Add PostgreSQL and a Table for full-stack export.',
+  },
+  {
+    type: 'visual.plugin.status-badge',
+    summary: 'Compact status pill — plugin SDK demo for custom palette items.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.table', 'visual.kpi', 'visual.plugin.metric-chip'],
+    placementMessage: 'Pair with tables or KPI rows for status context.',
+  },
+  {
+    type: 'visual.plugin.metric-chip',
+    summary: 'Inline metric chip — plugin SDK demo for compact KPI highlights.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.kpi', 'visual.table', 'layout.flex'],
+    placementMessage: 'Bind value from KPI or table aggregate in a flex row.',
+  },
 ];
 
 const guideByType = new Map(GROUPING_GUIDES.map((guide) => [guide.type, guide]));
@@ -238,6 +311,10 @@ const FORM_INPUT_TYPES = new Set([
   'visual.input.textarea',
 ]);
 
+export function getBaseGroupingGuide(type: string): ComponentGroupingGuide | undefined {
+  return guideByType.get(type);
+}
+
 export function getGroupingGuide(type: string): ComponentGroupingGuide | undefined {
   const guide = guideByType.get(type);
   if (!guide) {
@@ -247,12 +324,22 @@ export function getGroupingGuide(type: string): ComponentGroupingGuide | undefin
 }
 
 export function listInstructionGuides(): ComponentGroupingGuide[] {
-  return INSTRUCTION_GUIDE_TYPES.map((type) => getGroupingGuide(type)).filter(
+  return GROUPING_GUIDES.map((guide) => getGroupingGuide(guide.type)).filter(
     (guide): guide is ComponentGroupingGuide => guide !== undefined,
   );
 }
 
-export { getInstructionSteps, hasInstructionGuide };
+export function getInstructionSteps(type: string): InstructionStep[] {
+  const guide = getGroupingGuide(type);
+  if (!guide?.steps?.length) {
+    return [];
+  }
+  return [...guide.steps].sort((a, b) => a.order - b.order);
+}
+
+export function hasInstructionGuide(type: string): boolean {
+  return getInstructionSteps(type).length >= 3;
+}
 
 export function resolveGroupingAnimationBlocks(guide: ComponentGroupingGuide): string[] {
   if (guide.animationBlocks?.length) {

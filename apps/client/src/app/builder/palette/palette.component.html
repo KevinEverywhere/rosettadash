@@ -1,7 +1,7 @@
 <aside class="palette" data-testid="palette">
   <header class="palette__header">
     <h2>Components</h2>
-    <p>Click to inspect, + to add, i / link for grouping guides</p>
+    <p>Click to inspect, + to add, <strong>i</strong> = how it works, <strong>⛓</strong> = what it goes with</p>
   </header>
 
   @for (group of groups(); track group.id) {
@@ -85,6 +85,7 @@
                   class="palette__guide-panel"
                   [attr.data-testid]="'palette-guide-info-' + item.type"
                 >
+                  <p class="grouping-instruction__section-label">How it works</p>
                   <p class="palette__guide-summary">{{ guideSummary(item.type) }}</p>
                   @if (hasInstructionSteps(item.type)) {
                     <p class="grouping-instruction__outcome">{{ guideOutcome(item.type) }}</p>
@@ -125,7 +126,7 @@
                   class="palette__guide-panel"
                   [attr.data-testid]="'palette-guide-link-' + item.type"
                 >
-                  <p class="palette__guide-summary">Usually grouped with:</p>
+                  <p class="palette__guide-summary">What it goes with:</p>
                   <ul class="palette__companions">
                     @for (companion of guideCompanions(item.type); track companion.type) {
                       <li>

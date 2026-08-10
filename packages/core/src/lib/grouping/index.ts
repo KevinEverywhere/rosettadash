@@ -1,10 +1,13 @@
 export * from './types';
 export {
   getInstructionEnrichment,
-  INSTRUCTION_GUIDE_TYPES,
+  HAND_AUTHORED_INSTRUCTION_TYPES,
+  buildInstructionFromGuide,
+  resolveInstructionEnrichment,
 } from './component-instruction-guides';
 export {
   computeCompanionLayout,
+  getBaseGroupingGuide,
   getGroupingGuide,
   getInstructionSteps,
   groupingAnimationLabel,
