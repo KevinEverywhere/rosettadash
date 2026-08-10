@@ -72,7 +72,7 @@ Initial palette organization for DashBuilder. Components are grouped for palette
 | Timer | `logic.timer` | Intervals, countdown |
 | Debounce | `logic.debounce` | Input throttling |
 | Animation wrapper | `interaction.animation` | Enter/exit transitions |
-| Loading skeleton | `visual.skeleton` | |
+| Loading skeleton | `visual.skeleton` | Shipped (DAS-49) |
 | Toast / notification | `visual.toast` | |
 
 ## 6. Logic & Binding
@@ -122,7 +122,7 @@ Includes: text input, select, date range, data table, detail panel, KPI card, li
 
 ### P1 — Early expansion (planned)
 
-Remaining form inputs, timer, time preset, skeleton.
+Remaining form inputs, timer. Skeleton shipped (DAS-49).
 
 ### P2 — Full catalog
 

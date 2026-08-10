@@ -9,6 +9,7 @@ const SUPPORTED_TYPES = new Set([
   'domain.time-preset',
   'visual.table',
   'visual.detail',
+  'visual.skeleton',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -33,6 +34,8 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateDataTable(className);
     case 'visual.detail':
       return generateDetailPanel(className);
+    case 'visual.skeleton':
+      return generateSkeleton(className);
     case 'visual.kpi':
       return generateKpiCard(className);
     case 'visual.chart.line':
@@ -376,6 +379,51 @@ function generateDetailPanel(className: string): string {
     `      key,`,
     `      value: String(value ?? ''),`,
     `    }));`,
+    `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateSkeleton(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, computed, input } from '@angular/core';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    @if (loading()) {`,
+    `      <div class="skeleton skeleton--{{ variant() }}" [id]="id()" aria-busy="true">`,
+    `        @if (variant() === 'chart') {`,
+    `          <div class="skeleton__chart-block"></div>`,
+    `          <div class="skeleton__legend">`,
+    `            @for (line of lineIndexes(); track line) {`,
+    `              <span class="skeleton__line skeleton__line--short"></span>`,
+    `            }`,
+    `          </div>`,
+    `        } @else if (variant() === 'kpi') {`,
+    `          <span class="skeleton__line skeleton__line--title"></span>`,
+    `          <span class="skeleton__line skeleton__line--value"></span>`,
+    `        } @else {`,
+    `          @for (line of lineIndexes(); track line) {`,
+    `            <span class="skeleton__line"></span>`,
+    `          }`,
+    `        }`,
+    `      </div>`,
+    `    }`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  loading = input(true);`,
+    `  variant = input<'table' | 'chart' | 'kpi' | 'card'>('table');`,
+    `  lines = input(4);`,
+    ``,
+    `  lineIndexes = computed(() => {`,
+    `    const count = Math.max(1, Math.min(this.lines(), 8));`,
+    `    return Array.from({ length: count }, (_, index) => index);`,
     `  });`,
     `}`,
     ``,

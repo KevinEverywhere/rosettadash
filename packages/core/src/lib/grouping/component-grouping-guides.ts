@@ -26,7 +26,7 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     type: 'visual.table',
     summary: 'Tabular data view — usually paired with a filter and data source.',
     animationKey: 'filter-table',
-    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'infra.postgresql', 'visual.detail'],
+    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'infra.postgresql', 'visual.detail', 'visual.skeleton'],
     placementMessage: 'Add a time filter and PostgreSQL source for a complete data flow.',
   },
   {
@@ -35,6 +35,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     animationKey: 'filter-table',
     companionTypes: ['visual.table'],
     placementMessage: 'Add a Data Table and bind its selected row output to this panel.',
+  },
+  {
+    type: 'visual.skeleton',
+    summary: 'Loading placeholder — pair with tables, charts, or KPIs while data fetches.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.table', 'visual.chart.line', 'visual.kpi', 'infra.postgresql'],
+    placementMessage: 'Bind the loading input to a data hook or toggle while content loads.',
   },
   {
     type: 'visual.chart.line',

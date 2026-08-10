@@ -12,6 +12,7 @@ const SUPPORTED_TYPES = new Set([
   'domain.time-preset',
   'visual.table',
   'visual.detail',
+  'visual.skeleton',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -45,6 +46,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateDataTable(exportName);
     case 'visual.detail':
       return generateDetailPanel(exportName);
+    case 'visual.skeleton':
+      return generateSkeleton(exportName);
     case 'visual.kpi':
       return generateKpiCard(exportName);
     case 'visual.chart.line':
@@ -491,6 +494,58 @@ function generateDetailPanel(name: string): string {
     `        </dl>`,
     `      )}`,
     `    </section>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateSkeleton(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  loading?: boolean;`,
+    `  variant?: 'table' | 'chart' | 'kpi' | 'card';`,
+    `  lines?: number;`,
+    `}`,
+    ``,
+    `export function ${name}({ id, loading = true, variant = 'table', lines = 4 }: ${name}Props) {`,
+    `  if (!loading) {`,
+    `    return null;`,
+    `  }`,
+    ``,
+    `  const count = Math.max(1, Math.min(lines, 8));`,
+    ``,
+    `  if (variant === 'chart') {`,
+    `    return (`,
+    `      <div className={\`skeleton skeleton--\${variant}\`} id={id} aria-busy="true">`,
+    `        <div className="skeleton__chart-block" />`,
+    `        <div className="skeleton__legend">`,
+    `          {Array.from({ length: count }).map((_, index) => (`,
+    `            <span key={index} className="skeleton__line skeleton__line--short" />`,
+    `          ))}`,
+    `        </div>`,
+    `      </div>`,
+    `    );`,
+    `  }`,
+    ``,
+    `  if (variant === 'kpi') {`,
+    `    return (`,
+    `      <div className={\`skeleton skeleton--\${variant}\`} id={id} aria-busy="true">`,
+    `        <span className="skeleton__line skeleton__line--title" />`,
+    `        <span className="skeleton__line skeleton__line--value" />`,
+    `      </div>`,
+    `    );`,
+    `  }`,
+    ``,
+    `  return (`,
+    `    <div className={\`skeleton skeleton--\${variant}\`} id={id} aria-busy="true">`,
+    `      {Array.from({ length: count }).map((_, index) => (`,
+    `        <span key={index} className="skeleton__line" />`,
+    `      ))}`,
+    `    </div>`,
     `  );`,
     `}`,
     ``,

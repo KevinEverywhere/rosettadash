@@ -295,6 +295,46 @@ describe('generateReactUiFiles', () => {
     expect(dashboard?.content).toContain('filter={tp1_range}');
   });
 
+  it('generates React skeleton with checkbox loading wiring', () => {
+    const checkbox = registry.createNode('visual.input.checkbox', {
+      id: 'cb1',
+      properties: { defaultChecked: true },
+    });
+    const skeleton = registry.createNode('visual.skeleton', {
+      id: 'sk1',
+      properties: { variant: 'table', lines: 3 },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Loading Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [checkbox, skeleton, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'cb1',
+            sourcePortId: 'value',
+            targetNodeId: 'sk1',
+            targetPortId: 'loading',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const skeletonFile = files.find((file) => file.path.includes('LoadingSkeleton'));
+    const dashboard = files.find((file) => file.path === 'src/Dashboard.tsx');
+
+    expect(skeletonFile?.content).toContain('skeleton__line');
+    expect(dashboard?.content).toContain('cb1_value');
+    expect(dashboard?.content).toContain('loading={cb1_value}');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

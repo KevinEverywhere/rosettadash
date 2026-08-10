@@ -23,6 +23,27 @@ export class PreviewNodeComponent {
 
   protected readonly linkedToTable = computed(() => this.slice()?.linkedToTable ?? false);
 
+  protected readonly skeletonVisible = computed(() => {
+    const slice = this.slice();
+    if (slice?.skeletonLoading !== undefined) {
+      return slice.skeletonLoading;
+    }
+    if (slice?.linkedToData) {
+      return this.previewData.loading();
+    }
+    return this.readBoolean('defaultLoading', true);
+  });
+
+  protected readonly skeletonVariant = computed(
+    () => this.slice()?.skeletonVariant ?? this.readString('variant', 'table'),
+  );
+
+  protected readonly skeletonLines = computed(() => {
+    const lines = this.slice()?.skeletonLines ?? this.readNumber('lines', 4);
+    const count = Math.max(1, Math.min(lines, 8));
+    return Array.from({ length: count }, (_, index) => index);
+  });
+
   protected readonly timePresetOptions = [
     { id: 'last-7-days', label: PRESET_LABELS['last-7-days'] },
     { id: 'last-30-days', label: PRESET_LABELS['last-30-days'] },

@@ -107,8 +107,8 @@ These types are registered, previewable, and covered by exporters (visual → UI
 2. ~~`visual.chart.pie`~~ — shipped (DAS-46)
 3. ~~`layout.flex`~~ — shipped (DAS-46)
 4. ~~`visual.detail`~~ — shipped (DAS-47)
-5. `domain.time-preset` — DAS-48 (in progress)
-6. `visual.skeleton` — loading state wrapper
+5. ~~`domain.time-preset`~~ — shipped (DAS-48)
+6. `visual.skeleton` — DAS-49 (in progress)
 
 Each should be **one Jira ticket** with registry + preview + at least React exporter + e2e hook.
 
@@ -273,6 +273,14 @@ Registry properties for pie: `title`, `labelField`, `valueField`, `donut`. Flex:
 | `visual.detail` | Key-value fields for selected table row | React, Angular, Vue, Svelte UI exporters |
 
 Bind `[table].selected-row → [detail].row`. Preview supports clickable table rows with shared selection state.
+
+### Loading skeleton (DAS-49)
+
+| Type | Preview | Export |
+|------|---------|--------|
+| `visual.skeleton` | Shimmer placeholder (table/chart/kpi/card variants) | React, Angular, Vue, Svelte UI exporters |
+
+Bind `[checkbox].value → [skeleton].loading` or pair with data visuals — preview hides the skeleton once mock data finishes loading.
 
 ---
 

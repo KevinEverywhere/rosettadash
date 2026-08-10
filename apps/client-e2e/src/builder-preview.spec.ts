@@ -83,4 +83,25 @@ test.describe('Builder preview', () => {
     await firstRow.click();
     await expect(page.getByTestId('preview-detail')).toContainText('name');
   });
+
+  test('shows loading skeleton preview', async ({ page }) => {
+    await addFromPalette(page, 'visual.skeleton');
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+
+    await expect(page.getByTestId('preview-skeleton')).toBeVisible();
+    await expect(page.locator('.preview-skeleton__line').first()).toBeVisible();
+  });
+
+  test('hides skeleton after table data loads in preview', async ({ page }) => {
+    await addFromPalette(page, 'visual.skeleton');
+    await addFromPalette(page, 'visual.table');
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+
+    await expect(page.getByTestId('preview-table')).toBeVisible();
+    await expect(page.getByTestId('preview-skeleton-loaded')).toBeVisible();
+  });
 });

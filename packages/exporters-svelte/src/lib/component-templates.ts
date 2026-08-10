@@ -9,6 +9,7 @@ const SUPPORTED_TYPES = new Set([
   'domain.time-preset',
   'visual.table',
   'visual.detail',
+  'visual.skeleton',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -33,6 +34,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateDataTable();
     case 'visual.detail':
       return generateDetailPanel();
+    case 'visual.skeleton':
+      return generateSkeleton();
     case 'visual.kpi':
       return generateKpiCard();
     case 'visual.chart.line':
@@ -335,6 +338,50 @@ function generateDetailPanel(): string {
     `    </dl>`,
     `  {/if}`,
     `</section>`,
+    ``,
+  ]);
+}
+
+function generateSkeleton(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  let {`,
+    `    id,`,
+    `    loading = true,`,
+    `    variant = 'table' as 'table' | 'chart' | 'kpi' | 'card',`,
+    `    lines = 4,`,
+    `  }: {`,
+    `    id?: string;`,
+    `    loading?: boolean;`,
+    `    variant?: 'table' | 'chart' | 'kpi' | 'card';`,
+    `    lines?: number;`,
+    `  } = $props();`,
+    ``,
+    `  const lineIndexes = $derived.by(() => {`,
+    `    const count = Math.max(1, Math.min(lines, 8));`,
+    `    return Array.from({ length: count }, (_, index) => index);`,
+    `  });`,
+    `</script>`,
+    ``,
+    `{#if loading}`,
+    `  <div class="skeleton skeleton--{variant}" {id} aria-busy="true">`,
+    `    {#if variant === 'chart'}`,
+    `      <div class="skeleton__chart-block"></div>`,
+    `      <div class="skeleton__legend">`,
+    `        {#each lineIndexes as line (line)}`,
+    `          <span class="skeleton__line skeleton__line--short"></span>`,
+    `        {/each}`,
+    `      </div>`,
+    `    {:else if variant === 'kpi'}`,
+    `      <span class="skeleton__line skeleton__line--title"></span>`,
+    `      <span class="skeleton__line skeleton__line--value"></span>`,
+    `    {:else}`,
+    `      {#each lineIndexes as line (line)}`,
+    `        <span class="skeleton__line"></span>`,
+    `      {/each}`,
+    `    {/if}`,
+    `  </div>`,
+    `{/if}`,
     ``,
   ]);
 }

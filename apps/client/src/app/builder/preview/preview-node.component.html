@@ -152,6 +152,36 @@
       }
     </div>
   }
+  @case ('visual.skeleton') {
+    @if (skeletonVisible()) {
+      <div
+        class="preview-skeleton"
+        [class.preview-skeleton--chart]="skeletonVariant() === 'chart'"
+        [class.preview-skeleton--kpi]="skeletonVariant() === 'kpi'"
+        [class.preview-skeleton--card]="skeletonVariant() === 'card'"
+        data-testid="preview-skeleton"
+        aria-busy="true"
+      >
+        @if (skeletonVariant() === 'chart') {
+          <div class="preview-skeleton__chart-block"></div>
+          <div class="preview-skeleton__legend">
+            @for (line of skeletonLines(); track line) {
+              <span class="preview-skeleton__line preview-skeleton__line--short"></span>
+            }
+          </div>
+        } @else if (skeletonVariant() === 'kpi') {
+          <span class="preview-skeleton__line preview-skeleton__line--title"></span>
+          <span class="preview-skeleton__line preview-skeleton__line--value"></span>
+        } @else {
+          @for (line of skeletonLines(); track line) {
+            <span class="preview-skeleton__line"></span>
+          }
+        }
+      </div>
+    } @else {
+      <div class="preview-skeleton__loaded" data-testid="preview-skeleton-loaded">Content loaded</div>
+    }
+  }
   @case ('visual.kpi') {
     <div class="preview-kpi" data-testid="preview-kpi">
       <span class="preview-kpi__title">{{ readString('title', 'Metric') }}</span>

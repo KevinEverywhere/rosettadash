@@ -41,6 +41,11 @@ describe('component-grouping-guides', () => {
     expect(resolveCompanionPlacement('visual.table', 'domain.time-preset')).toBe('above');
   });
 
+  it('returns a guide for skeleton with table companion', () => {
+    expect(getGroupingGuide('visual.skeleton')?.companionTypes).toContain('visual.table');
+    expect(getGroupingGuide('visual.table')?.companionTypes).toContain('visual.skeleton');
+  });
+
   it('computes snapped companion layout above the source node', () => {
     const layout = computeCompanionLayout(
       { x: 48, y: 96, width: 220, height: 72 },

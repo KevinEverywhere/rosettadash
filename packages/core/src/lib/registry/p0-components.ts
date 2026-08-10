@@ -130,6 +130,31 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'visual.skeleton',
+    category: 'visual',
+    label: 'Loading Skeleton',
+    description: 'Placeholder shimmer while bound content loads',
+    isVisual: true,
+    inputs: [{ id: 'loading', name: 'loading', dataType: 'boolean' }],
+    outputs: [],
+    properties: [
+      {
+        key: 'variant',
+        label: 'Variant',
+        type: 'select',
+        default: 'table',
+        options: [
+          { label: 'Table', value: 'table' },
+          { label: 'Chart', value: 'chart' },
+          { label: 'KPI', value: 'kpi' },
+          { label: 'Card', value: 'card' },
+        ],
+      },
+      { key: 'lines', label: 'Lines', type: 'number', default: 4 },
+      { key: 'defaultLoading', label: 'Show by default', type: 'boolean', default: true },
+    ],
+  },
+  {
     type: 'visual.kpi',
     category: 'visual',
     label: 'KPI Card',

@@ -34,6 +34,7 @@ describe('palette-groups', () => {
       'visual.table',
       'visual.detail',
       'visual.kpi',
+      'visual.skeleton',
     ]);
   });
 

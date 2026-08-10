@@ -10,6 +10,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'domain.time-preset': 'TimePreset',
   'visual.table': 'DataTable',
   'visual.detail': 'DetailPanel',
+  'visual.skeleton': 'LoadingSkeleton',
   'visual.kpi': 'KpiCard',
   'visual.chart.line': 'LineChart',
   'visual.chart.bar': 'BarChart',

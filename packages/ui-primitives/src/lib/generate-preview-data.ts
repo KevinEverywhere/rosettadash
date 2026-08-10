@@ -43,6 +43,10 @@ export interface NodePreviewSlice {
   selectedRow?: PreviewRow | null;
   linkedToTable?: boolean;
   activeTimePreset?: string;
+  skeletonLoading?: boolean;
+  skeletonVariant?: string;
+  skeletonLines?: number;
+  linkedToData?: boolean;
 }
 
 export interface PreviewDataBundle {
@@ -175,6 +179,39 @@ function generateBaseRows(request: PreviewDataRequest, random: () => number): Pr
   });
 }
 
+function readNodeBoolean(node: PreviewNodeInput | undefined, key: string, fallback: boolean): boolean {
+  const value = node?.properties?.[key];
+  return typeof value === 'boolean' ? value : fallback;
+}
+
+function readNodeNumber(node: PreviewNodeInput | undefined, key: string, fallback: number): number {
+  const value = node?.properties?.[key];
+  return typeof value === 'number' ? value : fallback;
+}
+
+function readNodeString(node: PreviewNodeInput | undefined, key: string, fallback: string): string {
+  const value = node?.properties?.[key];
+  return typeof value === 'string' ? value : fallback;
+}
+
+function resolveSkeletonLoading(
+  skeletonNode: PreviewNodeInput,
+  nodes: PreviewNodeInput[],
+  bindings: PreviewBindingInput[],
+): boolean | undefined {
+  const loadingBinding = findBindingSource(bindings, skeletonNode.id, 'loading');
+  if (!loadingBinding) {
+    return undefined;
+  }
+
+  const source = nodes.find((node) => node.id === loadingBinding.sourceNodeId);
+  if (source?.type === 'visual.input.checkbox') {
+    return readNodeBoolean(source, 'defaultChecked', false);
+  }
+
+  return undefined;
+}
+
 function findBindingSource(
   bindings: PreviewBindingInput[],
   targetNodeId: string,
@@ -292,6 +329,20 @@ export function resolvePreviewGraph(
     nodeSlices[detailNode.id] = {
       selectedRow: rows?.[0] ?? null,
       linkedToTable: !!sourceTable,
+    };
+  }
+
+  const hasDataVisuals =
+    tableNodes.length > 0 ||
+    chartNodes.length > 0 ||
+    nodes.some((node) => node.type === 'visual.kpi');
+
+  for (const skeletonNode of nodes.filter((node) => node.type === 'visual.skeleton')) {
+    nodeSlices[skeletonNode.id] = {
+      skeletonLoading: resolveSkeletonLoading(skeletonNode, nodes, bindings),
+      skeletonVariant: readNodeString(skeletonNode, 'variant', 'table'),
+      skeletonLines: readNodeNumber(skeletonNode, 'lines', 4),
+      linkedToData: hasDataVisuals,
     };
   }
 

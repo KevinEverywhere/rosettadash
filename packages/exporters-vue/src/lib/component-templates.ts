@@ -9,6 +9,7 @@ const SUPPORTED_TYPES = new Set([
   'domain.time-preset',
   'visual.table',
   'visual.detail',
+  'visual.skeleton',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -33,6 +34,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateDataTable(exportName);
     case 'visual.detail':
       return generateDetailPanel(exportName);
+    case 'visual.skeleton':
+      return generateSkeleton(exportName);
     case 'visual.kpi':
       return generateKpiCard(exportName);
     case 'visual.chart.line':
@@ -292,6 +295,46 @@ function generateDetailPanel(name: string): string {
     `      </div>`,
     `    </dl>`,
     `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateSkeleton(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    loading?: boolean;`,
+    `    variant?: 'table' | 'chart' | 'kpi' | 'card';`,
+    `    lines?: number;`,
+    `  }>(),`,
+    `  { loading: true, variant: 'table', lines: 4 },`,
+    `);`,
+    `const lineIndexes = computed(() => {`,
+    `  const count = Math.max(1, Math.min(props.lines ?? 4, 8));`,
+    `  return Array.from({ length: count }, (_, index) => index);`,
+    `});`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <div v-if="loading" class="skeleton" :class="\`skeleton--\${variant}\`" :id="id" aria-busy="true">`,
+    `    <template v-if="variant === 'chart'">`,
+    `      <div class="skeleton__chart-block" />`,
+    `      <div class="skeleton__legend">`,
+    `        <span v-for="line in lineIndexes" :key="line" class="skeleton__line skeleton__line--short" />`,
+    `      </div>`,
+    `    </template>`,
+    `    <template v-else-if="variant === 'kpi'">`,
+    `      <span class="skeleton__line skeleton__line--title" />`,
+    `      <span class="skeleton__line skeleton__line--value" />`,
+    `    </template>`,
+    `    <template v-else>`,
+    `      <span v-for="line in lineIndexes" :key="line" class="skeleton__line" />`,
+    `    </template>`,
+    `  </div>`,
     `</template>`,
     ``,
   ]);
