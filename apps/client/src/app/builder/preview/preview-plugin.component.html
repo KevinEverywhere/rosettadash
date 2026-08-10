@@ -1,0 +1,20 @@
+@switch (templateId()) {
+  @case ('status-badge') {
+    <div
+      class="preview-plugin preview-plugin--badge"
+      [class.preview-plugin--success]="readString('tone', 'info') === 'success'"
+      [class.preview-plugin--warning]="readString('tone', 'info') === 'warning'"
+      data-testid="preview-plugin-status-badge"
+    >
+      {{ readString('label', 'Active') }}
+    </div>
+  }
+  @case ('metric-chip') {
+    <div class="preview-plugin preview-plugin--chip" data-testid="preview-plugin-metric-chip">
+      <span class="preview-plugin__chip-label">{{ readString('label', 'Metric') }}</span>
+      <span class="preview-plugin__chip-value">
+        {{ readNumber('value', 0) }}{{ readString('suffix') }}
+      </span>
+    </div>
+  }
+}

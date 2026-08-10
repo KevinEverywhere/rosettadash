@@ -359,9 +359,13 @@
     </div>
   }
   @default {
+    @if (pluginTemplateId(); as templateId) {
+      <app-preview-plugin [node]="node()" [templateId]="templateId" />
+    } @else {
     <div class="preview-fallback" data-testid="preview-fallback">
       <span>{{ node().label }}</span>
       <code>{{ node().type }}</code>
     </div>
+    }
   }
 }

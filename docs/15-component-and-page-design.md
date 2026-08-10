@@ -239,7 +239,7 @@ Functional accordion groups replace flat registry categories in the builder pale
 
 | Behavior | Detail |
 |----------|--------|
-| **Taxonomy** | `PALETTE_GROUP_DEFINITIONS` in `packages/core/src/lib/palette/` — 7 groups, 2–7 items each |
+| **Taxonomy** | `PALETTE_GROUP_DEFINITIONS` in `packages/core/src/lib/palette/` — 9 groups (including `plugin-extensions` for SDK demo components), 2–7 items each |
 | **Default state** | All groups collapsed on load |
 | **Multi-open** | Expanding one group does not collapse others |
 | **Accessibility** | Group headers are buttons with `aria-expanded` and Enter/Space support |

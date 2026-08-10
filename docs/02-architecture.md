@@ -165,6 +165,14 @@ See [04-export-pipeline.md](./04-export-pipeline.md) for detail.
 
 See **[Exporter Plugin SDK](./16-exporter-plugin-sdk.md)** for the full checklist.
 
+### Adding a custom component (plugin)
+
+1. Define a `ComponentPlugin` and call `registry.registerPlugin()`
+2. Assign a palette group (2–7 items per group)
+3. Register a client preview adapter
+
+See **[Component Plugin SDK](./17-component-plugin-sdk.md)** — foundation for three.js and third-party palette plugins.
+
 ### Adding a server partner
 
 1. Implement server stub generator (routes, modules, middleware)

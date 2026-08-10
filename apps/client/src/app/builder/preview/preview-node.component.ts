@@ -3,11 +3,13 @@ import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
 import { PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
 import { BuilderStateService } from '../builder-state.service';
+import { ComponentPreviewAdapterRegistry } from './component-preview-adapter.registry';
 import { PreviewDataService } from './preview-data.service';
+import { PreviewPluginComponent } from './preview-plugin.component';
 
 @Component({
   selector: 'app-preview-node',
-  imports: [CurrencyPipe, JsonPipe],
+  imports: [CurrencyPipe, JsonPipe, PreviewPluginComponent],
   templateUrl: './preview-node.component.html',
   styleUrl: './preview-node.component.scss',
 })
@@ -16,6 +18,11 @@ export class PreviewNodeComponent {
 
   private readonly previewData = inject(PreviewDataService);
   private readonly state = inject(BuilderStateService);
+  private readonly previewAdapters = inject(ComponentPreviewAdapterRegistry);
+
+  protected readonly pluginTemplateId = computed(() =>
+    this.previewAdapters.getTemplateId(this.node().type),
+  );
 
   constructor() {
     effect((onCleanup) => {

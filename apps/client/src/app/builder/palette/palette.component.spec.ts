@@ -12,9 +12,10 @@ describe('PaletteComponent', () => {
     const fixture = TestBed.createComponent(PaletteComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.palette__group').length).toBe(8);
+    expect(element.querySelectorAll('.palette__group').length).toBe(9);
     expect(element.querySelector('[data-testid="palette-group-data-display"]')).toBeTruthy();
     expect(element.querySelector('[data-testid="palette-group-logic-motion"]')).toBeTruthy();
+    expect(element.querySelector('[data-testid="palette-group-plugin-extensions"]')).toBeTruthy();
     expect(element.querySelector('[data-testid="palette-group-panel-data-display"]')).toBeFalsy();
   });
 

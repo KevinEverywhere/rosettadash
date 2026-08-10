@@ -1,7 +1,6 @@
 import type { ComponentDefinition } from '../model/types';
 import type { ComponentRegistry } from '../registry/component-registry';
 import { defaultComponentRegistry } from '../registry/component-registry';
-import { P0_COMPONENT_DEFINITIONS } from '../registry/p0-components';
 import type { PaletteGroupDefinition, ResolvedPaletteGroup } from './types';
 
 /** Functional palette groups (2–7 items each), aligned with component taxonomy. */
@@ -65,6 +64,11 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
       'infra.server.nuxt',
     ],
   },
+  {
+    id: 'plugin-extensions',
+    label: 'Plugin Extensions',
+    types: ['visual.plugin.status-badge', 'visual.plugin.metric-chip'],
+  },
 ];
 
 const MIN_ITEMS_PER_GROUP = 2;
@@ -89,7 +93,7 @@ export function resolvePaletteGroups(
 /** Validates taxonomy invariants against the P0 catalog. */
 export function validatePaletteGroupDefinitions(
   definitions: PaletteGroupDefinition[] = PALETTE_GROUP_DEFINITIONS,
-  catalogTypes: string[] = P0_COMPONENT_DEFINITIONS.map((def) => def.type),
+  catalogTypes: string[] = defaultComponentRegistry.list().map((definition) => definition.type),
 ): void {
   const seen = new Set<string>();
 

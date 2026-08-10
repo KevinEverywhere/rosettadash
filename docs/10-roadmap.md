@@ -93,9 +93,16 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Large composite performance — batched layout, culling, debounced preview (DAS-53)
 - [x] Exporter plugin SDK — core manifest + documentation (DAS-54)
 
-## Future — 3D visualization (planning)
+## Phase 8 — Component plugins & 3D (in progress)
 
-- **three.js**-based 3D dashboard display components — integration approach TBD
+**Ticket:** DAS-55 (component plugin SDK — foundation for three.js)
+
+- [x] Custom component SDK — registry, preview adapters, extension demos (DAS-55)
+- [ ] First three.js visual — DAS-56 (planned)
+
+## Future — 3D visualization
+
+- **three.js**-based 3D dashboard display components — DAS-56 on component SDK
 
 ## Backlog ideas (unscheduled)
 

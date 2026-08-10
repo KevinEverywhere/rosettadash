@@ -29,6 +29,7 @@ describe('palette-groups', () => {
       'access-onboarding',
       'data-sources',
       'api-servers',
+      'plugin-extensions',
     ]);
     expect(groups[0]?.items[0]?.type).toBe('visual.input.text');
     expect(groups[1]?.items.map((item) => item.type)).toEqual([

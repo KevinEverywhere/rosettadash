@@ -62,10 +62,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-52](https://planetkevin.atlassian.net/browse/DAS-52) | `feature/DAS-52-composite-version-diff` | Composite version history and diff |
 | [DAS-53](https://planetkevin.atlassian.net/browse/DAS-53) | `feature/DAS-53-large-composite-performance` | Large composite performance optimizations |
 | [DAS-54](https://planetkevin.atlassian.net/browse/DAS-54) | `feature/DAS-54-exporter-plugin-sdk-docs` | Exporter plugin SDK documentation |
+| [DAS-55](https://planetkevin.atlassian.net/browse/DAS-55) | `feature/DAS-55-custom-component-sdk` | Custom component SDK for palette and preview plugins |
 
 ## Active work
 
-_None — Phase 7 complete; see backlog below._
+| Ticket | Branch | Status |
+|--------|--------|--------|
+| [DAS-56](https://planetkevin.atlassian.net/browse/DAS-56) | `feature/DAS-56-threejs-visual` | Planned — first three.js visual on component SDK |
 
 ## Delivery status
 
@@ -102,9 +105,14 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns. A
 
 See [Exporter Plugin SDK](./16-exporter-plugin-sdk.md) for extending code generators.
 
-## Future — 3D dashboards (not yet ticketed)
+## Phase 8 — component plugins & 3D (started)
 
-- **three.js** integration — scope TBD
+1. ~~Custom component SDK~~ — DAS-55
+2. First three.js visual — DAS-56 (planned)
+
+## Future — 3D dashboards
+
+- **three.js** integration — DAS-56 (builds on component plugin SDK)
 
 ## Related documents
 

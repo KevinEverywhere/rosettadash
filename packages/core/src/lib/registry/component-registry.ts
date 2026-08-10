@@ -1,8 +1,11 @@
 import type { ComponentDefinition, ComponentNode, Port } from '../model/types';
+import type { ComponentPlugin } from './component-plugin';
+import { EXTENSION_COMPONENT_PLUGINS } from './extension-component-plugins';
 import { P0_COMPONENT_DEFINITIONS } from './p0-components';
 
 export class ComponentRegistry {
   private readonly definitions = new Map<string, ComponentDefinition>();
+  private readonly plugins = new Map<string, ComponentPlugin>();
 
   constructor(definitions: ComponentDefinition[] = P0_COMPONENT_DEFINITIONS) {
     for (const definition of definitions) {
@@ -15,6 +18,28 @@ export class ComponentRegistry {
       throw new Error(`Component type already registered: ${definition.type}`);
     }
     this.definitions.set(definition.type, definition);
+  }
+
+  registerPlugin(plugin: ComponentPlugin): void {
+    if (this.plugins.has(plugin.definition.type)) {
+      throw new Error(`Component plugin already registered: ${plugin.definition.type}`);
+    }
+    this.register(plugin.definition);
+    this.plugins.set(plugin.definition.type, plugin);
+  }
+
+  getPlugin(type: string): ComponentPlugin | undefined {
+    return this.plugins.get(type);
+  }
+
+  listPlugins(): ComponentPlugin[] {
+    return [...this.plugins.values()].sort((left, right) =>
+      left.definition.label.localeCompare(right.definition.label),
+    );
+  }
+
+  isPluginType(type: string): boolean {
+    return this.plugins.has(type);
   }
 
   get(type: string): ComponentDefinition | undefined {
@@ -72,3 +97,7 @@ export class ComponentRegistry {
 }
 
 export const defaultComponentRegistry = new ComponentRegistry();
+
+for (const plugin of EXTENSION_COMPONENT_PLUGINS) {
+  defaultComponentRegistry.registerPlugin(plugin);
+}
