@@ -53,7 +53,9 @@ describe('WelcomePageComponent', () => {
     );
     expect(fixture.nativeElement.querySelector('[data-testid="welcome-framework-prompt"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-panel-ui"]')).toBeFalsy();
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-styling"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.welcome__accordion-summary')).toBeFalsy();
     expect((fixture.nativeElement.querySelector('[data-testid="welcome-continue"]') as HTMLButtonElement).disabled).toBe(true);
   });
 

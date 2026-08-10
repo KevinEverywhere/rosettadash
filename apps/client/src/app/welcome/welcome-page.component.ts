@@ -110,6 +110,11 @@ export class WelcomePageComponent implements OnInit {
 
   protected readonly showFrameworkPrompt = computed(() => this.uiChoice() === null);
 
+  protected stylingSectionTitle(): string {
+    const ui = this.uiChoice();
+    return ui ? `Styling for ${this.selectedUiLabel()}` : 'Styling';
+  }
+
   ngOnInit(): void {
     const pending = readPendingStackProfile();
     if (pending) {

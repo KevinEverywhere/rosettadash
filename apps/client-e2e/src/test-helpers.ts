@@ -137,11 +137,14 @@ async function dismissCompactPanelsIfOpen(page: Page): Promise<void> {
   }
 }
 
-export async function openBuilderViaWelcome(page: Page): Promise<void> {
+export async function openBuilderViaWelcome(page: Page, ui = 'react'): Promise<void> {
   await page.goto('/');
   await page.evaluate(() => sessionStorage.clear());
   await page.reload();
   await expect(page.getByTestId('welcome-page')).toBeVisible();
+  await page.getByTestId('stack-section-toggle-ui').click();
+  await page.getByTestId(`stack-ui-${ui}`).click();
+  await expect(page.getByTestId('welcome-continue')).toBeEnabled();
   await page.getByTestId('welcome-continue').click();
   await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
   await expect(page.getByTestId('builder-shell')).toBeVisible();

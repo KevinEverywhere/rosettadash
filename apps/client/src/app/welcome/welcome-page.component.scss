@@ -130,9 +130,10 @@
 }
 
 .welcome__framework-prompt {
-  margin: 0 0 1rem;
-  font-size: 1.125rem;
-  font-weight: 600;
+  margin: 3rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
   color: var(--db-accent, #2563eb);
 }
 
@@ -256,6 +257,11 @@
   font: inherit;
   font-size: 0.8125rem;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
 
   &--selected {
     border-color: var(--db-accent, #2563eb);

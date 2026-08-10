@@ -10,7 +10,8 @@ test.describe('Welcome page entry', () => {
     await expect(page.getByTestId('welcome-heading')).toBeVisible();
     await expect(page.getByTestId('welcome-framework-prompt')).toBeVisible();
     await expect(page.getByTestId('stack-section-panel-ui')).toHaveCount(0);
-    await expect(page.getByTestId('stack-section-toggle-server')).toHaveCount(0);
+    await expect(page.getByTestId('stack-section-toggle-server')).toBeVisible();
+    await expect(page.getByTestId('stack-section-toggle-styling')).toBeVisible();
     await expect(page.getByTestId('welcome-continue')).toBeDisabled();
 
     await page.getByTestId('stack-section-toggle-ui').click();
