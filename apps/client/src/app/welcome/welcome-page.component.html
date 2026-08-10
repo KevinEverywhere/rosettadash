@@ -8,6 +8,11 @@
 
   <div class="welcome__layout">
     <section class="welcome__hero" aria-labelledby="welcome-heading">
+      @if (showFrameworkPrompt()) {
+        <p class="welcome__framework-prompt" data-testid="welcome-framework-prompt">
+          Choose a framework to begin →
+        </p>
+      }
       <p class="welcome__lead">
         Design composite dashboards visually, preview with mock data, and export production-ready
         code for your UI framework, server, and database.
@@ -38,7 +43,9 @@
           (click)="toggleSection('ui')"
         >
           <span class="welcome__accordion-title">UI framework</span>
-          <span class="welcome__accordion-summary">{{ selectedUiLabel() }}</span>
+          @if (hasUiChoice()) {
+            <span class="welcome__accordion-summary">{{ selectedUiLabel() }}</span>
+          }
         </button>
         @if (isSectionOpen('ui')) {
           <div class="welcome__accordion-panel" data-testid="stack-section-panel-ui">
@@ -62,134 +69,120 @@
         }
       </div>
 
-      @if (!isScratchPad()) {
-        <div class="welcome__accordion">
-          <button
-            type="button"
-            class="welcome__accordion-toggle"
-            [class.welcome__accordion-toggle--open]="isSectionOpen('server')"
-            [attr.aria-expanded]="isSectionOpen('server')"
-            data-testid="stack-section-toggle-server"
-            (click)="toggleSection('server')"
-          >
-            <span class="welcome__accordion-title">Server (Node.js)</span>
-            <span class="welcome__accordion-summary">{{ serverSummary() }}</span>
-          </button>
-          @if (isSectionOpen('server')) {
-            <div class="welcome__accordion-panel" data-testid="stack-section-panel-server">
-              <p class="welcome__section-lead">{{ serverEcosystemNote }}</p>
-              <ul class="welcome__chip-row">
-                @for (option of serverOptions; track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip"
-                      [class.welcome__chip--selected]="serverChoice() === option.id"
-                      [attr.data-testid]="'stack-server-' + option.id"
-                      (click)="selectServer(option.id)"
-                    >
-                      {{ option.label }}
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
-        </div>
-
-        <div class="welcome__accordion">
-          <button
-            type="button"
-            class="welcome__accordion-toggle"
-            [class.welcome__accordion-toggle--open]="isSectionOpen('database')"
-            [attr.aria-expanded]="isSectionOpen('database')"
-            data-testid="stack-section-toggle-database"
-            (click)="toggleSection('database')"
-          >
-            <span class="welcome__accordion-title">Database</span>
-            <span class="welcome__accordion-summary">{{ databaseSummary() }}</span>
-          </button>
-          @if (isSectionOpen('database')) {
-            <div class="welcome__accordion-panel" data-testid="stack-section-panel-database">
-              <p class="welcome__section-lead">
-                Optional — choose <strong>None</strong> if you are exporting UI components only.
-              </p>
-              <ul class="welcome__chip-row">
-                @for (option of databaseOptions; track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip"
-                      [class.welcome__chip--selected]="databaseChoice() === option.id"
-                      [attr.data-testid]="'stack-database-' + option.id"
-                      (click)="selectDatabase(option.id)"
-                    >
-                      {{ option.label }}
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
-        </div>
-      } @else {
-        <p class="welcome__scratch-note" data-testid="stack-scratch-note">
-          Scratch-pad mode keeps all export targets available in the builder. You can export to any
-          supported combination later.
-        </p>
-      }
-
-      <div class="welcome__accordion">
-        <button
-          type="button"
-          class="welcome__accordion-toggle"
-          [class.welcome__accordion-toggle--open]="isSectionOpen('styling')"
-          [attr.aria-expanded]="isSectionOpen('styling')"
-          data-testid="stack-section-toggle-styling"
-          (click)="toggleSection('styling')"
-        >
-          <span class="welcome__accordion-title">Styling for {{ selectedUiLabel() }}</span>
-          <span class="welcome__accordion-summary">{{ stylingSummary() }}</span>
-        </button>
-        @if (isSectionOpen('styling')) {
-          <div class="welcome__accordion-panel" data-testid="stack-section-panel-styling">
-            <p class="welcome__section-lead">
-              Combine foundation layers, an optional component library, and authoring approaches.
-              Options match your UI framework.
-            </p>
-
-            <div class="welcome__styling-group">
-              <h4 class="welcome__styling-group-title">Foundation</h4>
-              <ul class="welcome__chip-row">
-                @for (option of foundationOptions(); track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip welcome__chip--stacked"
-                      [class.welcome__chip--selected]="isFoundationSelected(option.id)"
-                      [attr.data-testid]="'stack-styling-foundation-' + option.id"
-                      (click)="toggleFoundation(option.id)"
-                    >
-                      <span class="welcome__chip-label">{{ option.label }}</span>
-                      <span class="welcome__chip-desc">{{ option.description }}</span>
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-
-            @if (componentLibraryOptions().length > 0) {
-              <div class="welcome__styling-group">
-                <h4 class="welcome__styling-group-title">Component library</h4>
+      @if (hasUiChoice()) {
+        @if (!isScratchPad()) {
+          <div class="welcome__accordion">
+            <button
+              type="button"
+              class="welcome__accordion-toggle"
+              [class.welcome__accordion-toggle--open]="isSectionOpen('server')"
+              [attr.aria-expanded]="isSectionOpen('server')"
+              data-testid="stack-section-toggle-server"
+              (click)="toggleSection('server')"
+            >
+              <span class="welcome__accordion-title">Server (Node.js)</span>
+              @if (serverSummary()) {
+                <span class="welcome__accordion-summary">{{ serverSummary() }}</span>
+              }
+            </button>
+            @if (isSectionOpen('server')) {
+              <div class="welcome__accordion-panel" data-testid="stack-section-panel-server">
+                <p class="welcome__section-lead">{{ serverEcosystemNote }}</p>
                 <ul class="welcome__chip-row">
-                  @for (option of componentLibraryOptions(); track option.id) {
+                  @for (option of serverOptions; track option.id) {
+                    <li>
+                      <button
+                        type="button"
+                        class="welcome__chip"
+                        [class.welcome__chip--selected]="serverChoice() === option.id"
+                        [attr.data-testid]="'stack-server-' + option.id"
+                        (click)="selectServer(option.id)"
+                      >
+                        {{ option.label }}
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+
+          <div class="welcome__accordion">
+            <button
+              type="button"
+              class="welcome__accordion-toggle"
+              [class.welcome__accordion-toggle--open]="isSectionOpen('database')"
+              [attr.aria-expanded]="isSectionOpen('database')"
+              data-testid="stack-section-toggle-database"
+              (click)="toggleSection('database')"
+            >
+              <span class="welcome__accordion-title">Database</span>
+              @if (databaseSummary()) {
+                <span class="welcome__accordion-summary">{{ databaseSummary() }}</span>
+              }
+            </button>
+            @if (isSectionOpen('database')) {
+              <div class="welcome__accordion-panel" data-testid="stack-section-panel-database">
+                <p class="welcome__section-lead">
+                  Optional — choose <strong>None</strong> if you are exporting UI components only.
+                </p>
+                <ul class="welcome__chip-row">
+                  @for (option of databaseOptions; track option.id) {
+                    <li>
+                      <button
+                        type="button"
+                        class="welcome__chip"
+                        [class.welcome__chip--selected]="databaseChoice() === option.id"
+                        [attr.data-testid]="'stack-database-' + option.id"
+                        (click)="selectDatabase(option.id)"
+                      >
+                        {{ option.label }}
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="welcome__scratch-note" data-testid="stack-scratch-note">
+            Scratch-pad mode keeps all export targets available in the builder. You can export to any
+            supported combination later.
+          </p>
+        }
+
+        <div class="welcome__accordion">
+          <button
+            type="button"
+            class="welcome__accordion-toggle"
+            [class.welcome__accordion-toggle--open]="isSectionOpen('styling')"
+            [attr.aria-expanded]="isSectionOpen('styling')"
+            data-testid="stack-section-toggle-styling"
+            (click)="toggleSection('styling')"
+          >
+            <span class="welcome__accordion-title">Styling for {{ selectedUiLabel() }}</span>
+            @if (stylingSummary()) {
+              <span class="welcome__accordion-summary">{{ stylingSummary() }}</span>
+            }
+          </button>
+          @if (isSectionOpen('styling')) {
+            <div class="welcome__accordion-panel" data-testid="stack-section-panel-styling">
+              <p class="welcome__section-lead">
+                Combine foundation layers, an optional component library, and authoring approaches.
+                Options match your UI framework.
+              </p>
+
+              <div class="welcome__styling-group">
+                <h4 class="welcome__styling-group-title">Foundation</h4>
+                <ul class="welcome__chip-row">
+                  @for (option of foundationOptions(); track option.id) {
                     <li>
                       <button
                         type="button"
                         class="welcome__chip welcome__chip--stacked"
-                        [class.welcome__chip--selected]="isComponentLibrarySelected(option.id)"
-                        [attr.data-testid]="'stack-styling-library-' + option.id"
-                        (click)="selectComponentLibrary(option.id)"
+                        [class.welcome__chip--selected]="isFoundationSelected(option.id)"
+                        [attr.data-testid]="'stack-styling-foundation-' + option.id"
+                        (click)="toggleFoundation(option.id)"
                       >
                         <span class="welcome__chip-label">{{ option.label }}</span>
                         <span class="welcome__chip-desc">{{ option.description }}</span>
@@ -198,40 +191,62 @@
                   }
                 </ul>
               </div>
-            }
 
-            <div class="welcome__styling-group">
-              <h4 class="welcome__styling-group-title">Authoring</h4>
-              <ul class="welcome__chip-row">
-                @for (option of authoringOptions(); track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip welcome__chip--stacked"
-                      [class.welcome__chip--selected]="isAuthoringSelected(option.id)"
-                      [attr.data-testid]="'stack-styling-authoring-' + option.id"
-                      (click)="toggleAuthoring(option.id)"
-                    >
-                      <span class="welcome__chip-label">{{ option.label }}</span>
-                      <span class="welcome__chip-desc">{{ option.description }}</span>
-                    </button>
-                  </li>
-                }
-              </ul>
+              @if (componentLibraryOptions().length > 0) {
+                <div class="welcome__styling-group">
+                  <h4 class="welcome__styling-group-title">Component library</h4>
+                  <ul class="welcome__chip-row">
+                    @for (option of componentLibraryOptions(); track option.id) {
+                      <li>
+                        <button
+                          type="button"
+                          class="welcome__chip welcome__chip--stacked"
+                          [class.welcome__chip--selected]="isComponentLibrarySelected(option.id)"
+                          [attr.data-testid]="'stack-styling-library-' + option.id"
+                          (click)="selectComponentLibrary(option.id)"
+                        >
+                          <span class="welcome__chip-label">{{ option.label }}</span>
+                          <span class="welcome__chip-desc">{{ option.description }}</span>
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+
+              <div class="welcome__styling-group">
+                <h4 class="welcome__styling-group-title">Authoring</h4>
+                <ul class="welcome__chip-row">
+                  @for (option of authoringOptions(); track option.id) {
+                    <li>
+                      <button
+                        type="button"
+                        class="welcome__chip welcome__chip--stacked"
+                        [class.welcome__chip--selected]="isAuthoringSelected(option.id)"
+                        [attr.data-testid]="'stack-styling-authoring-' + option.id"
+                        (click)="toggleAuthoring(option.id)"
+                      >
+                        <span class="welcome__chip-label">{{ option.label }}</span>
+                        <span class="welcome__chip-desc">{{ option.description }}</span>
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+
+              <label class="welcome__inline-toggle">
+                <input
+                  type="checkbox"
+                  data-testid="stack-styling-inline-styles"
+                  [checked]="stylingProfile()?.inlineStyles ?? false"
+                  (change)="setInlineStyles($any($event.target).checked)"
+                />
+                Allow inline styles in exported components
+              </label>
             </div>
-
-            <label class="welcome__inline-toggle">
-              <input
-                type="checkbox"
-                data-testid="stack-styling-inline-styles"
-                [checked]="stylingProfile().inlineStyles"
-                (change)="setInlineStyles($any($event.target).checked)"
-              />
-              Allow inline styles in exported components
-            </label>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
 
       <footer class="welcome__footer">
         @if (hasExistingSession()) {
@@ -244,7 +259,8 @@
               type="button"
               class="welcome__continue"
               data-testid="welcome-continue"
-              (click)="continueToBuilder()"
+              [disabled]="!canContinue()"
+              (click)="requestContinue()"
             >
               Continue to builder
             </button>
@@ -252,7 +268,8 @@
               type="button"
               class="welcome__continue welcome__continue--secondary"
               data-testid="welcome-start-fresh"
-              (click)="continueToBuilder({ fresh: true })"
+              [disabled]="!canContinue()"
+              (click)="requestStartFresh()"
             >
               Start new project
             </button>
@@ -262,12 +279,109 @@
             type="button"
             class="welcome__continue"
             data-testid="welcome-continue"
-            (click)="continueToBuilder()"
+            [disabled]="!canContinue()"
+            (click)="requestContinue()"
           >
-            Open builder
+            Continue to builder
           </button>
         }
       </footer>
     </section>
   </div>
+
+  @if (confirmDialog() === 'stack-change-target') {
+    <div
+      class="welcome__dialog-backdrop"
+      data-testid="welcome-stack-change-dialog"
+      role="button"
+      tabindex="0"
+      aria-label="Close dialog"
+      (click)="cancelConfirmDialog()"
+      (keydown.enter)="cancelConfirmDialog()"
+      (keydown.space)="cancelConfirmDialog()"
+    >
+      <div
+        class="welcome__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="welcome-stack-change-title"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+      >
+        <h3 id="welcome-stack-change-title">Apply stack change</h3>
+        <p>Should this stack change apply to your current dashboard or only a new project?</p>
+        <div class="welcome__dialog-actions">
+          <button
+            type="button"
+            class="welcome__continue"
+            data-testid="welcome-stack-change-current"
+            (click)="confirmStackChangeTarget('current')"
+          >
+            Current dashboard
+          </button>
+          <button
+            type="button"
+            class="welcome__continue welcome__continue--secondary"
+            data-testid="welcome-stack-change-new-project"
+            (click)="confirmStackChangeTarget('fresh')"
+          >
+            New project only
+          </button>
+          <button
+            type="button"
+            class="welcome__dialog-cancel"
+            data-testid="welcome-stack-change-cancel"
+            (click)="cancelConfirmDialog()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (confirmDialog() === 'start-fresh-unchanged') {
+    <div
+      class="welcome__dialog-backdrop"
+      data-testid="welcome-start-fresh-dialog"
+      role="button"
+      tabindex="0"
+      aria-label="Close dialog"
+      (click)="dismissStartFreshDialog()"
+      (keydown.enter)="dismissStartFreshDialog()"
+      (keydown.space)="dismissStartFreshDialog()"
+    >
+      <div
+        class="welcome__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="welcome-start-fresh-title"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+      >
+        <h3 id="welcome-start-fresh-title">Start a new project</h3>
+        <p>Begin with your existing tech stack, or change the stack above before continuing.</p>
+        <div class="welcome__dialog-actions">
+          <button
+            type="button"
+            class="welcome__continue"
+            data-testid="welcome-start-fresh-existing-stack"
+            (click)="startFreshWithExistingStack()"
+          >
+            Use existing stack
+          </button>
+          <button
+            type="button"
+            class="welcome__continue welcome__continue--secondary"
+            data-testid="welcome-start-fresh-change-first"
+            (click)="dismissStartFreshDialog()"
+          >
+            Change stack first
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 </main>

@@ -158,14 +158,22 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Unified fallback for phones, small tablets, portrait, and narrow windows
 - [x] Display availability documentation
 
-## Phase 16 — Compact builder layout (in progress)
+## Phase 16 — Compact builder layout (complete)
 
 **Ticket:** DAS-67
 
 - [x] Compact workspace tier (1024–1280px)
 - [x] Collapsible palette and inspector drawer panels
 - [x] Toolbar toggles and compact toolbar simplification
-- [ ] Further tablet polish (optional follow-ups)
+- [x] Custom app-select dropdowns (iOS-safe overlays)
+
+## Phase 17 — Welcome onboarding UX (in progress)
+
+**Ticket:** DAS-68
+
+- [x] Empty initial stack — all sections collapsed, no pre-selected labels
+- [x] Gated continue until UI framework chosen
+- [x] Returning-user stack hydration and change confirmations
 
 ## Future — VR / 3D expansion
 

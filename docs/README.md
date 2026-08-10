@@ -31,7 +31,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 16 (DAS-67) is in progress.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 17 (DAS-68) is in progress.
 
 ## Current capabilities (at a glance)
 
@@ -42,7 +42,8 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 16 (DA
 | Multi-target export (React/Angular/Vue/Svelte + 4 servers + 4 DBs) | Shipped |
 | Defaults engine, domain context, role visibility | Shipped |
 | Display availability gate (phone / tablet portrait) | Shipped (DAS-66) |
-| Compact builder layout (tablet / small desktop) | DAS-67 — in progress |
+| Compact builder layout (tablet / small desktop) | Shipped (DAS-67) |
+| Welcome onboarding UX (empty stack, confirmations) | DAS-68 — in progress |
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |
 | Phase 7 production hardening | Complete (DAS-50–DAS-54) |

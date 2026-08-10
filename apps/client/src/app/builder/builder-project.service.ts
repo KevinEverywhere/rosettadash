@@ -10,13 +10,11 @@ import { ProjectsApiService } from './projects-api.service';
 import {
   BUILDER_SESSION_KEY,
   clearPendingStackProfile,
+  readBuilderSession,
   readPendingStackProfile,
+  writeActiveStackProfile,
+  type BuilderSession,
 } from '../welcome/stack-profile-session';
-
-interface BuilderSession {
-  projectId: string;
-  compositeId: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class BuilderProjectService {
@@ -80,6 +78,9 @@ export class BuilderProjectService {
 
       this.state.setProjectContext(project, composite);
       this.writeSession({ projectId: project.id, compositeId: composite.id });
+      if (project.stackProfile) {
+        writeActiveStackProfile(project.stackProfile);
+      }
       return true;
     } catch {
       return false;
@@ -114,18 +115,11 @@ export class BuilderProjectService {
     const hydrated = { ...project, composites: [composite] };
     this.state.setProjectContext(hydrated, composite);
     this.writeSession({ projectId: project.id, compositeId: composite.id });
+    writeActiveStackProfile(stackProfile);
   }
 
   private readSession(): BuilderSession | null {
-    const raw = sessionStorage.getItem(BUILDER_SESSION_KEY);
-    if (!raw) {
-      return null;
-    }
-    try {
-      return JSON.parse(raw) as BuilderSession;
-    } catch {
-      return null;
-    }
+    return readBuilderSession();
   }
 
   private writeSession(session: BuilderSession): void {

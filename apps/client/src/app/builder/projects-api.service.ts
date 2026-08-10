@@ -28,6 +28,10 @@ export class ProjectsApiService {
     return this.http.post<Project>(this.base, body);
   }
 
+  updateProject(id: string, body: Partial<CreateProjectBody>): Observable<Project> {
+    return this.http.patch<Project>(`${this.base}/${id}`, body);
+  }
+
   updateComposite(projectId: string, compositeId: string, body: Composite): Observable<Composite> {
     return this.http.put<Composite>(`${this.base}/${projectId}/composites/${compositeId}`, body);
   }

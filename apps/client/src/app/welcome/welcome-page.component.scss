@@ -129,6 +129,13 @@
   cursor: pointer;
 }
 
+.welcome__framework-prompt {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--db-accent, #2563eb);
+}
+
 .welcome__lead {
   margin: 0;
   max-width: 36rem;
@@ -328,8 +335,13 @@
   font-weight: 600;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:disabled) {
     filter: brightness(0.95);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -338,8 +350,58 @@
   color: var(--db-text, #0f172a);
   border: 1px solid var(--db-border, #e2e8f0);
 
-  &:hover {
+  &:hover:not(:disabled) {
     filter: none;
     background: #f8fafc;
+  }
+}
+
+.welcome__dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(15 23 42 / 45%);
+  cursor: default;
+}
+
+.welcome__dialog {
+  width: min(28rem, 100%);
+  padding: 1.25rem;
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow: 0 24px 60px rgb(15 23 42 / 18%);
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+    color: var(--db-text, #0f172a);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.5;
+    color: var(--db-text-muted, #64748b);
+  }
+}
+
+.welcome__dialog-actions {
+  display: grid;
+  gap: 0.625rem;
+  margin-top: 1rem;
+}
+
+.welcome__dialog-cancel {
+  padding: 0.625rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--db-text-muted, #64748b);
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--db-text, #0f172a);
   }
 }

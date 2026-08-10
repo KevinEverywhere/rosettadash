@@ -73,12 +73,14 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-63](https://planetkevin.atlassian.net/browse/DAS-63) | `feature/DAS-63-geo-globe` | 3D geo globe lat/lng markers + multi-target export stubs |
 | [DAS-64](https://planetkevin.atlassian.net/browse/DAS-64) | `feature/DAS-64-stack-styling-selection` | Stack styling / CSS framework in project stack profile |
 | [DAS-65](https://planetkevin.atlassian.net/browse/DAS-65) | `feature/DAS-65-welcome-stack-none-options` | Welcome None server/database, heading, server ecosystem copy |
+| [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66) | `feature/DAS-66-mobile-tablet-viewport-gate` | Minimum viewport gate and unified availability UX |
+| [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67) | `feature/DAS-67-compact-builder-layout` | Collapsible palette/inspector for tablet and small desktop |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67) | `feature/DAS-67-compact-builder-layout` | Collapsible palette/inspector for tablet and small desktop |
+| [DAS-68](https://planetkevin.atlassian.net/browse/DAS-68) | `feature/DAS-68-welcome-onboarding-flow` | Welcome empty initial stack, gated continue, stack-change confirmations |
 
 ## Delivery status
 
@@ -95,7 +97,8 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 13 geo globe:** complete (DAS-63)
 - **Phase 14 stack styling:** complete (DAS-64)
 - **Phase 15 display availability:** complete (DAS-66)
-- **Phase 16 compact builder layout:** in progress (DAS-67)
+- **Phase 16 compact builder layout:** complete (DAS-67)
+- **Phase 17 welcome onboarding UX:** in progress (DAS-68)
 
 ## Phase 6 — complete
 
@@ -163,9 +166,13 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 1. ~~Minimum 1024px landscape viewport gate + unified fallback UX~~ — DAS-66
 2. [Display Availability](./19-display-availability.md) documentation
 
-## Phase 16 — Compact builder layout (in progress)
+## Phase 16 — Compact builder layout (complete)
 
 1. Collapsible palette/inspector drawers for 1024–1280px viewports — DAS-67
+
+## Phase 17 — Welcome onboarding UX (in progress)
+
+1. Empty initial stack state, gated continue, returning-user confirmations — DAS-68
 
 ## Future — VR / 3D expansion
 
