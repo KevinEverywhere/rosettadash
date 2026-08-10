@@ -69,6 +69,26 @@ export async function selectCanvasNodeHeader(
   await header.click();
 }
 
+export async function expandInspectorSection(page: Page, sectionId: string): Promise<void> {
+  const panel = page.getByTestId(`inspector-group-panel-${sectionId}`);
+  if (await panel.isVisible().catch(() => false)) {
+    return;
+  }
+
+  await page.getByTestId(`inspector-group-toggle-${sectionId}`).click();
+  await expect(panel).toBeVisible();
+}
+
+export async function expandInspectorBindings(page: Page): Promise<void> {
+  const panel = page.locator('[data-testid="inspector-bindings"] .inspector__group-panel');
+  if (await panel.isVisible().catch(() => false)) {
+    return;
+  }
+
+  await page.getByTestId('inspector-group-toggle-bindings').click();
+  await expect(panel).toBeVisible();
+}
+
 export async function openBuilder(page: Page): Promise<void> {
   await page.goto('/');
   await page.evaluate(() => sessionStorage.clear());

@@ -1,8 +1,10 @@
 import type {
   PreviewChartPoint,
   PreviewRow,
+  PreviewScatterPoint,
   PreviewSelectOption,
 } from './preview-types';
+import { mapRowsToScatterPoints, resolveScatterFields } from './map-scatter-points';
 
 export interface PreviewBindingInput {
   id: string;
@@ -37,6 +39,7 @@ export interface PreviewDataRequest {
 export interface NodePreviewSlice {
   tableRows?: PreviewRow[];
   chartPoints?: PreviewChartPoint[];
+  scatterPoints?: PreviewScatterPoint[];
   dateRangeLabel?: string;
   linkedFromTable?: boolean;
   filteredByDateRange?: boolean;
@@ -298,6 +301,13 @@ export function resolvePreviewGraph(
 
     nodeSlices[chartNode.id] = {
       chartPoints: rowsToChartPoints(chartRows),
+      scatterPoints:
+        chartNode.type === 'visual.display.3d-scatter'
+          ? mapRowsToScatterPoints(
+              chartRows,
+              resolveScatterFields(chartNode.properties),
+            )
+          : undefined,
       linkedFromTable,
       filteredByDateRange: rangeFromDateFilter,
       dateRangeLabel: rangeFromDateFilter ? dateRangeLabel : undefined,

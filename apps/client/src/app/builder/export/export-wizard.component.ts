@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal, untracked } from '@angular/core';
 import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
 import { resolveEffectiveExportTargets, resolveExportComposite } from '@dashbuilder/core';
 import { firstValueFrom } from 'rxjs';
@@ -102,12 +102,21 @@ export class ExportWizardComponent {
   protected readonly validationIssues = signal<ValidationIssue[]>([]);
   protected readonly errorMessage = signal<string | null>(null);
 
+  private targetsSeededForOpen = false;
+
   constructor() {
     effect(() => {
-      if (this.open()) {
-        this.seedTargetsFromState();
-        void this.refreshPreview();
+      if (!this.open()) {
+        this.targetsSeededForOpen = false;
+        return;
       }
+
+      if (!this.targetsSeededForOpen) {
+        untracked(() => this.seedTargetsFromState());
+        this.targetsSeededForOpen = true;
+      }
+
+      void this.refreshPreview();
     });
   }
 

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { openBuilder } from './test-helpers';
+import { addFromPalette, expandInspectorSection, openBuilder, selectCanvasNode } from './test-helpers';
 
 test.describe('Builder domain context', () => {
   test.beforeEach(async ({ page }) => {
@@ -7,6 +7,9 @@ test.describe('Builder domain context', () => {
   });
 
   test('persists domain context after save and reload', async ({ page }) => {
+    await addFromPalette(page, 'visual.input.text');
+    await selectCanvasNode(page, page.getByTestId('canvas-node'));
+    await expandInspectorSection(page, 'domain');
     await page.getByTestId('domain-client-name').fill('Northwind Logistics');
     await page.getByTestId('domain-project-name').fill('Fleet Analytics');
     await page.getByTestId('domain-default-time-range').selectOption('last-30-days');
@@ -17,6 +20,8 @@ test.describe('Builder domain context', () => {
 
     await page.reload();
     await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
+    await selectCanvasNode(page, page.getByTestId('canvas-node'));
+    await expandInspectorSection(page, 'domain');
 
     await expect(page.getByTestId('domain-client-name')).toHaveValue('Northwind Logistics');
     await expect(page.getByTestId('domain-project-name')).toHaveValue('Fleet Analytics');

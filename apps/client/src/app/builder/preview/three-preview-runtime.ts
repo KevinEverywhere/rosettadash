@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import type { PreviewChartPoint } from '@dashbuilder/ui-primitives';
+import type { PreviewChartPoint, PreviewScatterPoint } from '@dashbuilder/ui-primitives';
 
 export type ThreeCameraPreset = 'orbit' | 'front' | 'iso';
 export type ThreeVisualMode = 'bar-chart' | 'scatter' | 'scene';
@@ -14,6 +14,7 @@ export interface ThreePreviewOptions {
 
 export interface ThreePreviewData {
   points: PreviewChartPoint[];
+  scatterPoints?: PreviewScatterPoint[];
   mode: ThreeVisualMode;
 }
 
@@ -143,7 +144,7 @@ export class ThreePreviewRuntime {
     }
 
     if (data.mode === 'scatter') {
-      this.addScatter(points);
+      this.addScatter(data.scatterPoints ?? []);
       return;
     }
 
@@ -169,8 +170,8 @@ export class ThreePreviewRuntime {
     });
   }
 
-  private addScatter(points: PreviewChartPoint[]): void {
-    const maxValue = Math.max(...points.map((point) => point.value), 1);
+  private addScatter(scatterPoints: PreviewScatterPoint[]): void {
+    const points = scatterPoints.length > 0 ? scatterPoints : defaultScatterPoints();
     const geometry = new THREE.SphereGeometry(0.18, 16, 16);
 
     points.forEach((point, index) => {
@@ -178,12 +179,7 @@ export class ThreePreviewRuntime {
         color: BAR_COLORS[index % BAR_COLORS.length],
       });
       const mesh = new THREE.Mesh(geometry, material);
-      const angle = (index / Math.max(points.length, 1)) * Math.PI * 2;
-      mesh.position.set(
-        Math.cos(angle) * 3,
-        (point.value / maxValue) * 4 + 0.2,
-        Math.sin(angle) * 3,
-      );
+      mesh.position.set(point.x, point.y, point.z);
       this.contentGroup.add(mesh);
     });
   }
@@ -228,6 +224,16 @@ export class ThreePreviewRuntime {
       }
     }
   }
+}
+
+function defaultScatterPoints(): PreviewScatterPoint[] {
+  return [
+    { x: -2, y: 1.2, z: -2, label: 'A' },
+    { x: 0, y: 2.4, z: 1, label: 'B' },
+    { x: 2, y: 0.8, z: 2, label: 'C' },
+    { x: -1, y: 3.1, z: -1, label: 'D' },
+    { x: 1.5, y: 1.6, z: -2.5, label: 'E' },
+  ];
 }
 
 function defaultPreviewPoints(): PreviewChartPoint[] {

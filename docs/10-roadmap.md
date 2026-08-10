@@ -100,17 +100,24 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Custom component SDK — registry, preview adapters, extension demos (DAS-55)
 - [x] First three.js visual — 3D bar chart + VR palette group (DAS-56)
 
-## Phase 9 — Project stack setup (in progress)
+## Phase 9 — Project stack setup (complete)
 
 **Ticket:** DAS-57 — framework-first entry screen
 
-- [ ] UI framework selection at project level (React / Angular / Vue / Svelte / **Any**)
-- [ ] Entry screen for stack pieces (UI + server + database) with compatible second-level defaults
-- [ ] Export wizard and builder consume persisted stack profile
+- [x] UI framework selection at project level (React / Angular / Vue / Svelte / **Any**)
+- [x] Entry screen for stack pieces (UI + server + database) with compatible second-level defaults
+- [x] Export wizard and builder consume persisted stack profile
+
+## Phase 10 — VR / 3D expansion (in progress)
+
+**Ticket:** DAS-58 — 3D scatter field mapping
+
+- [ ] Rowset x/y/z field mapping in preview
+- [ ] React R3F scatter export stub
 
 ## Future — VR / 3D expansion
 
-- Scatter field mapping, scene point clouds, GLTF hosts, multi-target 3D export
+- Scene point clouds, GLTF hosts, multi-target 3D export
 
 ## Backlog ideas (unscheduled)
 

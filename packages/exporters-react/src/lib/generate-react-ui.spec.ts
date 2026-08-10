@@ -396,6 +396,40 @@ describe('generateReactUiFiles', () => {
     expect(chartFile?.path).toMatch(/BarChart\.tsx$/);
   });
 
+  it('generates React three.js scatter plot stub', () => {
+    const scatter = registry.createNode('visual.display.3d-scatter', { id: 's3d1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: '3D Scatter Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [scatter, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 's3d1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const scatterFile = files.find((file) => file.content.includes('mapScatterPoints'));
+    expect(scatterFile?.content).toContain('sphereGeometry');
+    expect(scatterFile?.path).toMatch(/ScatterPlot\.tsx$/);
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

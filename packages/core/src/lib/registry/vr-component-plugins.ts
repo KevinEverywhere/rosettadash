@@ -68,9 +68,9 @@ export const VR_COMPONENT_PLUGINS: ComponentPlugin[] = [
         ...sharedSceneProperties.map((property) =>
           property.key === 'title' ? { ...property, default: '3D Scatter Plot' } : property,
         ),
-        { key: 'xField', label: 'X field', type: 'string', default: 'x' },
-        { key: 'yField', label: 'Y field', type: 'string', default: 'y' },
-        { key: 'zField', label: 'Z field', type: 'string', default: 'value' },
+        { key: 'xField', label: 'X field', type: 'string', default: 'date' },
+        { key: 'yField', label: 'Y field', type: 'string', default: 'amount' },
+        { key: 'zField', label: 'Z field', type: 'string', default: 'id' },
       ],
     },
     metadata: {

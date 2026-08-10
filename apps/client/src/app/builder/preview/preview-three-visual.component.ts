@@ -10,6 +10,7 @@ import {
   input,
 } from '@angular/core';
 import type { ComponentNode } from '@dashbuilder/core';
+import { mapRowsToScatterPoints, resolveScatterFields } from '@dashbuilder/ui-primitives';
 import { PreviewDataService } from './preview-data.service';
 import {
   ThreePreviewRuntime,
@@ -37,6 +38,16 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
     () => this.slice()?.chartPoints ?? this.previewData.bundle().chartPoints,
   );
 
+  protected readonly scatterPoints = computed(() => {
+    const slice = this.slice();
+    if (slice?.scatterPoints?.length) {
+      return slice.scatterPoints;
+    }
+
+    const tableRows = slice?.tableRows ?? this.previewData.bundle().tableRows;
+    return mapRowsToScatterPoints(tableRows, resolveScatterFields(this.node().properties));
+  });
+
   protected readonly linkedHint = computed(() => {
     if (this.slice()?.linkedFromTable) {
       return 'Uses table rowset';
@@ -63,6 +74,7 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
       this.node();
       this.mode();
       this.chartPoints();
+      this.scatterPoints();
       this.syncRuntime();
     });
   }
@@ -97,6 +109,7 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
       },
       {
         points: this.chartPoints(),
+        scatterPoints: this.scatterPoints(),
         mode: this.mode(),
       },
     );

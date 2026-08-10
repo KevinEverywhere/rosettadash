@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { addFromPalette, openBuilder } from './test-helpers';
+import { addFromPalette, expandInspectorBindings, expandInspectorSection, openBuilder, selectCanvasNode } from './test-helpers';
 
 test.describe('Builder bindings', () => {
   test.beforeEach(async ({ page }) => {
@@ -20,8 +20,8 @@ test.describe('Builder bindings', () => {
     await chartNode.getByTestId(/^port-input-.*-range$/).click();
     await expect(page.getByTestId('binding-hint')).toBeHidden();
 
-    await chartNode.click();
-    await expect(page.getByTestId('inspector-bindings')).toBeVisible();
+    await selectCanvasNode(page, chartNode);
+    await expandInspectorBindings(page);
     await expect(page.getByTestId('inspector-bindings')).toContainText('Date Range.range');
 
     await page.getByTestId('save-button').click();
@@ -31,8 +31,8 @@ test.describe('Builder bindings', () => {
     await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
     await expect(page.getByTestId('canvas-node')).toHaveCount(2);
 
-    await page.getByTestId('canvas-node').nth(1).click();
-    await expect(page.getByTestId('inspector-bindings')).toBeVisible();
+    await selectCanvasNode(page, page.getByTestId('canvas-node').nth(1));
+    await expandInspectorBindings(page);
     await expect(page.getByTestId('inspector-bindings')).toContainText('Date Range.range');
   });
 

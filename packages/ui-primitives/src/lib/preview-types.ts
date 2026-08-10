@@ -15,3 +15,6 @@ export interface PreviewChartPoint {
   label: string;
   value: number;
 }
+
+export type { PreviewScatterPoint } from './map-scatter-points';
+export { mapRowsToScatterPoints, resolveScatterFields } from './map-scatter-points';
