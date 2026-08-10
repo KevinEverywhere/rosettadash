@@ -77,7 +77,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| _(none)_ | — | — |
+| [DAS-65](https://planetkevin.atlassian.net/browse/DAS-65) | `feature/DAS-65-welcome-stack-none-options` | Welcome None server/database, heading, server ecosystem copy |
 
 ## Delivery status
 

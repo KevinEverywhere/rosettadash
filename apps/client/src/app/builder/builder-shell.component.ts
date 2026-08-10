@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
 import { canEnterBuilder } from '../welcome/stack-profile-session';
@@ -23,6 +23,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     ExportWizardComponent,
     BuilderAuthGateComponent,
     FormsModule,
+    RouterLink,
   ],
   templateUrl: './builder-shell.component.html',
   styleUrl: './builder-shell.component.scss',

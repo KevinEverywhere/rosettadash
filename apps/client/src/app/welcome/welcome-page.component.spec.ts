@@ -6,6 +6,14 @@ import {
 } from './stack-profile-session';
 import { WelcomePageComponent } from './welcome-page.component';
 
+function expandSection(fixture: ComponentFixture<WelcomePageComponent>, section: string): void {
+  const toggle = fixture.nativeElement.querySelector(`[data-testid="stack-section-toggle-${section}"]`);
+  if (toggle && toggle.getAttribute('aria-expanded') !== 'true') {
+    toggle.click();
+    fixture.detectChanges();
+  }
+}
+
 describe('WelcomePageComponent', () => {
   let fixture: ComponentFixture<WelcomePageComponent>;
   let router: Router;
@@ -32,8 +40,12 @@ describe('WelcomePageComponent', () => {
     sessionStorage.clear();
   });
 
-  it('renders welcome hero and stack options', () => {
-    expect(fixture.nativeElement.querySelector('[data-testid="welcome-page"]')).toBeTruthy();
+  it('renders page heading and stack accordion with UI open by default', () => {
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-heading"]')?.textContent).toContain(
+      'Build Components and Dashboards for your stack',
+    );
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-panel-ui"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-panel-server"]')).toBeFalsy();
     expect(fixture.nativeElement.querySelectorAll('[data-testid^="stack-ui-"]').length).toBe(5);
   });
 
@@ -42,40 +54,70 @@ describe('WelcomePageComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('[data-testid="stack-scratch-note"]')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-nest"]')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeFalsy();
   });
 
-  it('shows styling options for scratch-pad and concrete stacks', () => {
-    expect(fixture.nativeElement.querySelectorAll('[data-testid^="stack-styling-"]').length).toBe(4);
+  it('shows framework-filtered styling options when styling section is expanded', () => {
+    expandSection(fixture, 'styling');
+
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-css-modules"]')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-styled-components"]'),
+    ).toBeTruthy();
 
     fixture.nativeElement.querySelector('[data-testid="stack-ui-any"]').click();
     fixture.detectChanges();
+    expandSection(fixture, 'styling');
 
-    expect(fixture.nativeElement.querySelectorAll('[data-testid^="stack-styling-"]').length).toBe(2);
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-neutral"]')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-tailwind"]')).toBeTruthy();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-styled-components"]'),
+    ).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-css-modules"]')).toBeTruthy();
   });
 
-  it('renders styling after stack partners and filters options by UI framework', () => {
-    const stylingHeading = fixture.nativeElement.querySelector('#stack-styling-heading');
-    const serverSection = fixture.nativeElement.querySelector('#stack-server-heading');
-
-    expect(stylingHeading?.textContent).toContain('React');
-    expect(
-      Array.from(fixture.nativeElement.querySelectorAll('h3')).indexOf(stylingHeading),
-    ).toBeGreaterThan(Array.from(fixture.nativeElement.querySelectorAll('h3')).indexOf(serverSection));
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-mui"]')).toBeTruthy();
+  it('filters component libraries by UI framework', () => {
+    expandSection(fixture, 'styling');
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-library-mui"]')).toBeTruthy();
 
     fixture.nativeElement.querySelector('[data-testid="stack-ui-angular"]').click();
     fixture.detectChanges();
+    expandSection(fixture, 'styling');
 
-    expect(fixture.nativeElement.querySelector('#stack-styling-heading')?.textContent).toContain(
-      'Angular',
-    );
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-mui"]')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-library-mui"]')).toBeFalsy();
     expect(
-      fixture.nativeElement.querySelector('[data-testid="stack-styling-angular-material"]'),
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-library-angular-material"]'),
     ).toBeTruthy();
+  });
+
+  it('offers None for server and database when sections are expanded', () => {
+    expandSection(fixture, 'server');
+    expandSection(fixture, 'database');
+
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-none"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-database-none"]')).toBeTruthy();
+  });
+
+  it('persists None server and database in pending stack profile', async () => {
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    expandSection(fixture, 'server');
+    expandSection(fixture, 'database');
+    fixture.nativeElement.querySelector('[data-testid="stack-server-none"]').click();
+    fixture.nativeElement.querySelector('[data-testid="stack-database-none"]').click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="welcome-continue"]').click();
+
+    expect(JSON.parse(sessionStorage.getItem(PENDING_STACK_KEY) ?? '{}')).toEqual({
+      ui: 'react',
+      server: 'none',
+      database: 'none',
+      styling: {
+        foundation: ['tailwind'],
+        authoring: ['css-modules'],
+        inlineStyles: true,
+      },
+    });
+    expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
   });
 
   it('stores pending stack profile and navigates to builder', async () => {
@@ -90,12 +132,16 @@ describe('WelcomePageComponent', () => {
       ui: 'svelte',
       server: 'nest',
       database: 'postgresql',
-      styling: 'tailwind',
+      styling: {
+        foundation: ['tailwind'],
+        authoring: ['plain-css'],
+        inlineStyles: true,
+      },
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
   });
 
-  it('redirects to builder when entry is already allowed', async () => {
+  it('stays on welcome when a builder session exists', () => {
     sessionStorage.setItem(
       BUILDER_SESSION_KEY,
       JSON.stringify({ projectId: 'p1', compositeId: 'c1' }),
@@ -105,6 +151,50 @@ describe('WelcomePageComponent', () => {
     fixture = TestBed.createComponent(WelcomePageComponent);
     fixture.detectChanges();
 
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-page"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-resume-note"]')).toBeTruthy();
+    expect(navigateSpy).not.toHaveBeenCalled();
+  });
+
+  it('resumes builder without rewriting pending stack', async () => {
+    sessionStorage.setItem(
+      BUILDER_SESSION_KEY,
+      JSON.stringify({ projectId: 'p1', compositeId: 'c1' }),
+    );
+
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    fixture = TestBed.createComponent(WelcomePageComponent);
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="welcome-continue"]').click();
+
+    expect(sessionStorage.getItem(PENDING_STACK_KEY)).toBeNull();
+    expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
+  });
+
+  it('starts a fresh project with the selected stack', async () => {
+    sessionStorage.setItem(
+      BUILDER_SESSION_KEY,
+      JSON.stringify({ projectId: 'p1', compositeId: 'c1' }),
+    );
+
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    fixture = TestBed.createComponent(WelcomePageComponent);
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="stack-ui-vue"]').click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="welcome-start-fresh"]').click();
+
+    expect(sessionStorage.getItem(BUILDER_SESSION_KEY)).toBeNull();
+    expect(JSON.parse(sessionStorage.getItem(PENDING_STACK_KEY) ?? '{}')).toEqual({
+      ui: 'vue',
+      server: 'nuxt',
+      database: 'postgresql',
+      styling: {
+        foundation: ['tailwind'],
+        authoring: ['css-modules'],
+        inlineStyles: true,
+      },
+    });
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
   });
 });

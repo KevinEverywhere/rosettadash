@@ -9,7 +9,7 @@
   } @else {
   <header class="builder__toolbar">
     <div class="builder__brand">
-      <span class="builder__logo">{{ appName }}</span>
+      <a class="builder__logo" routerLink="/" data-testid="builder-home-link">{{ appName }}</a>
       <span class="builder__subtitle">{{ state.project()?.name ?? 'Builder' }}</span>
     </div>
 

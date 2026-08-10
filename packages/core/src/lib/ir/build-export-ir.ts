@@ -5,7 +5,7 @@ import type { DomainContext } from '../domain/domain-context';
 import { normalizeDomainContext } from '../domain/domain-context';
 import { visibilityRolesForComponent } from '../domain/role-visibility';
 import { compositeHasOnboardingFlow, onboardingRoutePaths } from '../domain/onboarding';
-import { resolveEffectiveStyling } from '../export/stack-profile';
+import { resolveEffectiveStyling, resolveEffectiveStylingProfile } from '../export/stack-profile';
 import type {
   BuildExportIROptions,
   ExportIR,
@@ -112,9 +112,13 @@ export function buildExportIR(
     dataSources,
     routes: buildRoutes(composite, registry),
     events,
-    styles: {
-      framework: resolveEffectiveStyling(options.stackProfile, targets.ui),
-    },
+    styles: (() => {
+      const profile = resolveEffectiveStylingProfile(options.stackProfile, targets.ui);
+      return {
+        profile,
+        framework: resolveEffectiveStyling(options.stackProfile, targets.ui),
+      };
+    })(),
     domain: mapDomainContext(composite.domainContext),
   };
 }

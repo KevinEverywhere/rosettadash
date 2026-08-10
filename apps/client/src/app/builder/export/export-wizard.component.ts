@@ -2,8 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, input, output, signal, untracked } from '@angular/core';
 import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
 import {
+  formatStylingProfileSummary,
   resolveEffectiveExportTargets,
-  resolveEffectiveStyling,
+  resolveEffectiveStylingProfile,
   resolveExportComposite,
   stylingFrameworkLabel,
 } from '@dashbuilder/core';
@@ -232,10 +233,14 @@ export class ExportWizardComponent {
     const ui = current?.ir.targets.ui ?? this.uiTarget();
     const server = current?.ir.targets.server ?? this.serverTarget();
     const database = current?.ir.targets.database ?? this.databaseTarget();
-    const styling =
-      current?.ir.styles.framework ??
-      resolveEffectiveStyling(this.state.project()?.stackProfile, ui);
-    return `${ui} UI + ${server} + ${database} · ${stylingFrameworkLabel(styling)}`;
+    const stylingProfile =
+      current?.ir.styles.profile ??
+      resolveEffectiveStylingProfile(this.state.project()?.stackProfile, ui);
+    const stylingLabel =
+      current?.ir.styles.framework != null
+        ? stylingFrameworkLabel(current.ir.styles.framework)
+        : formatStylingProfileSummary(stylingProfile);
+    return `${ui} UI + ${server} + ${database} · ${stylingLabel}`;
   }
 
   private seedTargetsFromState(): void {

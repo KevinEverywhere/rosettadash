@@ -7,13 +7,12 @@ test.describe('Welcome page entry', () => {
     await page.evaluate(() => sessionStorage.clear());
     await page.reload();
 
-    await expect(page.getByTestId('welcome-page')).toBeVisible();
-    await expect(page.getByText('Welcome to DashBuilder')).toBeVisible();
-    await expect(page.getByTestId('stack-ui-react')).toBeVisible();
-    await expect(page.getByTestId('stack-ui-any')).toBeVisible();
+    await expect(page.getByTestId('welcome-heading')).toBeVisible();
+    await expect(page.getByTestId('stack-section-panel-ui')).toBeVisible();
+    await expect(page.getByTestId('stack-section-panel-server')).toHaveCount(0);
 
-    await page.getByTestId('stack-ui-vue').click();
-    await expect(page.getByTestId('stack-server-nuxt')).toBeVisible();
+    await page.getByTestId('stack-section-toggle-styling').click();
+    await expect(page.getByTestId('stack-styling-authoring-css-modules')).toBeVisible();
 
     await page.getByTestId('welcome-continue').click();
     await expect(page.getByTestId('builder-shell')).toBeVisible({ timeout: 120_000 });
@@ -28,12 +27,15 @@ test.describe('Welcome page entry', () => {
     await expect(page.getByTestId('builder-shell')).toHaveCount(0);
   });
 
-  test('skips welcome when a builder session exists', async ({ page }) => {
+  test('shows welcome at root even when a builder session exists', async ({ page }) => {
     await openBuilderViaWelcome(page);
 
     await page.goto('/');
-    await page.waitForURL('**/builder');
+    await expect(page.getByTestId('welcome-page')).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('welcome-resume-note')).toBeVisible();
+    await expect(page.getByTestId('builder-shell')).toHaveCount(0);
+
+    await page.getByTestId('welcome-continue').click();
     await expect(page.getByTestId('builder-shell')).toBeVisible({ timeout: 120_000 });
-    await expect(page.getByTestId('welcome-page')).toHaveCount(0);
   });
 });

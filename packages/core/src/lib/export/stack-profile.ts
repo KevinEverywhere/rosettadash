@@ -1,10 +1,32 @@
-import type { ExportTargetConfig, StackProfile, StylingFrameworkChoice } from '../model/types';
+import type {
+  ExportTargetConfig,
+  StackDatabaseChoice,
+  StackProfile,
+  StackServerChoice,
+  StackStylingProfile,
+  StylingAuthoring,
+  StylingComponentLibrary,
+  StylingFoundation,
+  StylingFrameworkChoice,
+} from '../model/types';
 
 export type UiFrameworkChoice = StackProfile['ui'];
 export type ServerTargetChoice = NonNullable<ExportTargetConfig['server']>;
 export type DatabaseTargetChoice = NonNullable<ExportTargetConfig['database']>;
 
-export type { StackProfile, StylingFrameworkChoice };
+export type {
+  StackProfile,
+  StackStylingProfile,
+  StylingFrameworkChoice,
+  StackServerChoice,
+  StackDatabaseChoice,
+  StylingFoundation,
+  StylingComponentLibrary,
+  StylingAuthoring,
+};
+
+export const SERVER_STACK_ECOSYSTEM_NOTE =
+  'v1 server exporters cover Node.js stacks below. Python (FastAPI, Django), Java (Spring), and Azure Functions are planned — pick None if you are UI-only for now.';
 
 export const UI_FRAMEWORK_OPTIONS: Array<{ id: UiFrameworkChoice; label: string; description: string }> = [
   { id: 'any', label: 'Any (scratch pad)', description: 'Experiment freely — pick export targets later' },
@@ -21,7 +43,31 @@ export const SERVER_TARGET_OPTIONS: Array<{ id: ServerTargetChoice; label: strin
   { id: 'nuxt', label: 'Nuxt' },
 ];
 
+export const SERVER_STACK_OPTIONS: Array<{
+  id: StackServerChoice;
+  label: string;
+  description?: string;
+}> = [
+  { id: 'none', label: 'None', description: 'UI components only — pick a server in export later' },
+  { id: 'next', label: 'Next.js', description: 'React full-stack (Node.js)' },
+  { id: 'nuxt', label: 'Nuxt', description: 'Vue full-stack (Node.js / Nitro)' },
+  { id: 'nest', label: 'NestJS', description: 'TypeScript API framework (Node.js)' },
+  { id: 'express', label: 'Express', description: 'Minimal Node.js HTTP server' },
+];
+
 export const DATABASE_TARGET_OPTIONS: Array<{ id: DatabaseTargetChoice; label: string }> = [
+  { id: 'postgresql', label: 'PostgreSQL' },
+  { id: 'mongodb', label: 'MongoDB' },
+  { id: 'supabase', label: 'Supabase' },
+  { id: 'mysql', label: 'MySQL' },
+];
+
+export const DATABASE_STACK_OPTIONS: Array<{
+  id: StackDatabaseChoice;
+  label: string;
+  description?: string;
+}> = [
+  { id: 'none', label: 'None', description: 'Skip database export for now' },
   { id: 'postgresql', label: 'PostgreSQL' },
   { id: 'mongodb', label: 'MongoDB' },
   { id: 'supabase', label: 'Supabase' },
@@ -78,6 +124,118 @@ const STYLING_BY_UI: Record<UiFrameworkChoice, StylingFrameworkChoice[]> = {
   svelte: ['neutral', 'tailwind', 'plain-css'],
 };
 
+export const STYLING_FOUNDATION_OPTIONS: Array<{
+  id: StylingFoundation;
+  label: string;
+  description: string;
+}> = [
+  {
+    id: 'neutral-tokens',
+    label: 'Neutral tokens',
+    description: 'DashBuilder CSS variables and semantic classes',
+  },
+  {
+    id: 'tailwind',
+    label: 'Tailwind CSS',
+    description: 'Utility-first CSS layer shared across frameworks',
+  },
+];
+
+export const STYLING_COMPONENT_LIBRARY_OPTIONS: Array<{
+  id: StylingComponentLibrary;
+  label: string;
+  description: string;
+}> = [
+  { id: 'mui', label: 'MUI (Material UI)', description: 'Material Design components for React' },
+  {
+    id: 'angular-material',
+    label: 'Angular Material',
+    description: 'Material Design components for Angular',
+  },
+  { id: 'vuetify', label: 'Vuetify', description: 'Material Design components for Vue' },
+];
+
+export const STYLING_AUTHORING_OPTIONS: Array<{
+  id: StylingAuthoring;
+  label: string;
+  description: string;
+}> = [
+  {
+    id: 'css-modules',
+    label: 'CSS Modules',
+    description: 'Scoped .module.css classes colocated with components',
+  },
+  {
+    id: 'styled-components',
+    label: 'styled-components',
+    description: 'CSS-in-JS styled primitives (React)',
+  },
+  { id: 'plain-css', label: 'Plain CSS', description: 'Standard stylesheets without a preprocessor' },
+  { id: 'plain-scss', label: 'Plain SCSS', description: 'SCSS variables and component styles' },
+];
+
+const STYLING_FOUNDATION_BY_UI: Record<UiFrameworkChoice, StylingFoundation[]> = {
+  any: ['neutral-tokens', 'tailwind'],
+  react: ['neutral-tokens', 'tailwind'],
+  angular: ['neutral-tokens', 'tailwind'],
+  vue: ['neutral-tokens', 'tailwind'],
+  svelte: ['neutral-tokens', 'tailwind'],
+};
+
+const STYLING_COMPONENT_LIBRARY_BY_UI: Record<UiFrameworkChoice, StylingComponentLibrary[]> = {
+  any: [],
+  react: ['mui'],
+  angular: ['angular-material'],
+  vue: ['vuetify'],
+  svelte: [],
+};
+
+const STYLING_AUTHORING_BY_UI: Record<UiFrameworkChoice, StylingAuthoring[]> = {
+  any: ['css-modules', 'plain-css'],
+  react: ['css-modules', 'styled-components', 'plain-css'],
+  angular: ['plain-scss', 'plain-css'],
+  vue: ['css-modules', 'plain-css'],
+  svelte: ['plain-css'],
+};
+
+const DEFAULT_STYLING_PROFILE_BY_UI: Record<UiFrameworkChoice, StackStylingProfile> = {
+  any: { foundation: ['neutral-tokens'], authoring: ['plain-css'], inlineStyles: true },
+  react: { foundation: ['tailwind'], authoring: ['css-modules'], inlineStyles: true },
+  angular: {
+    foundation: ['neutral-tokens'],
+    componentLibrary: 'angular-material',
+    authoring: ['plain-scss'],
+    inlineStyles: true,
+  },
+  vue: { foundation: ['tailwind'], authoring: ['css-modules'], inlineStyles: true },
+  svelte: { foundation: ['tailwind'], authoring: ['plain-css'], inlineStyles: true },
+};
+
+const LEGACY_STYLING_TO_PROFILE: Record<StylingFrameworkChoice, StackStylingProfile> = {
+  neutral: { foundation: ['neutral-tokens'], authoring: ['plain-css'], inlineStyles: true },
+  tailwind: { foundation: ['tailwind'], authoring: ['css-modules'], inlineStyles: true },
+  mui: {
+    foundation: ['neutral-tokens'],
+    componentLibrary: 'mui',
+    authoring: ['css-modules'],
+    inlineStyles: true,
+  },
+  'angular-material': {
+    foundation: ['neutral-tokens'],
+    componentLibrary: 'angular-material',
+    authoring: ['plain-scss'],
+    inlineStyles: true,
+  },
+  vuetify: {
+    foundation: ['neutral-tokens'],
+    componentLibrary: 'vuetify',
+    authoring: ['css-modules'],
+    inlineStyles: true,
+  },
+  'plain-css': { foundation: ['neutral-tokens'], authoring: ['plain-css'], inlineStyles: true },
+  'plain-scss': { foundation: ['neutral-tokens'], authoring: ['plain-scss'], inlineStyles: true },
+};
+
 const DEFAULT_STYLING_BY_UI: Record<UiFrameworkChoice, StylingFrameworkChoice> = {
   any: 'neutral',
   react: 'tailwind',
@@ -89,7 +247,7 @@ const DEFAULT_STYLING_BY_UI: Record<UiFrameworkChoice, StylingFrameworkChoice> =
 /** Idiomatic default partners per UI framework. */
 const UI_PARTNER_DEFAULTS: Record<
   Exclude<UiFrameworkChoice, 'any'>,
-  Required<Pick<StackProfile, 'server' | 'database' | 'styling'>>
+  { server: ServerTargetChoice; database: DatabaseTargetChoice; styling: StylingFrameworkChoice }
 > = {
   react: { server: 'next', database: 'postgresql', styling: 'tailwind' },
   angular: { server: 'nest', database: 'postgresql', styling: 'angular-material' },
@@ -97,11 +255,46 @@ const UI_PARTNER_DEFAULTS: Record<
   svelte: { server: 'nest', database: 'postgresql', styling: 'tailwind' },
 };
 
+function isExportServerChoice(server: StackServerChoice | undefined): server is ServerTargetChoice {
+  return !!server && server !== 'none';
+}
+
+function isExportDatabaseChoice(
+  database: StackDatabaseChoice | undefined,
+): database is DatabaseTargetChoice {
+  return !!database && database !== 'none';
+}
+
 export const DEFAULT_EXPORT_TARGETS: Required<ExportTargetConfig> = {
   ui: 'react',
   server: 'nest',
   database: 'postgresql',
 };
+
+export function getCompatibleStylingFoundations(
+  ui: UiFrameworkChoice,
+): Array<{ id: StylingFoundation; label: string; description: string }> {
+  const allowed = new Set(STYLING_FOUNDATION_BY_UI[ui]);
+  return STYLING_FOUNDATION_OPTIONS.filter((option) => allowed.has(option.id));
+}
+
+export function getCompatibleStylingComponentLibraries(
+  ui: UiFrameworkChoice,
+): Array<{ id: StylingComponentLibrary; label: string; description: string }> {
+  const allowed = new Set(STYLING_COMPONENT_LIBRARY_BY_UI[ui]);
+  return STYLING_COMPONENT_LIBRARY_OPTIONS.filter((option) => allowed.has(option.id));
+}
+
+export function getCompatibleStylingAuthoring(
+  ui: UiFrameworkChoice,
+): Array<{ id: StylingAuthoring; label: string; description: string }> {
+  const allowed = new Set(STYLING_AUTHORING_BY_UI[ui]);
+  return STYLING_AUTHORING_OPTIONS.filter((option) => allowed.has(option.id));
+}
+
+export function getDefaultStylingProfile(ui: UiFrameworkChoice): StackStylingProfile {
+  return cloneStylingProfile(DEFAULT_STYLING_PROFILE_BY_UI[ui]);
+}
 
 export function getCompatibleStylingOptions(
   ui: UiFrameworkChoice,
@@ -121,6 +314,87 @@ export function isStylingCompatible(
   return STYLING_BY_UI[ui].includes(styling);
 }
 
+export function normalizeStackStyling(
+  ui: UiFrameworkChoice,
+  styling: StackStylingProfile | StylingFrameworkChoice | undefined,
+): StackStylingProfile {
+  const base =
+    styling === undefined
+      ? getDefaultStylingProfile(ui)
+      : typeof styling === 'string'
+        ? cloneStylingProfile(LEGACY_STYLING_TO_PROFILE[styling])
+        : cloneStylingProfile(styling);
+
+  const foundation = base.foundation.filter((item) => STYLING_FOUNDATION_BY_UI[ui].includes(item));
+  const authoring = base.authoring.filter((item) => STYLING_AUTHORING_BY_UI[ui].includes(item));
+  const componentLibrary =
+    base.componentLibrary && STYLING_COMPONENT_LIBRARY_BY_UI[ui].includes(base.componentLibrary)
+      ? base.componentLibrary
+      : undefined;
+
+  const defaults = getDefaultStylingProfile(ui);
+
+  return {
+    foundation: foundation.length > 0 ? foundation : defaults.foundation,
+    authoring: authoring.length > 0 ? authoring : defaults.authoring,
+    ...(componentLibrary ? { componentLibrary } : {}),
+    inlineStyles: base.inlineStyles,
+  };
+}
+
+export function stylingProfilePrimaryFramework(profile: StackStylingProfile): StylingFrameworkChoice {
+  if (profile.componentLibrary === 'mui') {
+    return 'mui';
+  }
+  if (profile.componentLibrary === 'angular-material') {
+    return 'angular-material';
+  }
+  if (profile.componentLibrary === 'vuetify') {
+    return 'vuetify';
+  }
+  if (profile.foundation.includes('tailwind')) {
+    return 'tailwind';
+  }
+  return 'neutral';
+}
+
+export function formatStylingProfileSummary(profile: StackStylingProfile): string {
+  const parts: string[] = [];
+  if (profile.foundation.length > 0) {
+    parts.push(
+      profile.foundation
+        .map((item) => STYLING_FOUNDATION_OPTIONS.find((option) => option.id === item)?.label ?? item)
+        .join(' + '),
+    );
+  }
+  if (profile.componentLibrary) {
+    parts.push(
+      STYLING_COMPONENT_LIBRARY_OPTIONS.find((option) => option.id === profile.componentLibrary)?.label ??
+        profile.componentLibrary,
+    );
+  }
+  if (profile.authoring.length > 0) {
+    parts.push(
+      profile.authoring
+        .map((item) => STYLING_AUTHORING_OPTIONS.find((option) => option.id === item)?.label ?? item)
+        .join(' + '),
+    );
+  }
+  if (profile.inlineStyles) {
+    parts.push('inline styles');
+  }
+  return parts.join(' · ');
+}
+
+function cloneStylingProfile(profile: StackStylingProfile): StackStylingProfile {
+  return {
+    foundation: [...profile.foundation],
+    authoring: [...profile.authoring],
+    inlineStyles: profile.inlineStyles,
+    ...(profile.componentLibrary ? { componentLibrary: profile.componentLibrary } : {}),
+  };
+}
+
 export function normalizeStyling(
   ui: UiFrameworkChoice,
   styling: StylingFrameworkChoice | undefined,
@@ -132,9 +406,25 @@ export function normalizeStyling(
   return getDefaultStyling(ui);
 }
 
+export function resolveEffectiveStylingProfile(
+  projectProfile: StackProfile | undefined,
+  uiTarget: NonNullable<ExportTargetConfig['ui']>,
+): StackStylingProfile {
+  const normalized = normalizeStackProfile(projectProfile);
+  if (!normalized?.styling) {
+    return getDefaultStylingProfile(uiTarget);
+  }
+
+  if (normalized.ui !== 'any' && normalized.ui !== uiTarget) {
+    return getDefaultStylingProfile(uiTarget);
+  }
+
+  return normalizeStackStyling(uiTarget, normalized.styling);
+}
+
 export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile {
   if (ui === 'any') {
-    return { ui: 'any', styling: getDefaultStyling('any') };
+    return { ui: 'any', styling: getDefaultStylingProfile('any') };
   }
 
   const partners = UI_PARTNER_DEFAULTS[ui];
@@ -142,7 +432,7 @@ export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile 
     ui,
     server: partners.server,
     database: partners.database,
-    styling: partners.styling,
+    styling: getDefaultStylingProfile(ui),
   };
 }
 
@@ -151,11 +441,21 @@ export function stackProfileToExportTargets(profile: StackProfile): ExportTarget
     return undefined;
   }
 
-  return {
-    ui: profile.ui,
-    server: profile.server ?? UI_PARTNER_DEFAULTS[profile.ui].server,
-    database: profile.database ?? UI_PARTNER_DEFAULTS[profile.ui].database,
-  };
+  const targets: ExportTargetConfig = { ui: profile.ui };
+
+  if (isExportServerChoice(profile.server)) {
+    targets.server = profile.server;
+  } else if (profile.server === undefined) {
+    targets.server = UI_PARTNER_DEFAULTS[profile.ui].server;
+  }
+
+  if (isExportDatabaseChoice(profile.database)) {
+    targets.database = profile.database;
+  } else if (profile.database === undefined) {
+    targets.database = UI_PARTNER_DEFAULTS[profile.ui].database;
+  }
+
+  return targets;
 }
 
 export function normalizeStackProfile(profile: StackProfile | undefined): StackProfile | undefined {
@@ -163,7 +463,7 @@ export function normalizeStackProfile(profile: StackProfile | undefined): StackP
     return undefined;
   }
 
-  const styling = normalizeStyling(profile.ui, profile.styling);
+  const styling = normalizeStackStyling(profile.ui, profile.styling);
 
   if (profile.ui === 'any') {
     return { ui: 'any', styling };
@@ -206,16 +506,19 @@ export function resolveEffectiveStyling(
   projectProfile: StackProfile | undefined,
   uiTarget: NonNullable<ExportTargetConfig['ui']>,
 ): StylingFrameworkChoice {
-  const normalized = normalizeStackProfile(projectProfile);
-  if (normalized?.styling && isStylingCompatible(uiTarget, normalized.styling)) {
-    return normalized.styling;
-  }
-
-  return getDefaultStyling(uiTarget);
+  return stylingProfilePrimaryFramework(resolveEffectiveStylingProfile(projectProfile, uiTarget));
 }
 
 export function stylingFrameworkLabel(styling: StylingFrameworkChoice): string {
   return STYLING_FRAMEWORK_OPTIONS.find((option) => option.id === styling)?.label ?? styling;
+}
+
+export function serverStackLabel(server: StackServerChoice | undefined): string {
+  return SERVER_STACK_OPTIONS.find((option) => option.id === server)?.label ?? server ?? 'None';
+}
+
+export function databaseStackLabel(database: StackDatabaseChoice | undefined): string {
+  return DATABASE_STACK_OPTIONS.find((option) => option.id === database)?.label ?? database ?? 'None';
 }
 
 export function isScratchPadStack(profile: StackProfile | undefined): boolean {

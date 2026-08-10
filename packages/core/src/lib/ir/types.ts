@@ -7,6 +7,7 @@ import type {
   NodeLayout,
   Port,
   StackProfile,
+  StackStylingProfile,
   StylingFrameworkChoice,
 } from '../model/types';
 
@@ -21,6 +22,8 @@ export interface ExportIRMeta {
 }
 
 export interface IRStyleTokens {
+  profile: StackStylingProfile;
+  /** Primary framework label for v1 export comments and legacy consumers. */
   framework: StylingFrameworkChoice;
 }
 

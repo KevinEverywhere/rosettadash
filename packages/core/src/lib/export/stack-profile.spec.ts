@@ -1,9 +1,12 @@
 import {
   DEFAULT_EXPORT_TARGETS,
   getCompatibleStackDefaults,
+  getCompatibleStylingAuthoring,
   getCompatibleStylingOptions,
   getDefaultStyling,
+  getDefaultStylingProfile,
   normalizeStackProfile,
+  normalizeStackStyling,
   resolveEffectiveExportTargets,
   resolveEffectiveStyling,
   stackProfileToExportTargets,
@@ -15,24 +18,27 @@ describe('stack profile', () => {
       ui: 'react',
       server: 'next',
       database: 'postgresql',
-      styling: 'tailwind',
+      styling: getDefaultStylingProfile('react'),
     });
     expect(getCompatibleStackDefaults('vue')).toEqual({
       ui: 'vue',
       server: 'nuxt',
       database: 'postgresql',
-      styling: 'tailwind',
+      styling: getDefaultStylingProfile('vue'),
     });
     expect(getCompatibleStackDefaults('angular')).toEqual({
       ui: 'angular',
       server: 'nest',
       database: 'postgresql',
-      styling: 'angular-material',
+      styling: getDefaultStylingProfile('angular'),
     });
   });
 
   it('returns scratch-pad profile for any', () => {
-    expect(getCompatibleStackDefaults('any')).toEqual({ ui: 'any', styling: 'neutral' });
+    expect(getCompatibleStackDefaults('any')).toEqual({
+      ui: 'any',
+      styling: getDefaultStylingProfile('any'),
+    });
     expect(stackProfileToExportTargets({ ui: 'any', styling: 'tailwind' })).toBeUndefined();
   });
 
@@ -47,6 +53,11 @@ describe('stack profile', () => {
       'neutral',
       'tailwind',
     ]);
+    expect(getCompatibleStylingAuthoring('react').map((option) => option.id)).toEqual([
+      'css-modules',
+      'styled-components',
+      'plain-css',
+    ]);
   });
 
   it('normalizes partial profiles and styling compatibility', () => {
@@ -54,7 +65,14 @@ describe('stack profile', () => {
       ui: 'angular',
       server: 'express',
       database: 'postgresql',
-      styling: 'angular-material',
+      styling: getDefaultStylingProfile('angular'),
+    });
+
+    expect(normalizeStackProfile({ ui: 'react', server: 'none', database: 'none' })).toEqual({
+      ui: 'react',
+      server: 'none',
+      database: 'none',
+      styling: getDefaultStylingProfile('react'),
     });
 
     expect(
@@ -63,14 +81,27 @@ describe('stack profile', () => {
       ui: 'react',
       server: 'next',
       database: 'postgresql',
-      styling: 'mui',
+      styling: normalizeStackStyling('react', 'mui'),
     });
 
     expect(normalizeStackProfile({ ui: 'react', styling: 'vuetify' as never })).toEqual({
       ui: 'react',
       server: 'next',
       database: 'postgresql',
-      styling: 'tailwind',
+      styling: normalizeStackStyling('react', 'vuetify'),
+    });
+  });
+
+  it('maps none server/database choices to UI-only export targets', () => {
+    expect(stackProfileToExportTargets({ ui: 'react', server: 'none', database: 'none' })).toEqual({
+      ui: 'react',
+    });
+
+    expect(
+      stackProfileToExportTargets({ ui: 'vue', server: 'nuxt', database: 'none', styling: 'tailwind' }),
+    ).toEqual({
+      ui: 'vue',
+      server: 'nuxt',
     });
   });
 

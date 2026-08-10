@@ -1,5 +1,5 @@
 import { ProjectsService } from './projects.service';
-import { defaultComponentRegistry } from '@dashbuilder/core';
+import { defaultComponentRegistry, getDefaultStylingProfile, normalizeStackStyling } from '@dashbuilder/core';
 
 describe('ProjectsService', () => {
   let service: ProjectsService;
@@ -23,14 +23,17 @@ describe('ProjectsService', () => {
       ui: 'react',
       server: 'next',
       database: 'postgresql',
-      styling: 'tailwind',
+      styling: getDefaultStylingProfile('react'),
     });
 
     const scratch = service.createProject({
       name: 'Scratch pad',
       stackProfile: { ui: 'any', server: 'nest', database: 'mongodb', styling: 'tailwind' },
     });
-    expect(scratch.stackProfile).toEqual({ ui: 'any', styling: 'tailwind' });
+    expect(scratch.stackProfile).toEqual({
+      ui: 'any',
+      styling: normalizeStackStyling('any', 'tailwind'),
+    });
   });
 
   it('creates a valid composite', () => {

@@ -80,6 +80,12 @@ export interface ExportTargetConfig {
   database?: 'mongodb' | 'postgresql' | 'supabase' | 'mysql';
 }
 
+/** Server choice on the welcome stack picker — includes explicit opt-out. */
+export type StackServerChoice = NonNullable<ExportTargetConfig['server']> | 'none';
+
+/** Database choice on the welcome stack picker — includes explicit opt-out. */
+export type StackDatabaseChoice = NonNullable<ExportTargetConfig['database']> | 'none';
+
 /** @deprecated Legacy single-choice styling value — migrated to {@link StackStylingProfile}. */
 export type StylingFrameworkChoice =
   | 'neutral'
@@ -113,9 +119,10 @@ export interface StackStylingProfile {
 
 export interface StackProfile {
   ui: 'react' | 'angular' | 'vue' | 'svelte' | 'any';
-  server?: ExportTargetConfig['server'];
-  database?: ExportTargetConfig['database'];
-  styling?: StylingFrameworkChoice;
+  server?: StackServerChoice;
+  database?: StackDatabaseChoice;
+  /** Composable styling profile, or legacy single {@link StylingFrameworkChoice}. */
+  styling?: StackStylingProfile | StylingFrameworkChoice;
 }
 
 export interface Composite {
