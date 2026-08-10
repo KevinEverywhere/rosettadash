@@ -55,7 +55,9 @@ describe('WelcomePageComponent', () => {
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-panel-ui"]')).toBeFalsy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-styling"]')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('.welcome__accordion-summary')).toBeFalsy();
+    expect(
+      fixture.nativeElement.querySelectorAll('.welcome__accordion-summary--placeholder').length,
+    ).toBeGreaterThan(0);
     expect((fixture.nativeElement.querySelector('[data-testid="welcome-continue"]') as HTMLButtonElement).disabled).toBe(true);
   });
 
@@ -261,5 +263,45 @@ describe('WelcomePageComponent', () => {
       },
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
+  });
+
+  it('resets stack selectors to Select when Change stack first is chosen', () => {
+    sessionStorage.setItem(
+      BUILDER_SESSION_KEY,
+      JSON.stringify({ projectId: 'p1', compositeId: 'c1' }),
+    );
+    sessionStorage.setItem(
+      ACTIVE_STACK_KEY,
+      JSON.stringify({
+        ui: 'react',
+        server: 'next',
+        database: 'postgresql',
+        styling: {
+          foundation: ['tailwind'],
+          authoring: ['css-modules'],
+          inlineStyles: true,
+        },
+      }),
+    );
+
+    fixture = TestBed.createComponent(WelcomePageComponent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-framework-prompt"]')).toBeFalsy();
+
+    fixture.nativeElement.querySelector('[data-testid="welcome-start-fresh"]').click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[data-testid="welcome-start-fresh-change-first"]').click();
+    fixture.detectChanges();
+
+    const summaries = [
+      ...fixture.nativeElement.querySelectorAll('.welcome__accordion-summary'),
+    ].map((node: Element) => node.textContent?.trim());
+    expect(summaries.every((text) => text === 'Select')).toBe(true);
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-framework-prompt"]')).toBeTruthy();
+    expect((fixture.nativeElement.querySelector('[data-testid="welcome-continue"]') as HTMLButtonElement).disabled).toBe(
+      true,
+    );
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-panel-ui"]')).toBeTruthy();
   });
 });

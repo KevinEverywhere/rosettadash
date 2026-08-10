@@ -32,10 +32,11 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 20. [Builder Creation Assistance](./21-builder-creation-assistance.md) — animated guides for common components (Phase 18, DAS-69)
 21. [Demo Dashboards](./22-demo-dashboards.md) — three animated example dashboards (Phase 21, post–Phase 20)
 22. [Content Library](./23-content-library.md) — user-controlled save/revisit (DAS-71, spec)
+23. [App Lock](./24-app-lock.md) — optional local password for env secrets (DAS-71)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **Phase 19 (DAS-70)** — BYOK key management — is in progress.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-71** — app lock + content library — is in progress.
 
 ## Current capabilities (at a glance)
 
@@ -49,8 +50,9 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. **Phase 19 (
 | Compact builder layout (tablet / small desktop) | Shipped (DAS-67) |
 | Welcome onboarding UX (empty stack, confirmations) | Shipped (DAS-68) |
 | Builder creation assistance (animated guides) | Shipped (DAS-69) |
-| BYOK key management | DAS-70 — in progress (Phase 19) |
-| AI-assisted component creation | Phase 20 — planned (DAS-71) |
+| BYOK key management | Shipped (DAS-70, Phase 19) |
+| App lock (local env password) | DAS-71 — in progress |
+| AI-assisted component creation | Phase 20 — planned (DAS-72 candidate) |
 | Animated demo dashboards (3 examples) | Phase 21 — planned after Phase 20 |
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |

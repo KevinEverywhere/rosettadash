@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { EnvironmentConfigPageComponent } from './environment-config-page.component';
 import { EnvironmentConfigService } from './environment-config.service';
+import { AppLockService } from './app-lock.service';
 
 describe('EnvironmentConfigPageComponent', () => {
   let fixture: ComponentFixture<EnvironmentConfigPageComponent>;
@@ -14,6 +15,7 @@ describe('EnvironmentConfigPageComponent', () => {
       providers: [
         provideRouter([]),
         EnvironmentConfigService,
+        AppLockService,
         {
           provide: ActivatedRoute,
           useValue: {
@@ -54,6 +56,7 @@ describe('EnvironmentConfigPageComponent', () => {
       providers: [
         provideRouter([]),
         EnvironmentConfigService,
+        AppLockService,
         {
           provide: ActivatedRoute,
           useValue: {

@@ -76,12 +76,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66) | `feature/DAS-66-mobile-tablet-viewport-gate` | Minimum viewport gate and unified availability UX |
 | [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67) | `feature/DAS-67-compact-builder-layout` | Collapsible palette/inspector for tablet and small desktop |
 | [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) | `feature/DAS-69-builder-creation-assistance` | Animated builder guides for all palette components (Phase 18) |
+| [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) | `feature/DAS-70-byok-key-management` | BYOK key management — unified `/environment` page, encrypted storage, validation (Phase 19) |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) | `feature/DAS-70-byok-key-management` | BYOK key management — provider manifest, encrypted storage, settings UI (Phase 19) |
+| [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) | `feature/DAS-71-app-lock-and-content-library` | App lock for env secrets + content library (spec) |
 
 ## Planned (not yet ticketed)
 
@@ -89,7 +90,6 @@ Forward-looking Jira ticket plan for DashBuilder.
 |-------|---------|-----|
 | 20 — AI assist | Natural-language component creation in builder | [AI & BYOK Integration](./20-ai-and-byok-integration.md) |
 | 21 — Demo dashboards | Three animated example dashboards (discuss before build) | [Demo Dashboards](./22-demo-dashboards.md) |
-| — | User-controlled content library | [Content Library](./23-content-library.md) (DAS-71) |
 
 ## Delivery status
 
@@ -109,9 +109,9 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 16 compact builder layout:** complete (DAS-67)
 - **Phase 17 welcome onboarding UX:** complete (DAS-68)
 - **Phase 18 builder creation assistance:** complete (DAS-69)
-- **Phase 19 BYOK key management:** in progress (DAS-70)
+- **Phase 19 BYOK key management:** complete (DAS-70)
+- **DAS-71 app lock + content library:** in progress
 - **Phase 20 AI-assisted creation:** planned (DAS-72 candidate)
-- **DAS-71 content library:** spec only — user-controlled save/revisit with path notation
 - **Phase 21 animated demo dashboards:** planned — discuss after Phase 20
 
 ## Phase 6 — complete
@@ -194,11 +194,18 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 
 See [Builder Creation Assistance](./21-builder-creation-assistance.md).
 
-## Phase 19 — BYOK key management (in progress)
+## Phase 19 — BYOK key management (complete)
 
 1. Client-side provider API key storage and settings UI — DAS-70
 
 See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
+
+## DAS-71 — App lock & content library (in progress)
+
+1. Optional local app password for environment secrets — shipped on branch
+2. User-controlled content library — [spec](./23-content-library.md)
+
+See [App Lock](./24-app-lock.md) and [Content Library](./23-content-library.md).
 
 ## Phase 20 — AI-assisted component creation (planned)
 

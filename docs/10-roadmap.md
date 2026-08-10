@@ -184,7 +184,7 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Upgraded palette info panels and canvas placement prompts
 - [x] See [Builder Creation Assistance](./21-builder-creation-assistance.md)
 
-## Phase 19 — BYOK key management (in progress)
+## Phase 19 — BYOK key management (complete)
 
 **Ticket:** [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) · Branch: `feature/DAS-70-byok-key-management`
 
@@ -195,7 +195,16 @@ Users bring their own AI provider API keys. DashBuilder stores keys client-side 
 - [x] Unified `/environment` page with test connection
 - [x] Welcome + builder navigation links
 - [ ] Deep-link from palette when adding server/AI nodes (Phase 20 follow-up)
-- [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
+- [x] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
+
+## DAS-71 — App lock & content library (in progress)
+
+**Ticket:** [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) · Branch: `feature/DAS-71-app-lock-and-content-library`
+
+- [x] Optional local app password (PBKDF2 verifier + passphrase AES-GCM)
+- [x] Unlock gate on `/environment`
+- [ ] Content library — user-controlled save/revisit ([spec](./23-content-library.md))
+- [ ] See [App Lock](./24-app-lock.md)
 
 ## Phase 20 — AI-assisted component creation (planned)
 

@@ -53,9 +53,12 @@
           (click)="toggleSection('ui')"
         >
           <span class="welcome__accordion-title">UI framework</span>
-          @if (hasUiChoice()) {
-            <span class="welcome__accordion-summary">{{ selectedUiLabel() }}</span>
-          }
+          <span
+            class="welcome__accordion-summary"
+            [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(uiSectionSummary())"
+          >
+            {{ uiSectionSummary() }}
+          </span>
         </button>
         @if (isSectionOpen('ui')) {
           <div class="welcome__accordion-panel" data-testid="stack-section-panel-ui">
@@ -90,9 +93,12 @@
             (click)="toggleSection('server')"
           >
             <span class="welcome__accordion-title">Server (Node.js)</span>
-            @if (hasUiChoice() && serverSummary()) {
-              <span class="welcome__accordion-summary">{{ serverSummary() }}</span>
-            }
+            <span
+              class="welcome__accordion-summary"
+              [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(serverSectionSummary())"
+            >
+              {{ serverSectionSummary() }}
+            </span>
           </button>
           @if (isSectionOpen('server')) {
             <div class="welcome__accordion-panel" data-testid="stack-section-panel-server">
@@ -127,9 +133,12 @@
             (click)="toggleSection('database')"
           >
             <span class="welcome__accordion-title">Database</span>
-            @if (hasUiChoice() && databaseSummary()) {
-              <span class="welcome__accordion-summary">{{ databaseSummary() }}</span>
-            }
+            <span
+              class="welcome__accordion-summary"
+              [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(databaseSectionSummary())"
+            >
+              {{ databaseSectionSummary() }}
+            </span>
           </button>
           @if (isSectionOpen('database')) {
             <div class="welcome__accordion-panel" data-testid="stack-section-panel-database">
@@ -172,9 +181,12 @@
           (click)="toggleSection('styling')"
         >
           <span class="welcome__accordion-title">{{ stylingSectionTitle() }}</span>
-          @if (hasUiChoice() && stylingSummary()) {
-            <span class="welcome__accordion-summary">{{ stylingSummary() }}</span>
-          }
+          <span
+            class="welcome__accordion-summary"
+            [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(stylingSectionSummary())"
+          >
+            {{ stylingSectionSummary() }}
+          </span>
         </button>
         @if (isSectionOpen('styling')) {
           <div class="welcome__accordion-panel" data-testid="stack-section-panel-styling">

@@ -86,7 +86,7 @@ Some organizations forbid browser-to-vendor calls. DashBuilder will support an o
 | Concern | Decision |
 |---------|----------|
 | **Where keys live** | `sessionStorage` (default) or `localStorage` (user opt-in “remember for this browser”) |
-| **Encryption at rest** | AES-GCM with key derived from a per-session random salt + optional user passphrase (stretch goal) |
+| **Encryption at rest** | AES-GCM with per-browser salt; optional **app lock passphrase** (DAS-71) for stronger protection |
 | **Server persistence** | **Never** — NestJS server must not store raw provider API keys in project/composite records |
 | **Export artifacts** | Never embed AI keys in exported zip; use `.env.example` placeholders only |
 | **Telemetry** | No logging of prompts or keys in DashBuilder server logs |
@@ -133,6 +133,10 @@ Location: **`/environment`** — unified **Environment & API keys** page (Welcom
 3. Clipboard export of keys is disabled in the settings UI.
 4. Clearing builder session (`clearBuilderSession`) optionally clears BYOK keys (user preference).
 5. Content Security Policy must allow configured provider endpoints only when AI panel is enabled.
+
+### App lock (DAS-71)
+
+Optional **local password** on `/environment` encrypts BYOK and env secrets with a passphrase-derived key. Separate from server `BUILDER_API_KEY`. See [App Lock](./24-app-lock.md).
 
 ---
 
@@ -212,7 +216,7 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 
 ## Implementation phases
 
-### Phase 19 — BYOK key management (in progress)
+### Phase 19 — BYOK key management (complete)
 
 **Ticket:** [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) · Branch: `feature/DAS-70-byok-key-management`
 
@@ -263,3 +267,4 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 - [Roadmap](./10-roadmap.md) — Phases 18–21
 - [Planned Tickets](./11-planned-tickets.md) — Jira index
 - [Demo Dashboards](./22-demo-dashboards.md) — Phase 21 (after Phase 20, discuss before build)
+- [App Lock](./24-app-lock.md) — optional local password for env secrets (DAS-71)

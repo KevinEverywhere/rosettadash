@@ -1,0 +1,28 @@
+<div class="app-lock-gate" data-testid="app-lock-gate">
+  <div class="app-lock-gate__panel">
+    <h2>Unlock environment vault</h2>
+    <p>Enter your app password to view and edit saved API keys in this browser.</p>
+
+    <form (ngSubmit)="submit()">
+      <label class="app-lock-gate__label">
+        <span>Password</span>
+        <input
+          type="password"
+          autocomplete="current-password"
+          data-testid="app-lock-password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="appLockPassword"
+        />
+      </label>
+
+      @if (appLock.error(); as message) {
+        <p class="app-lock-gate__error" data-testid="app-lock-error">{{ message }}</p>
+      }
+
+      <button type="submit" class="app-lock-gate__submit" data-testid="app-lock-submit" [disabled]="!password().trim()">
+        Unlock
+      </button>
+    </form>
+  </div>
+</div>

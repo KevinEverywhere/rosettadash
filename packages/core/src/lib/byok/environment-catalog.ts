@@ -104,9 +104,9 @@ const BUILDER_FIELDS: EnvFieldDefinition[] = [
   {
     id: 'builder-api-key',
     envKey: 'DASHBUILDER_API_KEY',
-    label: 'DashBuilder access key',
+    label: 'Shared builder API key (advanced)',
     description:
-      'Optional key when your DashBuilder server has BUILDER_AUTH_ENABLED. Stored in this browser only.',
+      'Only when your local NestJS API has BUILDER_AUTH_ENABLED for shared/deployed installs — not the app lock password.',
     category: 'builder',
     sensitive: true,
     optional: true,

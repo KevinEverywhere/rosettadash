@@ -285,6 +285,47 @@ export class WelcomePageComponent implements OnInit {
 
   protected dismissStartFreshDialog(): void {
     this.confirmDialog.set(null);
+    this.resetStackSelections();
+  }
+
+  protected uiSectionSummary(): string {
+    return this.hasUiChoice() ? this.selectedUiLabel() : 'Select';
+  }
+
+  protected serverSectionSummary(): string {
+    if (!this.hasUiChoice() || this.isScratchPad()) {
+      return 'Select';
+    }
+    return this.serverSummary() || 'Select';
+  }
+
+  protected databaseSectionSummary(): string {
+    if (!this.hasUiChoice() || this.isScratchPad()) {
+      return 'Select';
+    }
+    return this.databaseSummary() || 'Select';
+  }
+
+  protected stylingSectionSummary(): string {
+    if (!this.hasUiChoice()) {
+      return 'Select';
+    }
+    return this.stylingSummary() || 'Select';
+  }
+
+  protected isPlaceholderSummary(value: string): boolean {
+    return value === 'Select';
+  }
+
+  private resetStackSelections(): void {
+    this.uiChoice.set(null);
+    this.serverChoice.set(null);
+    this.databaseChoice.set(null);
+    this.stylingProfile.set(null);
+    this.openSections.set(new Set(['ui']));
+    this.baselineProfile = null;
+    this.stackChangeTarget = null;
+    this.pendingStackMutation = null;
   }
 
   protected async continueToBuilder(options?: {

@@ -115,6 +115,11 @@
   font-weight: 600;
   color: var(--db-text, #0f172a);
   text-align: right;
+
+  &--placeholder {
+    color: var(--db-text-muted, #94a3b8);
+    font-weight: 500;
+  }
 }
 
 .welcome__accordion-panel {

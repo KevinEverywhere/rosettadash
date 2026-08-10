@@ -20,6 +20,8 @@ import {
   readActiveStackProfile,
   readPendingStackProfile,
 } from '../welcome/stack-profile-session';
+import { AppLockGateComponent } from './app-lock-gate.component';
+import { AppLockService } from './app-lock.service';
 import { CredentialValidationService } from './credential-validation.service';
 import { EnvironmentConfigService } from './environment-config.service';
 
@@ -39,13 +41,14 @@ const SECTION_LABELS: Record<EnvSectionId, string> = {
 
 @Component({
   selector: 'app-environment-config-page',
-  imports: [FormsModule, RouterLink, NgTemplateOutlet, NgClass],
+  imports: [FormsModule, RouterLink, NgTemplateOutlet, NgClass, AppLockGateComponent],
   templateUrl: './environment-config-page.component.html',
   styleUrl: './environment-config-page.component.scss',
 })
 export class EnvironmentConfigPageComponent implements OnInit {
   protected readonly appName = APP_NAME;
   protected readonly config = inject(EnvironmentConfigService);
+  protected readonly appLock = inject(AppLockService);
   private readonly credentialValidation = inject(CredentialValidationService);
   private readonly route = inject(ActivatedRoute);
 
@@ -58,6 +61,9 @@ export class EnvironmentConfigPageComponent implements OnInit {
   readonly customFields = signal<EnvFieldDefinition[]>([]);
   readonly testingProvider = signal<AiProviderId | null>(null);
   readonly validatingField = signal<string | null>(null);
+  readonly newLockPassword = signal('');
+  readonly confirmLockPassword = signal('');
+  readonly disableLockPassword = signal('');
 
   readonly stackProfile = computed(() => readActiveStackProfile() ?? readPendingStackProfile());
 
@@ -124,6 +130,9 @@ export class EnvironmentConfigPageComponent implements OnInit {
         return summary ?? active ?? null;
       }
       case 'storage':
+        if (this.appLock.isEnabled()) {
+          return this.appLock.isUnlocked() ? 'Locked · unlocked' : 'Locked';
+        }
         return this.config.settings().rememberKeys ? 'Remembered' : 'Session only';
       case 'builder':
         return this.config.hasSecretValue('DASHBUILDER_API_KEY') ? 'Key stored' : null;
@@ -273,6 +282,38 @@ export class EnvironmentConfigPageComponent implements OnInit {
 
   async save(): Promise<void> {
     await this.config.save();
+  }
+
+  async enableAppLock(): Promise<void> {
+    const password = this.newLockPassword().trim();
+    const confirm = this.confirmLockPassword().trim();
+    if (!password || password !== confirm) {
+      this.config.saveMessage.set('Passwords must match and cannot be empty.');
+      return;
+    }
+    await this.appLock.enableLock(password);
+    await this.config.save();
+    this.newLockPassword.set('');
+    this.confirmLockPassword.set('');
+    this.config.saveMessage.set('App lock enabled for this browser.');
+  }
+
+  async disableAppLock(): Promise<void> {
+    const ok = await this.appLock.disableLock(this.disableLockPassword());
+    if (!ok) {
+      return;
+    }
+    this.disableLockPassword.set('');
+    await this.config.reloadSecrets();
+    this.config.saveMessage.set('App lock removed.');
+  }
+
+  lockVault(): void {
+    this.appLock.lock();
+  }
+
+  onVaultUnlocked(): void {
+    // Trigger view refresh after gate unlock.
   }
 
   clearAll(): void {

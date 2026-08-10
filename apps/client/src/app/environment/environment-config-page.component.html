@@ -6,6 +6,8 @@
 
   @if (!config.loaded()) {
     <p class="env-page__loading" data-testid="env-loading">Loading saved values…</p>
+  } @else if (appLock.isEnabled() && !appLock.isUnlocked()) {
+    <app-app-lock-gate data-testid="app-lock-gate-host" />
   } @else {
     <div class="env-page__layout">
       <section class="env-page__hero" aria-labelledby="env-hero-heading">
@@ -80,18 +82,87 @@
               <div class="env-page__accordion-panel" [attr.data-testid]="'env-section-panel-' + section">
                 @switch (section) {
                   @case ('storage') {
-                    <label class="env-page__checkbox">
+                    <p class="env-page__hint">
+                      Optional app password locks this browser’s saved API keys. Skip it if you do not
+                      need extra protection on this device.
+                    </p>
+
+                    @if (!appLock.isEnabled()) {
+                      <div class="env-page__grid">
+                        <label class="env-page__field">
+                          <span>New app password</span>
+                          <input
+                            type="password"
+                            autocomplete="new-password"
+                            data-testid="app-lock-new-password"
+                            [ngModel]="newLockPassword()"
+                            (ngModelChange)="newLockPassword.set($event)"
+                          />
+                        </label>
+                        <label class="env-page__field">
+                          <span>Confirm password</span>
+                          <input
+                            type="password"
+                            autocomplete="new-password"
+                            data-testid="app-lock-confirm-password"
+                            [ngModel]="confirmLockPassword()"
+                            (ngModelChange)="confirmLockPassword.set($event)"
+                          />
+                        </label>
+                      </div>
+                      <button
+                        type="button"
+                        class="env-page__button env-page__button--secondary"
+                        data-testid="app-lock-enable"
+                        (click)="enableAppLock()"
+                      >
+                        Enable app lock
+                      </button>
+                    } @else {
+                      <p class="env-page__hint env-page__hint--success">App lock is enabled.</p>
+                      <button
+                        type="button"
+                        class="env-page__button env-page__button--secondary"
+                        data-testid="app-lock-lock-now"
+                        (click)="lockVault()"
+                      >
+                        Lock now
+                      </button>
+                      <label class="env-page__field env-page__field--spaced">
+                        <span>Current password to remove app lock</span>
+                        <input
+                          type="password"
+                          autocomplete="current-password"
+                          data-testid="app-lock-disable-password"
+                          [ngModel]="disableLockPassword()"
+                          (ngModelChange)="disableLockPassword.set($event)"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        class="env-page__button env-page__button--danger"
+                        data-testid="app-lock-disable"
+                        (click)="disableAppLock()"
+                      >
+                        Remove app lock
+                      </button>
+                    }
+
+                    <label class="env-page__checkbox env-page__field--spaced">
                       <input
                         type="checkbox"
                         data-testid="env-remember-keys"
                         [checked]="config.settings().rememberKeys"
+                        [disabled]="appLock.isEnabled()"
                         (change)="onRememberKeysChange($any($event.target).checked)"
                       />
                       Remember values in this browser (encrypted localStorage for secrets)
                     </label>
-                    <p class="env-page__hint">
-                      When unchecked, secrets clear when you close the tab.
-                    </p>
+                    @if (appLock.isEnabled()) {
+                      <p class="env-page__hint">App lock always persists encrypted secrets locally.</p>
+                    } @else {
+                      <p class="env-page__hint">When unchecked, secrets clear when you close the tab.</p>
+                    }
                   }
 
                   @case ('ai') {

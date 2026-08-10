@@ -1,7 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
   decryptSecretPayload,
+  decryptWithPassphrase,
   encryptSecretPayload,
+  encryptWithPassphrase,
   generateStorageSalt,
   getDefaultByokSettings,
   parseEncryptedPayload,
@@ -15,6 +17,7 @@ import {
   type CredentialValidationStatus,
   type EnvironmentStorageSettings,
 } from '@dashbuilder/core';
+import { AppLockService } from './app-lock.service';
 
 const SETTINGS_KEY = 'dashbuilder:environment:settings';
 const SECRETS_KEY = 'dashbuilder:environment:secrets';
@@ -28,6 +31,8 @@ const DEFAULT_SETTINGS: EnvironmentStorageSettings = {
 
 @Injectable({ providedIn: 'root' })
 export class EnvironmentConfigService {
+  private readonly appLock = inject(AppLockService);
+
   readonly settings = signal<EnvironmentStorageSettings>(DEFAULT_SETTINGS);
   readonly plainValues = signal<Record<string, string>>({});
   readonly secretKeys = signal<string[]>([]);
@@ -40,8 +45,13 @@ export class EnvironmentConfigService {
 
   async initialize(): Promise<void> {
     this.loaded.set(false);
+    this.appLock.initialize();
     await this.loadFromStorage();
     this.loaded.set(true);
+  }
+
+  async reloadSecrets(): Promise<void> {
+    await this.loadSecretsFromStorage();
   }
 
   getValue(envKey: string): string {
@@ -188,19 +198,26 @@ export class EnvironmentConfigService {
 
     const salt = await this.ensureSalt();
     const secretPayload = JSON.stringify(Object.fromEntries(this.secretValues.entries()));
-    const encrypted = await encryptSecretPayload(secretPayload, salt);
+    const encrypted = await this.encryptSecrets(secretPayload, salt);
     const encryptedJson = serializeEncryptedPayload(encrypted);
 
+    const persistLocally = settings.rememberKeys || this.appLock.isEnabled();
     sessionStorageRef.setItem(SECRETS_KEY, encryptedJson);
-    if (settings.rememberKeys && localStorageRef) {
+    if (persistLocally && localStorageRef) {
       localStorageRef.setItem(SECRETS_KEY, encryptedJson);
-      localStorageRef.setItem(SALT_KEY, this.encodeSalt(salt));
+      if (!this.appLock.isEnabled()) {
+        localStorageRef.setItem(SALT_KEY, this.encodeSalt(salt));
+      }
     } else if (localStorageRef) {
       localStorageRef.removeItem(SECRETS_KEY);
-      localStorageRef.removeItem(SALT_KEY);
+      if (!this.appLock.isEnabled()) {
+        localStorageRef.removeItem(SALT_KEY);
+      }
     }
 
-    sessionStorageRef.setItem(SALT_KEY, this.encodeSalt(salt));
+    if (!this.appLock.isEnabled()) {
+      sessionStorageRef.setItem(SALT_KEY, this.encodeSalt(salt));
+    }
 
     const builderKey = this.secretValues.get('DASHBUILDER_API_KEY');
     if (builderKey) {
@@ -261,7 +278,7 @@ export class EnvironmentConfigService {
       (rememberFromLocal ? localStorageRef?.getItem(PLAIN_KEY) : null) ??
       sessionStorageRef?.getItem(PLAIN_KEY);
 
-    if (plainRaw) {
+    if (plainRaw && (!this.appLock.isEnabled() || this.appLock.isUnlocked())) {
       try {
         this.plainValues.set(JSON.parse(plainRaw) as Record<string, string>);
       } catch {
@@ -269,30 +286,81 @@ export class EnvironmentConfigService {
       }
     }
 
+    await this.loadSecretsFromStorage();
+  }
+
+  private async loadSecretsFromStorage(): Promise<void> {
+    const sessionStorageRef = this.getSessionStorage();
+    const localStorageRef = this.getLocalStorage();
+    const rememberFromLocal =
+      localStorageRef?.getItem(SETTINGS_KEY) &&
+      JSON.parse(localStorageRef.getItem(SETTINGS_KEY) ?? '{}').rememberKeys;
+
+    if (this.appLock.isEnabled() && !this.appLock.isUnlocked()) {
+      this.secretValues.clear();
+      this.secretKeys.set([]);
+      return;
+    }
+
     const saltRaw =
       (rememberFromLocal ? localStorageRef?.getItem(SALT_KEY) : null) ??
       sessionStorageRef?.getItem(SALT_KEY);
 
-    if (saltRaw) {
+    if (saltRaw && !this.appLock.isEnabled()) {
       this.salt = this.decodeSalt(saltRaw);
     }
 
     const secretsRaw =
-      (rememberFromLocal ? localStorageRef?.getItem(SECRETS_KEY) : null) ??
+      (this.appLock.isEnabled()
+        ? localStorageRef?.getItem(SECRETS_KEY)
+        : rememberFromLocal
+          ? localStorageRef?.getItem(SECRETS_KEY)
+          : null) ??
       sessionStorageRef?.getItem(SECRETS_KEY);
 
-    if (secretsRaw && this.salt) {
-      try {
-        const payload = parseEncryptedPayload(secretsRaw);
-        const decrypted = await decryptSecretPayload(payload, this.salt);
-        const parsed = JSON.parse(decrypted) as Record<string, string>;
-        this.secretValues = new Map(Object.entries(parsed));
-        this.secretKeys.set([...this.secretValues.keys()]);
-      } catch {
-        this.secretValues.clear();
-        this.secretKeys.set([]);
-      }
+    if (!secretsRaw) {
+      this.secretValues.clear();
+      this.secretKeys.set([]);
+      return;
     }
+
+    try {
+      const payload = parseEncryptedPayload(secretsRaw);
+      const decrypted = await this.decryptSecrets(payload);
+      const parsed = JSON.parse(decrypted) as Record<string, string>;
+      this.secretValues = new Map(Object.entries(parsed));
+      this.secretKeys.set([...this.secretValues.keys()]);
+    } catch {
+      this.secretValues.clear();
+      this.secretKeys.set([]);
+    }
+  }
+
+  private async encryptSecrets(secretPayload: string, salt: Uint8Array) {
+    if (this.appLock.isEnabled()) {
+      const passphrase = this.appLock.getPassphrase();
+      const encryptionSalt = this.appLock.getEncryptionSaltBase64();
+      if (!passphrase || !encryptionSalt) {
+        throw new Error('App lock is enabled but vault is locked.');
+      }
+      return encryptWithPassphrase(secretPayload, passphrase, encryptionSalt);
+    }
+    return encryptSecretPayload(secretPayload, salt);
+  }
+
+  private async decryptSecrets(payload: ReturnType<typeof parseEncryptedPayload>): Promise<string> {
+    if (this.appLock.isEnabled()) {
+      const passphrase = this.appLock.getPassphrase();
+      const encryptionSalt = this.appLock.getEncryptionSaltBase64();
+      if (!passphrase || !encryptionSalt) {
+        throw new Error('App lock is enabled but vault is locked.');
+      }
+      return decryptWithPassphrase(payload, passphrase, encryptionSalt);
+    }
+    if (!this.salt) {
+      throw new Error('Missing storage salt.');
+    }
+    return decryptSecretPayload(payload, this.salt);
   }
 
   private getProviderValidationKeyForEnvKey(envKey: string): string | null {
