@@ -16,11 +16,18 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Bind the range output to table or chart filter inputs.',
   },
   {
+    type: 'domain.time-preset',
+    summary: 'Relative period shortcuts — drives the same bindings as date range.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.table', 'visual.chart.line'],
+    placementMessage: 'Bind the range output to table or chart filter inputs.',
+  },
+  {
     type: 'visual.table',
     summary: 'Tabular data view — usually paired with a filter and data source.',
     animationKey: 'filter-table',
-    companionTypes: ['visual.input.date-range', 'infra.postgresql', 'visual.detail'],
-    placementMessage: 'Add a Date Range filter and PostgreSQL source for a complete data flow.',
+    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'infra.postgresql', 'visual.detail'],
+    placementMessage: 'Add a time filter and PostgreSQL source for a complete data flow.',
   },
   {
     type: 'visual.detail',
@@ -33,21 +40,21 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     type: 'visual.chart.line',
     summary: 'Time-series chart — works best with a date range and rowset data.',
     animationKey: 'filter-chart',
-    companionTypes: ['visual.input.date-range', 'visual.table'],
+    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'visual.table'],
     placementMessage: 'Add a Date Range and optionally a Table for drill-down.',
   },
   {
     type: 'visual.chart.bar',
     summary: 'Category comparison chart — often grouped with filters and KPIs.',
     animationKey: 'filter-chart',
-    companionTypes: ['visual.input.date-range', 'visual.kpi'],
+    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'visual.kpi'],
     placementMessage: 'Add a Date Range filter and KPI cards for dashboard context.',
   },
   {
     type: 'visual.chart.pie',
     summary: 'Part-to-whole breakdown — pair with filters and KPI context.',
     animationKey: 'filter-chart',
-    companionTypes: ['visual.input.date-range', 'visual.kpi'],
+    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'visual.kpi'],
     placementMessage: 'Add a Date Range filter and KPI cards for dashboard context.',
   },
   {
@@ -145,7 +152,7 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
 
 const guideByType = new Map(GROUPING_GUIDES.map((guide) => [guide.type, guide]));
 
-const FILTER_TYPES = new Set(['visual.input.date-range']);
+const FILTER_TYPES = new Set(['visual.input.date-range', 'domain.time-preset']);
 const DATA_VISUAL_TYPES = new Set([
   'visual.table',
   'visual.detail',

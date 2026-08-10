@@ -19,6 +19,7 @@ export class PreviewDataService {
   readonly loading = signal(false);
   readonly source = signal<PreviewDataSource>('default');
   readonly selectedTableRow = signal<PreviewRow | null>(null);
+  readonly selectedTimePreset = signal<string | null>(null);
 
   readonly nodeSlices = computed(() => this.bundle().nodes);
 
@@ -43,6 +44,10 @@ export class PreviewDataService {
 
   selectTableRow(row: PreviewRow): void {
     this.selectedTableRow.set(row);
+  }
+
+  selectTimePreset(preset: string): void {
+    this.selectedTimePreset.set(preset);
   }
 
   sliceForNode(nodeId: string): NodePreviewSlice | undefined {

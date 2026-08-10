@@ -107,7 +107,7 @@ These types are registered, previewable, and covered by exporters (visual → UI
 2. ~~`visual.chart.pie`~~ — shipped (DAS-46)
 3. ~~`layout.flex`~~ — shipped (DAS-46)
 4. ~~`visual.detail`~~ — shipped (DAS-47)
-5. `domain.time-preset` — relative period shortcuts (Last 7d, QTD)
+5. `domain.time-preset` — DAS-48 (in progress)
 6. `visual.skeleton` — loading state wrapper
 
 Each should be **one Jira ticket** with registry + preview + at least React exporter + e2e hook.

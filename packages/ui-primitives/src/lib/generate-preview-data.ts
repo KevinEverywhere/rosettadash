@@ -42,6 +42,7 @@ export interface NodePreviewSlice {
   filteredByDateRange?: boolean;
   selectedRow?: PreviewRow | null;
   linkedToTable?: boolean;
+  activeTimePreset?: string;
 }
 
 export interface PreviewDataBundle {
@@ -100,6 +101,37 @@ export function formatIsoDate(base: Date, offsetDays: number): string {
 function readPreset(node?: PreviewNodeInput, fallback = 'last-7-days'): string {
   const preset = node?.properties?.['preset'];
   return typeof preset === 'string' ? preset : fallback;
+}
+
+function readTimePreset(node?: PreviewNodeInput, fallback = 'last-7-days'): string {
+  const preset = node?.properties?.['defaultPreset'];
+  return typeof preset === 'string' ? preset : fallback;
+}
+
+function isTimeFilterType(type: string): boolean {
+  return type === 'visual.input.date-range' || type === 'domain.time-preset';
+}
+
+function resolveActivePreset(
+  request: PreviewDataRequest,
+  nodes: PreviewNodeInput[],
+  domainPreset: string,
+): string {
+  if (request.dateRangePreset) {
+    return request.dateRangePreset;
+  }
+
+  const dateRangeNode = nodes.find((node) => node.type === 'visual.input.date-range');
+  if (dateRangeNode) {
+    return readPreset(dateRangeNode, domainPreset);
+  }
+
+  const timePresetNode = nodes.find((node) => node.type === 'domain.time-preset');
+  if (timePresetNode) {
+    return readTimePreset(timePresetNode, domainPreset);
+  }
+
+  return domainPreset;
 }
 
 function filterRowsByPreset(rows: PreviewRow[], preset: string): PreviewRow[] {
@@ -177,9 +209,7 @@ export function resolvePreviewGraph(
   ].join(':');
   const random = createRandom(hashSeed(seedKey));
 
-  const dateRangeNode = nodes.find((node) => node.type === 'visual.input.date-range');
-  const activePreset =
-    request.dateRangePreset ?? readPreset(dateRangeNode, domainPreset);
+  const activePreset = resolveActivePreset(request, nodes, domainPreset);
   const dateRangeLabel = PRESET_LABELS[activePreset] ?? PRESET_LABELS['last-7-days'];
 
   const baseRows = generateBaseRows(request, random);
@@ -200,8 +230,7 @@ export function resolvePreviewGraph(
       !!filterBinding &&
       nodes.some(
         (node) =>
-          node.id === filterBinding.sourceNodeId &&
-          node.type === 'visual.input.date-range',
+          node.id === filterBinding.sourceNodeId && isTimeFilterType(node.type),
       );
 
     nodeSlices[tableNode.id] = {
@@ -222,8 +251,7 @@ export function resolvePreviewGraph(
       !!rangeBinding &&
       nodes.some(
         (node) =>
-          node.id === rangeBinding.sourceNodeId &&
-          node.type === 'visual.input.date-range',
+          node.id === rangeBinding.sourceNodeId && isTimeFilterType(node.type),
       );
 
     const linkedFromTable = tableNodes.length > 0;
@@ -241,6 +269,12 @@ export function resolvePreviewGraph(
     if (node.type === 'visual.input.date-range') {
       nodeSlices[node.id] = {
         dateRangeLabel,
+      };
+    }
+    if (node.type === 'domain.time-preset') {
+      nodeSlices[node.id] = {
+        dateRangeLabel,
+        activeTimePreset: activePreset,
       };
     }
   }

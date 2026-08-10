@@ -1,7 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
-import { PreviewRow } from '@dashbuilder/ui-primitives';
+import { PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
 import { BuilderStateService } from '../builder-state.service';
 import { PreviewDataService } from './preview-data.service';
 
@@ -22,6 +22,19 @@ export class PreviewNodeComponent {
   );
 
   protected readonly linkedToTable = computed(() => this.slice()?.linkedToTable ?? false);
+
+  protected readonly timePresetOptions = [
+    { id: 'last-7-days', label: PRESET_LABELS['last-7-days'] },
+    { id: 'last-30-days', label: PRESET_LABELS['last-30-days'] },
+    { id: 'qtd', label: PRESET_LABELS['qtd'] },
+  ];
+
+  protected readonly activeTimePreset = computed(
+    () =>
+      this.previewData.selectedTimePreset() ??
+      this.slice()?.activeTimePreset ??
+      this.readString('defaultPreset', 'last-7-days'),
+  );
 
   protected readonly tableRows = computed(
     () => this.slice()?.tableRows ?? this.previewData.bundle().tableRows,
@@ -121,6 +134,14 @@ export class PreviewNodeComponent {
 
   protected selectTableRow(row: PreviewRow): void {
     this.previewData.selectTableRow(row);
+  }
+
+  protected selectTimePreset(preset: string): void {
+    this.previewData.selectTimePreset(preset);
+  }
+
+  protected isActiveTimePreset(preset: string): boolean {
+    return this.activeTimePreset() === preset;
   }
 
   protected isSelectedTableRow(row: PreviewRow): boolean {

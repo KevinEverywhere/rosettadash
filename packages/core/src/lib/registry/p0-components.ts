@@ -325,6 +325,29 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'domain.time-preset',
+    category: 'domain',
+    label: 'Time Preset',
+    description: 'Relative period shortcuts for dashboard filters',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'range', name: 'range', dataType: 'date-range' }],
+    properties: [
+      { key: 'label', label: 'Label', type: 'string', default: 'Period' },
+      {
+        key: 'defaultPreset',
+        label: 'Default preset',
+        type: 'select',
+        default: 'last-7-days',
+        options: [
+          { label: 'Last 7 days', value: 'last-7-days' },
+          { label: 'Last 30 days', value: 'last-30-days' },
+          { label: 'Quarter to date', value: 'qtd' },
+        ],
+      },
+    ],
+  },
+  {
     type: 'infra.env',
     category: 'infra',
     label: 'Environment Config',

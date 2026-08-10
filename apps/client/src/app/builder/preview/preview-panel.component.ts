@@ -27,10 +27,16 @@ export class PreviewPanelComponent {
       const dateRangeNode = this.state
         .nodes()
         .find((node) => node.type === 'visual.input.date-range');
+      const timePresetNode = this.state
+        .nodes()
+        .find((node) => node.type === 'domain.time-preset');
       const preset =
-        typeof dateRangeNode?.properties['preset'] === 'string'
+        this.previewData.selectedTimePreset() ??
+        (typeof dateRangeNode?.properties['preset'] === 'string'
           ? dateRangeNode.properties['preset']
-          : domainContext?.defaultTimeRange ?? 'last-7-days';
+          : typeof timePresetNode?.properties['defaultPreset'] === 'string'
+            ? timePresetNode.properties['defaultPreset']
+            : domainContext?.defaultTimeRange ?? 'last-7-days');
 
       void this.previewData.load({
         projectName: project?.name,

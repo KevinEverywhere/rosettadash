@@ -136,6 +136,10 @@ function generateTokensScss(ir: ExportIR): string {
     `.detail-panel__field { display: grid; grid-template-columns: minmax(5rem, 30%) 1fr; gap: 0.5rem; font-size: 0.875rem; }`,
     `.detail-panel__field dt { font-weight: 600; color: var(--db-muted); text-transform: capitalize; }`,
     `.detail-panel__empty { margin: 0; color: var(--db-muted); font-size: 0.875rem; }`,
+    `.time-preset { display: flex; flex-direction: column; gap: 0.5rem; }`,
+    `.time-preset__buttons { display: flex; flex-wrap: wrap; gap: 0.375rem; }`,
+    `.time-preset__button { padding: 0.375rem 0.625rem; border: 1px solid var(--db-border); border-radius: 999px; background: #fff; font: inherit; font-size: 0.75rem; cursor: pointer; }`,
+    `.time-preset__button--active { border-color: var(--db-accent); background: color-mix(in srgb, var(--db-accent) 12%, transparent); color: var(--db-accent); font-weight: 600; }`,
     `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);

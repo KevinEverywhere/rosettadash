@@ -16,6 +16,7 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
       'visual.input.checkbox',
       'visual.input.textarea',
       'visual.input.date-range',
+      'domain.time-preset',
     ],
   },
   {

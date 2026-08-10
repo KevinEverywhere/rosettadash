@@ -32,4 +32,29 @@ test.describe('Builder preview binding flow', () => {
       'Filtered by date range',
     );
   });
+
+  test('filters table from time preset bindings in preview', async ({ page }) => {
+    await addFromPalette(page, 'domain.time-preset');
+    await addFromPalette(page, 'visual.table');
+    await expect(page.getByTestId('canvas-node')).toHaveCount(2);
+
+    const timePresetNode = page.getByTestId('canvas-node').nth(0);
+    const tableNode = page.getByTestId('canvas-node').nth(1);
+
+    await timePresetNode.getByTestId(/^port-output-.*-range$/).click();
+    await tableNode.getByTestId(/^port-input-.*-filter$/).click();
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+
+    await expect(page.getByTestId('preview-time-preset')).toBeVisible();
+    await expect(page.getByTestId('preview-table').first()).toBeVisible();
+    await expect(page.getByTestId('preview-binding-hint').first()).toContainText(
+      'Filtered by date range',
+    );
+
+    await page.getByRole('button', { name: 'Last 30 days' }).click();
+    await waitForPreviewData(page);
+    await expect(page.locator('.preview-time-preset__button--active')).toHaveText('Last 30 days');
+  });
 });

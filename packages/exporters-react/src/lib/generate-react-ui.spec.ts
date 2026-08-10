@@ -250,6 +250,51 @@ describe('generateReactUiFiles', () => {
     expect(dashboard?.content).toContain('t1_selected_row');
   });
 
+  it('generates React time preset with table filter wiring', () => {
+    const timePreset = registry.createNode('domain.time-preset', { id: 'tp1' });
+    const table = registry.createNode('visual.table', { id: 't1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Preset Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [timePreset, table, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 't1',
+            targetPortId: 'data',
+          },
+          {
+            id: 'b2',
+            sourceNodeId: 'tp1',
+            sourcePortId: 'range',
+            targetNodeId: 't1',
+            targetPortId: 'filter',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const presetFile = files.find((file) => file.path.includes('TimePreset'));
+    const dashboard = files.find((file) => file.path === 'src/Dashboard.tsx');
+
+    expect(presetFile?.content).toContain('time-preset__button');
+    expect(dashboard?.content).toContain('tp1_range');
+    expect(dashboard?.content).toContain('filter={tp1_range}');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

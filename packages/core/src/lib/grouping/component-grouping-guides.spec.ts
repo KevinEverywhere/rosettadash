@@ -35,6 +35,12 @@ describe('component-grouping-guides', () => {
     expect(resolveCompanionPlacement('visual.table', 'visual.detail')).toBe('right');
   });
 
+  it('returns a guide for time preset with table companion', () => {
+    expect(getGroupingGuide('domain.time-preset')?.companionTypes).toContain('visual.table');
+    expect(getGroupingGuide('visual.table')?.companionTypes).toContain('domain.time-preset');
+    expect(resolveCompanionPlacement('visual.table', 'domain.time-preset')).toBe('above');
+  });
+
   it('computes snapped companion layout above the source node', () => {
     const layout = computeCompanionLayout(
       { x: 48, y: 96, width: 220, height: 72 },

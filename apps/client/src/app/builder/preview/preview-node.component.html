@@ -77,6 +77,23 @@
       <span class="preview-date-range__preset">{{ dateRangeLabel() }}</span>
     </div>
   }
+  @case ('domain.time-preset') {
+    <div class="preview-time-preset" data-testid="preview-time-preset">
+      <span class="preview-field__label">{{ readString('label', 'Period') }}</span>
+      <div class="preview-time-preset__buttons">
+        @for (option of timePresetOptions; track option.id) {
+          <button
+            type="button"
+            class="preview-time-preset__button"
+            [class.preview-time-preset__button--active]="isActiveTimePreset(option.id)"
+            (click)="selectTimePreset(option.id)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+  }
   @case ('visual.table') {
     <div class="preview-table" data-testid="preview-table">
       <div class="preview-table__header">

@@ -7,6 +7,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.input.checkbox': 'CheckboxInput',
   'visual.input.textarea': 'TextareaInput',
   'visual.input.date-range': 'DateRangeFilter',
+  'domain.time-preset': 'TimePreset',
   'visual.table': 'DataTable',
   'visual.detail': 'DetailPanel',
   'visual.kpi': 'KpiCard',

@@ -4,6 +4,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.input.text': 'TextInput',
   'visual.input.select': 'SelectInput',
   'visual.input.date-range': 'DateRangeFilter',
+  'domain.time-preset': 'TimePreset',
   'visual.table': 'DataTable',
   'visual.detail': 'DetailPanel',
   'visual.kpi': 'KpiCard',
