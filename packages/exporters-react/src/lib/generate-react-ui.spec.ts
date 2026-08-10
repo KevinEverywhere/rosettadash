@@ -167,6 +167,43 @@ describe('generateReactUiFiles', () => {
     expect(textareaFile?.content).toContain('<textarea');
   });
 
+  it('generates React pie chart component template', () => {
+    const pie = registry.createNode('visual.chart.pie', {
+      id: 'p1',
+      properties: { title: 'Breakdown', donut: true },
+    });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Pie Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [pie, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 'p1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const pieFile = files.find((file) => file.path.endsWith('PieChart.tsx'));
+    expect(pieFile?.content).toContain('conic-gradient');
+    expect(pieFile?.content).toContain('pie-chart--donut');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

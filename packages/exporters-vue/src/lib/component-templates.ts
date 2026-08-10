@@ -10,6 +10,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
+  'visual.chart.pie',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -32,6 +33,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateLineChart(exportName);
     case 'visual.chart.bar':
       return generateBarChart(exportName);
+    case 'visual.chart.pie':
+      return generatePieChart(exportName);
     default:
       throw new VueExportError(`Missing Vue template for ${component.type}`);
   }
@@ -306,6 +309,69 @@ function generateBarChart(name: string): string {
     `        :title="String(row.label ?? row.id ?? index)"`,
     `      />`,
     `    </div>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generatePieChart(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { DateRange, Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    title?: string;`,
+    `    labelField?: string;`,
+    `    valueField?: string;`,
+    `    donut?: boolean;`,
+    `    data?: Row[];`,
+    `    range?: DateRange;`,
+    `  }>(),`,
+    `  { title: 'Chart', labelField: 'label', valueField: 'value', donut: false, data: () => [] },`,
+    `);`,
+    `const filtered = computed(() => filterByRange(props.data ?? [], props.range));`,
+    `const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];`,
+    `const gradient = computed(() => {`,
+    `  const total = filtered.value.reduce((sum, row) => sum + Number(row[props.valueField] ?? 0), 0) || 1;`,
+    `  let cumulative = 0;`,
+    `  const stops = filtered.value.map((row, index) => {`,
+    `    const value = Number(row[props.valueField] ?? 0);`,
+    `    const percent = (value / total) * 100;`,
+    `    const start = cumulative;`,
+    `    cumulative += percent;`,
+    `    return \`\${colors[index % colors.length]} \${start}% \${cumulative}%\`;`,
+    `  });`,
+    `  return \`conic-gradient(\${stops.join(', ') || '#d1d5db 0 100%'})\`;`,
+    `});`,
+    `function color(index: number): string {`,
+    `  return colors[index % colors.length] ?? colors[0];`,
+    `}`,
+    `function filterByRange(data: Row[], range?: DateRange): Row[] {`,
+    `  if (!range) return data;`,
+    `  return data.filter((row) => {`,
+    `    const value = String(row.date ?? row.createdAt ?? '');`,
+    `    if (!value) return true;`,
+    `    return value >= range.start && value <= range.end;`,
+    `  });`,
+    `}`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="chart-card" :id="id">`,
+    `    <h3>{{ title }}</h3>`,
+    `    <div`,
+    `      :class="donut ? 'pie-chart pie-chart--donut' : 'pie-chart'"`,
+    `      :style="{ background: gradient }"`,
+    `    ></div>`,
+    `    <ul class="pie-chart__legend">`,
+    `      <li v-for="(row, index) in filtered" :key="String(row.id ?? index)">`,
+    `        <span :style="{ background: color(index) }"></span>`,
+    `        {{ String(row[labelField] ?? row.id ?? index) }}`,
+    `      </li>`,
+    `    </ul>`,
     `  </section>`,
     `</template>`,
     ``,

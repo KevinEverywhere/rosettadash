@@ -8,6 +8,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.kpi': 'KpiCard',
   'visual.chart.line': 'LineChart',
   'visual.chart.bar': 'BarChart',
+  'visual.chart.pie': 'PieChart',
 };
 
 export function pascalCase(value: string): string {

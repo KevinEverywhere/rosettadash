@@ -26,12 +26,12 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
   {
     id: 'charts',
     label: 'Charts',
-    types: ['visual.chart.line', 'visual.chart.bar'],
+    types: ['visual.chart.line', 'visual.chart.bar', 'visual.chart.pie'],
   },
   {
     id: 'layout',
     label: 'Layout & Navigation',
-    types: ['layout.grid', 'layout.tabs', 'layout.modal'],
+    types: ['layout.grid', 'layout.flex', 'layout.tabs', 'layout.modal'],
   },
   {
     id: 'access-onboarding',

@@ -92,6 +92,43 @@ describe('generateAngularUiFiles', () => {
     expect(files.filter((file) => file.path.startsWith('src/components/'))).toHaveLength(3);
   });
 
+  it('generates Angular pie chart component template', () => {
+    const pie = registry.createNode('visual.chart.pie', {
+      id: 'p1',
+      properties: { title: 'Breakdown', donut: true },
+    });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Pie Dashboard',
+        version: 1,
+        exportTargets: { ui: 'angular', server: 'nest' },
+        nodes: [pie, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 'p1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateAngularUiFiles(ir);
+    const pieFile = files.find((file) => file.path.includes('PieChart'));
+    expect(pieFile?.content).toContain('conic-gradient');
+    expect(pieFile?.content).toContain('pie-chart--donut');
+  });
+
   it('rejects non-angular UI targets', () => {
     const ir = buildExportIR(
       {

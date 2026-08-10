@@ -82,7 +82,9 @@ These types are registered, previewable, and covered by exporters (visual → UI
 | `visual.kpi` | Single metric card |
 | `visual.chart.line` | Line chart |
 | `visual.chart.bar` | Bar chart |
+| `visual.chart.pie` | Pie / donut chart |
 | `layout.grid` | Responsive layout container |
+| `layout.flex` | Flex row/column layout container |
 | `layout.tabs` | Tabbed regions |
 | `layout.modal` | Dialog shell |
 | `domain.role-gate` | Role-based visibility wrapper |
@@ -101,8 +103,8 @@ These types are registered, previewable, and covered by exporters (visual → UI
 ### Next single components (suggested P1 order)
 
 1. ~~`visual.input.number`, `visual.input.checkbox`, `visual.input.textarea`~~ — shipped (DAS-39)
-2. `visual.chart.pie` — second chart family
-3. `layout.flex` — simpler layout than grid for many pages
+2. ~~`visual.chart.pie`~~ — shipped (DAS-46)
+3. ~~`layout.flex`~~ — shipped (DAS-46)
 4. `visual.detail` — row drill-down from table selection
 5. `domain.time-preset` — relative period shortcuts (Last 7d, QTD)
 6. `visual.skeleton` — loading state wrapper
@@ -213,7 +215,7 @@ Create a Jira ticket **before** each branch:
 3. ~~**Export wizard: single/selection modes** — UX for piecemeal export~~ — DAS-41
 4. ~~**Layout polish** — snap, resize, multi-select on canvas~~ — DAS-42
 5. ~~**Undo/redo** — command pattern over graph mutations~~ — DAS-45
-6. **Pie chart + flex layout** — expand visualization and layout palette
+6. ~~**Pie chart + flex layout** — expand visualization and layout palette~~ — DAS-46
 7. ~~**Grouping guides & animated placement hints**~~ — DAS-43
 8. ~~**Palette accordion groups** — 2–7 functional groups, default collapsed~~ — DAS-44
 
@@ -253,6 +255,15 @@ Snapshot-based history stack over graph mutations in `apps/client/src/app/builde
 | **Mutations tracked** | Add/remove node, property edits, bindings, layout drag/resize (coalesced), domain context |
 | **UI** | Undo / Redo toolbar buttons; Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z (or Ctrl+Y) |
 | **Stack rules** | Redo cleared on new mutation; history reset on load/save/template apply |
+
+### Pie chart + flex layout (DAS-46)
+
+| Type | Preview | Export |
+|------|---------|--------|
+| `visual.chart.pie` | Conic-gradient pie/donut with legend | React, Angular, Vue, Svelte UI exporters |
+| `layout.flex` | Row/column flex slots with gap + align | Preview only (layouts export via IR `layouts` array) |
+
+Registry properties for pie: `title`, `labelField`, `valueField`, `donut`. Flex: `direction`, `gap`, `align`.
 
 ---
 

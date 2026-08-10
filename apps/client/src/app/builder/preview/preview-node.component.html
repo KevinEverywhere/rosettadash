@@ -150,6 +150,29 @@
       </div>
     </div>
   }
+  @case ('visual.chart.pie') {
+    <div class="preview-chart" data-testid="preview-pie-chart">
+      <div class="preview-chart__header">
+        <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        }
+      </div>
+      <div
+        class="preview-chart__pie"
+        [class.preview-chart__pie--donut]="readBoolean('donut')"
+        [style.background]="pieConicGradient()"
+      ></div>
+      <ul class="preview-chart__pie-legend">
+        @for (slice of pieSlices(); track slice.label) {
+          <li>
+            <span class="preview-chart__pie-swatch" [style.background]="slice.color"></span>
+            {{ slice.label }}
+          </li>
+        }
+      </ul>
+    </div>
+  }
   @case ('layout.grid') {
     <div class="preview-layout" data-testid="preview-grid">
       <span class="preview-layout__title">{{ node().label }}</span>
@@ -160,6 +183,21 @@
       >
         @for (slot of [1, 2, 3]; track slot) {
           <div class="preview-layout__slot">Slot {{ slot }}</div>
+        }
+      </div>
+    </div>
+  }
+  @case ('layout.flex') {
+    <div class="preview-layout" data-testid="preview-flex">
+      <span class="preview-layout__title">{{ node().label }}</span>
+      <div
+        class="preview-layout__flex"
+        [class.preview-layout__flex--column]="readString('direction', 'row') === 'column'"
+        [style.gap.px]="readNumber('gap', 16)"
+        [style.alignItems]="readString('align', 'stretch')"
+      >
+        @for (slot of [1, 2, 3]; track slot) {
+          <div class="preview-layout__slot">Item {{ slot }}</div>
         }
       </div>
     </div>

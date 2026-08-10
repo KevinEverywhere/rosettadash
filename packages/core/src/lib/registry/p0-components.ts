@@ -160,6 +160,24 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'visual.chart.pie',
+    category: 'visual',
+    label: 'Pie Chart',
+    description: 'Category breakdown pie or donut chart',
+    isVisual: true,
+    inputs: [
+      { id: 'data', name: 'data', dataType: 'rowset', required: true },
+      { id: 'range', name: 'range', dataType: 'date-range' },
+    ],
+    outputs: [],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Chart' },
+      { key: 'labelField', label: 'Label field', type: 'string', default: 'label' },
+      { key: 'valueField', label: 'Value field', type: 'string', default: 'value' },
+      { key: 'donut', label: 'Donut style', type: 'boolean', default: false },
+    ],
+  },
+  {
     type: 'layout.grid',
     category: 'layout',
     label: 'Grid',
@@ -170,6 +188,39 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     properties: [
       { key: 'columns', label: 'Columns', type: 'number', default: 12 },
       { key: 'gap', label: 'Gap (px)', type: 'number', default: 16 },
+    ],
+  },
+  {
+    type: 'layout.flex',
+    category: 'layout',
+    label: 'Flex',
+    description: 'Flex row or column layout container',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    properties: [
+      {
+        key: 'direction',
+        label: 'Direction',
+        type: 'select',
+        default: 'row',
+        options: [
+          { label: 'Row', value: 'row' },
+          { label: 'Column', value: 'column' },
+        ],
+      },
+      { key: 'gap', label: 'Gap (px)', type: 'number', default: 16 },
+      {
+        key: 'align',
+        label: 'Align items',
+        type: 'select',
+        default: 'stretch',
+        options: [
+          { label: 'Stretch', value: 'stretch' },
+          { label: 'Start', value: 'flex-start' },
+          { label: 'Center', value: 'center' },
+        ],
+      },
     ],
   },
   {

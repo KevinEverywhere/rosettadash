@@ -51,4 +51,14 @@ test.describe('Builder preview', () => {
     await expect(page.getByTestId('preview-checkbox')).toBeVisible();
     await expect(page.getByTestId('preview-textarea')).toBeVisible();
   });
+
+  test('shows pie chart and flex layout previews', async ({ page }) => {
+    await addFromPalette(page, 'visual.chart.pie');
+    await addFromPalette(page, 'layout.flex');
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+    await expect(page.getByTestId('preview-pie-chart')).toBeVisible();
+    await expect(page.getByTestId('preview-flex')).toBeVisible();
+  });
 });

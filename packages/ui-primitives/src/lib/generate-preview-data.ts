@@ -186,7 +186,10 @@ export function resolvePreviewGraph(
   const nodeSlices: Record<string, NodePreviewSlice> = {};
   const tableNodes = nodes.filter((node) => node.type === 'visual.table');
   const chartNodes = nodes.filter(
-    (node) => node.type === 'visual.chart.line' || node.type === 'visual.chart.bar',
+    (node) =>
+      node.type === 'visual.chart.line' ||
+      node.type === 'visual.chart.bar' ||
+      node.type === 'visual.chart.pie',
   );
 
   for (const tableNode of tableNodes) {

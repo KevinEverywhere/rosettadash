@@ -123,6 +123,11 @@ function generateTokensCss(ir: ExportIR): string {
     `.kpi-card, .chart-card, .table-card { padding: 1rem; }`,
     `.bar-chart { display: flex; align-items: flex-end; gap: 0.25rem; height: 8rem; }`,
     `.bar { flex: 1; background: var(--db-accent); min-height: 0.25rem; }`,
+    `.pie-chart { width: 8rem; height: 8rem; margin: 0 auto; border-radius: 999px; border: 1px solid var(--db-border); }`,
+    `.pie-chart--donut { mask: radial-gradient(circle, transparent 42%, #000 43%); }`,
+    `.pie-chart__legend { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.75rem; }`,
+    `.pie-chart__legend li { display: inline-flex; align-items: center; gap: 0.25rem; }`,
+    `.pie-chart__legend span { width: 0.625rem; height: 0.625rem; border-radius: 999px; }`,
     `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);

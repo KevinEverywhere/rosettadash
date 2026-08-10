@@ -10,6 +10,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
+  'visual.chart.pie',
 ]);
 
 export function generateComponentFile(component: IRComponent, className: string): string {
@@ -32,6 +33,8 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateLineChart(className);
     case 'visual.chart.bar':
       return generateBarChart(className);
+    case 'visual.chart.pie':
+      return generatePieChart(className);
     default:
       throw new AngularExportError(`Missing Angular template for ${component.type}`);
   }
@@ -369,6 +372,81 @@ function generateBarChart(className: string): string {
     `  barHeight(row: Row): number {`,
     `    const max = Math.max(...this.filtered().map((entry) => Number(entry['value'] ?? 0)), 1);`,
     `    return (Number(row['value'] ?? 0) / max) * 100;`,
+    `  }`,
+    `}`,
+    ``,
+    `function filterByRange(data: Row[], range?: DateRange): Row[] {`,
+    `  if (!range) {`,
+    `    return data;`,
+    `  }`,
+    `  return data.filter((row) => {`,
+    `    const value = String(row['date'] ?? row['createdAt'] ?? '');`,
+    `    if (!value) {`,
+    `      return true;`,
+    `    }`,
+    `    return value >= range.start && value <= range.end;`,
+    `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generatePieChart(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, computed, input } from '@angular/core';`,
+    `import type { DateRange, Row } from '../types';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <section class="chart-card" [id]="id()">`,
+    `      <h3>{{ title() }}</h3>`,
+    `      <div`,
+    `        class="pie-chart"`,
+    `        [class.pie-chart--donut]="donut()"`,
+    `        [style.background]="gradient()"`,
+    `      ></div>`,
+    `      <ul class="pie-chart__legend">`,
+    `        @for (row of filtered(); track row.id ?? $index) {`,
+    `          <li>`,
+    `            <span [style.background]="color($index)"></span>`,
+    `            {{ String(row[labelField()] ?? row.id ?? $index) }}`,
+    `          </li>`,
+    `        }`,
+    `      </ul>`,
+    `    </section>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  title = input('Chart');`,
+    `  labelField = input('label');`,
+    `  valueField = input('value');`,
+    `  donut = input(false);`,
+    `  data = input<Row[]>([]);`,
+    `  range = input<DateRange>();`,
+    ``,
+    `  filtered = computed(() => filterByRange(this.data(), this.range()));`,
+    ``,
+    `  gradient = computed(() => {`,
+    `    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];`,
+    `    const total = this.filtered().reduce((sum, row) => sum + Number(row[this.valueField()] ?? 0), 0) || 1;`,
+    `    let cumulative = 0;`,
+    `    const stops = this.filtered().map((row, index) => {`,
+    `      const value = Number(row[this.valueField()] ?? 0);`,
+    `      const percent = (value / total) * 100;`,
+    `      const start = cumulative;`,
+    `      cumulative += percent;`,
+    `      return \`\${colors[index % colors.length]} \${start}% \${cumulative}%\`;`,
+    `    });`,
+    `    return \`conic-gradient(\${stops.join(', ') || '#d1d5db 0 100%'})\`;`,
+    `  });`,
+    ``,
+    `  color(index: number): string {`,
+    `    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];`,
+    `    return colors[index % colors.length] ?? colors[0];`,
     `  }`,
     `}`,
     ``,

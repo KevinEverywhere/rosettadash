@@ -10,6 +10,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
+  'visual.chart.pie',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -32,6 +33,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateLineChart();
     case 'visual.chart.bar':
       return generateBarChart();
+    case 'visual.chart.pie':
+      return generatePieChart();
     default:
       throw new SvelteExportError(`Missing Svelte template for ${component.type}`);
   }
@@ -346,6 +349,77 @@ function generateBarChart(): string {
     `      ></div>`,
     `    {/each}`,
     `  </div>`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generatePieChart(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  import type { DateRange, Row } from '../types';`,
+    `  let {`,
+    `    id,`,
+    `    title = 'Chart',`,
+    `    labelField = 'label',`,
+    `    valueField = 'value',`,
+    `    donut = false,`,
+    `    data = [] as Row[],`,
+    `    range,`,
+    `  }: {`,
+    `    id?: string;`,
+    `    title?: string;`,
+    `    labelField?: string;`,
+    `    valueField?: string;`,
+    `    donut?: boolean;`,
+    `    data?: Row[];`,
+    `    range?: DateRange;`,
+    `  } = $props();`,
+    ``,
+    `  const filtered = $derived(filterByRange(data, range));`,
+    `  const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];`,
+    ``,
+    `  const gradient = $derived.by(() => {`,
+    `    const total = filtered.reduce((sum, row) => sum + Number(row[valueField] ?? 0), 0) || 1;`,
+    `    let cumulative = 0;`,
+    `    const stops = filtered.map((row, index) => {`,
+    `      const value = Number(row[valueField] ?? 0);`,
+    `      const percent = (value / total) * 100;`,
+    `      const start = cumulative;`,
+    `      cumulative += percent;`,
+    `      return \`\${colors[index % colors.length]} \${start}% \${cumulative}%\`;`,
+    `    });`,
+    `    return \`conic-gradient(\${stops.join(', ') || '#d1d5db 0 100%'})\`;`,
+    `  });`,
+    ``,
+    `  function color(index: number): string {`,
+    `    return colors[index % colors.length] ?? colors[0];`,
+    `  }`,
+    ``,
+    `  function filterByRange(source: Row[], value?: DateRange): Row[] {`,
+    `    if (!value) return source;`,
+    `    return source.filter((row) => {`,
+    `      const dateValue = String(row.date ?? row.createdAt ?? '');`,
+    `      if (!dateValue) return true;`,
+    `      return dateValue >= value.start && dateValue <= value.end;`,
+    `    });`,
+    `  }`,
+    `</script>`,
+    ``,
+    `<section class="chart-card" {id}>`,
+    `  <h3>{title}</h3>`,
+    `  <div`,
+    `    class={donut ? 'pie-chart pie-chart--donut' : 'pie-chart'}`,
+    `    style:background={gradient}`,
+    `  ></div>`,
+    `  <ul class="pie-chart__legend">`,
+    `    {#each filtered as row, index (String(row.id ?? index))}`,
+    `      <li>`,
+    `        <span style:background={color(index)}></span>`,
+    `        {String(row[labelField] ?? row.id ?? index)}`,
+    `      </li>`,
+    `    {/each}`,
+    `  </ul>`,
     `</section>`,
     ``,
   ]);

@@ -67,6 +67,36 @@ export class PreviewNodeComponent {
       .join(' ');
   });
 
+  protected readonly pieSlices = computed(() => {
+    const points = this.chartPoints();
+    const total = points.reduce((sum, point) => sum + point.value, 0) || 1;
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+    let cumulative = 0;
+
+    return points.map((point, index) => {
+      const percent = (point.value / total) * 100;
+      const slice = {
+        label: point.label,
+        percent,
+        start: cumulative,
+        color: colors[index % colors.length] ?? colors[0],
+      };
+      cumulative += percent;
+      return slice;
+    });
+  });
+
+  protected readonly pieConicGradient = computed(() => {
+    const slices = this.pieSlices();
+    if (slices.length === 0) {
+      return 'conic-gradient(#d1d5db 0 100%)';
+    }
+    const stops = slices
+      .map((slice) => `${slice.color} ${slice.start}% ${slice.start + slice.percent}%`)
+      .join(', ');
+    return `conic-gradient(${stops})`;
+  });
+
   protected readonly roleGateAllowedRoles = computed(() =>
     parseRoleGateAllowedRoles(this.node().properties['roles']),
   );

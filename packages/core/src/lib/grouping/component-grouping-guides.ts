@@ -37,6 +37,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Add a Date Range filter and KPI cards for dashboard context.',
   },
   {
+    type: 'visual.chart.pie',
+    summary: 'Part-to-whole breakdown — pair with filters and KPI context.',
+    animationKey: 'filter-chart',
+    companionTypes: ['visual.input.date-range', 'visual.kpi'],
+    placementMessage: 'Add a Date Range filter and KPI cards for dashboard context.',
+  },
+  {
     type: 'visual.kpi',
     summary: 'Single metric card — typically fed by a database or table aggregate.',
     animationKey: 'data-stack',
@@ -120,12 +127,19 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     companionTypes: ['visual.kpi', 'visual.chart.bar'],
     placementMessage: 'Add KPI cards and bar charts as grid cells.',
   },
+  {
+    type: 'layout.flex',
+    summary: 'Flex row/column — simpler layout for toolbars and form rows.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.input.text', 'visual.kpi'],
+    placementMessage: 'Add inputs or KPI cards as flex children.',
+  },
 ];
 
 const guideByType = new Map(GROUPING_GUIDES.map((guide) => [guide.type, guide]));
 
 const FILTER_TYPES = new Set(['visual.input.date-range']);
-const DATA_VISUAL_TYPES = new Set(['visual.table', 'visual.chart.line', 'visual.chart.bar', 'visual.kpi']);
+const DATA_VISUAL_TYPES = new Set(['visual.table', 'visual.chart.line', 'visual.chart.bar', 'visual.chart.pie', 'visual.kpi']);
 const INFRA_DATA_TYPES = new Set([
   'infra.postgresql',
   'infra.mongodb',
