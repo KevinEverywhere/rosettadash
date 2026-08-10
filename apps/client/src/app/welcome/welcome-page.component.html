@@ -4,6 +4,16 @@
     <h1 id="welcome-heading" data-testid="welcome-heading">
       Build Components and Dashboards for your stack
     </h1>
+    <nav class="welcome__top-nav" aria-label="Quick links">
+      <a
+        routerLink="/environment"
+        [queryParams]="{ from: 'byok' }"
+        class="welcome__top-nav-link"
+        data-testid="welcome-env-link"
+      >
+        Environment &amp; API keys (BYOK)
+      </a>
+    </nav>
   </header>
 
   <div class="welcome__layout">

@@ -75,20 +75,21 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-65](https://planetkevin.atlassian.net/browse/DAS-65) | `feature/DAS-65-welcome-stack-none-options` | Welcome None server/database, heading, server ecosystem copy |
 | [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66) | `feature/DAS-66-mobile-tablet-viewport-gate` | Minimum viewport gate and unified availability UX |
 | [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67) | `feature/DAS-67-compact-builder-layout` | Collapsible palette/inspector for tablet and small desktop |
-| [DAS-68](https://planetkevin.atlassian.net/browse/DAS-68) | `feature/DAS-68-welcome-onboarding-flow` | Welcome empty initial stack, gated continue, stack-change confirmations |
+| [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) | `feature/DAS-69-builder-creation-assistance` | Animated builder guides for all palette components (Phase 18) |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) | `feature/DAS-69-builder-creation-assistance` | Animated builder guides for 10 common components (Phase 18) |
+| [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) | `feature/DAS-70-byok-key-management` | BYOK key management — provider manifest, encrypted storage, settings UI (Phase 19) |
 
 ## Planned (not yet ticketed)
 
 | Phase | Summary | Doc |
 |-------|---------|-----|
-| 19 — BYOK | User-owned API keys for AI providers | [AI & BYOK Integration](./20-ai-and-byok-integration.md) |
 | 20 — AI assist | Natural-language component creation in builder | [AI & BYOK Integration](./20-ai-and-byok-integration.md) |
+| 21 — Demo dashboards | Three animated example dashboards (discuss before build) | [Demo Dashboards](./22-demo-dashboards.md) |
+| — | User-controlled content library | [Content Library](./23-content-library.md) (DAS-71) |
 
 ## Delivery status
 
@@ -107,9 +108,11 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 15 display availability:** complete (DAS-66)
 - **Phase 16 compact builder layout:** complete (DAS-67)
 - **Phase 17 welcome onboarding UX:** complete (DAS-68)
-- **Phase 18 builder creation assistance:** in progress (DAS-69)
-- **Phase 19 BYOK key management:** planned
-- **Phase 20 AI-assisted creation:** planned
+- **Phase 18 builder creation assistance:** complete (DAS-69)
+- **Phase 19 BYOK key management:** in progress (DAS-70)
+- **Phase 20 AI-assisted creation:** planned (DAS-72 candidate)
+- **DAS-71 content library:** spec only — user-controlled save/revisit with path notation
+- **Phase 21 animated demo dashboards:** planned — discuss after Phase 20
 
 ## Phase 6 — complete
 
@@ -185,15 +188,15 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 
 1. Empty initial stack state, gated continue, returning-user confirmations — DAS-68
 
-## Phase 18 — Builder creation assistance (in progress)
+## Phase 18 — Builder creation assistance (complete)
 
-1. Animated multi-step guides for 10 common components — DAS-69
+1. Animated multi-step guides for all palette components — DAS-69
 
 See [Builder Creation Assistance](./21-builder-creation-assistance.md).
 
-## Phase 19 — BYOK key management (planned)
+## Phase 19 — BYOK key management (in progress)
 
-1. Client-side provider API key storage and settings UI
+1. Client-side provider API key storage and settings UI — DAS-70
 
 See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
 
@@ -202,6 +205,12 @@ See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
 1. AI assistant drawer, structured graph actions, BYOK-powered inference
 
 See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
+
+## Phase 21 — Animated demo dashboards (planned)
+
+1. Three purpose-built dashboards with animated walkthroughs — discuss after Phase 20
+
+See [Demo Dashboards](./22-demo-dashboards.md).
 
 ## Future — VR / 3D expansion
 

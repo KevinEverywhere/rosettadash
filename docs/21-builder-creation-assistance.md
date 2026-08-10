@@ -2,6 +2,7 @@
 
 Phase 18 — animated, text-based instructions that show users **how common dashboard components work** and what to add next. Extends [DAS-43](https://planetkevin.atlassian.net/browse/DAS-43) grouping guides from static CSS previews into multi-step walkthroughs with instructional copy.
 
+**Status:** Complete  
 **Ticket:** [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) — `feature/DAS-69-builder-creation-assistance`
 
 **Follows:** DAS-68 welcome onboarding · **Precedes:** [AI & BYOK integration](./20-ai-and-byok-integration.md) (Phases 19–20)
@@ -279,12 +280,13 @@ Users can open info panels in this order without AI or API keys.
 
 ## Acceptance criteria (DAS-69)
 
-- [ ] All 10 instruction guides in core with steps + animation keys
-- [ ] Palette info panel renders step list + animated preview per guide
-- [ ] Canvas placement prompt shows first missing-companion step text
-- [ ] Unit tests: every guide has ≥3 steps; animation keys resolve
-- [ ] E2E: info panel for date-range; placement prompt after table add
-- [ ] Docs cross-linked from roadmap and AI integration doc
+- [x] All 10 priority instruction guides in core with steps + animation keys
+- [x] Auto-generated 5-step guides for all 38 palette components
+- [x] Palette info panel renders step list + animated preview per guide
+- [x] Canvas placement prompt shows first missing-companion step text
+- [x] Unit tests: every guide has ≥3 steps; animation keys resolve
+- [x] E2E: info panel for date-range; placement prompt after table add
+- [x] Docs cross-linked from roadmap and AI integration doc
 
 ---
 
@@ -300,6 +302,7 @@ Users can open info panels in this order without AI or API keys.
 ## Related documents
 
 - [AI & BYOK Integration](./20-ai-and-byok-integration.md)
+- [Demo Dashboards](./22-demo-dashboards.md) — Phase 21 (after Phase 20)
 - [Component & Page Design](./15-component-and-page-design.md) — DAS-43
 - [Roadmap](./10-roadmap.md)
 - [Planned Tickets](./11-planned-tickets.md)

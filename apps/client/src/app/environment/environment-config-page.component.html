@@ -1,0 +1,336 @@
+<main class="env-page" data-testid="environment-config-page">
+  <header class="env-page__page-header">
+    <p class="env-page__eyebrow">{{ appName }}</p>
+    <h1>Environment &amp; API keys</h1>
+  </header>
+
+  @if (!config.loaded()) {
+    <p class="env-page__loading" data-testid="env-loading">Loading saved values…</p>
+  } @else {
+    <div class="env-page__layout">
+      <section class="env-page__hero" aria-labelledby="env-hero-heading">
+        <h2 id="env-hero-heading" class="env-page__hero-title">Credentials stay in your browser</h2>
+        <p class="env-page__lead">
+          Configure databases, servers, AI providers, and DashBuilder access ahead of time — or
+          fill them in as you build. Values are never sent to the DashBuilder server or included in
+          exports.
+        </p>
+        <ul class="env-page__highlights">
+          <li>Store multiple AI keys — pick a default provider for AI assist</li>
+          <li>Grey labels until validated; black when verified; red on failure</li>
+          <li>Database and server fields follow your stack on Welcome</li>
+          <li>Exported projects still use <code>.env.example</code> placeholders only</li>
+        </ul>
+
+        <nav class="env-page__nav" aria-label="Page navigation">
+          <a routerLink="/" class="env-page__nav-link" data-testid="env-link-welcome">← Welcome / stack</a>
+          @if (canOpenBuilder()) {
+            <a routerLink="/builder" class="env-page__nav-link" data-testid="env-link-builder">Open builder →</a>
+          } @else {
+            <span class="env-page__nav-note">Choose a stack on Welcome to open the builder.</span>
+          }
+        </nav>
+
+        <footer class="env-page__footer">
+          @if (config.saveMessage(); as message) {
+            <p class="env-page__save-message" data-testid="env-save-message">{{ message }}</p>
+          }
+          <div class="env-page__footer-actions">
+            <button type="button" class="env-page__button" data-testid="env-save" (click)="save()">
+              Save in browser
+            </button>
+            <button
+              type="button"
+              class="env-page__button env-page__button--danger"
+              data-testid="env-clear"
+              (click)="clearAll()"
+            >
+              Clear all
+            </button>
+          </div>
+        </footer>
+      </section>
+
+      <section class="env-page__panel" aria-label="Environment variable sections">
+        @for (section of sections; track section) {
+          <div
+            class="env-page__accordion"
+            [class.env-page__accordion--featured]="section === 'ai'"
+          >
+            <button
+              type="button"
+              class="env-page__accordion-toggle"
+              [class.env-page__accordion-toggle--open]="isSectionOpen(section)"
+              [attr.aria-expanded]="isSectionOpen(section)"
+              [attr.data-testid]="'env-section-toggle-' + section"
+              (click)="toggleSection(section)"
+            >
+              <span class="env-page__accordion-title">{{ sectionLabels[section] }}</span>
+              @if (sectionSummary(section); as summary) {
+                <span
+                  class="env-page__accordion-summary"
+                  [ngClass]="sectionSummaryValidationClass(section)"
+                >
+                  {{ summary }}
+                </span>
+              }
+            </button>
+
+            @if (isSectionOpen(section)) {
+              <div class="env-page__accordion-panel" [attr.data-testid]="'env-section-panel-' + section">
+                @switch (section) {
+                  @case ('storage') {
+                    <label class="env-page__checkbox">
+                      <input
+                        type="checkbox"
+                        data-testid="env-remember-keys"
+                        [checked]="config.settings().rememberKeys"
+                        (change)="onRememberKeysChange($any($event.target).checked)"
+                      />
+                      Remember values in this browser (encrypted localStorage for secrets)
+                    </label>
+                    <p class="env-page__hint">
+                      When unchecked, secrets clear when you close the tab.
+                    </p>
+                  }
+
+                  @case ('ai') {
+                    <p class="env-page__hint">
+                      Bring keys for any providers you use — Anthropic, OpenAI, and others can all
+                      stay saved. Choose which is the <strong>default for AI assist</strong>.
+                    </p>
+
+                    <label class="env-page__field env-page__field--compact">
+                      <span>Default provider for AI assist</span>
+                      <select
+                        data-testid="env-ai-provider"
+                        [ngModel]="config.settings().byok.activeProvider"
+                        (ngModelChange)="onProviderChange($event)"
+                      >
+                        @for (provider of aiProviders; track provider.id) {
+                          <option [value]="provider.id">{{ provider.label }}</option>
+                        }
+                      </select>
+                    </label>
+
+                    <label class="env-page__field env-page__field--compact">
+                      <span>Default model</span>
+                      <select
+                        data-testid="env-ai-model"
+                        [ngModel]="config.settings().byok.activeModel"
+                        (ngModelChange)="onModelChange($event)"
+                      >
+                        @for (model of activeProvider()?.models ?? []; track model.id) {
+                          <option [value]="model.id">{{ model.label }}</option>
+                        }
+                      </select>
+                    </label>
+
+                    <div class="env-page__provider-list">
+                      @for (provider of aiProviders; track provider.id) {
+                        <article
+                          class="env-page__provider-card"
+                          [attr.data-testid]="'env-provider-card-' + provider.id"
+                        >
+                          <header class="env-page__provider-header">
+                            <div>
+                              <h3 class="env-page__provider-name" [class]="validationClassForProvider(provider.id)">
+                                {{ provider.label }}
+                              </h3>
+                              <p class="env-page__provider-status" [class]="validationClassForProvider(provider.id)">
+                                {{ providerStatusLabel(provider) }}
+                              </p>
+                            </div>
+                            @if (config.settings().byok.activeProvider === provider.id) {
+                              <span class="env-page__provider-badge">Default</span>
+                            }
+                          </header>
+
+                          <p class="env-page__provider-desc">{{ provider.description }}</p>
+
+                          @if (provider.requiresApiKey) {
+                            <label class="env-page__field">
+                              <span [class]="validationClassForProvider(provider.id)">API key</span>
+                              <input
+                                type="password"
+                                autocomplete="off"
+                                [attr.data-testid]="'env-provider-key-' + provider.id"
+                                [ngModel]="getProviderKeyValue(provider)"
+                                (ngModelChange)="onProviderKeyChange(provider, $event)"
+                              />
+                              <code class="env-page__env-key">{{ provider.apiKeyEnvKey }}</code>
+                            </label>
+                          }
+
+                          @if (provider.supportsCustomBaseUrl) {
+                            <label class="env-page__field">
+                              <span [class]="validationClassForProvider(provider.id)">Base URL</span>
+                              <input
+                                type="url"
+                                [placeholder]="provider.defaultBaseUrl ?? 'https://'"
+                                [ngModel]="getProviderBaseUrl(provider)"
+                                (ngModelChange)="onProviderBaseUrlChange(provider, $event)"
+                              />
+                            </label>
+                          }
+
+                          @if (provider.id === 'azure-openai') {
+                            <div class="env-page__grid">
+                              <label class="env-page__field">
+                                <span [class]="validationClassForProvider(provider.id)">Resource name</span>
+                                <input
+                                  type="text"
+                                  data-testid="env-azure-resource"
+                                  [ngModel]="config.settings().byok.azureResourceName ?? ''"
+                                  (ngModelChange)="onByokSettingChange('azureResourceName', $event)"
+                                />
+                              </label>
+                              <label class="env-page__field">
+                                <span [class]="validationClassForProvider(provider.id)">Deployment ID</span>
+                                <input
+                                  type="text"
+                                  data-testid="env-azure-deployment"
+                                  [ngModel]="config.settings().byok.azureDeploymentId ?? ''"
+                                  (ngModelChange)="onByokSettingChange('azureDeploymentId', $event)"
+                                />
+                              </label>
+                            </div>
+                          }
+
+                          <div class="env-page__actions">
+                            <button
+                              type="button"
+                              class="env-page__button env-page__button--secondary"
+                              [attr.data-testid]="'env-test-provider-' + provider.id"
+                              [disabled]="isProviderTesting(provider.id)"
+                              (click)="runProviderTest(provider.id)"
+                            >
+                              {{ isProviderTesting(provider.id) ? 'Testing…' : 'Validate' }}
+                            </button>
+                          </div>
+                        </article>
+                      }
+                    </div>
+                  }
+
+                  @case ('custom') {
+                    <div class="env-page__grid">
+                      <label class="env-page__field">
+                        <span>Variable name</span>
+                        <input
+                          type="text"
+                          data-testid="env-custom-key"
+                          placeholder="MY_SERVICE_TOKEN"
+                          [ngModel]="customEnvKey()"
+                          (ngModelChange)="customEnvKey.set($event)"
+                        />
+                      </label>
+                      <label class="env-page__field">
+                        <span>Value</span>
+                        <input
+                          type="password"
+                          data-testid="env-custom-value"
+                          [ngModel]="customEnvValue()"
+                          (ngModelChange)="customEnvValue.set($event)"
+                        />
+                      </label>
+                    </div>
+                    <button
+                      type="button"
+                      class="env-page__button env-page__button--secondary"
+                      (click)="addCustomField()"
+                    >
+                      Add variable
+                    </button>
+
+                    @if (customFields().length) {
+                      <div class="env-page__fields env-page__fields--grid env-page__fields--spaced">
+                        @for (field of customFields(); track trackField($index, field)) {
+                          <ng-container
+                            *ngTemplateOutlet="envField; context: { $implicit: field, removable: true }"
+                          ></ng-container>
+                        }
+                      </div>
+                    }
+                  }
+
+                  @default {
+                    @if (section === 'database' || section === 'server') {
+                      <p class="env-page__hint">
+                        Fields match your current stack. Change stack on
+                        <a routerLink="/">Welcome</a>.
+                      </p>
+                    }
+
+                    @if (fieldsForSection(section).length) {
+                      <div class="env-page__fields env-page__fields--grid">
+                        @for (field of fieldsForSection(section); track trackField($index, field)) {
+                          <ng-container
+                            *ngTemplateOutlet="envField; context: { $implicit: field }"
+                          ></ng-container>
+                        }
+                      </div>
+                    } @else {
+                      <p class="env-page__hint">No fields for your current stack selection.</p>
+                    }
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  }
+</main>
+
+<ng-template #envField let-field let-removable="removable">
+  <div class="env-page__field">
+    <div class="env-page__field-header">
+      <label [attr.for]="'env-input-' + field.id">
+        <span [class]="validationClassForEnvField(field)">{{ field.label }}</span>
+      </label>
+      @if (getFieldValue(field).trim()) {
+        <button
+          type="button"
+          class="env-page__validate-link"
+          [class]="validationClassForEnvField(field)"
+          [disabled]="isFieldValidating(field.envKey)"
+          (click)="validateField(field)"
+        >
+          {{ isFieldValidating(field.envKey) ? 'Checking…' : 'Validate' }}
+        </button>
+      }
+    </div>
+    @if (fieldStatusLabel(field); as statusLabel) {
+      <p class="env-page__field-status" [class]="validationClassForEnvField(field)">{{ statusLabel }}</p>
+    }
+    <small>{{ field.description }}</small>
+    @if (field.sensitive) {
+      <input
+        [id]="'env-input-' + field.id"
+        type="password"
+        autocomplete="off"
+        [attr.data-testid]="'env-field-' + field.envKey"
+        [placeholder]="field.placeholder ?? ''"
+        [ngModel]="getFieldValue(field)"
+        (ngModelChange)="onSecretChange(field, $event)"
+      />
+    } @else {
+      <input
+        [id]="'env-input-' + field.id"
+        type="text"
+        [attr.data-testid]="'env-field-' + field.envKey"
+        [placeholder]="field.placeholder ?? ''"
+        [ngModel]="getFieldValue(field)"
+        (ngModelChange)="onPlainChange(field, $event)"
+      />
+    }
+    <code class="env-page__env-key">{{ field.envKey }}</code>
+    @if (removable) {
+      <button type="button" class="env-page__link-button" (click)="removeCustomField(field)">
+        Remove
+      </button>
+    }
+  </div>
+</ng-template>

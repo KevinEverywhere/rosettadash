@@ -190,6 +190,17 @@
   }
 }
 
+.builder__env-link {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--db-accent, #2563eb);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .builder__subtitle {
   font-size: 0.8125rem;
   color: var(--db-text-muted);

@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import {
   APP_NAME,
@@ -41,6 +41,7 @@ type StackChangeTarget = 'current' | 'fresh';
 
 @Component({
   selector: 'app-welcome-page',
+  imports: [RouterLink],
   templateUrl: './welcome-page.component.html',
   styleUrl: './welcome-page.component.scss',
 })

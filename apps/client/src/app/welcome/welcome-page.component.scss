@@ -25,6 +25,23 @@
   }
 }
 
+.welcome__top-nav {
+  margin-top: 0.875rem;
+}
+
+.welcome__top-nav-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--db-accent, #2563eb);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .welcome__layout {
   display: grid;
   gap: 2rem;

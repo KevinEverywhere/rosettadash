@@ -175,22 +175,26 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Gated continue until UI framework chosen
 - [x] Returning-user stack hydration and change confirmations
 
-## Phase 18 — Builder creation assistance (in progress)
+## Phase 18 — Builder creation assistance (complete)
 
-**Ticket:** [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) — animated guides for 10 common components
+**Ticket:** [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) — animated guides for all palette components
 
-- [ ] Multi-step animated instructions with text (extends DAS-43)
-- [ ] Ten high-frequency component guides in core registry
-- [ ] Upgraded palette info panels and canvas placement prompts
-- [ ] See [Builder Creation Assistance](./21-builder-creation-assistance.md)
+- [x] Multi-step animated instructions with text (extends DAS-43)
+- [x] Ten high-frequency hand-authored guides + auto-generated guides for all 38 palette components
+- [x] Upgraded palette info panels and canvas placement prompts
+- [x] See [Builder Creation Assistance](./21-builder-creation-assistance.md)
 
-## Phase 19 — BYOK key management (planned)
+## Phase 19 — BYOK key management (in progress)
+
+**Ticket:** [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) · Branch: `feature/DAS-70-byok-key-management`
 
 Users bring their own AI provider API keys. DashBuilder stores keys client-side only, never on the server or in exports.
 
-- [ ] Provider manifest (OpenAI, Anthropic, Google, Azure OpenAI, Ollama)
-- [ ] Encrypted session/local key storage
-- [ ] Settings UI with test connection
+- [x] Provider manifest (OpenAI, Anthropic, Google, Azure OpenAI, Ollama)
+- [x] Encrypted session/local key storage
+- [x] Unified `/environment` page with test connection
+- [x] Welcome + builder navigation links
+- [ ] Deep-link from palette when adding server/AI nodes (Phase 20 follow-up)
 - [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
 
 ## Phase 20 — AI-assisted component creation (planned)
@@ -201,6 +205,20 @@ Natural-language help for adding components, bindings, and templates — powered
 - [ ] Structured action responses applied through builder history
 - [ ] Integrates with grouping guides and stack profile context
 - [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
+
+## Phase 21 — Animated demo dashboards (planned)
+
+**Ticket:** TBD · **Timing:** After Phase 20; **design discussion required before implementation**
+
+Three purpose-built example dashboards demonstrating DashBuilder end-to-end — animated walkthroughs for real-world layouts using palette components, grouping guides, and (optionally) AI assist.
+
+| Dashboard | Purpose (draft) |
+|-----------|-----------------|
+| **Operations / KPI** | Metrics, filters, tables, alerts — team monitoring |
+| **Analytics / reporting** | Charts, date ranges, drill-down — business intelligence |
+| **Admin / settings** | Forms, validation, role-aware panels — configuration UX |
+
+Scope, animation style, and hosting (in-app vs docs vs video) will be decided after Phase 20. See [Demo Dashboards](./22-demo-dashboards.md).
 
 ## Future — VR / 3D expansion
 
@@ -229,6 +247,9 @@ When creating Jira tickets:
 ## Related documents
 
 - [Planned Tickets](./11-planned-tickets.md)
+- [AI & BYOK Integration](./20-ai-and-byok-integration.md) — Phases 19–20
+- [Builder Creation Assistance](./21-builder-creation-assistance.md) — Phase 18 (complete)
+- [Demo Dashboards](./22-demo-dashboards.md) — Phase 21
 - [Component & Page Design](./15-component-and-page-design.md)
 - [Workflow & Branching](./07-workflow-and-branching.md)
 - [Technology Stack](./06-technology-stack.md)

@@ -4,7 +4,7 @@ How DashBuilder will bring AI-assisted component creation to users while keeping
 
 **Phases:** [Phase 19 — BYOK](./10-roadmap.md#phase-19--byok-key-management-planned) · [Phase 20 — AI-assisted creation](./10-roadmap.md#phase-20--ai-assisted-component-creation-planned)
 
-**Prerequisite work:** [Phase 18 — Builder creation assistance](./21-builder-creation-assistance.md) (DAS-69) establishes animated, text-based guidance before AI is layered on.
+**Prerequisite work:** [Phase 18 — Builder creation assistance](./21-builder-creation-assistance.md) (DAS-69, complete) establishes animated, text-based guidance before AI is layered on.
 
 ---
 
@@ -112,7 +112,7 @@ Provider metadata (models list, context limits) lives in `@dashbuilder/core` as 
 
 ### Settings UI (Phase 19)
 
-Location: **Builder → Settings → AI & API Keys** (or welcome-adjacent “Integrations” for pre-builder setup).
+Location: **`/environment`** — unified **Environment & API keys** page (Welcome link + Builder toolbar). Replaces a builder-only settings drawer for all credential types.
 
 | Field | Purpose |
 |-------|---------|
@@ -121,6 +121,8 @@ Location: **Builder → Settings → AI & API Keys** (or welcome-adjacent “Int
 | Model | Provider-specific model picker |
 | Custom base URL | Optional override for proxies / Ollama |
 | Remember keys | Checkbox — localStorage vs sessionStorage |
+| Database / server / auth vars | Stack-aware fields from environment catalog |
+| Custom variables | User-added keys for any integration |
 
 **Test connection** sends a minimal ping prompt and surfaces success/failure without storing the response.
 
@@ -210,9 +212,9 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 
 ## Implementation phases
 
-### Phase 19 — BYOK key management
+### Phase 19 — BYOK key management (in progress)
 
-**Ticket:** TBD (DAS-70 candidate)
+**Ticket:** [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) · Branch: `feature/DAS-70-byok-key-management`
 
 - Core provider manifest + encryption helpers
 - Settings UI + test connection
@@ -220,9 +222,9 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 - Docs + security review checklist
 - No LLM calls yet — infrastructure only
 
-### Phase 20 — AI-assisted component creation
+### Phase 20 — AI-assisted component creation (planned)
 
-**Ticket:** TBD (DAS-71 candidate)
+**Ticket:** TBD (DAS-72 candidate)
 
 - Prompt builder + action parser
 - AI drawer UI
@@ -258,5 +260,6 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 - [Builder Creation Assistance](./21-builder-creation-assistance.md) — Phase 18 animated guides (DAS-69)
 - [Component & Page Design](./15-component-and-page-design.md) — DAS-43 grouping guides
 - [Component Model](./03-component-model.md) — nodes, bindings, composites
-- [Roadmap](./10-roadmap.md) — Phases 18–20
+- [Roadmap](./10-roadmap.md) — Phases 18–21
 - [Planned Tickets](./11-planned-tickets.md) — Jira index
+- [Demo Dashboards](./22-demo-dashboards.md) — Phase 21 (after Phase 20, discuss before build)
