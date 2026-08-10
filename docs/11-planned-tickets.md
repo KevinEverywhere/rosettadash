@@ -65,12 +65,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-55](https://planetkevin.atlassian.net/browse/DAS-55) | `feature/DAS-55-custom-component-sdk` | Custom component SDK for palette and preview plugins |
 | [DAS-56](https://planetkevin.atlassian.net/browse/DAS-56) | `feature/DAS-56-threejs-visual` | First three.js visual — 3D bar chart + VR palette group |
 | [DAS-57](https://planetkevin.atlassian.net/browse/DAS-57) | `feature/DAS-57-project-stack-setup` | Framework-first project stack entry screen |
+| [DAS-58](https://planetkevin.atlassian.net/browse/DAS-58) | `feature/DAS-58-3d-scatter-field-mapping` | 3D scatter rowset field mapping + React export stub |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-58](https://planetkevin.atlassian.net/browse/DAS-58) | `feature/DAS-58-3d-scatter-field-mapping` | 3D scatter rowset field mapping + React export stub |
+| [DAS-59](https://planetkevin.atlassian.net/browse/DAS-59) | `feature/DAS-59-welcome-stack-page` | Welcome page with tech stack selection above builder |
 
 ## Delivery status
 
@@ -81,6 +82,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 6 component & page design:** complete (DAS-39–DAS-49)
 - **Phase 8 component plugins & 3D:** complete (DAS-55–DAS-56)
 - **Phase 9 project stack setup:** complete (DAS-57)
+- **Phase 10 VR / 3D expansion:** started (DAS-58 complete on `development`)
 
 ## Phase 6 — complete
 
@@ -123,7 +125,11 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 
 ## Phase 10 — VR / 3D expansion (started)
 
-1. 3D scatter rowset field mapping — DAS-58 (active)
+1. ~~3D scatter rowset field mapping~~ — DAS-58
+
+## Phase 11 — Welcome & entry (started)
+
+1. ~~Welcome page with tech stack selection above builder~~ — DAS-59 (active, implementation complete)
 
 ## Future — VR / 3D expansion
 

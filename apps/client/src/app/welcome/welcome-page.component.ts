@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  APP_NAME,
   DATABASE_TARGET_OPTIONS,
   getCompatibleStackDefaults,
   normalizeStackProfile,
@@ -12,18 +13,20 @@ import {
   UI_FRAMEWORK_OPTIONS,
 } from '@dashbuilder/core';
 import {
+  canEnterBuilder,
   hasBuilderSession,
   writePendingStackProfile,
 } from './stack-profile-session';
 
 @Component({
-  selector: 'app-stack-setup',
-  templateUrl: './stack-setup.component.html',
-  styleUrl: './stack-setup.component.scss',
+  selector: 'app-welcome-page',
+  templateUrl: './welcome-page.component.html',
+  styleUrl: './welcome-page.component.scss',
 })
-export class StackSetupComponent implements OnInit {
+export class WelcomePageComponent implements OnInit {
   private readonly router = inject(Router);
 
+  protected readonly appName = APP_NAME;
   protected readonly uiOptions = UI_FRAMEWORK_OPTIONS;
   protected readonly serverOptions = SERVER_TARGET_OPTIONS;
   protected readonly databaseOptions = DATABASE_TARGET_OPTIONS;
@@ -33,7 +36,7 @@ export class StackSetupComponent implements OnInit {
   protected readonly databaseChoice = signal<DatabaseTargetChoice>('postgresql');
 
   ngOnInit(): void {
-    if (hasBuilderSession()) {
+    if (canEnterBuilder()) {
       void this.router.navigate(['/builder']);
       return;
     }

@@ -4,26 +4,26 @@ import {
   BUILDER_SESSION_KEY,
   PENDING_STACK_KEY,
 } from './stack-profile-session';
-import { StackSetupComponent } from './stack-setup.component';
+import { WelcomePageComponent } from './welcome-page.component';
 
-describe('StackSetupComponent', () => {
-  let fixture: ComponentFixture<StackSetupComponent>;
+describe('WelcomePageComponent', () => {
+  let fixture: ComponentFixture<WelcomePageComponent>;
   let router: Router;
 
   beforeEach(async () => {
     sessionStorage.clear();
 
     await TestBed.configureTestingModule({
-      imports: [StackSetupComponent],
+      imports: [WelcomePageComponent],
       providers: [
         provideRouter([
-          { path: '', component: StackSetupComponent },
-          { path: 'builder', component: StackSetupComponent },
+          { path: '', component: WelcomePageComponent },
+          { path: 'builder', component: WelcomePageComponent },
         ]),
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StackSetupComponent);
+    fixture = TestBed.createComponent(WelcomePageComponent);
     router = TestBed.inject(Router);
     fixture.detectChanges();
   });
@@ -32,9 +32,9 @@ describe('StackSetupComponent', () => {
     sessionStorage.clear();
   });
 
-  it('renders UI framework options', () => {
-    const options = fixture.nativeElement.querySelectorAll('[data-testid^="stack-ui-"]');
-    expect(options.length).toBe(5);
+  it('renders welcome hero and stack options', () => {
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-page"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelectorAll('[data-testid^="stack-ui-"]').length).toBe(5);
   });
 
   it('shows scratch-pad note when Any is selected', () => {
@@ -50,7 +50,7 @@ describe('StackSetupComponent', () => {
 
     fixture.nativeElement.querySelector('[data-testid="stack-ui-svelte"]').click();
     fixture.detectChanges();
-    fixture.nativeElement.querySelector('[data-testid="stack-setup-continue"]').click();
+    fixture.nativeElement.querySelector('[data-testid="welcome-continue"]').click();
 
     const pending = JSON.parse(sessionStorage.getItem(PENDING_STACK_KEY) ?? '{}');
     expect(pending).toEqual({
@@ -61,14 +61,14 @@ describe('StackSetupComponent', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
   });
 
-  it('redirects to builder when a session already exists', async () => {
+  it('redirects to builder when entry is already allowed', async () => {
     sessionStorage.setItem(
       BUILDER_SESSION_KEY,
       JSON.stringify({ projectId: 'p1', compositeId: 'c1' }),
     );
 
     const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
-    fixture = TestBed.createComponent(StackSetupComponent);
+    fixture = TestBed.createComponent(WelcomePageComponent);
     fixture.detectChanges();
 
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);

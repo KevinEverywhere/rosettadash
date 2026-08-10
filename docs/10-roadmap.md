@@ -108,12 +108,20 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Entry screen for stack pieces (UI + server + database) with compatible second-level defaults
 - [x] Export wizard and builder consume persisted stack profile
 
-## Phase 10 — VR / 3D expansion (in progress)
+## Phase 10 — VR / 3D expansion (started)
 
 **Ticket:** DAS-58 — 3D scatter field mapping
 
-- [ ] Rowset x/y/z field mapping in preview
-- [ ] React R3F scatter export stub
+- [x] Rowset x/y/z field mapping in preview
+- [x] React R3F scatter export stub
+
+## Phase 11 — Welcome & entry (in progress)
+
+**Ticket:** DAS-59 — welcome page with tech stack selection
+
+- [x] Welcome landing at `/` with product intro + stack picker
+- [x] Redirect fresh `/builder` visits to welcome until stack is chosen
+- [x] Preserve session restore and DAS-57 stack profile behavior
 
 ## Future — VR / 3D expansion
 
@@ -126,7 +134,8 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - CLI export (`npx dashbuilder export`)
 - Hosted preview URLs
 - Custom component SDK for third-party palette plugins
-- ~~Framework-first project stack entry screen~~ — DAS-57 (in progress)
+- ~~Framework-first project stack entry screen~~ — DAS-57 (complete)
+- ~~Welcome page with stack selection above builder~~ — DAS-59 (in progress)
 
 ## Ticket creation guidance
 

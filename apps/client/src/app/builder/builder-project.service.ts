@@ -11,7 +11,7 @@ import {
   BUILDER_SESSION_KEY,
   clearPendingStackProfile,
   readPendingStackProfile,
-} from '../stack-setup/stack-profile-session';
+} from '../welcome/stack-profile-session';
 
 interface BuilderSession {
   projectId: string;

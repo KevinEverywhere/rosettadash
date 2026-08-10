@@ -1,0 +1,103 @@
+<main class="welcome" data-testid="welcome-page">
+  <div class="welcome__layout">
+    <section class="welcome__hero" aria-labelledby="welcome-heading">
+      <p class="welcome__eyebrow">Welcome to {{ appName }}</p>
+      <h1 id="welcome-heading">Build dashboards for your stack</h1>
+      <p class="welcome__lead">
+        Design composite dashboards visually, preview with mock data, and export production-ready
+        code for your UI framework, server, and database.
+      </p>
+      <ul class="welcome__highlights">
+        <li>Drag-and-drop canvas with bindings and live preview</li>
+        <li>Multi-target export to React, Angular, Vue, Svelte, and more</li>
+        <li>Start focused on one stack, or pick <strong>Any</strong> to experiment freely</li>
+      </ul>
+    </section>
+
+    <section class="welcome__stack-panel" data-testid="welcome-stack">
+      <header class="welcome__stack-header">
+        <h2>Choose your tech stack</h2>
+        <p>
+          Pick a UI framework first. We will suggest compatible server and database partners — or
+          choose <strong>Any</strong> for scratch-pad mode.
+        </p>
+      </header>
+
+      <section class="welcome__section" aria-labelledby="stack-ui-heading">
+        <h3 id="stack-ui-heading">UI framework</h3>
+        <ul class="welcome__options">
+          @for (option of uiOptions; track option.id) {
+            <li>
+              <button
+                type="button"
+                class="welcome__option"
+                [class.welcome__option--selected]="uiChoice() === option.id"
+                [attr.data-testid]="'stack-ui-' + option.id"
+                (click)="selectUi(option.id)"
+              >
+                <span class="welcome__option-label">{{ option.label }}</span>
+                <span class="welcome__option-desc">{{ option.description }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (!isScratchPad()) {
+        <section class="welcome__section" aria-labelledby="stack-server-heading">
+          <h3 id="stack-server-heading">Server partner</h3>
+          <ul class="welcome__chip-row">
+            @for (option of serverOptions; track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip"
+                  [class.welcome__chip--selected]="serverChoice() === option.id"
+                  [attr.data-testid]="'stack-server-' + option.id"
+                  (click)="selectServer(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+
+        <section class="welcome__section" aria-labelledby="stack-database-heading">
+          <h3 id="stack-database-heading">Database</h3>
+          <ul class="welcome__chip-row">
+            @for (option of databaseOptions; track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip"
+                  [class.welcome__chip--selected]="databaseChoice() === option.id"
+                  [attr.data-testid]="'stack-database-' + option.id"
+                  (click)="selectDatabase(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      } @else {
+        <p class="welcome__scratch-note" data-testid="stack-scratch-note">
+          Scratch-pad mode keeps all export targets available in the builder. You can export to any
+          supported combination later.
+        </p>
+      }
+
+      <footer class="welcome__footer">
+        <button
+          type="button"
+          class="welcome__continue"
+          data-testid="welcome-continue"
+          (click)="continueToBuilder()"
+        >
+          Open builder
+        </button>
+      </footer>
+    </section>
+  </div>
+</main>

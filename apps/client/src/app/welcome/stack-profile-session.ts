@@ -27,3 +27,7 @@ export function clearPendingStackProfile(): void {
 export function hasBuilderSession(): boolean {
   return !!sessionStorage.getItem(BUILDER_SESSION_KEY);
 }
+
+export function canEnterBuilder(): boolean {
+  return hasBuilderSession() || readPendingStackProfile() !== null;
+}

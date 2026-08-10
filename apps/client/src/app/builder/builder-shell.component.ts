@@ -1,6 +1,8 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
+import { canEnterBuilder } from '../welcome/stack-profile-session';
 import { BuilderAuthGateComponent } from './builder-auth-gate.component';
 import { BuilderAuthService } from './builder-auth.service';
 import { BuilderProjectService } from './builder-project.service';
@@ -27,6 +29,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
 })
 export class BuilderShellComponent implements OnInit {
   private readonly projectService = inject(BuilderProjectService);
+  private readonly router = inject(Router);
   protected readonly auth = inject(BuilderAuthService);
   protected readonly state = inject(BuilderStateService);
 
@@ -36,6 +39,11 @@ export class BuilderShellComponent implements OnInit {
   protected selectedTemplateId = '';
 
   async ngOnInit(): Promise<void> {
+    if (!canEnterBuilder()) {
+      void this.router.navigate(['/']);
+      return;
+    }
+
     await this.auth.initialize();
     if (this.auth.authenticated()) {
       await this.projectService.initialize();

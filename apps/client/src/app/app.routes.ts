@@ -1,11 +1,11 @@
 import { Route } from '@angular/router';
 import { BuilderShellComponent } from './builder/builder-shell.component';
-import { StackSetupComponent } from './stack-setup/stack-setup.component';
+import { WelcomePageComponent } from './welcome/welcome-page.component';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    component: StackSetupComponent,
+    component: WelcomePageComponent,
   },
   {
     path: 'builder',
