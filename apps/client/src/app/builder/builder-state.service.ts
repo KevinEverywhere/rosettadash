@@ -21,6 +21,7 @@ import {
   normalizeDomainContext,
   slugifyDomainId,
   suggestionsForSelectedNode,
+  type AiBuilderAction,
   type PlacementPrompt,
 } from '@dashbuilder/core';
 import {
@@ -45,6 +46,8 @@ export interface PendingBindingSource {
 export type CreateBindingResult =
   | { ok: true; binding: Binding }
   | { ok: false; error: string };
+
+export type ApplyAiActionsResult = { ok: true } | { ok: false; error: string };
 
 @Injectable({ providedIn: 'root' })
 export class BuilderStateService {
@@ -251,7 +254,9 @@ export class BuilderStateService {
     definition: ComponentDefinition,
     options?: { layout?: Partial<NodeLayout>; skipPlacementPrompt?: boolean },
   ): ComponentNode {
-    this.recordHistory();
+    if (!this.historySuspended) {
+      this.recordHistory();
+    }
     const node = defaultComponentRegistry.createNode(definition.type, {
       layout: {
         x: snapToCanvasGrid(options?.layout?.x ?? 24),
@@ -376,13 +381,14 @@ export class BuilderStateService {
     this.applyCompositeTemplate('onboarding');
   }
 
-  applyCompositeTemplate(templateId: string): void {
+  applyCompositeTemplate(templateId: string, options?: { skipConfirm?: boolean }): void {
     const composite = this.composite();
     if (!composite) {
       return;
     }
 
     if (
+      !options?.skipConfirm &&
       this.dirty() &&
       typeof globalThis.confirm === 'function' &&
       !globalThis.confirm(
@@ -729,6 +735,86 @@ export class BuilderStateService {
 
   suggestionsForNode(nodeId: string): DefaultSuggestion[] {
     return this.suggestions().filter((suggestion) => suggestion.nodeId === nodeId);
+  }
+
+  applyAiActions(actions: AiBuilderAction[]): ApplyAiActionsResult {
+    if (!actions.length) {
+      return { ok: false, error: 'No actions to apply.' };
+    }
+
+    const refMap = new Map<string, string>();
+    const resolveNodeId = (nodeId?: string, nodeRef?: string): string | null => {
+      if (nodeId) {
+        return nodeId;
+      }
+      if (nodeRef) {
+        return refMap.get(nodeRef) ?? null;
+      }
+      return null;
+    };
+
+    this.recordHistory();
+    this.historySuspended = true;
+
+    try {
+      for (const action of actions) {
+        if (action.op === 'add_node') {
+          const definition = defaultComponentRegistry.get(action.type);
+          if (!definition) {
+            return { ok: false, error: `Unknown component type: ${action.type}` };
+          }
+          const node = this.addNodeFromDefinition(definition, {
+            layout: action.layout,
+            skipPlacementPrompt: true,
+          });
+          if (action.properties) {
+            for (const [key, value] of Object.entries(action.properties)) {
+              this.updateNodeProperty(node.id, key, value);
+            }
+          }
+          if (action.ref) {
+            refMap.set(action.ref, node.id);
+          }
+          continue;
+        }
+
+        if (action.op === 'set_property') {
+          const nodeId = resolveNodeId(action.nodeId, action.nodeRef);
+          if (!nodeId) {
+            return { ok: false, error: 'Could not resolve node for set_property.' };
+          }
+          this.updateNodeProperty(nodeId, action.key, action.value);
+          continue;
+        }
+
+        if (action.op === 'bind') {
+          const sourceNodeId = resolveNodeId(action.sourceNodeId, action.sourceRef);
+          const targetNodeId = resolveNodeId(action.targetNodeId, action.targetRef);
+          if (!sourceNodeId || !targetNodeId) {
+            return { ok: false, error: 'Could not resolve nodes for bind.' };
+          }
+          const result = this.createBinding(
+            sourceNodeId,
+            action.sourcePort,
+            targetNodeId,
+            action.targetPort,
+          );
+          if (!result.ok) {
+            return result;
+          }
+          continue;
+        }
+
+        if (action.op === 'apply_template') {
+          this.applyCompositeTemplate(action.templateId, { skipConfirm: true });
+        }
+      }
+    } finally {
+      this.historySuspended = false;
+    }
+
+    this.markDirty();
+    return { ok: true };
   }
 
   applySuggestion(suggestionId: string): void {

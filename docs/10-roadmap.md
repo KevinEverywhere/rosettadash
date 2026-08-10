@@ -197,12 +197,25 @@ Users bring their own AI provider API keys. DashBuilder stores keys client-side 
 - [ ] Deep-link from palette when adding server/AI nodes (Phase 20 follow-up)
 - [x] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
 
-## DAS-72 — App lock recovery codes (in progress)
+## Phase 20 — AI-assisted component creation (in progress)
 
-**Ticket:** [DAS-72](https://planetkevin.atlassian.net/browse/DAS-72) · Branch: `feature/DAS-72-app-lock-recovery-codes`
+**Ticket:** [DAS-73](https://planetkevin.atlassian.net/browse/DAS-73) · Branch: `feature/DAS-73-ai-assist-drawer`
 
-- [ ] Recovery codes, password hint, forgot-password reset flow
-- [ ] See [App Lock](./24-app-lock.md)
+Cost-point-zero: **Ollama local default** (free). Cloud via BYOK — user pays provider, not DashBuilder.
+
+- [x] Core AI action schema + validator
+- [x] AI drawer in builder toolbar
+- [x] Ollama / OpenAI / Anthropic adapters
+- [x] Apply pipeline through builder history
+- [ ] Palette “Ask AI” and inspector suggest (follow-up)
+- [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
+
+## DAS-72 — App lock recovery codes (complete)
+
+**Ticket:** [DAS-72](https://planetkevin.atlassian.net/browse/DAS-72)
+
+- [x] Recovery codes, password hint, forgot-password reset
+- [x] See [App Lock](./24-app-lock.md)
 
 ## DAS-71 — Content library (in progress)
 
@@ -212,13 +225,13 @@ Users bring their own AI provider API keys. DashBuilder stores keys client-side 
 - [x] Unlock gate on `/environment`
 - [ ] Content library — user-controlled save/revisit ([spec](./23-content-library.md))
 
-## Phase 20 — AI-assisted component creation (planned)
+## Phase 20 — AI-assisted component creation (in progress)
 
-Natural-language help for adding components, bindings, and templates — powered by Phase 19 BYOK.
+Natural-language help for adding components, bindings, and templates — **Ollama local first (free)**, cloud via BYOK.
 
-- [ ] AI assistant drawer in builder
-- [ ] Structured action responses applied through builder history
-- [ ] Integrates with grouping guides and stack profile context
+- [x] AI assistant drawer in builder (DAS-73)
+- [x] Structured action responses applied through builder history
+- [x] Integrates with grouping guides and stack profile context
 - [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
 
 ## Phase 21 — Animated demo dashboards (planned)

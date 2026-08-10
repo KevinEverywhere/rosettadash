@@ -124,6 +124,15 @@
       </div>
       <button
         type="button"
+        class="builder__ai"
+        data-testid="ai-assist-button"
+        [disabled]="state.loading()"
+        (click)="openAiDrawer()"
+      >
+        AI assist
+      </button>
+      <button
+        type="button"
         class="builder__export"
         data-testid="export-button"
         [disabled]="state.loading()"
@@ -178,3 +187,4 @@
 </div>
 
 <app-export-wizard [open]="exportWizardOpen()" (closed)="closeExportWizard()" />
+<app-ai-drawer [open]="aiDrawerOpen()" (closed)="closeAiDrawer()" />

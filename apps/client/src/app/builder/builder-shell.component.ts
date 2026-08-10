@@ -13,6 +13,7 @@ import { DisplayAvailabilityService } from './display-availability.service';
 import { BuilderWorkspaceLayoutService } from './builder-workspace-layout.service';
 import { CanvasComponent } from './canvas/canvas.component';
 import { ExportWizardComponent } from './export/export-wizard.component';
+import { AiDrawerComponent } from './ai/ai-drawer.component';
 import { InspectorComponent } from './inspector/inspector.component';
 import { PaletteComponent } from './palette/palette.component';
 import { PreviewPanelComponent } from './preview/preview-panel.component';
@@ -25,6 +26,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     PreviewPanelComponent,
     InspectorComponent,
     ExportWizardComponent,
+    AiDrawerComponent,
     BuilderAuthGateComponent,
     BuilderViewportGateComponent,
     AppSelectComponent,
@@ -44,6 +46,7 @@ export class BuilderShellComponent implements OnInit {
 
   protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
+  protected readonly aiDrawerOpen = signal(false);
   protected readonly compositeTemplates = listCompositeTemplates();
   protected readonly templateSelectOptions = this.compositeTemplates.map((template) => ({
     value: template.id,
@@ -98,6 +101,14 @@ export class BuilderShellComponent implements OnInit {
     this.exportWizardOpen.set(false);
   }
 
+  protected openAiDrawer(): void {
+    this.aiDrawerOpen.set(true);
+  }
+
+  protected closeAiDrawer(): void {
+    this.aiDrawerOpen.set(false);
+  }
+
   protected undo(): void {
     this.state.undo();
   }
@@ -112,7 +123,8 @@ export class BuilderShellComponent implements OnInit {
       this.auth.checking() ||
       (this.auth.authEnabled() && !this.auth.authenticated()) ||
       this.state.loading() ||
-      this.exportWizardOpen()
+      this.exportWizardOpen() ||
+      this.aiDrawerOpen()
     ) {
       return;
     }

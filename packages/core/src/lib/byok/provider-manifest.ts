@@ -63,8 +63,9 @@ export const AI_PROVIDER_MANIFEST: AiProviderDefinition[] = [
     supportsCustomBaseUrl: true,
     defaultBaseUrl: 'http://localhost:11434',
     models: [
-      { id: 'llama3.2', label: 'Llama 3.2' },
-      { id: 'mistral', label: 'Mistral' },
+      { id: 'llama3.2', label: 'Llama 3.2 (recommended — free local)' },
+      { id: 'mistral', label: 'Mistral 7B' },
+      { id: 'qwen2.5', label: 'Qwen 2.5' },
     ],
   },
 ];
@@ -78,10 +79,10 @@ export function getAiProvider(id: AiProviderId): AiProviderDefinition {
 }
 
 export function getDefaultByokSettings(): ByokSettings {
-  const defaultProvider = AI_PROVIDER_MANIFEST[0];
+  const defaultProvider = getAiProvider('ollama');
   return {
     activeProvider: defaultProvider.id,
-    activeModel: defaultProvider.models[0]?.id ?? '',
+    activeModel: defaultProvider.models[0]?.id ?? 'llama3.2',
     rememberKeys: false,
   };
 }

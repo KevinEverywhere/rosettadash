@@ -1,0 +1,131 @@
+@if (open()) {
+  <div class="ai-drawer" data-testid="ai-drawer">
+    <button
+      type="button"
+      class="ai-drawer__backdrop"
+      data-testid="ai-drawer-backdrop"
+      aria-label="Close AI assistant"
+      (click)="close()"
+    ></button>
+
+    <section
+      class="ai-drawer__dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ai-drawer-title"
+    >
+      <header class="ai-drawer__header">
+        <div>
+          <h2 id="ai-drawer-title">AI assist</h2>
+          <p>Free-first with local Ollama. Cloud keys are BYOK — you pay the provider, not DashBuilder.</p>
+        </div>
+        <button
+          type="button"
+          class="ai-drawer__close"
+          data-testid="ai-drawer-close"
+          aria-label="Close AI assistant"
+          (click)="close()"
+        >
+          ×
+        </button>
+      </header>
+
+      @if (assist.readiness(); as readiness) {
+        <div class="ai-drawer__status" data-testid="ai-readiness">
+          <span class="ai-drawer__badge" [class.ai-drawer__badge--free]="readiness.freeLocal">
+            {{ readiness.freeLocal ? 'Free local' : 'BYOK cloud' }}
+          </span>
+          <span>{{ readiness.providerLabel }} · {{ readiness.model || 'no model selected' }}</span>
+          @if (!readiness.ready && readiness.message) {
+            <p class="ai-drawer__setup">{{ readiness.message }}</p>
+          }
+        </div>
+
+        @if (!readiness.ready && readiness.freeLocal) {
+          <section class="ai-drawer__setup-panel" data-testid="ai-ollama-setup">
+            <h3>Initialize a free local model</h3>
+            <ol>
+              <li>Install <a href="https://ollama.com" target="_blank" rel="noopener">Ollama</a></li>
+              <li>Run <code>ollama pull llama3.2</code></li>
+              <li>Keep Ollama running, then click Refresh below</li>
+            </ol>
+            <p>
+              Optional: pick another model on
+              <a routerLink="/environment" [queryParams]="{ from: 'byok' }">Environment</a>.
+            </p>
+            <button type="button" class="ai-drawer__secondary" data-testid="ai-refresh-setup" (click)="refreshSetup()">
+              Refresh connection
+            </button>
+          </section>
+        } @else if (!readiness.ready) {
+          <section class="ai-drawer__setup-panel">
+            <p>Add your provider API key on the Environment page — DashBuilder never stores keys on the server.</p>
+            <a class="ai-drawer__secondary ai-drawer__link-button" routerLink="/environment" [queryParams]="{ from: 'byok' }">
+              Configure BYOK
+            </a>
+          </section>
+        }
+      }
+
+      <div class="ai-drawer__messages" data-testid="ai-messages">
+        @if (!assist.messages().length) {
+          <p class="ai-drawer__empty">
+            Describe what to build — for example: “Add a date filter, KPI row, and sales table.”
+          </p>
+        }
+        @for (message of assist.messages(); track $index) {
+          <article
+            class="ai-drawer__message"
+            [class.ai-drawer__message--user]="message.role === 'user'"
+            [class.ai-drawer__message--assistant]="message.role === 'assistant'"
+          >
+            <p>{{ message.content }}</p>
+            @if (message.response?.followUp) {
+              <p class="ai-drawer__follow-up">Next: {{ message.response?.followUp }}</p>
+            }
+            @if (message.error) {
+              <p class="ai-drawer__error">{{ message.error }}</p>
+            }
+          </article>
+        }
+      </div>
+
+      @if (applyMessage(); as message) {
+        <p class="ai-drawer__apply-message" data-testid="ai-apply-message">{{ message }}</p>
+      }
+
+      <footer class="ai-drawer__footer">
+        @if (hasApplicableResponse()) {
+          <button
+            type="button"
+            class="ai-drawer__apply"
+            data-testid="ai-apply"
+            [disabled]="assist.pending()"
+            (click)="applyLatest()"
+          >
+            Apply to canvas
+          </button>
+        }
+        <form class="ai-drawer__form" (ngSubmit)="submit()">
+          <textarea
+            rows="3"
+            placeholder="Describe components, bindings, or a template to apply…"
+            data-testid="ai-prompt"
+            [disabled]="assist.pending()"
+            [ngModel]="prompt()"
+            (ngModelChange)="prompt.set($event)"
+            name="aiPrompt"
+          ></textarea>
+          <button
+            type="submit"
+            class="ai-drawer__send"
+            data-testid="ai-send"
+            [disabled]="assist.pending() || !prompt().trim()"
+          >
+            {{ assist.pending() ? 'Thinking…' : 'Send' }}
+          </button>
+        </form>
+      </footer>
+    </section>
+  </div>
+}

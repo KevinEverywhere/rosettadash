@@ -78,12 +78,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) | `feature/DAS-69-builder-creation-assistance` | Animated builder guides for all palette components (Phase 18) |
 | [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) | `feature/DAS-70-byok-key-management` | BYOK key management — unified `/environment` page, encrypted storage, validation (Phase 19) |
 | [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) | `feature/DAS-71-app-lock-and-content-library` | App lock for env secrets + welcome stack reset |
+| [DAS-72](https://planetkevin.atlassian.net/browse/DAS-72) | `feature/DAS-72-app-lock-recovery-codes` | App lock recovery codes + forgot-password reset |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-72](https://planetkevin.atlassian.net/browse/DAS-72) | `feature/DAS-72-app-lock-recovery-codes` | App lock recovery codes + forgot-password reset |
+| [DAS-73](https://planetkevin.atlassian.net/browse/DAS-73) | `feature/DAS-73-ai-assist-drawer` | AI assist drawer — Ollama-first BYOK |
 | [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) | `feature/DAS-71-content-library` | Content library (spec + implementation) |
 
 ## Planned (not yet ticketed)
@@ -113,8 +114,9 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 18 builder creation assistance:** complete (DAS-69)
 - **Phase 19 BYOK key management:** complete (DAS-70)
 - **DAS-71 app lock:** complete (merged); content library remains on DAS-71
-- **DAS-72 app lock recovery codes:** in progress
-- **Phase 20 AI-assisted creation:** planned (DAS-73 candidate)
+- **DAS-72 app lock recovery codes:** complete (branch ready)
+- **DAS-73 AI assist drawer:** in progress
+- **Phase 20 AI-assisted creation:** in progress (DAS-73)
 - **Phase 21 animated demo dashboards:** planned — discuss after Phase 20
 
 ## Phase 6 — complete
@@ -203,21 +205,27 @@ See [Builder Creation Assistance](./21-builder-creation-assistance.md).
 
 See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
 
-## DAS-72 — App lock recovery codes (in progress)
+## DAS-73 — AI assist drawer (in progress)
+
+1. Ollama-first AI drawer, structured graph actions, BYOK cloud — DAS-73
+
+See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
+
+## DAS-72 — App lock recovery codes (complete)
 
 1. Recovery codes, password hint, forgot-password reset — DAS-72
 
 See [App Lock](./24-app-lock.md).
 
-## DAS-71 — Content library (in progress)
+## DAS-71 — Content library (planned)
 
 1. User-controlled content library — [spec](./23-content-library.md)
 
 See [Content Library](./23-content-library.md).
 
-## Phase 20 — AI-assisted component creation (planned)
+## Phase 20 — AI-assisted component creation (in progress)
 
-1. AI assistant drawer, structured graph actions, BYOK-powered inference
+1. AI assistant drawer, structured graph actions, Ollama free local + BYOK cloud — DAS-73
 
 See [AI & BYOK Integration](./20-ai-and-byok-integration.md).
 

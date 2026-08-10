@@ -226,13 +226,14 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 - Docs + security review checklist
 - No LLM calls yet — infrastructure only
 
-### Phase 20 — AI-assisted component creation (planned)
+### Phase 20 — AI-assisted component creation (in progress)
 
-**Ticket:** TBD (DAS-73 candidate)
+**Ticket:** [DAS-73](https://planetkevin.atlassian.net/browse/DAS-73) · Branch: `feature/DAS-73-ai-assist-drawer`
 
-- Prompt builder + action parser
-- AI drawer UI
-- Provider adapters (OpenAI, Anthropic first)
+- Cost-point-zero: Ollama local default; cloud BYOK optional
+- Prompt builder + action parser + validator in `@dashbuilder/core`
+- AI drawer UI with Ollama setup guidance
+- Provider adapters (Ollama, OpenAI, Anthropic)
 - Apply pipeline through builder history
 - E2E with mocked provider (no real keys in CI)
 

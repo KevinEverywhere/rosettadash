@@ -36,7 +36,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-72** — app lock recovery codes — is in progress.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-73** — AI assist drawer (Ollama-first, BYOK) — is in progress.
 
 ## Current capabilities (at a glance)
 
@@ -52,7 +52,7 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-72** �
 | Builder creation assistance (animated guides) | Shipped (DAS-69) |
 | BYOK key management | Shipped (DAS-70, Phase 19) |
 | App lock (local env password) | Shipped (DAS-71); recovery codes in progress (DAS-72) |
-| AI-assisted component creation | Phase 20 — planned (DAS-73 candidate) |
+| AI-assisted component creation | DAS-73 — in progress (Ollama free local default) |
 | Animated demo dashboards (3 examples) | Phase 21 — planned after Phase 20 |
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |
