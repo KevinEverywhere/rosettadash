@@ -263,7 +263,7 @@
               <span class="inspector__group-count">{{ nodeBindings().length }}</span>
             </button>
             @if (isSectionExpanded('bindings')) {
-              <div class="inspector__group-panel">
+              <div class="inspector__group-panel" data-testid="inspector-group-panel-bindings">
                 <ul class="inspector__bindings">
                   @for (binding of nodeBindings(); track binding.id) {
                     <li class="inspector__binding">

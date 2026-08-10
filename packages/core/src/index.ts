@@ -19,3 +19,4 @@ export * from './lib/grouping';
 export * from './lib/palette';
 export * from './lib/templates';
 export * from './lib/versioning';
+export * from './lib/viewport';

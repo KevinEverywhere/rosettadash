@@ -72,12 +72,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-62](https://planetkevin.atlassian.net/browse/DAS-62) | `feature/DAS-62-gltf-model-host` | GLTF model host preview + multi-target export stubs |
 | [DAS-63](https://planetkevin.atlassian.net/browse/DAS-63) | `feature/DAS-63-geo-globe` | 3D geo globe lat/lng markers + multi-target export stubs |
 | [DAS-64](https://planetkevin.atlassian.net/browse/DAS-64) | `feature/DAS-64-stack-styling-selection` | Stack styling / CSS framework in project stack profile |
+| [DAS-65](https://planetkevin.atlassian.net/browse/DAS-65) | `feature/DAS-65-welcome-stack-none-options` | Welcome None server/database, heading, server ecosystem copy |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-65](https://planetkevin.atlassian.net/browse/DAS-65) | `feature/DAS-65-welcome-stack-none-options` | Welcome None server/database, heading, server ecosystem copy |
+| [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66) | `feature/DAS-66-mobile-tablet-viewport-gate` | 1024px landscape gate; unified message for phones and small tablets |
 
 ## Delivery status
 
@@ -93,6 +94,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 12 multi-target 3D export:** complete (DAS-61, DAS-62)
 - **Phase 13 geo globe:** complete (DAS-63)
 - **Phase 14 stack styling:** complete (DAS-64)
+- **Phase 15 display availability:** in progress (DAS-66)
 
 ## Phase 6 — complete
 
@@ -154,6 +156,12 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 ## Phase 14 — Stack styling (complete)
 
 1. ~~CSS / styling framework in project stack profile (extends DAS-57)~~ — DAS-64
+
+## Phase 15 — Display availability (in progress)
+
+1. Minimum 1024px landscape viewport gate + unified fallback UX — DAS-66
+2. [Display Availability](./19-display-availability.md) documentation
+3. Responsive collapsible builder panels for supported landscape tablets — next branch
 
 ## Future — VR / 3D expansion
 

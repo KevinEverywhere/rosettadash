@@ -80,13 +80,7 @@ export async function expandInspectorSection(page: Page, sectionId: string): Pro
 }
 
 export async function expandInspectorBindings(page: Page): Promise<void> {
-  const panel = page.locator('[data-testid="inspector-bindings"] .inspector__group-panel');
-  if (await panel.isVisible().catch(() => false)) {
-    return;
-  }
-
-  await page.getByTestId('inspector-group-toggle-bindings').click();
-  await expect(panel).toBeVisible();
+  await expandInspectorSection(page, 'bindings');
 }
 
 export async function openBuilder(page: Page): Promise<void> {

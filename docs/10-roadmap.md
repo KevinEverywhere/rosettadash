@@ -150,6 +150,15 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Welcome page styling picker with UI-aware compatibility matrix
 - [x] Persist styling on project; export wizard + ExportIR read stack styling
 
+## Phase 15 — Display availability (in progress)
+
+**Ticket:** DAS-66
+
+- [x] Core viewport gate — minimum 1024px width in landscape mode
+- [x] Unified fallback for phones, small tablets, portrait, and narrow windows
+- [x] Display availability documentation
+- [ ] Responsive collapsible builder panels for supported landscape tablets (next branch)
+
 ## Future — VR / 3D expansion
 
 - (none scheduled — see backlog ideas below)

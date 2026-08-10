@@ -27,10 +27,11 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 15. [Component & Page Design](./15-component-and-page-design.md) — single components, page patterns, implementation plan
 16. [Exporter Plugin SDK](./16-exporter-plugin-sdk.md) — adding UI/server/database code generators
 17. [Component Plugin SDK](./17-component-plugin-sdk.md) — registering custom palette and preview components
+18. [Display Availability](./19-display-availability.md) — phone/tablet/desktop tiers and builder gating
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 7 (DAS-50–DAS-54) is complete.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 15 (DAS-66) is in progress.
 
 ## Current capabilities (at a glance)
 
@@ -40,6 +41,7 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 7 (DAS
 | Bindings + live preview (P0 components) | Shipped |
 | Multi-target export (React/Angular/Vue/Svelte + 4 servers + 4 DBs) | Shipped |
 | Defaults engine, domain context, role visibility | Shipped |
+| Display availability gate (phone / tablet portrait) | DAS-66 — in progress |
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |
 | Phase 7 production hardening | Complete (DAS-50–DAS-54) |

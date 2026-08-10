@@ -31,7 +31,9 @@ test.describe('Builder bindings', () => {
     await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
     await expect(page.getByTestId('canvas-node')).toHaveCount(2);
 
-    await selectCanvasNode(page, page.getByTestId('canvas-node').nth(1));
+    const restoredChart = page.getByTestId('canvas-node').nth(1);
+    await selectCanvasNode(page, restoredChart);
+    await expect(page.getByTestId('inspector-bindings')).toBeVisible();
     await expandInspectorBindings(page);
     await expect(page.getByTestId('inspector-bindings')).toContainText('Date Range.range');
   });

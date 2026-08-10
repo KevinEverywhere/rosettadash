@@ -1,5 +1,7 @@
 <div class="builder" data-testid="builder-shell">
-  @if (auth.checking()) {
+  @if (viewport.blocked()) {
+    <app-builder-viewport-gate [availability]="viewport.availability()" />
+  } @else if (auth.checking()) {
     <div class="builder__loading" data-testid="auth-checking">Checking access…</div>
   } @else if (auth.authEnabled() && !auth.authenticated()) {
     <app-builder-auth-gate

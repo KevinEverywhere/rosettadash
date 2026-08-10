@@ -6,7 +6,9 @@ import { canEnterBuilder } from '../welcome/stack-profile-session';
 import { BuilderAuthGateComponent } from './builder-auth-gate.component';
 import { BuilderAuthService } from './builder-auth.service';
 import { BuilderProjectService } from './builder-project.service';
+import { BuilderViewportGateComponent } from './builder-viewport-gate.component';
 import { BuilderStateService, WorkspaceMode } from './builder-state.service';
+import { DisplayAvailabilityService } from './display-availability.service';
 import { CanvasComponent } from './canvas/canvas.component';
 import { ExportWizardComponent } from './export/export-wizard.component';
 import { InspectorComponent } from './inspector/inspector.component';
@@ -22,6 +24,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     InspectorComponent,
     ExportWizardComponent,
     BuilderAuthGateComponent,
+    BuilderViewportGateComponent,
     FormsModule,
     RouterLink,
   ],
@@ -33,6 +36,7 @@ export class BuilderShellComponent implements OnInit {
   private readonly router = inject(Router);
   protected readonly auth = inject(BuilderAuthService);
   protected readonly state = inject(BuilderStateService);
+  protected readonly viewport = inject(DisplayAvailabilityService);
 
   protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
@@ -42,6 +46,10 @@ export class BuilderShellComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (!canEnterBuilder()) {
       void this.router.navigate(['/']);
+      return;
+    }
+
+    if (this.viewport.blocked()) {
       return;
     }
 
