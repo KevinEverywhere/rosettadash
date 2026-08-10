@@ -66,12 +66,12 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-56](https://planetkevin.atlassian.net/browse/DAS-56) | `feature/DAS-56-threejs-visual` | First three.js visual — 3D bar chart + VR palette group |
 | [DAS-57](https://planetkevin.atlassian.net/browse/DAS-57) | `feature/DAS-57-project-stack-setup` | Framework-first project stack entry screen |
 | [DAS-58](https://planetkevin.atlassian.net/browse/DAS-58) | `feature/DAS-58-3d-scatter-field-mapping` | 3D scatter rowset field mapping + React export stub |
+| [DAS-59](https://planetkevin.atlassian.net/browse/DAS-59) | `feature/DAS-59-welcome-stack-page` | Welcome page with tech stack selection above builder |
+| [DAS-60](https://planetkevin.atlassian.net/browse/DAS-60) | `feature/DAS-60-3d-scene-point-cloud` | 3D scene rowset point-cloud field mapping + React export stub |
 
 ## Active work
 
-| Ticket | Branch | Status |
-|--------|--------|--------|
-| [DAS-59](https://planetkevin.atlassian.net/browse/DAS-59) | `feature/DAS-59-welcome-stack-page` | Welcome page with tech stack selection above builder |
+_None — merge `feature/DAS-60-3d-scene-point-cloud` when ready._
 
 ## Delivery status
 
@@ -82,7 +82,8 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 6 component & page design:** complete (DAS-39–DAS-49)
 - **Phase 8 component plugins & 3D:** complete (DAS-55–DAS-56)
 - **Phase 9 project stack setup:** complete (DAS-57)
-- **Phase 10 VR / 3D expansion:** started (DAS-58 complete on `development`)
+- **Phase 10 VR / 3D expansion:** DAS-58 and DAS-60 complete on branch
+- **Phase 11 welcome & entry:** complete (DAS-59)
 
 ## Phase 6 — complete
 
@@ -123,17 +124,17 @@ See [Component Plugin SDK](./17-component-plugin-sdk.md).
 
 Stack selection moves upstream: UI framework (or **Any**) at the top level, then compatible server/database partners as second-level defaults. Persisted on the project; export wizard and builder read from it.
 
-## Phase 10 — VR / 3D expansion (started)
+## Phase 10 — VR / 3D expansion (complete)
 
 1. ~~3D scatter rowset field mapping~~ — DAS-58
+2. ~~3D scene point-cloud field mapping~~ — DAS-60
 
-## Phase 11 — Welcome & entry (started)
+## Phase 11 — Welcome & entry (complete)
 
-1. ~~Welcome page with tech stack selection above builder~~ — DAS-59 (active, implementation complete)
+1. ~~Welcome page with tech stack selection above builder~~ — DAS-59
 
 ## Future — VR / 3D expansion
 
-- Full scene point-cloud bindings
 - Vue/Svelte/Angular R3F-equivalent exporters
 - GLTF model hosts and geo globes
 

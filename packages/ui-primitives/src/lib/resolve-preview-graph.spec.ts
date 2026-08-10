@@ -69,4 +69,28 @@ describe('resolvePreviewGraph', () => {
     expect(chartSlice?.chartPoints?.length).toBeGreaterThan(0);
     expect(chartSlice?.chartPoints?.[0]?.label).toMatch(/\d{2}-\d{2}/);
   });
+
+  it('derives scene point cloud coordinates from table rowset', () => {
+    const sceneNodes = [
+      ...nodes,
+      {
+        id: 's1',
+        type: 'visual.display.3d-scene',
+        properties: { xField: 'amount', yField: 'id', zField: 'date' },
+      },
+    ];
+
+    const result = resolvePreviewGraph({
+      projectName: 'Sales',
+      compositeName: 'Overview',
+      limit: 8,
+      nodes: sceneNodes,
+      bindings: [],
+    });
+
+    const sceneSlice = result.nodes['s1'];
+    expect(sceneSlice?.linkedFromTable).toBe(true);
+    expect(sceneSlice?.scatterPoints?.length).toBeGreaterThan(0);
+    expect(sceneSlice?.scatterPoints?.every((point) => Number.isFinite(point.x))).toBe(true);
+  });
 });

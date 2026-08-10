@@ -321,8 +321,11 @@ export function resolvePreviewGraph(
       tableNodes.length > 0 &&
       (!dataBinding || tableNodes.some((table) => table.id === dataBinding.sourceNodeId));
 
+    const sceneRows = linkedFromTable ? primaryTableRows : filteredRows;
+
     nodeSlices[sceneNode.id] = {
-      chartPoints: linkedFromTable ? rowsToChartPoints(primaryTableRows) : undefined,
+      chartPoints: rowsToChartPoints(sceneRows),
+      scatterPoints: mapRowsToScatterPoints(sceneRows, resolveScatterFields(sceneNode.properties)),
       linkedFromTable,
     };
   }

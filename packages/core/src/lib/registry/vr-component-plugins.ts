@@ -92,6 +92,9 @@ export const VR_COMPONENT_PLUGINS: ComponentPlugin[] = [
         ...sharedSceneProperties.map((property) =>
           property.key === 'title' ? { ...property, default: '3D Scene' } : property,
         ),
+        { key: 'xField', label: 'X field', type: 'string', default: 'date' },
+        { key: 'yField', label: 'Y field', type: 'string', default: 'amount' },
+        { key: 'zField', label: 'Z field', type: 'string', default: 'id' },
         { key: 'showGrid', label: 'Show grid', type: 'boolean', default: true },
       ],
     },

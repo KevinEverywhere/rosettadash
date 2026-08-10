@@ -148,7 +148,31 @@ export class ThreePreviewRuntime {
       return;
     }
 
-    this.addSceneMarkers(points);
+    if (data.mode === 'scene') {
+      this.addScenePointCloud(data.scatterPoints ?? []);
+      return;
+    }
+  }
+
+  private addScenePointCloud(scatterPoints: PreviewScatterPoint[]): void {
+    if (scatterPoints.length === 0) {
+      const geometry = new THREE.BoxGeometry(1.2, 0.2, 1.2);
+      const material = new THREE.MeshStandardMaterial({ color: '#64748b' });
+      const platform = new THREE.Mesh(geometry, material);
+      platform.position.y = 0.1;
+      this.contentGroup.add(platform);
+      return;
+    }
+
+    const geometry = new THREE.SphereGeometry(0.1, 10, 10);
+    scatterPoints.forEach((point, index) => {
+      const material = new THREE.MeshStandardMaterial({
+        color: BAR_COLORS[index % BAR_COLORS.length],
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(point.x, point.y, point.z);
+      this.contentGroup.add(mesh);
+    });
   }
 
   private addBars(points: PreviewChartPoint[]): void {
@@ -180,33 +204,6 @@ export class ThreePreviewRuntime {
       });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.set(point.x, point.y, point.z);
-      this.contentGroup.add(mesh);
-    });
-  }
-
-  private addSceneMarkers(points: PreviewChartPoint[]): void {
-    if (points.length === 0) {
-      const geometry = new THREE.BoxGeometry(1.2, 0.2, 1.2);
-      const material = new THREE.MeshStandardMaterial({ color: '#64748b' });
-      const platform = new THREE.Mesh(geometry, material);
-      platform.position.y = 0.1;
-      this.contentGroup.add(platform);
-      return;
-    }
-
-    const maxValue = Math.max(...points.map((point) => point.value), 1);
-    const geometry = new THREE.SphereGeometry(0.12, 12, 12);
-    points.slice(0, 24).forEach((point, index) => {
-      const material = new THREE.MeshStandardMaterial({
-        color: BAR_COLORS[index % BAR_COLORS.length],
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      const angle = (index / Math.max(points.length, 1)) * Math.PI * 2;
-      mesh.position.set(
-        Math.cos(angle) * 2.5,
-        (point.value / maxValue) * 2 + 0.2,
-        Math.sin(angle) * 2.5,
-      );
       this.contentGroup.add(mesh);
     });
   }

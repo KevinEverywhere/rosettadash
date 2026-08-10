@@ -108,14 +108,16 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Entry screen for stack pieces (UI + server + database) with compatible second-level defaults
 - [x] Export wizard and builder consume persisted stack profile
 
-## Phase 10 — VR / 3D expansion (started)
+## Phase 10 — VR / 3D expansion (complete)
 
-**Ticket:** DAS-58 — 3D scatter field mapping
+**Tickets:** DAS-58, DAS-60
 
-- [x] Rowset x/y/z field mapping in preview
-- [x] React R3F scatter export stub
+- [x] Rowset x/y/z field mapping in preview (3D scatter) — DAS-58
+- [x] React R3F scatter export stub — DAS-58
+- [x] 3D scene point-cloud field mapping — DAS-60
+- [x] React R3F scene point-cloud export stub — DAS-60
 
-## Phase 11 — Welcome & entry (in progress)
+## Phase 11 — Welcome & entry (complete)
 
 **Ticket:** DAS-59 — welcome page with tech stack selection
 
@@ -125,7 +127,7 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 
 ## Future — VR / 3D expansion
 
-- Scene point clouds, GLTF hosts, multi-target 3D export
+- GLTF model hosts, multi-target 3D export
 
 ## Backlog ideas (unscheduled)
 
@@ -135,7 +137,7 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - Hosted preview URLs
 - Custom component SDK for third-party palette plugins
 - ~~Framework-first project stack entry screen~~ — DAS-57 (complete)
-- ~~Welcome page with stack selection above builder~~ — DAS-59 (in progress)
+- ~~Welcome page with stack selection above builder~~ — DAS-59 (complete)
 
 ## Ticket creation guidance
 
