@@ -80,7 +80,18 @@
               (pointermove)="onHeaderPointerMove($event)"
               (pointerup)="onHeaderPointerUp($event)"
             >
-              <span class="canvas__node-label">{{ node.label }}</span>
+              <div class="canvas__node-header-row">
+                <span class="canvas__node-label">{{ node.label }}</span>
+                <button
+                  type="button"
+                  class="canvas__node-close"
+                  [attr.data-testid]="'canvas-node-remove-' + node.id"
+                  [attr.aria-label]="'Remove ' + node.label + ' from canvas'"
+                  (click)="removeNode(node.id, $event)"
+                >
+                  ×
+                </button>
+              </div>
               <span class="canvas__node-type">{{ node.type }}</span>
             </header>
 

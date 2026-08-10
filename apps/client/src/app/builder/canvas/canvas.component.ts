@@ -162,6 +162,11 @@ export class CanvasComponent implements AfterViewInit {
     this.state.selectNode(nodeId, { additive });
   }
 
+  protected removeNode(nodeId: string, event: Event): void {
+    event.stopPropagation();
+    this.state.removeNode(nodeId);
+  }
+
   protected stopHeaderEvent(event: Event): void {
     event.stopPropagation();
     if (event instanceof KeyboardEvent && event.key === ' ') {

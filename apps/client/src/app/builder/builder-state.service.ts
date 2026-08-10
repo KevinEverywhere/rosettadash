@@ -325,8 +325,16 @@ export class BuilderStateService {
     this.markDirty();
   }
 
+  removeNode(nodeId: string): void {
+    this.removeNodes([nodeId]);
+  }
+
   removeSelectedNode(): void {
-    const ids = new Set(this.selectedNodeIds());
+    this.removeNodes(this.selectedNodeIds());
+  }
+
+  removeNodes(nodeIds: string[]): void {
+    const ids = new Set(nodeIds);
     if (ids.size === 0) {
       return;
     }
@@ -337,7 +345,7 @@ export class BuilderStateService {
         (binding) => !ids.has(binding.sourceNodeId) && !ids.has(binding.targetNodeId),
       ),
     );
-    this.selectedNodeIds.set([]);
+    this.selectedNodeIds.update((selected) => selected.filter((id) => !ids.has(id)));
     this.clearPendingBinding();
     this.markDirty();
   }

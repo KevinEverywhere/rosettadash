@@ -175,8 +175,7 @@ describe('BuilderStateService', () => {
     );
 
     service.createBinding(dateRange.id, 'range', chart.id, 'range');
-    service.selectNode(dateRange.id);
-    service.removeSelectedNode();
+    service.removeNode(dateRange.id);
 
     expect(service.bindings()).toHaveLength(0);
     expect(service.nodes()).toHaveLength(1);

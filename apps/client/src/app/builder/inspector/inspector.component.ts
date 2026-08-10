@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   Binding,
@@ -22,6 +22,9 @@ import { VersionHistoryPanelComponent } from './version-history-panel.component'
 export class InspectorComponent {
   protected readonly state = inject(BuilderStateService);
 
+  private readonly expandedSectionIds = signal<ReadonlySet<string>>(new Set());
+  private selectionKey = '';
+
   protected readonly definition = computed(() => {
     const selected = this.state.selectedDefinition();
     if (selected) {
@@ -40,9 +43,7 @@ export class InspectorComponent {
     }
     return this.state.suggestionsForNode(node.id);
   });
-  protected readonly hasSelection = computed(
-    () => this.definition() !== null,
-  );
+  protected readonly hasSelection = computed(() => this.definition() !== null);
   protected readonly hasComposite = computed(() => this.state.composite() !== null);
   protected readonly isEditingNode = computed(() => this.node() !== null);
   protected readonly isRoleGateNode = computed(() => this.node()?.type === 'domain.role-gate');
@@ -56,6 +57,48 @@ export class InspectorComponent {
     }
     return parseRoleGateAllowedRoles(node.properties['roles']);
   });
+
+  protected readonly editableProperties = computed(() => {
+    const def = this.definition();
+    const node = this.node();
+    if (!def || !node) {
+      return [] as PropertySchema[];
+    }
+    if (node.type === 'domain.role-gate') {
+      return def.properties.filter((property) => property.key !== 'roles');
+    }
+    return def.properties;
+  });
+
+  constructor() {
+    effect(() => {
+      const key =
+        this.node()?.id ??
+        this.state.selectedDefinition()?.type ??
+        '';
+      if (key === this.selectionKey) {
+        return;
+      }
+      this.selectionKey = key;
+      this.expandedSectionIds.set(this.defaultExpandedSections());
+    });
+  }
+
+  protected isSectionExpanded(sectionId: string): boolean {
+    return this.expandedSectionIds().has(sectionId);
+  }
+
+  protected toggleSection(sectionId: string): void {
+    this.expandedSectionIds.update((current) => {
+      const next = new Set(current);
+      if (next.has(sectionId)) {
+        next.delete(sectionId);
+      } else {
+        next.add(sectionId);
+      }
+      return next;
+    });
+  }
 
   protected addToCanvas(): void {
     const definition = this.state.selectedDefinition();
@@ -118,5 +161,38 @@ export class InspectorComponent {
 
   protected toggleRoleGateRole(roleId: string, enabled: boolean): void {
     this.state.toggleRoleGateRole(roleId, enabled);
+  }
+
+  private defaultExpandedSections(): ReadonlySet<string> {
+    const next = new Set<string>(['overview']);
+    const node = this.node();
+    const def = this.definition();
+
+    if (node) {
+      if (this.editableProperties().length) {
+        next.add('properties');
+      }
+      if (this.nodeSuggestions().length) {
+        next.add('suggestions');
+      }
+      if (this.nodeBindings().length) {
+        next.add('bindings');
+      }
+      if (node.type === 'domain.role-gate') {
+        next.add('roles');
+      }
+      return next;
+    }
+
+    if (def) {
+      if (def.properties.length) {
+        next.add('schema-properties');
+      }
+      if (def.inputs.length || def.outputs.length) {
+        next.add('ports');
+      }
+    }
+
+    return next;
   }
 }

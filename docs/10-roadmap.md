@@ -100,6 +100,14 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Custom component SDK — registry, preview adapters, extension demos (DAS-55)
 - [x] First three.js visual — 3D bar chart + VR palette group (DAS-56)
 
+## Phase 9 — Project stack setup (in progress)
+
+**Ticket:** DAS-57 — framework-first entry screen
+
+- [ ] UI framework selection at project level (React / Angular / Vue / Svelte / **Any**)
+- [ ] Entry screen for stack pieces (UI + server + database) with compatible second-level defaults
+- [ ] Export wizard and builder consume persisted stack profile
+
 ## Future — VR / 3D expansion
 
 - Scatter field mapping, scene point clouds, GLTF hosts, multi-target 3D export
@@ -111,6 +119,7 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - CLI export (`npx dashbuilder export`)
 - Hosted preview URLs
 - Custom component SDK for third-party palette plugins
+- ~~Framework-first project stack entry screen~~ — DAS-57 (in progress)
 
 ## Ticket creation guidance
 

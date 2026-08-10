@@ -69,7 +69,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| — | — | — |
+| [DAS-57](https://planetkevin.atlassian.net/browse/DAS-57) | `feature/DAS-57-project-stack-setup` | Framework-first project stack entry screen |
 
 ## Delivery status
 
@@ -112,6 +112,12 @@ See [Exporter Plugin SDK](./16-exporter-plugin-sdk.md) for extending code genera
 2. ~~First three.js visual (3D bar chart + VR group)~~ — DAS-56
 
 See [Component Plugin SDK](./17-component-plugin-sdk.md).
+
+## Phase 9 — Project stack setup (started)
+
+1. Framework-first entry screen + `any` scratch-pad mode — DAS-57 (active)
+
+Stack selection moves upstream: UI framework (or **Any**) at the top level, then compatible server/database partners as second-level defaults. Persisted on the project; export wizard and builder read from it.
 
 ## Future — VR / 3D expansion
 

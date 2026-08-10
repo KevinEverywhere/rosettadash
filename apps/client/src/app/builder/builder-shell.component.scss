@@ -192,7 +192,7 @@
 .builder__workspace {
   display: grid;
   flex: 1;
-  grid-template-columns: 16rem 1fr 20rem;
+  grid-template-columns: 16rem 1fr 22rem;
   min-height: 0;
 }
 
@@ -208,6 +208,6 @@
 
 @media (max-width: 960px) {
   .builder__workspace {
-    grid-template-columns: 12rem 1fr 16rem;
+    grid-template-columns: 12rem 1fr 18rem;
   }
 }
