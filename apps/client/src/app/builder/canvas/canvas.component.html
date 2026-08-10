@@ -21,11 +21,13 @@
   </header>
 
   <div
+    #surface
     class="canvas__surface canvas__surface--grid"
     tabindex="0"
     role="region"
     aria-label="Canvas design surface"
     (click)="clearCanvasSelection($event)"
+    (scroll)="onSurfaceScroll()"
     (keydown.enter)="clearCanvasSelection($event)"
     (keydown.space)="clearCanvasSelection($event)"
   >
@@ -50,14 +52,14 @@
       </svg>
 
       <div class="canvas__nodes">
-        @for (node of state.nodes(); track node.id) {
+        @for (node of visibleCanvasNodes(); track node.id) {
           <article
             class="canvas__node"
             data-testid="canvas-node"
             role="button"
             tabindex="0"
-            [class.canvas__node--selected]="state.isNodeSelected(node.id)"
-            [attr.data-selected]="state.isNodeSelected(node.id) ? 'true' : 'false'"
+            [class.canvas__node--selected]="state.selectedNodeIdsSet().has(node.id)"
+            [attr.data-selected]="state.selectedNodeIdsSet().has(node.id) ? 'true' : 'false'"
             [style.left.px]="node.layout?.x ?? 24"
             [style.top.px]="node.layout?.y ?? 24"
             [style.width.px]="node.layout?.width ?? 220"
@@ -89,7 +91,7 @@
                     <button
                       type="button"
                       class="canvas__port canvas__port--input"
-                      [class.canvas__port--bound]="state.isInputBound(node.id, port.id)"
+                      [class.canvas__port--bound]="state.boundInputPortKeys().has(node.id + ':' + port.id)"
                       [class.canvas__port--pending-target]="isPendingTarget(node.id, port.id)"
                       [attr.data-testid]="'port-input-' + node.id + '-' + port.id"
                       (click)="onInputPortClick(node.id, port.id, $event)"
@@ -121,7 +123,7 @@
               </ul>
             </div>
 
-            @if (state.isNodeSelected(node.id)) {
+            @if (state.selectedNodeIdsSet().has(node.id)) {
               <button
                 type="button"
                 class="canvas__resize-handle"

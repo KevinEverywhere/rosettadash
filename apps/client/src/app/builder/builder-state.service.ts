@@ -88,6 +88,23 @@ export class BuilderStateService {
     return this.nodes().filter((node) => ids.has(node.id));
   });
 
+  readonly selectedNodeIdsSet = computed(() => new Set(this.selectedNodeIds()));
+
+  readonly boundInputPortKeys = computed(
+    () =>
+      new Set(
+        this.bindings().map((binding) => `${binding.targetNodeId}:${binding.targetPortId}`),
+      ),
+  );
+
+  readonly nodesById = computed(() => {
+    const map = new Map<string, ComponentNode>();
+    for (const node of this.nodes()) {
+      map.set(node.id, node);
+    }
+    return map;
+  });
+
   readonly bindingsForSelectedNode = computed(() => {
     const nodeId = this.selectedNodeId();
     if (!nodeId) {
@@ -133,7 +150,7 @@ export class BuilderStateService {
   }
 
   isNodeSelected(nodeId: string): boolean {
-    return this.selectedNodeIds().includes(nodeId);
+    return this.selectedNodeIdsSet().has(nodeId);
   }
 
   clearSelection(): void {
@@ -143,30 +160,38 @@ export class BuilderStateService {
   }
 
   updateNodeLayout(nodeId: string, layout: Partial<NodeLayout>, options?: { skipHistory?: boolean }): void {
+    this.updateNodesLayoutBatch(new Map([[nodeId, layout]]), options);
+  }
+
+  updateNodesLayoutBatch(
+    updates: ReadonlyMap<string, Partial<NodeLayout>>,
+    options?: { skipHistory?: boolean },
+  ): void {
+    if (updates.size === 0) {
+      return;
+    }
     if (!options?.skipHistory && !this.layoutTransactionActive) {
       this.recordHistory();
     }
     this.nodes.update((nodes) =>
       nodes.map((node) => {
-        if (node.id !== nodeId) {
+        const patch = updates.get(node.id);
+        if (!patch) {
           return node;
         }
         const current = node.layout ?? { x: 24, y: 24, width: 220, height: 72 };
-        const next: NodeLayout = {
-          ...current,
-          ...layout,
-        };
-        if (layout.x !== undefined) {
-          next.x = snapToCanvasGrid(layout.x);
+        const next: NodeLayout = { ...current, ...patch };
+        if (patch.x !== undefined) {
+          next.x = snapToCanvasGrid(patch.x);
         }
-        if (layout.y !== undefined) {
-          next.y = snapToCanvasGrid(layout.y);
+        if (patch.y !== undefined) {
+          next.y = snapToCanvasGrid(patch.y);
         }
-        if (layout.width !== undefined) {
-          next.width = clampCanvasNodeWidth(layout.width);
+        if (patch.width !== undefined) {
+          next.width = clampCanvasNodeWidth(patch.width);
         }
-        if (layout.height !== undefined) {
-          next.height = clampCanvasNodeHeight(layout.height);
+        if (patch.height !== undefined) {
+          next.height = clampCanvasNodeHeight(patch.height);
         }
         return { ...node, layout: next };
       }),
@@ -567,10 +592,7 @@ export class BuilderStateService {
   );
 
   isInputBound(nodeId: string, portId: string): boolean {
-    return this.bindings().some(
-      (binding) =>
-        binding.targetNodeId === nodeId && binding.targetPortId === portId,
-    );
+    return this.boundInputPortKeys().has(`${nodeId}:${portId}`);
   }
 
   markDirty(): void {

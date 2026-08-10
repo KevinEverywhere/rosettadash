@@ -287,4 +287,24 @@ describe('BuilderStateService', () => {
     });
     expect(service.canUndo()).toBe(false);
   });
+
+  it('batch-updates multiple node layouts in one pass', () => {
+    const first = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.input.text'),
+    );
+    const second = service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.kpi'),
+    );
+
+    service.updateNodesLayoutBatch(
+      new Map([
+        [first.id, { x: 48, y: 48 }],
+        [second.id, { x: 96, y: 96 }],
+      ]),
+    );
+
+    const nodes = service.nodes();
+    expect(nodes.find((node) => node.id === first.id)?.layout?.x).toBe(48);
+    expect(nodes.find((node) => node.id === second.id)?.layout?.y).toBe(96);
+  });
 });

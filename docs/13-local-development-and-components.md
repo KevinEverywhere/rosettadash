@@ -258,6 +258,21 @@ npm run e2e
 
 ---
 
+## Large composite performance
+
+The builder applies a few optimizations when graphs grow beyond ~50 nodes:
+
+| Area | Behavior |
+|------|----------|
+| **Canvas drag/resize** | Batched layout updates (`updateNodesLayoutBatch`) — one nodes pass per pointer frame |
+| **Selection / bindings** | Computed `Set` lookups instead of per-node linear scans |
+| **Canvas rendering** | Viewport culling hides off-screen nodes (selected nodes always render) |
+| **Preview reload** | Debounced API load keyed on data-relevant fields (layout-only edits skip reload) |
+
+If performance still degrades, split dashboards into multiple composites or reduce live preview scope while editing.
+
+---
+
 ## Related documents
 
 - [README](../README.md) — quick start

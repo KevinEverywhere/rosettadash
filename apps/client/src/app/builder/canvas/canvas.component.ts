@@ -1,4 +1,4 @@
-import { Component, HostListener, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, computed, inject, signal } from '@angular/core';
 import { Binding, ComponentNode, PlacementPrompt, groupingAnimationLabel } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import {
@@ -7,6 +7,10 @@ import {
   clampCanvasNodeWidth,
   snapToCanvasGrid,
 } from './canvas-layout';
+import {
+  type CanvasViewport,
+  filterVisibleCanvasNodes,
+} from './canvas-viewport';
 
 const PORT_ROW_HEIGHT = 24;
 const NODE_HEADER_HEIGHT = 44;
@@ -40,15 +44,71 @@ interface ResizeState {
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.scss',
 })
-export class CanvasComponent {
+export class CanvasComponent implements AfterViewInit {
   protected readonly state = inject(BuilderStateService);
+
+  @ViewChild('surface') private surfaceRef?: ElementRef<HTMLElement>;
 
   private dragState: DragState | null = null;
   private resizeState: ResizeState | null = null;
 
-  protected readonly bindingEdges = computed(() =>
-    this.state.bindings().map((binding) => this.edgeForBinding(binding)).filter(Boolean) as BindingEdge[],
+  protected readonly viewportScroll = signal<CanvasViewport>({
+    left: 0,
+    top: 0,
+    width: 800,
+    height: 600,
+  });
+
+  protected readonly visibleCanvasNodes = computed(() =>
+    filterVisibleCanvasNodes(
+      this.state.nodes(),
+      this.viewportScroll(),
+      this.state.selectedNodeIdsSet(),
+    ),
   );
+
+  protected readonly bindingEdges = computed(() => {
+    const nodesById = this.state.nodesById();
+    const visibleIds = new Set(this.visibleCanvasNodes().map((node) => node.id));
+    const selectedIds = this.state.selectedNodeIdsSet();
+    const cullEdges = this.state.nodes().length > 50;
+
+    return this.state
+      .bindings()
+      .filter((binding) => {
+        if (!cullEdges) {
+          return true;
+        }
+        const sourceVisible =
+          visibleIds.has(binding.sourceNodeId) || selectedIds.has(binding.sourceNodeId);
+        const targetVisible =
+          visibleIds.has(binding.targetNodeId) || selectedIds.has(binding.targetNodeId);
+        return sourceVisible && targetVisible;
+      })
+      .map((binding) => this.edgeForBinding(binding, nodesById))
+      .filter((edge): edge is BindingEdge => edge !== null);
+  });
+
+  ngAfterViewInit(): void {
+    this.syncViewport();
+  }
+
+  protected syncViewport(): void {
+    const surface = this.surfaceRef?.nativeElement;
+    if (!surface) {
+      return;
+    }
+    this.viewportScroll.set({
+      left: surface.scrollLeft,
+      top: surface.scrollTop,
+      width: surface.clientWidth,
+      height: surface.clientHeight,
+    });
+  }
+
+  protected onSurfaceScroll(): void {
+    this.syncViewport();
+  }
 
   protected promptAnimationLabel(prompt: PlacementPrompt): string {
     return groupingAnimationLabel(prompt.animationKey);
@@ -74,12 +134,12 @@ export class CanvasComponent {
   }
 
   protected promptLeft(prompt: PlacementPrompt): number {
-    const source = this.state.nodes().find((node) => node.id === prompt.sourceNodeId);
+    const source = this.state.nodesById().get(prompt.sourceNodeId);
     return (source?.layout?.x ?? 24) + (source?.layout?.width ?? 220) + 16;
   }
 
   protected promptTop(prompt: PlacementPrompt): number {
-    const source = this.state.nodes().find((node) => node.id === prompt.sourceNodeId);
+    const source = this.state.nodesById().get(prompt.sourceNodeId);
     return source?.layout?.y ?? 24;
   }
 
@@ -139,13 +199,14 @@ export class CanvasComponent {
       return;
     }
 
-    const nodeIds = this.state.selectedNodeIds().includes(nodeId)
+    const nodeIds = this.state.selectedNodeIdsSet().has(nodeId)
       ? [...this.state.selectedNodeIds()]
       : [nodeId];
 
+    const nodesById = this.state.nodesById();
     const origins = new Map<string, { x: number; y: number }>();
     for (const id of nodeIds) {
-      const selectedNode = this.state.nodes().find((item) => item.id === id);
+      const selectedNode = nodesById.get(id);
       if (selectedNode?.layout) {
         origins.set(id, { x: selectedNode.layout.x, y: selectedNode.layout.y });
       }
@@ -170,12 +231,14 @@ export class CanvasComponent {
     const deltaX = event.clientX - this.dragState.startClientX;
     const deltaY = event.clientY - this.dragState.startClientY;
 
+    const updates = new Map<string, { x: number; y: number }>();
     for (const [id, origin] of this.dragState.origins) {
-      this.state.updateNodeLayout(id, {
+      updates.set(id, {
         x: snapToCanvasGrid(origin.x + deltaX),
         y: snapToCanvasGrid(origin.y + deltaY),
-      }, { skipHistory: true });
+      });
     }
+    this.state.updateNodesLayoutBatch(updates, { skipHistory: true });
   }
 
   protected onHeaderPointerUp(event: PointerEvent): void {
@@ -297,9 +360,12 @@ export class CanvasComponent {
     return Math.max(CANVAS_MIN_NODE_HEIGHT, NODE_HEADER_HEIGHT + portCount * PORT_ROW_HEIGHT + 12);
   }
 
-  private edgeForBinding(binding: Binding): BindingEdge | null {
-    const source = this.portAnchor(binding.sourceNodeId, binding.sourcePortId, 'output');
-    const target = this.portAnchor(binding.targetNodeId, binding.targetPortId, 'input');
+  private edgeForBinding(
+    binding: Binding,
+    nodesById: ReadonlyMap<string, ComponentNode>,
+  ): BindingEdge | null {
+    const source = this.portAnchor(binding.sourceNodeId, binding.sourcePortId, 'output', nodesById);
+    const target = this.portAnchor(binding.targetNodeId, binding.targetPortId, 'input', nodesById);
     if (!source || !target) {
       return null;
     }
@@ -316,8 +382,9 @@ export class CanvasComponent {
     nodeId: string,
     portId: string,
     direction: 'input' | 'output',
+    nodesById: ReadonlyMap<string, ComponentNode>,
   ): { x: number; y: number } | null {
-    const node = this.state.nodes().find((item) => item.id === nodeId);
+    const node = nodesById.get(nodeId);
     if (!node?.layout) {
       return null;
     }
