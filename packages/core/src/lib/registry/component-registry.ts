@@ -1,6 +1,7 @@
 import type { ComponentDefinition, ComponentNode, Port } from '../model/types';
 import type { ComponentPlugin } from './component-plugin';
 import { EXTENSION_COMPONENT_PLUGINS } from './extension-component-plugins';
+import { VR_COMPONENT_PLUGINS } from './vr-component-plugins';
 import { P0_COMPONENT_DEFINITIONS } from './p0-components';
 
 export class ComponentRegistry {
@@ -99,5 +100,9 @@ export class ComponentRegistry {
 export const defaultComponentRegistry = new ComponentRegistry();
 
 for (const plugin of EXTENSION_COMPONENT_PLUGINS) {
+  defaultComponentRegistry.registerPlugin(plugin);
+}
+
+for (const plugin of VR_COMPONENT_PLUGINS) {
   defaultComponentRegistry.registerPlugin(plugin);
 }

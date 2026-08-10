@@ -15,6 +15,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.chart.line': 'LineChart',
   'visual.chart.bar': 'BarChart',
   'visual.chart.pie': 'PieChart',
+  'visual.display.3d-bar-chart': 'ThreeBarChart',
   'logic.timer': 'Timer',
 };
 

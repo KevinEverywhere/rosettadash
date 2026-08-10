@@ -30,6 +30,7 @@ describe('palette-groups', () => {
       'data-sources',
       'api-servers',
       'plugin-extensions',
+      'vr-visuals',
     ]);
     expect(groups[0]?.items[0]?.type).toBe('visual.input.text');
     expect(groups[1]?.items.map((item) => item.type)).toEqual([

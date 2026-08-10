@@ -63,12 +63,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-53](https://planetkevin.atlassian.net/browse/DAS-53) | `feature/DAS-53-large-composite-performance` | Large composite performance optimizations |
 | [DAS-54](https://planetkevin.atlassian.net/browse/DAS-54) | `feature/DAS-54-exporter-plugin-sdk-docs` | Exporter plugin SDK documentation |
 | [DAS-55](https://planetkevin.atlassian.net/browse/DAS-55) | `feature/DAS-55-custom-component-sdk` | Custom component SDK for palette and preview plugins |
+| [DAS-56](https://planetkevin.atlassian.net/browse/DAS-56) | `feature/DAS-56-threejs-visual` | First three.js visual — 3D bar chart + VR palette group |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-56](https://planetkevin.atlassian.net/browse/DAS-56) | `feature/DAS-56-threejs-visual` | Planned — first three.js visual on component SDK |
+| — | — | — |
 
 ## Delivery status
 
@@ -77,7 +78,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
 - **Phase 6 component & page design:** complete (DAS-39–DAS-49)
-- **Phase 7 production hardening:** complete (DAS-50–DAS-54)
+- **Phase 8 component plugins & 3D:** complete (DAS-55–DAS-56)
 
 ## Phase 6 — complete
 
@@ -105,14 +106,18 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns. A
 
 See [Exporter Plugin SDK](./16-exporter-plugin-sdk.md) for extending code generators.
 
-## Phase 8 — component plugins & 3D (started)
+## Phase 8 — complete
 
 1. ~~Custom component SDK~~ — DAS-55
-2. First three.js visual — DAS-56 (planned)
+2. ~~First three.js visual (3D bar chart + VR group)~~ — DAS-56
 
-## Future — 3D dashboards
+See [Component Plugin SDK](./17-component-plugin-sdk.md).
 
-- **three.js** integration — DAS-56 (builds on component plugin SDK)
+## Future — VR / 3D expansion
+
+- Full scatter field mapping and scene point-cloud bindings
+- Vue/Svelte/Angular R3F-equivalent exporters
+- GLTF model hosts and geo globes
 
 ## Related documents
 

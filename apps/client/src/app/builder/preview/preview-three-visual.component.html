@@ -1,0 +1,9 @@
+<div class="preview-three-visual">
+  <div class="preview-three-visual__header">
+    <span class="preview-three-visual__title">{{ title() }}</span>
+    @if (linkedHint(); as hint) {
+      <span class="preview-three-visual__hint">{{ hint }}</span>
+    }
+  </div>
+  <div #host class="preview-three-visual__canvas" [attr.data-testid]="testId()"></div>
+</div>

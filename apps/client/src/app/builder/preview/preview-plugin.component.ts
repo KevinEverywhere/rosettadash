@@ -1,9 +1,11 @@
 import { Component, input } from '@angular/core';
 import type { ComponentNode } from '@dashbuilder/core';
 import type { ComponentPreviewTemplateId } from './component-preview-adapter.registry';
+import { PreviewThreeVisualComponent } from './preview-three-visual.component';
 
 @Component({
   selector: 'app-preview-plugin',
+  imports: [PreviewThreeVisualComponent],
   templateUrl: './preview-plugin.component.html',
   styleUrl: './preview-plugin.component.scss',
 })

@@ -258,7 +258,9 @@ export function resolvePreviewGraph(
     (node) =>
       node.type === 'visual.chart.line' ||
       node.type === 'visual.chart.bar' ||
-      node.type === 'visual.chart.pie',
+      node.type === 'visual.chart.pie' ||
+      node.type === 'visual.display.3d-bar-chart' ||
+      node.type === 'visual.display.3d-scatter',
   );
 
   for (const tableNode of tableNodes) {
@@ -299,6 +301,19 @@ export function resolvePreviewGraph(
       linkedFromTable,
       filteredByDateRange: rangeFromDateFilter,
       dateRangeLabel: rangeFromDateFilter ? dateRangeLabel : undefined,
+    };
+  }
+
+  const sceneNodes = nodes.filter((node) => node.type === 'visual.display.3d-scene');
+  for (const sceneNode of sceneNodes) {
+    const dataBinding = findBindingSource(bindings, sceneNode.id, 'data');
+    const linkedFromTable =
+      tableNodes.length > 0 &&
+      (!dataBinding || tableNodes.some((table) => table.id === dataBinding.sourceNodeId));
+
+    nodeSlices[sceneNode.id] = {
+      chartPoints: linkedFromTable ? rowsToChartPoints(primaryTableRows) : undefined,
+      linkedFromTable,
     };
   }
 

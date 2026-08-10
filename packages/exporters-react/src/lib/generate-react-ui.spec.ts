@@ -362,6 +362,40 @@ describe('generateReactUiFiles', () => {
     );
   });
 
+  it('generates React three.js bar chart stub', () => {
+    const chart = registry.createNode('visual.display.3d-bar-chart', { id: 'b3d1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: '3D Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [chart, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 'b3d1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const chartFile = files.find((file) => file.content.includes('@react-three/fiber'));
+    expect(chartFile?.content).toContain('OrbitControls');
+    expect(chartFile?.path).toMatch(/BarChart\.tsx$/);
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

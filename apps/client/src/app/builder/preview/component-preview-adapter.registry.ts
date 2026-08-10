@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 
-export type ComponentPreviewTemplateId = 'status-badge' | 'metric-chip';
+export type ComponentPreviewTemplateId =
+  | 'status-badge'
+  | 'metric-chip'
+  | '3d-bar-chart'
+  | '3d-scatter'
+  | '3d-scene';
 
 @Injectable({ providedIn: 'root' })
 export class ComponentPreviewAdapterRegistry {
@@ -27,4 +32,7 @@ export function registerDefaultComponentPreviewAdapters(
 ): void {
   registry.register('visual.plugin.status-badge', 'status-badge');
   registry.register('visual.plugin.metric-chip', 'metric-chip');
+  registry.register('visual.display.3d-bar-chart', '3d-bar-chart');
+  registry.register('visual.display.3d-scatter', '3d-scatter');
+  registry.register('visual.display.3d-scene', '3d-scene');
 }

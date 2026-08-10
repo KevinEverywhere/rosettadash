@@ -17,4 +17,13 @@
       </span>
     </div>
   }
+  @case ('3d-bar-chart') {
+    <app-preview-three-visual [node]="node()" mode="bar-chart" />
+  }
+  @case ('3d-scatter') {
+    <app-preview-three-visual [node]="node()" mode="scatter" />
+  }
+  @case ('3d-scene') {
+    <app-preview-three-visual [node]="node()" mode="scene" />
+  }
 }

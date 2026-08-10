@@ -1,0 +1,40 @@
+.preview-three-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  min-height: 12rem;
+}
+
+.preview-three-visual__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.preview-three-visual__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.preview-three-visual__hint {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+.preview-three-visual__canvas {
+  flex: 1;
+  min-height: 10rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #334155;
+  background: #0f172a;
+}
+
+.preview-three-visual__canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}

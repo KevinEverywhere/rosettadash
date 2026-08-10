@@ -69,6 +69,15 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
     label: 'Plugin Extensions',
     types: ['visual.plugin.status-badge', 'visual.plugin.metric-chip'],
   },
+  {
+    id: 'vr-visuals',
+    label: 'VR & 3D',
+    types: [
+      'visual.display.3d-bar-chart',
+      'visual.display.3d-scatter',
+      'visual.display.3d-scene',
+    ],
+  },
 ];
 
 const MIN_ITEMS_PER_GROUP = 2;

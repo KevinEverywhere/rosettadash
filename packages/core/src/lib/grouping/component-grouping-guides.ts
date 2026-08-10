@@ -72,6 +72,27 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Add a Date Range filter and KPI cards for dashboard context.',
   },
   {
+    type: 'visual.display.3d-bar-chart',
+    summary: '3D categorical chart — bind table rowset data and orbit to explore.',
+    animationKey: 'filter-chart',
+    companionTypes: ['visual.input.date-range', 'domain.time-preset', 'visual.table'],
+    placementMessage: 'Add a Data Table and bind its rowset to the 3D bar chart.',
+  },
+  {
+    type: 'visual.display.3d-scatter',
+    summary: '3D scatter plot — map rowset fields to X, Y, and Z axes.',
+    animationKey: 'filter-chart',
+    companionTypes: ['visual.table', 'visual.input.date-range'],
+    placementMessage: 'Bind a table rowset and configure x/y/z field names.',
+  },
+  {
+    type: 'visual.display.3d-scene',
+    summary: 'Spatial orbit scene — host for 3D dashboard layouts.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.table', 'visual.display.3d-bar-chart'],
+    placementMessage: 'Pair with data sources or other VR visuals for spatial dashboards.',
+  },
+  {
     type: 'visual.kpi',
     summary: 'Single metric card — typically fed by a database or table aggregate.',
     animationKey: 'data-stack',
@@ -173,6 +194,7 @@ const DATA_VISUAL_TYPES = new Set([
   'visual.chart.line',
   'visual.chart.bar',
   'visual.chart.pie',
+  'visual.display.3d-bar-chart',
   'visual.kpi',
 ]);
 const INFRA_DATA_TYPES = new Set([

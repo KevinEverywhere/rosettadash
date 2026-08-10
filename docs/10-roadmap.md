@@ -93,16 +93,16 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Large composite performance — batched layout, culling, debounced preview (DAS-53)
 - [x] Exporter plugin SDK — core manifest + documentation (DAS-54)
 
-## Phase 8 — Component plugins & 3D (in progress)
+## Phase 8 — Component plugins & 3D (complete)
 
-**Ticket:** DAS-55 (component plugin SDK — foundation for three.js)
+**Tickets:** DAS-55, DAS-56
 
 - [x] Custom component SDK — registry, preview adapters, extension demos (DAS-55)
-- [ ] First three.js visual — DAS-56 (planned)
+- [x] First three.js visual — 3D bar chart + VR palette group (DAS-56)
 
-## Future — 3D visualization
+## Future — VR / 3D expansion
 
-- **three.js**-based 3D dashboard display components — DAS-56 on component SDK
+- Scatter field mapping, scene point clouds, GLTF hosts, multi-target 3D export
 
 ## Backlog ideas (unscheduled)
 

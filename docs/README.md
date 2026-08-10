@@ -43,4 +43,4 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 7 (DAS
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |
 | Phase 7 production hardening | Complete (DAS-50–DAS-54) |
-| Phase 8 component plugins & 3D | In progress (DAS-55–DAS-56) |
+| Phase 8 component plugins & 3D | Complete (DAS-55–DAS-56) |

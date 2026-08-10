@@ -145,14 +145,22 @@ Until exporter templates exist, export may emit fallback stubs — plan exporter
 
 ---
 
-## three.js readiness (DAS-56 preview)
+## three.js readiness (DAS-56)
 
-Recommended shape for a future `visual.display.3d-scene` plugin:
+Shipped in DAS-56:
+
+| Type | Preview | Palette group |
+|------|---------|---------------|
+| `visual.display.3d-bar-chart` | three.js bars + orbit | `vr-visuals` |
+| `visual.display.3d-scatter` | three.js scatter (preview) | `vr-visuals` |
+| `visual.display.3d-scene` | three.js orbit scene host | `vr-visuals` |
+
+Recommended patterns for future VR plugins:
 
 | Layer | Approach |
 |-------|----------|
 | **Definition** | Properties: camera, background, animation; ports: `rowset` → mesh data |
-| **Preview** | Dedicated `PreviewThreeSceneComponent` registered via adapter |
+| **Preview** | Dedicated component registered via adapter; shared `ThreePreviewRuntime` lifecycle |
 | **Lifecycle** | Create/dispose renderer on node id change; pause when not in preview mode |
 | **Performance** | Reuse DAS-53 viewport/culling patterns; single animation loop per panel |
 | **Export** | React Three Fiber first; exporter plugin second |
