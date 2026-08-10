@@ -118,11 +118,11 @@ Initial palette organization for DashBuilder. Components are grouped for palette
 
 Registered in `packages/core`, with preview renderers and export coverage. See [Component & Page Design — P0 table](./15-component-and-page-design.md#p0-components--implemented-today) for the full list (21 types).
 
-Includes: text input, select, date range, data table, KPI card, line/bar/pie chart, grid, flex, tabs, modal, role gate, person invite, role assign, env config, PostgreSQL, MongoDB, Supabase, MySQL, NestJS/Express/Next/Nuxt server nodes.
+Includes: text input, select, date range, data table, detail panel, KPI card, line/bar/pie chart, grid, flex, tabs, modal, role gate, person invite, role assign, env config, PostgreSQL, MongoDB, Supabase, MySQL, NestJS/Express/Next/Nuxt server nodes.
 
 ### P1 — Early expansion (planned)
 
-Remaining form inputs, detail panel, timer, time preset, skeleton.
+Remaining form inputs, timer, time preset, skeleton.
 
 ### P2 — Full catalog
 

@@ -128,6 +128,14 @@ function generateTokensScss(ir: ExportIR): string {
     `.pie-chart__legend { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.75rem; }`,
     `.pie-chart__legend li { display: inline-flex; align-items: center; gap: 0.25rem; }`,
     `.pie-chart__legend span { width: 0.625rem; height: 0.625rem; border-radius: 999px; }`,
+    `.table-row { cursor: pointer; }`,
+    `.table-row--selected { background: color-mix(in srgb, var(--db-accent) 12%, transparent); }`,
+    `.detail-panel, .detail-panel__fields { margin: 0; }`,
+    `.detail-panel { padding: 1rem; }`,
+    `.detail-panel__fields { display: grid; gap: 0.5rem; }`,
+    `.detail-panel__field { display: grid; grid-template-columns: minmax(5rem, 30%) 1fr; gap: 0.5rem; font-size: 0.875rem; }`,
+    `.detail-panel__field dt { font-weight: 600; color: var(--db-muted); text-transform: capitalize; }`,
+    `.detail-panel__empty { margin: 0; color: var(--db-muted); font-size: 0.875rem; }`,
     `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);
@@ -183,7 +191,7 @@ function generateDashboardFile(ir: ExportIR, exportNames: Map<string, string>): 
 
   return joinLines([
     `import { Component, inject, signal } from '@angular/core';`,
-    `import type { DateRange } from './types';`,
+    `import type { DateRange, Row } from './types';`,
     ...componentImportLines,
     ...serviceImportLines,
     ``,

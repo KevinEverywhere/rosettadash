@@ -37,6 +37,9 @@ export function buildDashboardContext(
     if (dataType === 'string') {
       return `  let ${varName} = $state('');`;
     }
+    if (dataType === 'row') {
+      return `  let ${varName} = $state<Row | undefined>();`;
+    }
     return `  let ${varName} = $state<unknown>();`;
   });
 
@@ -111,6 +114,11 @@ function wireComponentOutputs(
 
     if (output.dataType === 'date-range' || output.dataType === 'string') {
       bindings.push(`bind:${output.name}={${state.varName}}`);
+    }
+
+    if (output.dataType === 'row') {
+      bindings.push(`selectedRow={${state.varName}}`);
+      bindings.push(`onSelectRow={(next) => { ${state.varName} = next; }}`);
     }
   }
 }

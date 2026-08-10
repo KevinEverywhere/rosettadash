@@ -79,6 +79,7 @@ These types are registered, previewable, and covered by exporters (visual → UI
 | `visual.input.textarea` | Multi-line text |
 | `visual.input.date-range` | Time filter driver |
 | `visual.table` | Data table |
+| `visual.detail` | Row drill-down detail panel |
 | `visual.kpi` | Single metric card |
 | `visual.chart.line` | Line chart |
 | `visual.chart.bar` | Bar chart |
@@ -105,7 +106,7 @@ These types are registered, previewable, and covered by exporters (visual → UI
 1. ~~`visual.input.number`, `visual.input.checkbox`, `visual.input.textarea`~~ — shipped (DAS-39)
 2. ~~`visual.chart.pie`~~ — shipped (DAS-46)
 3. ~~`layout.flex`~~ — shipped (DAS-46)
-4. `visual.detail` — row drill-down from table selection
+4. ~~`visual.detail`~~ — shipped (DAS-47)
 5. `domain.time-preset` — relative period shortcuts (Last 7d, QTD)
 6. `visual.skeleton` — loading state wrapper
 
@@ -216,7 +217,7 @@ Create a Jira ticket **before** each branch:
 4. ~~**Layout polish** — snap, resize, multi-select on canvas~~ — DAS-42
 5. ~~**Undo/redo** — command pattern over graph mutations~~ — DAS-45
 6. ~~**Pie chart + flex layout** — expand visualization and layout palette~~ — DAS-46
-7. ~~**Grouping guides & animated placement hints**~~ — DAS-43
+7. ~~**Detail panel** — table row drill-down~~ — DAS-47
 8. ~~**Palette accordion groups** — 2–7 functional groups, default collapsed~~ — DAS-44
 
 ### Component grouping guides (DAS-43)
@@ -264,6 +265,14 @@ Snapshot-based history stack over graph mutations in `apps/client/src/app/builde
 | `layout.flex` | Row/column flex slots with gap + align | Preview only (layouts export via IR `layouts` array) |
 
 Registry properties for pie: `title`, `labelField`, `valueField`, `donut`. Flex: `direction`, `gap`, `align`.
+
+### Detail panel (DAS-47)
+
+| Type | Preview | Export |
+|------|---------|--------|
+| `visual.detail` | Key-value fields for selected table row | React, Angular, Vue, Svelte UI exporters |
+
+Bind `[table].selected-row → [detail].row`. Preview supports clickable table rows with shared selection state.
 
 ---
 

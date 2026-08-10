@@ -30,6 +30,11 @@ describe('component-grouping-guides', () => {
     expect(getGroupingGuide('visual.chart.pie')?.companionTypes).toContain('visual.input.date-range');
   });
 
+  it('returns a guide for detail panel with table companion', () => {
+    expect(getGroupingGuide('visual.detail')?.companionTypes).toContain('visual.table');
+    expect(resolveCompanionPlacement('visual.table', 'visual.detail')).toBe('right');
+  });
+
   it('computes snapped companion layout above the source node', () => {
     const layout = computeCompanionLayout(
       { x: 48, y: 96, width: 220, height: 72 },

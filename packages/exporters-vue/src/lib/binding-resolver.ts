@@ -37,6 +37,9 @@ export function buildDashboardContext(
     if (dataType === 'string') {
       return `const ${varName} = ref('');`;
     }
+    if (dataType === 'row') {
+      return `const ${varName} = ref<Row | undefined>();`;
+    }
     return `const ${varName} = ref<unknown>();`;
   });
 
@@ -111,6 +114,11 @@ function wireComponentOutputs(
 
     if (output.dataType === 'date-range' || output.dataType === 'string') {
       bindings.push(`v-model="${state.varName}"`);
+    }
+
+    if (output.dataType === 'row') {
+      bindings.push(`:selected-row="${state.varName}"`);
+      bindings.push(`@select-row="${state.varName} = $event"`);
     }
   }
 }

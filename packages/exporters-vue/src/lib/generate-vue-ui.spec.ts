@@ -129,6 +129,52 @@ describe('generateVueUiFiles', () => {
     expect(pieFile?.content).toContain('pie-chart--donut');
   });
 
+  it('generates Vue table and detail panel with row selection wiring', () => {
+    const table = registry.createNode('visual.table', { id: 't1' });
+    const detail = registry.createNode('visual.detail', { id: 'd1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'sales' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'CRUD Dashboard',
+        version: 1,
+        exportTargets: { ui: 'vue', server: 'nest' },
+        nodes: [table, detail, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 't1',
+            targetPortId: 'data',
+          },
+          {
+            id: 'b2',
+            sourceNodeId: 't1',
+            sourcePortId: 'selected-row',
+            targetNodeId: 'd1',
+            targetPortId: 'row',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateVueUiFiles(ir);
+    const detailFile = files.find((file) => file.path.includes('DetailPanel'));
+    const tableFile = files.find((file) => file.path.includes('DataTable'));
+    const dashboard = files.find((file) => file.path === 'src/Dashboard.vue');
+
+    expect(detailFile?.content).toContain('detail-panel__fields');
+    expect(tableFile?.content).toContain('selectRow');
+    expect(dashboard?.content).toContain('t1_selected_row');
+  });
+
   it('rejects non-vue UI targets', () => {
     const ir = buildExportIR(
       {

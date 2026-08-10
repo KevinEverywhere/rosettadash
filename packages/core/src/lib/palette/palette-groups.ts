@@ -21,7 +21,7 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
   {
     id: 'data-display',
     label: 'Data Display',
-    types: ['visual.table', 'visual.kpi'],
+    types: ['visual.table', 'visual.detail', 'visual.kpi'],
   },
   {
     id: 'charts',

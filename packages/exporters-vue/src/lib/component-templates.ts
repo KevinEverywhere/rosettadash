@@ -7,6 +7,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.input.select',
   'visual.input.date-range',
   'visual.table',
+  'visual.detail',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -27,6 +28,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateDateRangeFilter(exportName);
     case 'visual.table':
       return generateDataTable(exportName);
+    case 'visual.detail':
+      return generateDetailPanel(exportName);
     case 'visual.kpi':
       return generateKpiCard(exportName);
     case 'visual.chart.line':
@@ -150,9 +153,11 @@ function generateDataTable(name: string): string {
     `    pageSize?: number;`,
     `    sortable?: boolean;`,
     `    filterable?: boolean;`,
+    `    selectedRow?: Row;`,
     `  }>(),`,
     `  { data: () => [], pageSize: 25, sortable: true, filterable: true },`,
     `);`,
+    `const emit = defineEmits<{ selectRow: [row: Row] }>();`,
     `const rows = computed(() => filterRows(props.data ?? [], props.filter).slice(0, props.pageSize));`,
     `const columns = computed(() => {`,
     `  const first = rows.value[0];`,
@@ -177,11 +182,55 @@ function generateDataTable(name: string): string {
     `        </tr>`,
     `      </thead>`,
     `      <tbody>`,
-    `        <tr v-for="(row, index) in rows" :key="String(row.id ?? index)">`,
+    `        <tr`,
+    `          v-for="(row, index) in rows"`,
+    `          :key="String(row.id ?? index)"`,
+    `          :class="selectedRow?.id === row.id ? 'table-row table-row--selected' : 'table-row'"`,
+    `          @click="emit('selectRow', row)"`,
+    `        >`,
     `          <td v-for="column in columns" :key="column">{{ row[column] ?? '' }}</td>`,
     `        </tr>`,
     `      </tbody>`,
     `    </table>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateDetailPanel(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    title?: string;`,
+    `    emptyMessage?: string;`,
+    `    row?: Row;`,
+    `  }>(),`,
+    `  { title: 'Details', emptyMessage: 'Select a row to view details' },`,
+    `);`,
+    `const fields = computed(() => {`,
+    `  if (!props.row) return [] as Array<{ key: string; value: string }>;`,
+    `  return Object.entries(props.row).map(([key, value]) => ({`,
+    `    key,`,
+    `    value: String(value ?? ''),`,
+    `  }));`,
+    `});`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="detail-panel" :id="id">`,
+    `    <h3>{{ title }}</h3>`,
+    `    <p v-if="fields.length === 0" class="detail-panel__empty">{{ emptyMessage }}</p>`,
+    `    <dl v-else class="detail-panel__fields">`,
+    `      <div v-for="field in fields" :key="field.key" class="detail-panel__field">`,
+    `        <dt>{{ field.key }}</dt>`,
+    `        <dd>{{ field.value }}</dd>`,
+    `      </div>`,
+    `    </dl>`,
     `  </section>`,
     `</template>`,
     ``,

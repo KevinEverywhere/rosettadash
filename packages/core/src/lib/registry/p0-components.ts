@@ -112,6 +112,24 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'visual.detail',
+    category: 'visual',
+    label: 'Detail Panel',
+    description: 'Displays fields for a selected table row',
+    isVisual: true,
+    inputs: [{ id: 'row', name: 'row', dataType: 'row' }],
+    outputs: [],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Details' },
+      {
+        key: 'emptyMessage',
+        label: 'Empty message',
+        type: 'string',
+        default: 'Select a row to view details',
+      },
+    ],
+  },
+  {
     type: 'visual.kpi',
     category: 'visual',
     label: 'KPI Card',

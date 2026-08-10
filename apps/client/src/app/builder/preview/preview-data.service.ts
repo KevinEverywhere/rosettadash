@@ -4,6 +4,7 @@ import {
   NodePreviewSlice,
   PreviewDataBundle,
   PreviewDataRequest,
+  PreviewRow,
   getDefaultPreviewData,
 } from '@dashbuilder/ui-primitives';
 import { firstValueFrom } from 'rxjs';
@@ -17,6 +18,7 @@ export class PreviewDataService {
   readonly bundle = signal<PreviewDataBundle>(getDefaultPreviewData());
   readonly loading = signal(false);
   readonly source = signal<PreviewDataSource>('default');
+  readonly selectedTableRow = signal<PreviewRow | null>(null);
 
   readonly nodeSlices = computed(() => this.bundle().nodes);
 
@@ -28,15 +30,29 @@ export class PreviewDataService {
       );
       this.bundle.set(data);
       this.source.set('api');
+      this.syncDefaultSelectedRow(data);
     } catch {
-      this.bundle.set(getDefaultPreviewData());
+      const fallback = getDefaultPreviewData();
+      this.bundle.set(fallback);
       this.source.set('default');
+      this.syncDefaultSelectedRow(fallback);
     } finally {
       this.loading.set(false);
     }
   }
 
+  selectTableRow(row: PreviewRow): void {
+    this.selectedTableRow.set(row);
+  }
+
   sliceForNode(nodeId: string): NodePreviewSlice | undefined {
     return this.bundle().nodes[nodeId];
+  }
+
+  private syncDefaultSelectedRow(bundle: PreviewDataBundle): void {
+    const detailSlice = Object.values(bundle.nodes).find(
+      (slice) => slice.linkedToTable && slice.selectedRow,
+    );
+    this.selectedTableRow.set(detailSlice?.selectedRow ?? bundle.tableRows[0] ?? null);
   }
 }

@@ -7,6 +7,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.input.select',
   'visual.input.date-range',
   'visual.table',
+  'visual.detail',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -27,6 +28,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateDateRangeFilter();
     case 'visual.table':
       return generateDataTable();
+    case 'visual.detail':
+      return generateDetailPanel();
     case 'visual.kpi':
       return generateKpiCard();
     case 'visual.chart.line':
@@ -167,6 +170,8 @@ function generateDataTable(): string {
     `    pageSize = 25,`,
     `    sortable = true,`,
     `    filterable = true,`,
+    `    selectedRow,`,
+    `    onSelectRow,`,
     `  }: {`,
     `    id?: string;`,
     `    data?: Row[];`,
@@ -174,6 +179,8 @@ function generateDataTable(): string {
     `    pageSize?: number;`,
     `    sortable?: boolean;`,
     `    filterable?: boolean;`,
+    `    selectedRow?: Row;`,
+    `    onSelectRow?: (row: Row) => void;`,
     `  } = $props();`,
     ``,
     `  const rows = $derived(filterRows(data, filter).slice(0, pageSize));`,
@@ -203,7 +210,10 @@ function generateDataTable(): string {
     `    </thead>`,
     `    <tbody>`,
     `      {#each rows as row, index (String(row.id ?? index))}`,
-    `        <tr>`,
+    `        <tr`,
+    `          class={selectedRow?.id === row.id ? 'table-row table-row--selected' : 'table-row'}`,
+    `          onclick={() => onSelectRow?.(row)}`,
+    `        >`,
     `          {#each columns as column (column)}`,
     `            <td>{row[column] ?? ''}</td>`,
     `          {/each}`,
@@ -211,6 +221,50 @@ function generateDataTable(): string {
     `      {/each}`,
     `    </tbody>`,
     `  </table>`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generateDetailPanel(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  import type { Row } from '../types';`,
+    `  let {`,
+    `    id,`,
+    `    title = 'Details',`,
+    `    emptyMessage = 'Select a row to view details',`,
+    `    row,`,
+    `  }: {`,
+    `    id?: string;`,
+    `    title?: string;`,
+    `    emptyMessage?: string;`,
+    `    row?: Row;`,
+    `  } = $props();`,
+    ``,
+    `  const fields = $derived.by(() => {`,
+    `    if (!row) return [] as Array<{ key: string; value: string }>;`,
+    `    return Object.entries(row).map(([key, value]) => ({`,
+    `      key,`,
+    `      value: String(value ?? ''),`,
+    `    }));`,
+    `  });`,
+    `</script>`,
+    ``,
+    `<section class="detail-panel" {id}>`,
+    `  <h3>{title}</h3>`,
+    `  {#if fields.length === 0}`,
+    `    <p class="detail-panel__empty">{emptyMessage}</p>`,
+    `  {:else}`,
+    `    <dl class="detail-panel__fields">`,
+    `      {#each fields as field (field.key)}`,
+    `        <div class="detail-panel__field">`,
+    `          <dt>{field.key}</dt>`,
+    `          <dd>{field.value}</dd>`,
+    `        </div>`,
+    `      {/each}`,
+    `    </dl>`,
+    `  {/if}`,
     `</section>`,
     ``,
   ]);

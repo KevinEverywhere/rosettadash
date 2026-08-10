@@ -53,12 +53,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-43](https://planetkevin.atlassian.net/browse/DAS-43) | `feature/DAS-43-component-grouping-guides` | Grouping guides + companion prompts |
 | [DAS-44](https://planetkevin.atlassian.net/browse/DAS-44) | `feature/DAS-44-palette-accordion-groups` | Palette functional accordion groups |
 | [DAS-45](https://planetkevin.atlassian.net/browse/DAS-45) | `feature/DAS-45-undo-redo` | Builder undo/redo |
+| [DAS-46](https://planetkevin.atlassian.net/browse/DAS-46) | `feature/DAS-46-pie-chart-flex-layout` | Pie chart + flex layout |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-46](https://planetkevin.atlassian.net/browse/DAS-46) | `feature/DAS-46-pie-chart-flex-layout` | In progress — pie chart + flex layout |
+| [DAS-47](https://planetkevin.atlassian.net/browse/DAS-47) | `feature/DAS-47-detail-panel` | In progress — detail panel for table drill-down |
 
 ## Delivery status
 
@@ -66,7 +67,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 4 multi-target export:** complete (DAS-17–DAS-31)
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
-- **Phase 6 component & page design:** in progress (DAS-46 pie chart + flex layout active)
+- **Phase 6 component & page design:** in progress (DAS-47 detail panel active)
 
 ## Phase 6 — planned (create Jira ticket before each)
 
@@ -77,9 +78,10 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns an
 3. ~~Export wizard: single/selection modes~~ — DAS-41
 4. ~~Canvas layout polish (snap, resize, multi-select)~~ — DAS-42
 5. ~~Undo/redo~~ — DAS-45
-6. Pie chart + flex layout — DAS-46 (in progress)
-7. ~~Component grouping guides & animated placement hints~~ — DAS-43
-8. ~~Palette accordion reorganization (2–7 items per group)~~ — DAS-44
+6. ~~Pie chart + flex layout~~ — DAS-46
+7. ~~Detail panel~~ — DAS-47 (in progress)
+8. ~~Component grouping guides & animated placement hints~~ — DAS-43
+9. ~~Palette accordion reorganization (2–7 items per group)~~ — DAS-44
 
 ## Future — 3D dashboards (not yet ticketed)
 

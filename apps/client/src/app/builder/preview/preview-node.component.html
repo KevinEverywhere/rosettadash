@@ -98,7 +98,11 @@
         </thead>
         <tbody>
           @for (row of tableRows().slice(0, readNumber('pageSize', 25)); track row.id) {
-            <tr>
+            <tr
+              class="preview-table__row"
+              [class.preview-table__row--selected]="isSelectedTableRow(row)"
+              (click)="selectTableRow(row)"
+            >
               <td>{{ row.name }}</td>
               <td>{{ row.status }}</td>
               <td>{{ row.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
@@ -107,6 +111,28 @@
           }
         </tbody>
       </table>
+    </div>
+  }
+  @case ('visual.detail') {
+    <div class="preview-detail" data-testid="preview-detail">
+      <div class="preview-detail__header">
+        <span class="preview-detail__title">{{ readString('title', 'Details') }}</span>
+        @if (linkedToTable()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">Table row selection</span>
+        }
+      </div>
+      @if (detailRow(); as row) {
+        <dl class="preview-detail__fields">
+          @for (field of detailFields(); track field.key) {
+            <div class="preview-detail__field">
+              <dt>{{ field.key }}</dt>
+              <dd>{{ field.value }}</dd>
+            </div>
+          }
+        </dl>
+      } @else {
+        <p class="preview-detail__empty">{{ readString('emptyMessage', 'Select a row to view details') }}</p>
+      }
     </div>
   }
   @case ('visual.kpi') {

@@ -38,6 +38,9 @@ export function buildDashboardContext(
     if (dataType === 'string') {
       return `  readonly ${varName} = signal<string>('');`;
     }
+    if (dataType === 'row') {
+      return `  readonly ${varName} = signal<Row | undefined>(undefined);`;
+    }
     return `  readonly ${varName} = signal<unknown>(undefined);`;
   });
 
@@ -114,6 +117,11 @@ function wireComponentOutputs(
     if (output.dataType === 'date-range' || output.dataType === 'string') {
       bindings.push(`[value]="${state.varName}()"`);
       bindings.push(`(valueChange)="${state.varName}.set($event)"`);
+    }
+
+    if (output.dataType === 'row') {
+      bindings.push(`[selectedRow]="${state.varName}()"`);
+      bindings.push(`(onSelectRow)="${state.varName}.set($event)"`);
     }
   }
 }

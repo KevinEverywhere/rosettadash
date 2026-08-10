@@ -8,6 +8,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.input.textarea': 'TextareaInput',
   'visual.input.date-range': 'DateRangeFilter',
   'visual.table': 'DataTable',
+  'visual.detail': 'DetailPanel',
   'visual.kpi': 'KpiCard',
   'visual.chart.line': 'LineChart',
   'visual.chart.bar': 'BarChart',

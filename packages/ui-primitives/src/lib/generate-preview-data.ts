@@ -40,6 +40,8 @@ export interface NodePreviewSlice {
   dateRangeLabel?: string;
   linkedFromTable?: boolean;
   filteredByDateRange?: boolean;
+  selectedRow?: PreviewRow | null;
+  linkedToTable?: boolean;
 }
 
 export interface PreviewDataBundle {
@@ -241,6 +243,22 @@ export function resolvePreviewGraph(
         dateRangeLabel,
       };
     }
+  }
+
+  const detailNodes = nodes.filter((node) => node.type === 'visual.detail');
+  for (const detailNode of detailNodes) {
+    const rowBinding = findBindingSource(bindings, detailNode.id, 'row');
+    const sourceTable = rowBinding
+      ? tableNodes.find((table) => table.id === rowBinding.sourceNodeId)
+      : undefined;
+    const rows = sourceTable
+      ? (nodeSlices[sourceTable.id]?.tableRows ?? filteredRows)
+      : undefined;
+
+    nodeSlices[detailNode.id] = {
+      selectedRow: rows?.[0] ?? null,
+      linkedToTable: !!sourceTable,
+    };
   }
 
   return {

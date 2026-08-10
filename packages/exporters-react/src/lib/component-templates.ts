@@ -10,6 +10,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.input.textarea',
   'visual.input.date-range',
   'visual.table',
+  'visual.detail',
   'visual.kpi',
   'visual.chart.line',
   'visual.chart.bar',
@@ -39,6 +40,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateDateRangeFilter(exportName);
     case 'visual.table':
       return generateDataTable(exportName);
+    case 'visual.detail':
+      return generateDetailPanel(exportName);
     case 'visual.kpi':
       return generateKpiCard(exportName);
     case 'visual.chart.line':
@@ -320,9 +323,11 @@ function generateDataTable(name: string): string {
     `  pageSize?: number;`,
     `  sortable?: boolean;`,
     `  filterable?: boolean;`,
+    `  selectedRow?: Row;`,
+    `  onSelectRow?: (row: Row) => void;`,
     `}`,
     ``,
-    `export function ${name}({ id, data, filter, pageSize = 25, sortable = true, filterable = true }: ${name}Props) {`,
+    `export function ${name}({ id, data, filter, pageSize = 25, sortable = true, filterable = true, selectedRow, onSelectRow }: ${name}Props) {`,
     `  const rows = filterRows(data, filter).slice(0, pageSize);`,
     `  const columns = rows.length > 0 ? Object.keys(rows[0]) : ['id', 'label', 'value'];`,
     ``,
@@ -338,7 +343,11 @@ function generateDataTable(name: string): string {
     `        </thead>`,
     `        <tbody>`,
     `          {rows.map((row, index) => (`,
-    `            <tr key={String(row.id ?? index)}>`,
+    `            <tr`,
+    `              key={String(row.id ?? index)}`,
+    `              className={selectedRow?.id === row.id ? 'table-row table-row--selected' : 'table-row'}`,
+    `              onClick={() => onSelectRow?.(row)}`,
+    `            >`,
     `              {columns.map((column) => (`,
     `                <td key={column}>{String(row[column] ?? '')}</td>`,
     `              ))}`,
@@ -361,6 +370,49 @@ function generateDataTable(name: string): string {
     `    }`,
     `    return value >= filter.start && value <= filter.end;`,
     `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateDetailPanel(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `import type { Row } from '../types';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  title?: string;`,
+    `  emptyMessage?: string;`,
+    `  row?: Row;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  title = 'Details',`,
+    `  emptyMessage = 'Select a row to view details',`,
+    `  row,`,
+    `}: ${name}Props) {`,
+    `  const fields = row ? Object.entries(row) : [];`,
+    ``,
+    `  return (`,
+    `    <section className="detail-panel" id={id}>`,
+    `      <h3>{title}</h3>`,
+    `      {fields.length === 0 ? (`,
+    `        <p className="detail-panel__empty">{emptyMessage}</p>`,
+    `      ) : (`,
+    `        <dl className="detail-panel__fields">`,
+    `          {fields.map(([key, value]) => (`,
+    `            <div key={key} className="detail-panel__field">`,
+    `              <dt>{key}</dt>`,
+    `              <dd>{String(value ?? '')}</dd>`,
+    `            </div>`,
+    `          ))}`,
+    `        </dl>`,
+    `      )}`,
+    `    </section>`,
+    `  );`,
     `}`,
     ``,
   ]);

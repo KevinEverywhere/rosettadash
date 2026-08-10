@@ -19,8 +19,15 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     type: 'visual.table',
     summary: 'Tabular data view — usually paired with a filter and data source.',
     animationKey: 'filter-table',
-    companionTypes: ['visual.input.date-range', 'infra.postgresql'],
+    companionTypes: ['visual.input.date-range', 'infra.postgresql', 'visual.detail'],
     placementMessage: 'Add a Date Range filter and PostgreSQL source for a complete data flow.',
+  },
+  {
+    type: 'visual.detail',
+    summary: 'Row drill-down panel — bind to a table selected-row output.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.table'],
+    placementMessage: 'Add a Data Table and bind its selected row output to this panel.',
   },
   {
     type: 'visual.chart.line',
@@ -139,7 +146,14 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
 const guideByType = new Map(GROUPING_GUIDES.map((guide) => [guide.type, guide]));
 
 const FILTER_TYPES = new Set(['visual.input.date-range']);
-const DATA_VISUAL_TYPES = new Set(['visual.table', 'visual.chart.line', 'visual.chart.bar', 'visual.chart.pie', 'visual.kpi']);
+const DATA_VISUAL_TYPES = new Set([
+  'visual.table',
+  'visual.detail',
+  'visual.chart.line',
+  'visual.chart.bar',
+  'visual.chart.pie',
+  'visual.kpi',
+]);
 const INFRA_DATA_TYPES = new Set([
   'infra.postgresql',
   'infra.mongodb',
@@ -211,6 +225,12 @@ export function resolveCompanionPlacement(
     return 'below';
   }
   if (DATA_VISUAL_TYPES.has(companionType)) {
+    if (sourceType === 'visual.table' && companionType === 'visual.detail') {
+      return 'right';
+    }
+    if (sourceType === 'visual.detail' && companionType === 'visual.table') {
+      return 'left';
+    }
     return 'below';
   }
   return 'right';

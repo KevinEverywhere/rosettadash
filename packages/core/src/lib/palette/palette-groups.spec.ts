@@ -30,7 +30,11 @@ describe('palette-groups', () => {
       'api-servers',
     ]);
     expect(groups[0]?.items[0]?.type).toBe('visual.input.text');
-    expect(groups[1]?.items.map((item) => item.type)).toEqual(['visual.table', 'visual.kpi']);
+    expect(groups[1]?.items.map((item) => item.type)).toEqual([
+      'visual.table',
+      'visual.detail',
+      'visual.kpi',
+    ]);
   });
 
   it('finds the group id for a component type', () => {

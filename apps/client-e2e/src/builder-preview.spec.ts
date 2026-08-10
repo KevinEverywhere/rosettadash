@@ -61,4 +61,26 @@ test.describe('Builder preview', () => {
     await expect(page.getByTestId('preview-pie-chart')).toBeVisible();
     await expect(page.getByTestId('preview-flex')).toBeVisible();
   });
+
+  test('shows detail panel for table row selection in preview', async ({ page }) => {
+    await addFromPalette(page, 'visual.table');
+    await addFromPalette(page, 'visual.detail');
+
+    const nodes = page.getByTestId('canvas-node');
+    const tableNode = nodes.nth(0);
+    const detailNode = nodes.nth(1);
+
+    await tableNode.getByTestId(/^port-output-.*-selected-row$/).click();
+    await detailNode.getByTestId(/^port-input-.*-row$/).click();
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+
+    await expect(page.getByTestId('preview-detail')).toBeVisible();
+    await expect(page.getByTestId('preview-binding-hint')).toContainText('Table row selection');
+
+    const firstRow = page.getByTestId('preview-table').locator('tbody tr').first();
+    await firstRow.click();
+    await expect(page.getByTestId('preview-detail')).toContainText('name');
+  });
 });

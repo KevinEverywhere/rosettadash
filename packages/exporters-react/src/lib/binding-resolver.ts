@@ -42,6 +42,9 @@ export function buildDashboardContext(
     if (dataType === 'boolean') {
       return `  const [${varName}, ${setter}] = useState<boolean>(false);`;
     }
+    if (dataType === 'row') {
+      return `  const [${varName}, ${setter}] = useState<Record<string, unknown> | undefined>();`;
+    }
     return `  const [${varName}, ${setter}] = useState<unknown>();`;
   });
 
@@ -118,6 +121,11 @@ function wireComponentOutputs(
     ) {
       props['value'] = state.varName;
       props['onChange'] = state.setter;
+    }
+
+    if (output.dataType === 'row') {
+      props['selectedRow'] = state.varName;
+      props['onSelectRow'] = state.setter;
     }
   }
 }

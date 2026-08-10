@@ -1,6 +1,7 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
+import { PreviewRow } from '@dashbuilder/ui-primitives';
 import { BuilderStateService } from '../builder-state.service';
 import { PreviewDataService } from './preview-data.service';
 
@@ -19,6 +20,8 @@ export class PreviewNodeComponent {
   private readonly slice = computed(() =>
     this.previewData.sliceForNode(this.node().id),
   );
+
+  protected readonly linkedToTable = computed(() => this.slice()?.linkedToTable ?? false);
 
   protected readonly tableRows = computed(
     () => this.slice()?.tableRows ?? this.previewData.bundle().tableRows,
@@ -96,6 +99,34 @@ export class PreviewNodeComponent {
       .join(', ');
     return `conic-gradient(${stops})`;
   });
+
+  protected readonly detailRow = computed(() => {
+    const selected = this.previewData.selectedTableRow();
+    if (selected) {
+      return selected;
+    }
+    return this.slice()?.selectedRow ?? null;
+  });
+
+  protected readonly detailFields = computed(() => {
+    const row = this.detailRow();
+    if (!row) {
+      return [] as Array<{ key: string; value: string }>;
+    }
+    return Object.entries(row).map(([key, value]) => ({
+      key,
+      value: String(value ?? ''),
+    }));
+  });
+
+  protected selectTableRow(row: PreviewRow): void {
+    this.previewData.selectTableRow(row);
+  }
+
+  protected isSelectedTableRow(row: PreviewRow): boolean {
+    const selected = this.detailRow();
+    return !!selected && selected.id === row.id;
+  }
 
   protected readonly roleGateAllowedRoles = computed(() =>
     parseRoleGateAllowedRoles(this.node().properties['roles']),
