@@ -125,17 +125,18 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Redirect fresh `/builder` visits to welcome until stack is chosen
 - [x] Preserve session restore and DAS-57 stack profile behavior
 
-## Phase 12 — Multi-target 3D export (in progress)
+## Phase 12 — Multi-target 3D export (complete)
 
-**Ticket:** DAS-61 — Vue, Svelte, and Angular 3D export stubs
+**Tickets:** DAS-61, DAS-62
 
-- [x] Vue TresJS stubs for bar chart, scatter, and scene
-- [x] Svelte Threlte stubs for bar chart, scatter, and scene
-- [x] Angular three.js canvas stubs for bar chart, scatter, and scene
+- [x] Vue TresJS stubs for bar chart, scatter, and scene — DAS-61
+- [x] Svelte Threlte stubs for bar chart, scatter, and scene — DAS-61
+- [x] Angular three.js canvas stubs for bar chart, scatter, and scene — DAS-61
+- [x] GLTF model host preview + multi-target export stubs — DAS-62
 
 ## Future — VR / 3D expansion
 
-- GLTF model hosts, geo globes
+- Geo globes
 
 ## Backlog ideas (unscheduled)
 

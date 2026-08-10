@@ -1,9 +1,15 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { PreviewChartPoint, PreviewScatterPoint } from '@dashbuilder/ui-primitives';
 
 export type ThreeCameraPreset = 'orbit' | 'front' | 'iso';
-export type ThreeVisualMode = 'bar-chart' | 'scatter' | 'scene';
+export type ThreeVisualMode = 'bar-chart' | 'scatter' | 'scene' | 'gltf-model';
+
+export interface ThreeGltfModelConfig {
+  url: string;
+  scale: number;
+}
 
 export interface ThreePreviewOptions {
   backgroundColor: string;
@@ -15,6 +21,7 @@ export interface ThreePreviewOptions {
 export interface ThreePreviewData {
   points: PreviewChartPoint[];
   scatterPoints?: PreviewScatterPoint[];
+  gltfModel?: ThreeGltfModelConfig;
   mode: ThreeVisualMode;
 }
 
@@ -29,6 +36,8 @@ export class ThreePreviewRuntime {
   private resizeObserver?: ResizeObserver;
   private contentGroup = new THREE.Group();
   private gridHelper?: THREE.GridHelper;
+  private gltfLoadId = 0;
+  private loadedGltfKey?: string;
 
   mount(host: HTMLElement): void {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -134,6 +143,11 @@ export class ThreePreviewRuntime {
   }
 
   private rebuildContent(data: ThreePreviewData): void {
+    if (data.mode !== 'gltf-model') {
+      this.gltfLoadId += 1;
+      this.loadedGltfKey = undefined;
+    }
+
     this.clearContentGroup();
 
     const points = data.points.length > 0 ? data.points : defaultPreviewPoints();
@@ -152,6 +166,64 @@ export class ThreePreviewRuntime {
       this.addScenePointCloud(data.scatterPoints ?? []);
       return;
     }
+
+    if (data.mode === 'gltf-model') {
+      this.loadGltfModel(data.gltfModel);
+    }
+  }
+
+  private loadGltfModel(config?: ThreeGltfModelConfig): void {
+    const url = config?.url?.trim();
+    const scale = config?.scale ?? 1.5;
+
+    if (!url) {
+      this.loadedGltfKey = undefined;
+      this.addGltfFallback();
+      return;
+    }
+
+    const loadKey = `${url}::${scale}`;
+    this.loadedGltfKey = loadKey;
+    const loadId = ++this.gltfLoadId;
+    const loader = new GLTFLoader();
+
+    loader.load(
+      url,
+      (gltf) => {
+        if (loadId !== this.gltfLoadId) {
+          return;
+        }
+
+        this.clearContentGroup();
+        const model = gltf.scene.clone(true);
+        model.scale.setScalar(scale);
+
+        const bounds = new THREE.Box3().setFromObject(model);
+        const center = bounds.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+        model.position.y += (bounds.max.y - bounds.min.y) / 2;
+
+        this.contentGroup.add(model);
+      },
+      undefined,
+      () => {
+        if (loadId !== this.gltfLoadId) {
+          return;
+        }
+
+        this.loadedGltfKey = undefined;
+        this.addGltfFallback();
+      },
+    );
+  }
+
+  private addGltfFallback(): void {
+    this.clearContentGroup();
+    const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+    const material = new THREE.MeshStandardMaterial({ color: '#64748b' });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.y = 0.6;
+    this.contentGroup.add(mesh);
   }
 
   private addScenePointCloud(scatterPoints: PreviewScatterPoint[]): void {
@@ -211,15 +283,21 @@ export class ThreePreviewRuntime {
   private clearContentGroup(): void {
     for (const child of [...this.contentGroup.children]) {
       this.contentGroup.remove(child);
-      if (child instanceof THREE.Mesh) {
-        child.geometry.dispose();
-        if (Array.isArray(child.material)) {
-          child.material.forEach((material: THREE.Material) => material.dispose());
+      this.disposeObject3D(child);
+    }
+  }
+
+  private disposeObject3D(object: THREE.Object3D): void {
+    object.traverse((node) => {
+      if (node instanceof THREE.Mesh) {
+        node.geometry.dispose();
+        if (Array.isArray(node.material)) {
+          node.material.forEach((material: THREE.Material) => material.dispose());
         } else {
-          child.material.dispose();
+          node.material.dispose();
         }
       }
-    }
+    });
   }
 }
 

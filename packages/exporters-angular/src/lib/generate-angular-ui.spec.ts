@@ -209,6 +209,27 @@ describe('generateAngularUiFiles', () => {
     expect(chartFile?.content).toContain('filterByRange');
   });
 
+  it('generates Angular three.js GLTF model stub', () => {
+    const model = registry.createNode('visual.display.3d-gltf-model', { id: 'g3d1' });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'GLTF Dashboard',
+        version: 1,
+        exportTargets: { ui: 'angular', server: 'nest' },
+        nodes: [model, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateAngularUiFiles(ir);
+    const modelFile = files.find((file) => file.content.includes('GLTFLoader'));
+    expect(modelFile?.content).toContain('modelUrl');
+  });
+
   it('rejects non-angular UI targets', () => {
     const ir = buildExportIR(
       {

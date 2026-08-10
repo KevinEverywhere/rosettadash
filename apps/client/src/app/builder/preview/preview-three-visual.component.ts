@@ -10,6 +10,7 @@ import {
   input,
 } from '@angular/core';
 import type { ComponentNode } from '@dashbuilder/core';
+import { DEFAULT_GLTF_MODEL_URL } from '@dashbuilder/core';
 import { mapRowsToScatterPoints, resolveScatterFields } from '@dashbuilder/ui-primitives';
 import { PreviewDataService } from './preview-data.service';
 import {
@@ -39,6 +40,10 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
   );
 
   protected readonly scatterPoints = computed(() => {
+    if (this.mode() === 'gltf-model') {
+      return [];
+    }
+
     const slice = this.slice();
     if (slice?.scatterPoints?.length) {
       return slice.scatterPoints;
@@ -48,7 +53,16 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
     return mapRowsToScatterPoints(tableRows, resolveScatterFields(this.node().properties));
   });
 
+  protected readonly gltfModel = computed(() => ({
+    url: this.readString(this.node(), 'modelUrl', DEFAULT_GLTF_MODEL_URL),
+    scale: this.readNumber(this.node(), 'modelScale', 1.5),
+  }));
+
   protected readonly linkedHint = computed(() => {
+    if (this.mode() === 'gltf-model') {
+      return 'GLTF model host';
+    }
+
     if (this.slice()?.linkedFromTable) {
       return 'Uses table rowset';
     }
@@ -64,6 +78,8 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
         return 'preview-3d-bar-chart';
       case 'scatter':
         return 'preview-3d-scatter';
+      case 'gltf-model':
+        return 'preview-3d-gltf-model';
       default:
         return 'preview-3d-scene';
     }
@@ -75,6 +91,7 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
       this.mode();
       this.chartPoints();
       this.scatterPoints();
+      this.gltfModel();
       this.syncRuntime();
     });
   }
@@ -105,11 +122,15 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
         backgroundColor: this.readString(node, 'backgroundColor', '#0f172a'),
         cameraPreset: this.readCameraPreset(node),
         autoRotate: this.readBoolean(node, 'autoRotate', false),
-        showGrid: this.mode() === 'scene' ? this.readBoolean(node, 'showGrid', true) : true,
+        showGrid:
+          this.mode() === 'scene' || this.mode() === 'gltf-model'
+            ? this.readBoolean(node, 'showGrid', true)
+            : true,
       },
       {
         points: this.chartPoints(),
         scatterPoints: this.scatterPoints(),
+        gltfModel: this.mode() === 'gltf-model' ? this.gltfModel() : undefined,
         mode: this.mode(),
       },
     );
@@ -123,6 +144,11 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
   private readBoolean(node: ComponentNode, key: string, fallback: boolean): boolean {
     const value = node.properties[key];
     return typeof value === 'boolean' ? value : fallback;
+  }
+
+  private readNumber(node: ComponentNode, key: string, fallback: number): number {
+    const value = node.properties[key];
+    return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
   }
 
   private readCameraPreset(node: ComponentNode): ThreeCameraPreset {

@@ -76,6 +76,7 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
       'visual.display.3d-bar-chart',
       'visual.display.3d-scatter',
       'visual.display.3d-scene',
+      'visual.display.3d-gltf-model',
     ],
   },
 ];

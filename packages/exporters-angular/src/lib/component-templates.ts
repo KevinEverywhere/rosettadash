@@ -4,6 +4,7 @@ import {
   generateThreeBarChart,
   generateThreeScatterPlot,
   generateThreeScenePointCloud,
+  generateThreeGltfModel,
 } from './three-visual-templates';
 import { joinLines, selectorFromClass } from './utils';
 
@@ -22,6 +23,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-bar-chart',
   'visual.display.3d-scatter',
   'visual.display.3d-scene',
+  'visual.display.3d-gltf-model',
   'logic.timer',
 ]);
 
@@ -59,6 +61,8 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateThreeScatterPlot(className);
     case 'visual.display.3d-scene':
       return generateThreeScenePointCloud(className);
+    case 'visual.display.3d-gltf-model':
+      return generateThreeGltfModel(className);
     case 'logic.timer':
       return generateTimer(className);
     default:

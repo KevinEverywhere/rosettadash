@@ -93,6 +93,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Pair with data sources or other VR visuals for spatial dashboards.',
   },
   {
+    type: 'visual.display.3d-gltf-model',
+    summary: 'GLTF/GLB model host — load external 3D assets with orbit controls.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.display.3d-scene', 'visual.kpi'],
+    placementMessage: 'Set a model URL and scale; pair with KPI cards for spatial context.',
+  },
+  {
     type: 'visual.kpi',
     summary: 'Single metric card — typically fed by a database or table aggregate.',
     animationKey: 'data-stack',

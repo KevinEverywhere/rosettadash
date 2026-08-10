@@ -20,6 +20,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-bar-chart',
   'visual.display.3d-scatter',
   'visual.display.3d-scene',
+  'visual.display.3d-gltf-model',
   'domain.role-gate',
   'domain.person-invite',
   'domain.role-assign',
@@ -66,6 +67,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateThreeScatterPlot(exportName);
     case 'visual.display.3d-scene':
       return generateThreeScenePointCloud(exportName);
+    case 'visual.display.3d-gltf-model':
+      return generateThreeGltfModel(exportName);
     case 'domain.role-gate':
       return generateRoleGate(exportName);
     case 'domain.person-invite':
@@ -1080,6 +1083,67 @@ function generateThreeScenePointCloud(name: string): string {
     `    }`,
     `    return value >= range.start && value <= range.end;`,
     `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateThreeGltfModel(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `/** Requires: npm install three @react-three/fiber @react-three/drei */`,
+    `import { Suspense, useMemo } from 'react';`,
+    `import { Canvas } from '@react-three/fiber';`,
+    `import { Grid, OrbitControls, useGLTF } from '@react-three/drei';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  title?: string;`,
+    `  modelUrl?: string;`,
+    `  modelScale?: number;`,
+    `  backgroundColor?: string;`,
+    `  autoRotate?: boolean;`,
+    `  showGrid?: boolean;`,
+    `}`,
+    ``,
+    `const DEFAULT_MODEL_URL =`,
+    `  'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb';`,
+    ``,
+    `function GltfModel({ url, scale }: { url: string; scale: number }) {`,
+    `  const { scene } = useGLTF(url);`,
+    `  const model = useMemo(() => scene.clone(true), [scene]);`,
+    `  return <primitive object={model} scale={scale} />;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  title = '3D Model',`,
+    `  modelUrl = DEFAULT_MODEL_URL,`,
+    `  modelScale = 1.5,`,
+    `  backgroundColor = '#0f172a',`,
+    `  autoRotate = false,`,
+    `  showGrid = true,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <section className="chart-card chart-card--3d" id={id}>`,
+    `      <h3>{title}</h3>`,
+    `      <div className="three-chart" style={{ background: backgroundColor }}>`,
+    `        <Canvas camera={{ position: [8, 6, 8], fov: 45 }}>`,
+    `          <color attach="background" args={[backgroundColor]} />`,
+    `          <ambientLight intensity={0.65} />`,
+    `          <directionalLight position={[6, 10, 4]} intensity={1.1} />`,
+    `          {showGrid ? (`,
+    `            <Grid args={[12, 12]} cellColor="#334155" sectionColor="#475569" position={[0, -0.01, 0]} />`,
+    `          ) : null}`,
+    `          <Suspense fallback={null}>`,
+    `            <GltfModel url={modelUrl} scale={modelScale} />`,
+    `          </Suspense>`,
+    `          <OrbitControls autoRotate={autoRotate} minDistance={4} maxDistance={40} />`,
+    `        </Canvas>`,
+    `      </div>`,
+    `    </section>`,
+    `  );`,
     `}`,
     ``,
   ]);

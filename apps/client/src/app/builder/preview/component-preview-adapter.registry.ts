@@ -5,7 +5,8 @@ export type ComponentPreviewTemplateId =
   | 'metric-chip'
   | '3d-bar-chart'
   | '3d-scatter'
-  | '3d-scene';
+  | '3d-scene'
+  | '3d-gltf-model';
 
 @Injectable({ providedIn: 'root' })
 export class ComponentPreviewAdapterRegistry {
@@ -35,4 +36,5 @@ export function registerDefaultComponentPreviewAdapters(
   registry.register('visual.display.3d-bar-chart', '3d-bar-chart');
   registry.register('visual.display.3d-scatter', '3d-scatter');
   registry.register('visual.display.3d-scene', '3d-scene');
+  registry.register('visual.display.3d-gltf-model', '3d-gltf-model');
 }

@@ -68,12 +68,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-58](https://planetkevin.atlassian.net/browse/DAS-58) | `feature/DAS-58-3d-scatter-field-mapping` | 3D scatter rowset field mapping + React export stub |
 | [DAS-59](https://planetkevin.atlassian.net/browse/DAS-59) | `feature/DAS-59-welcome-stack-page` | Welcome page with tech stack selection above builder |
 | [DAS-60](https://planetkevin.atlassian.net/browse/DAS-60) | `feature/DAS-60-3d-scene-point-cloud` | 3D scene rowset point-cloud field mapping + React export stub |
+| [DAS-61](https://planetkevin.atlassian.net/browse/DAS-61) | `feature/DAS-61-multi-target-3d-export-stubs` | Multi-target 3D export stubs (Vue, Svelte, Angular) |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-61](https://planetkevin.atlassian.net/browse/DAS-61) | `feature/DAS-61-multi-target-3d-export-stubs` | Multi-target 3D export stubs (Vue, Svelte, Angular) |
+| [DAS-62](https://planetkevin.atlassian.net/browse/DAS-62) | `feature/DAS-62-gltf-model-host` | GLTF model host preview + multi-target export stubs |
 
 ## Delivery status
 
@@ -86,7 +87,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 9 project stack setup:** complete (DAS-57)
 - **Phase 10 VR / 3D expansion:** DAS-58 and DAS-60 complete on branch
 - **Phase 11 welcome & entry:** complete (DAS-59)
-- **Phase 12 multi-target 3D export:** in progress (DAS-61)
+- **Phase 12 multi-target 3D export:** DAS-61 complete; DAS-62 active
 
 ## Phase 6 — complete
 
@@ -138,11 +139,12 @@ Stack selection moves upstream: UI framework (or **Any**) at the top level, then
 
 ## Phase 12 — Multi-target 3D export (in progress)
 
-1. ~~Vue/Svelte/Angular 3D export stubs~~ — DAS-61 (active)
+1. ~~Vue/Svelte/Angular 3D export stubs~~ — DAS-61
+2. ~~GLTF model host preview + export stubs~~ — DAS-62 (active)
 
 ## Future — VR / 3D expansion
 
-- GLTF model hosts and geo globes
+- Geo globes
 
 ## Related documents
 

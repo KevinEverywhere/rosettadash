@@ -465,6 +465,28 @@ describe('generateReactUiFiles', () => {
     expect(sceneFile?.path).toMatch(/3dScene\.tsx$/);
   });
 
+  it('generates React three.js GLTF model stub', () => {
+    const model = registry.createNode('visual.display.3d-gltf-model', { id: 'g3d1' });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'GLTF Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [model, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const modelFile = files.find((file) => file.content.includes('useGLTF'));
+    expect(modelFile?.content).toContain('GltfModel');
+    expect(modelFile?.content).toContain('modelUrl');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

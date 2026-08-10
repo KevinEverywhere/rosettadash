@@ -15,6 +15,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.display.3d-bar-chart': 'ThreeBarChart',
   'visual.display.3d-scatter': 'ThreeScatterPlot',
   'visual.display.3d-scene': 'ThreeScenePointCloud',
+  'visual.display.3d-gltf-model': 'ThreeGltfModel',
   'logic.timer': 'Timer',
 };
 
