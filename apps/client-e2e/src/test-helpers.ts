@@ -95,7 +95,7 @@ export async function openBuilder(page: Page): Promise<void> {
     sessionStorage.clear();
     sessionStorage.setItem(
       'dashbuilder:pending-stack',
-      JSON.stringify({ ui: 'react', server: 'next', database: 'postgresql' }),
+      JSON.stringify({ ui: 'react', server: 'nest', database: 'postgresql' }),
     );
   });
   await page.goto('/builder');
