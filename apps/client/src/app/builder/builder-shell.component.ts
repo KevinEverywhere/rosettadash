@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
 import { BuilderProjectService } from './builder-project.service';
@@ -57,6 +57,54 @@ export class BuilderShellComponent implements OnInit {
 
   protected closeExportWizard(): void {
     this.exportWizardOpen.set(false);
+  }
+
+  protected undo(): void {
+    this.state.undo();
+  }
+
+  protected redo(): void {
+    this.state.redo();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  protected onDocumentKeydown(event: KeyboardEvent): void {
+    if (this.state.loading() || this.exportWizardOpen()) {
+      return;
+    }
+
+    const target = event.target;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target instanceof HTMLSelectElement ||
+      (target instanceof HTMLElement && target.isContentEditable)
+    ) {
+      return;
+    }
+
+    const mod = event.metaKey || event.ctrlKey;
+    if (!mod) {
+      return;
+    }
+
+    const key = event.key.toLowerCase();
+    if (key === 'z' && !event.shiftKey) {
+      event.preventDefault();
+      this.undo();
+      return;
+    }
+
+    if (key === 'z' && event.shiftKey) {
+      event.preventDefault();
+      this.redo();
+      return;
+    }
+
+    if (key === 'y') {
+      event.preventDefault();
+      this.redo();
+    }
   }
 
   protected statusLabel(): string {

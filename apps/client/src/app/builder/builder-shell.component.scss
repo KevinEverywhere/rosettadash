@@ -35,6 +35,33 @@
   background: var(--db-surface);
 }
 
+.builder__history {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.builder__history-btn {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--db-border);
+  border-radius: 0.375rem;
+  background: var(--db-surface);
+  color: var(--db-text-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--db-accent);
+    color: var(--db-text);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
 .builder__mode {
   padding: 0.25rem 0.625rem;
   border: none;

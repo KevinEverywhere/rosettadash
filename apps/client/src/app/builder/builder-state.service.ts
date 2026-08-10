@@ -29,6 +29,10 @@ import {
   clampCanvasNodeWidth,
   snapToCanvasGrid,
 } from './canvas/canvas-layout';
+import {
+  BuilderHistoryStack,
+  type BuilderGraphSnapshot,
+} from './history/builder-history';
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 export type WorkspaceMode = 'design' | 'preview';
@@ -61,6 +65,13 @@ export class BuilderStateService {
   readonly dismissedSuggestionIds = signal<Set<string>>(new Set());
   readonly previewRoleId = signal('viewer');
   readonly placementPrompt = signal<PlacementPrompt | null>(null);
+
+  private readonly history = new BuilderHistoryStack();
+  private historySuspended = false;
+  private layoutTransactionActive = false;
+
+  readonly canUndo = signal(false);
+  readonly canRedo = signal(false);
 
   readonly selectedNodeId = computed(() => this.selectedNodeIds()[0] ?? null);
 
@@ -131,7 +142,10 @@ export class BuilderStateService {
     this.clearPendingBinding();
   }
 
-  updateNodeLayout(nodeId: string, layout: Partial<NodeLayout>): void {
+  updateNodeLayout(nodeId: string, layout: Partial<NodeLayout>, options?: { skipHistory?: boolean }): void {
+    if (!options?.skipHistory && !this.layoutTransactionActive) {
+      this.recordHistory();
+    }
     this.nodes.update((nodes) =>
       nodes.map((node) => {
         if (node.id !== nodeId) {
@@ -158,6 +172,31 @@ export class BuilderStateService {
       }),
     );
     this.markDirty();
+  }
+
+  beginLayoutHistory(): void {
+    if (this.layoutTransactionActive) {
+      return;
+    }
+    this.layoutTransactionActive = true;
+    this.history.beginTransaction(this.captureHistorySnapshot());
+  }
+
+  commitLayoutHistory(): void {
+    if (!this.layoutTransactionActive) {
+      return;
+    }
+    this.layoutTransactionActive = false;
+    this.history.commitTransaction();
+    this.syncHistoryAvailability();
+  }
+
+  cancelLayoutHistory(): void {
+    if (!this.layoutTransactionActive) {
+      return;
+    }
+    this.layoutTransactionActive = false;
+    this.history.cancelTransaction();
   }
 
   moveSelectedNodes(deltaX: number, deltaY: number): void {
@@ -187,6 +226,7 @@ export class BuilderStateService {
     definition: ComponentDefinition,
     options?: { layout?: Partial<NodeLayout>; skipPlacementPrompt?: boolean },
   ): ComponentNode {
+    this.recordHistory();
     const node = defaultComponentRegistry.createNode(definition.type, {
       layout: {
         x: snapToCanvasGrid(options?.layout?.x ?? 24),
@@ -243,6 +283,13 @@ export class BuilderStateService {
   }
 
   updateNodeProperty(nodeId: string, key: string, value: unknown): void {
+    const current = this.nodes().find((node) => node.id === nodeId);
+    if (current?.properties[key] === value) {
+      return;
+    }
+    if (!this.historySuspended) {
+      this.recordHistory();
+    }
     this.nodes.update((nodes) =>
       nodes.map((node) =>
         node.id === nodeId
@@ -258,6 +305,7 @@ export class BuilderStateService {
     if (ids.size === 0) {
       return;
     }
+    this.recordHistory();
     this.nodes.update((nodes) => nodes.filter((node) => !ids.has(node.id)));
     this.bindings.update((bindings) =>
       bindings.filter(
@@ -278,6 +326,7 @@ export class BuilderStateService {
     this.saveStatus.set('idle');
     this.errorMessage.set(null);
     this.clearPendingBinding();
+    this.resetHistory();
   }
 
   applySavedComposite(composite: Composite): void {
@@ -287,6 +336,7 @@ export class BuilderStateService {
     this.dirty.set(false);
     this.saveStatus.set('saved');
     this.clearPendingBinding();
+    this.resetHistory();
   }
 
   applyOnboardingTemplate(): void {
@@ -329,7 +379,30 @@ export class BuilderStateService {
     this.selectedNodeIds.set([]);
     this.selectedDefinition.set(null);
     this.clearPendingBinding();
+    this.resetHistory();
     this.markDirty();
+  }
+
+  undo(): void {
+    if (!this.history.canUndo) {
+      return;
+    }
+    const snapshot = this.history.undo(this.captureHistorySnapshot());
+    if (snapshot) {
+      this.applyHistorySnapshot(snapshot);
+      this.syncHistoryAvailability();
+    }
+  }
+
+  redo(): void {
+    if (!this.history.canRedo) {
+      return;
+    }
+    const snapshot = this.history.redo(this.captureHistorySnapshot());
+    if (snapshot) {
+      this.applyHistorySnapshot(snapshot);
+      this.syncHistoryAvailability();
+    }
   }
 
   buildCompositePayload(): Composite {
@@ -360,6 +433,7 @@ export class BuilderStateService {
       return;
     }
 
+    const before = this.captureHistorySnapshot();
     const result = this.createBinding(
       pending.nodeId,
       pending.portId,
@@ -369,6 +443,8 @@ export class BuilderStateService {
     this.pendingBindingSource.set(null);
 
     if (result.ok) {
+      this.history.record(before);
+      this.syncHistoryAvailability();
       this.bindingMessage.set(null);
       this.mergeSuggestions(
         evaluateDefaults(
@@ -460,6 +536,7 @@ export class BuilderStateService {
   }
 
   removeBinding(bindingId: string): void {
+    this.recordHistory();
     this.bindings.update((bindings) =>
       bindings.filter((binding) => binding.id !== bindingId),
     );
@@ -508,6 +585,7 @@ export class BuilderStateService {
     projectId?: string;
     defaultTimeRange?: TimeRangePreset | '';
   }): void {
+    this.recordHistory();
     const composite = this.composite();
     if (!composite) {
       return;
@@ -580,6 +658,7 @@ export class BuilderStateService {
       return;
     }
 
+    this.recordHistory();
     roles.push(role);
     const normalized = normalizeDomainContext({ ...current, roles });
     this.composite.set({ ...composite, domainContext: normalized });
@@ -592,6 +671,7 @@ export class BuilderStateService {
       return;
     }
 
+    this.recordHistory();
     const current = composite.domainContext;
     const roles = current.roles?.filter((role) => role.id !== roleId) ?? [];
     const normalized = normalizeDomainContext({ ...current, roles });
@@ -627,8 +707,14 @@ export class BuilderStateService {
       return;
     }
 
-    for (const patch of suggestion.patches) {
-      this.updateNodeProperty(suggestion.nodeId, patch.key, patch.value);
+    this.recordHistory();
+    this.historySuspended = true;
+    try {
+      for (const patch of suggestion.patches) {
+        this.updateNodeProperty(suggestion.nodeId, patch.key, patch.value);
+      }
+    } finally {
+      this.historySuspended = false;
     }
 
     this.nodes.update((nodes) =>
@@ -679,6 +765,54 @@ export class BuilderStateService {
         dismissedIds: this.dismissedSuggestionIds(),
       }),
     );
+  }
+
+  private captureHistorySnapshot(): BuilderGraphSnapshot {
+    const composite = this.composite();
+    return {
+      nodes: structuredClone(this.nodes()),
+      bindings: structuredClone(this.bindings()),
+      composite: composite ? structuredClone(composite) : null,
+      selectedNodeIds: [...this.selectedNodeIds()],
+    };
+  }
+
+  private applyHistorySnapshot(snapshot: BuilderGraphSnapshot): void {
+    this.historySuspended = true;
+    try {
+      this.nodes.set(structuredClone(snapshot.nodes));
+      this.bindings.set(structuredClone(snapshot.bindings));
+      if (snapshot.composite) {
+        this.composite.set(structuredClone(snapshot.composite));
+      }
+      this.selectedNodeIds.set([...snapshot.selectedNodeIds]);
+      this.selectedDefinition.set(null);
+      this.clearPendingBinding();
+      this.placementPrompt.set(null);
+      this.refreshSuggestionsForSelection();
+      this.markDirty();
+    } finally {
+      this.historySuspended = false;
+    }
+  }
+
+  private recordHistory(): void {
+    if (this.historySuspended) {
+      return;
+    }
+    this.history.record(this.captureHistorySnapshot());
+    this.syncHistoryAvailability();
+  }
+
+  private resetHistory(): void {
+    this.history.clear();
+    this.layoutTransactionActive = false;
+    this.syncHistoryAvailability();
+  }
+
+  private syncHistoryAvailability(): void {
+    this.canUndo.set(this.history.canUndo);
+    this.canRedo.set(this.history.canRedo);
   }
 
   private refreshPlacementPrompt(sourceNodeId: string): void {

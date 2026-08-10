@@ -237,4 +237,54 @@ describe('BuilderStateService', () => {
       service.suggestionsForNode(postgres.id).some((entry) => entry.id === `postgres-table:${postgres.id}`),
     ).toBe(false);
   });
+
+  it('supports undo and redo for node additions', () => {
+    const definition = defaultComponentRegistry.getOrThrow('visual.input.text');
+    service.addNodeFromDefinition(definition);
+    expect(service.nodes()).toHaveLength(1);
+    expect(service.canUndo()).toBe(true);
+    expect(service.canRedo()).toBe(false);
+
+    service.undo();
+    expect(service.nodes()).toHaveLength(0);
+    expect(service.canUndo()).toBe(false);
+    expect(service.canRedo()).toBe(true);
+
+    service.redo();
+    expect(service.nodes()).toHaveLength(1);
+    expect(service.canRedo()).toBe(false);
+  });
+
+  it('clears history when a saved composite is applied', () => {
+    service.setProjectContext(
+      {
+        id: 'p1',
+        name: 'Test',
+        composites: [],
+        createdAt: '',
+        updatedAt: '',
+      },
+      {
+        id: 'c1',
+        name: 'Main',
+        nodes: [],
+        bindings: [],
+        version: 1,
+      },
+    );
+
+    service.addNodeFromDefinition(
+      defaultComponentRegistry.getOrThrow('visual.input.text'),
+    );
+    expect(service.canUndo()).toBe(true);
+
+    service.applySavedComposite({
+      id: 'c1',
+      name: 'Main',
+      nodes: [],
+      bindings: [],
+      version: 1,
+    });
+    expect(service.canUndo()).toBe(false);
+  });
 });

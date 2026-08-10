@@ -212,7 +212,7 @@ Create a Jira ticket **before** each branch:
 2. ~~**Page template library** — apply template from builder; 5 fixtures~~ — DAS-40
 3. ~~**Export wizard: single/selection modes** — UX for piecemeal export~~ — DAS-41
 4. ~~**Layout polish** — snap, resize, multi-select on canvas~~ — DAS-42
-5. **Undo/redo** — command pattern over graph mutations
+5. ~~**Undo/redo** — command pattern over graph mutations~~ — DAS-45
 6. **Pie chart + flex layout** — expand visualization and layout palette
 7. ~~**Grouping guides & animated placement hints**~~ — DAS-43
 8. ~~**Palette accordion groups** — 2–7 functional groups, default collapsed~~ — DAS-44
@@ -243,6 +243,16 @@ Functional accordion groups replace flat registry categories in the builder pale
 | **DAS-43 preserved** | Info, link, and + add affordances unchanged on expanded rows |
 
 Helpers: `resolvePaletteGroups`, `findPaletteGroupIdForType`, `validatePaletteGroupDefinitions`.
+
+### Builder undo/redo (DAS-45)
+
+Snapshot-based history stack over graph mutations in `apps/client/src/app/builder/history/`:
+
+| Behavior | Detail |
+|----------|--------|
+| **Mutations tracked** | Add/remove node, property edits, bindings, layout drag/resize (coalesced), domain context |
+| **UI** | Undo / Redo toolbar buttons; Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z (or Ctrl+Y) |
+| **Stack rules** | Redo cleared on new mutation; history reset on load/save/template apply |
 
 ---
 

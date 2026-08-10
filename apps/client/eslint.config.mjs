@@ -29,6 +29,14 @@ export default [
     },
   },
   {
+    files: ['**/*.spec.ts'],
+    rules: {
+      'playwright/no-standalone-expect': 'off',
+      'playwright/expect-expect': 'off',
+      'playwright/no-skipped-test': 'off',
+    },
+  },
+  {
     files: ['**/*.html'],
     // Override or add rules here
     rules: {},

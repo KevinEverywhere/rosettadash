@@ -108,7 +108,7 @@ dashbuilder/
 
 - **Project state** — persisted via NestJS API (in-memory MVP)
 - **Canvas state** — in-memory Angular signals in the builder client
-- **Undo/redo** — planned (Phase 6); not yet implemented
+- **Undo/redo** — DAS-45 (Phase 6); snapshot history over graph mutations
 
 ## Builder server (NestJS)
 

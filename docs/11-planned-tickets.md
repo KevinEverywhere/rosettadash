@@ -51,12 +51,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-41](https://planetkevin.atlassian.net/browse/DAS-41) | `feature/DAS-41-export-wizard-scope` | Export wizard full / single / selection scopes |
 | [DAS-42](https://planetkevin.atlassian.net/browse/DAS-42) | `feature/DAS-42-canvas-layout-polish` | Canvas snap, resize, multi-select |
 | [DAS-43](https://planetkevin.atlassian.net/browse/DAS-43) | `feature/DAS-43-component-grouping-guides` | Grouping guides + companion prompts |
+| [DAS-44](https://planetkevin.atlassian.net/browse/DAS-44) | `feature/DAS-44-palette-accordion-groups` | Palette functional accordion groups |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-44](https://planetkevin.atlassian.net/browse/DAS-44) | `feature/DAS-44-palette-accordion-groups` | In progress — palette accordion groups |
+| [DAS-45](https://planetkevin.atlassian.net/browse/DAS-45) | `feature/DAS-45-undo-redo` | In progress — builder undo/redo |
 
 ## Delivery status
 
@@ -64,7 +65,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 4 multi-target export:** complete (DAS-17–DAS-31)
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
-- **Phase 6 component & page design:** in progress (DAS-44 palette accordion active)
+- **Phase 6 component & page design:** in progress (DAS-45 undo/redo active)
 
 ## Phase 6 — planned (create Jira ticket before each)
 
@@ -74,7 +75,7 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns an
 2. ~~Page template library (analytics, CRUD, settings)~~ — DAS-40
 3. ~~Export wizard: single/selection modes~~ — DAS-41
 4. ~~Canvas layout polish (snap, resize, multi-select)~~ — DAS-42
-5. Undo/redo
+5. ~~Undo/redo~~ — DAS-45
 6. Pie chart + flex layout
 7. ~~Component grouping guides & animated placement hints~~ — DAS-43
 8. ~~Palette accordion reorganization (2–7 items per group)~~ — DAS-44

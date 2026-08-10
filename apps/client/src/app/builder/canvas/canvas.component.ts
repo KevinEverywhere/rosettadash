@@ -158,6 +158,7 @@ export class CanvasComponent {
       origins,
     };
 
+    this.state.beginLayoutHistory();
     (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
   }
 
@@ -173,7 +174,7 @@ export class CanvasComponent {
       this.state.updateNodeLayout(id, {
         x: snapToCanvasGrid(origin.x + deltaX),
         y: snapToCanvasGrid(origin.y + deltaY),
-      });
+      }, { skipHistory: true });
     }
   }
 
@@ -183,6 +184,7 @@ export class CanvasComponent {
     }
     (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
     this.dragState = null;
+    this.state.commitLayoutHistory();
   }
 
   protected onResizePointerDown(nodeId: string, event: PointerEvent): void {
@@ -207,6 +209,7 @@ export class CanvasComponent {
       startClientY: event.clientY,
     };
 
+    this.state.beginLayoutHistory();
     (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
   }
 
@@ -224,7 +227,7 @@ export class CanvasComponent {
     this.state.updateNodeLayout(resizeState.nodeId, {
       width: clampCanvasNodeWidth(resizeState.originWidth + deltaX),
       height: clampCanvasNodeHeight(Math.max(minHeight, resizeState.originHeight + deltaY)),
-    });
+    }, { skipHistory: true });
   }
 
   protected onResizePointerUp(event: PointerEvent): void {
@@ -233,15 +236,18 @@ export class CanvasComponent {
     }
     (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
     this.resizeState = null;
+    this.state.commitLayoutHistory();
   }
 
   @HostListener('document:pointerup', ['$event'])
   protected onDocumentPointerUp(event: PointerEvent): void {
     if (this.dragState?.pointerId === event.pointerId) {
       this.dragState = null;
+      this.state.commitLayoutHistory();
     }
     if (this.resizeState?.pointerId === event.pointerId) {
       this.resizeState = null;
+      this.state.commitLayoutHistory();
     }
   }
 
