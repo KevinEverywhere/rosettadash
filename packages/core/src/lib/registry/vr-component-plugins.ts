@@ -9,6 +9,9 @@ const cameraPresetOptions = [
 export const DEFAULT_GLTF_MODEL_URL =
   'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb';
 
+export const DEFAULT_GLOBE_TEXTURE_URL =
+  'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg';
+
 const sharedSceneProperties = [
   { key: 'title', label: 'Title', type: 'string' as const, default: '3D View' },
   {
@@ -128,6 +131,41 @@ export const VR_COMPONENT_PLUGINS: ComponentPlugin[] = [
         },
         { key: 'modelScale', label: 'Model scale', type: 'number', default: 1.5 },
         { key: 'showGrid', label: 'Show grid', type: 'boolean', default: true },
+      ],
+    },
+    metadata: {
+      paletteGroupId: 'vr-visuals',
+      previewKind: 'plugin',
+    },
+  },
+  {
+    id: 'display.3d-geo-globe',
+    definition: {
+      type: 'visual.display.3d-geo-globe',
+      category: 'visual',
+      label: '3D Geo Globe',
+      description: 'Orbiting globe with rowset lat/lng markers',
+      isVisual: true,
+      inputs: rowsetChartInputs,
+      outputs: [],
+      properties: [
+        ...sharedSceneProperties.map((property) =>
+          property.key === 'title'
+            ? { ...property, default: 'Geo Globe' }
+            : property.key === 'autoRotate'
+              ? { ...property, default: true }
+              : property,
+        ),
+        {
+          key: 'textureUrl',
+          label: 'Texture URL',
+          type: 'string',
+          default: DEFAULT_GLOBE_TEXTURE_URL,
+        },
+        { key: 'latField', label: 'Latitude field', type: 'string', default: 'lat' },
+        { key: 'lngField', label: 'Longitude field', type: 'string', default: 'lng' },
+        { key: 'labelField', label: 'Label field', type: 'string', default: 'name' },
+        { key: 'globeRadius', label: 'Globe radius', type: 'number', default: 2 },
       ],
     },
     metadata: {

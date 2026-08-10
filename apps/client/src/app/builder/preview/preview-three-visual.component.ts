@@ -10,8 +10,13 @@ import {
   input,
 } from '@angular/core';
 import type { ComponentNode } from '@dashbuilder/core';
-import { DEFAULT_GLTF_MODEL_URL } from '@dashbuilder/core';
-import { mapRowsToScatterPoints, resolveScatterFields } from '@dashbuilder/ui-primitives';
+import { DEFAULT_GLTF_MODEL_URL, DEFAULT_GLOBE_TEXTURE_URL } from '@dashbuilder/core';
+import {
+  mapRowsToGlobeMarkers,
+  mapRowsToScatterPoints,
+  resolveGlobeFields,
+  resolveScatterFields,
+} from '@dashbuilder/ui-primitives';
 import { PreviewDataService } from './preview-data.service';
 import {
   ThreePreviewRuntime,
@@ -40,7 +45,7 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
   );
 
   protected readonly scatterPoints = computed(() => {
-    if (this.mode() === 'gltf-model') {
+    if (this.mode() === 'gltf-model' || this.mode() === 'geo-globe') {
       return [];
     }
 
@@ -58,9 +63,34 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
     scale: this.readNumber(this.node(), 'modelScale', 1.5),
   }));
 
+  protected readonly globeMarkers = computed(() => {
+    if (this.mode() !== 'geo-globe') {
+      return [];
+    }
+
+    const slice = this.slice();
+    if (slice?.globeMarkers?.length) {
+      return slice.globeMarkers;
+    }
+
+    const tableRows = slice?.tableRows ?? this.previewData.bundle().tableRows;
+    return mapRowsToGlobeMarkers(tableRows, resolveGlobeFields(this.node().properties));
+  });
+
+  protected readonly globeConfig = computed(() => ({
+    textureUrl: this.readString(this.node(), 'textureUrl', DEFAULT_GLOBE_TEXTURE_URL),
+    radius: this.readNumber(this.node(), 'globeRadius', 2),
+  }));
+
   protected readonly linkedHint = computed(() => {
     if (this.mode() === 'gltf-model') {
       return 'GLTF model host';
+    }
+    if (this.mode() === 'geo-globe') {
+      if (this.slice()?.linkedFromTable) {
+        return 'Uses table rowset lat/lng';
+      }
+      return 'Geo globe markers';
     }
 
     if (this.slice()?.linkedFromTable) {
@@ -80,6 +110,8 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
         return 'preview-3d-scatter';
       case 'gltf-model':
         return 'preview-3d-gltf-model';
+      case 'geo-globe':
+        return 'preview-3d-geo-globe';
       default:
         return 'preview-3d-scene';
     }
@@ -92,6 +124,8 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
       this.chartPoints();
       this.scatterPoints();
       this.gltfModel();
+      this.globeMarkers();
+      this.globeConfig();
       this.syncRuntime();
     });
   }
@@ -123,14 +157,18 @@ export class PreviewThreeVisualComponent implements AfterViewInit, OnDestroy {
         cameraPreset: this.readCameraPreset(node),
         autoRotate: this.readBoolean(node, 'autoRotate', false),
         showGrid:
-          this.mode() === 'scene' || this.mode() === 'gltf-model'
-            ? this.readBoolean(node, 'showGrid', true)
-            : true,
+          this.mode() === 'geo-globe'
+            ? false
+            : this.mode() === 'scene' || this.mode() === 'gltf-model'
+              ? this.readBoolean(node, 'showGrid', true)
+              : true,
       },
       {
         points: this.chartPoints(),
         scatterPoints: this.scatterPoints(),
         gltfModel: this.mode() === 'gltf-model' ? this.gltfModel() : undefined,
+        globe: this.mode() === 'geo-globe' ? this.globeConfig() : undefined,
+        globeMarkers: this.mode() === 'geo-globe' ? this.globeMarkers() : undefined,
         mode: this.mode(),
       },
     );

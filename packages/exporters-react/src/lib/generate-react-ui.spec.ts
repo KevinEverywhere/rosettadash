@@ -487,6 +487,40 @@ describe('generateReactUiFiles', () => {
     expect(modelFile?.content).toContain('modelUrl');
   });
 
+  it('generates React three.js geo globe stub', () => {
+    const globe = registry.createNode('visual.display.3d-geo-globe', { id: 'globe1' });
+    const postgres = registry.createNode('infra.postgresql', {
+      id: 'pg1',
+      properties: { connectionEnvKey: 'DATABASE_URL', table: 'locations' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Globe Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [globe, postgres, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'pg1',
+            sourcePortId: 'rowset',
+            targetNodeId: 'globe1',
+            targetPortId: 'data',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const globeFile = files.find((file) => file.content.includes('mapGlobeMarkers'));
+    expect(globeFile?.content).toContain('GeoGlobe');
+    expect(globeFile?.content).toContain('latField');
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

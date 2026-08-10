@@ -154,6 +154,7 @@ Shipped in DAS-56:
 | `visual.display.3d-bar-chart` | three.js bars + orbit | `vr-visuals` |
 | `visual.display.3d-scatter` | three.js scatter (preview) | `vr-visuals` |
 | `visual.display.3d-gltf-model` | GLTF/GLB model host with orbit controls | `vr-visuals` |
+| `visual.display.3d-geo-globe` | Textured Earth globe + lat/lng rowset markers | `vr-visuals` |
 | `visual.display.3d-scene` | three.js orbit scene + rowset point cloud | `vr-visuals` |
 
 Recommended patterns for future VR plugins:

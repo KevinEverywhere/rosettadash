@@ -13,7 +13,7 @@ describe('VR component plugins', () => {
     }
   });
 
-  it('keeps VR palette group at four items', () => {
-    expect(VR_COMPONENT_PLUGINS).toHaveLength(4);
+  it('keeps VR palette group at five items', () => {
+    expect(VR_COMPONENT_PLUGINS).toHaveLength(5);
   });
 });

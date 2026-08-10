@@ -134,9 +134,17 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Angular three.js canvas stubs for bar chart, scatter, and scene — DAS-61
 - [x] GLTF model host preview + multi-target export stubs — DAS-62
 
+## Phase 13 — Geo globe (complete)
+
+**Ticket:** DAS-63
+
+- [x] `visual.display.3d-geo-globe` plugin with lat/lng rowset marker mapping
+- [x] Textured Earth sphere preview + orbit markers in builder
+- [x] React, Vue, Svelte, and Angular export stubs
+
 ## Future — VR / 3D expansion
 
-- Geo globes
+- (none scheduled — see backlog ideas below)
 
 ## Backlog ideas (unscheduled)
 

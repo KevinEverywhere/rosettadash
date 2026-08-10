@@ -6,7 +6,8 @@ export type ComponentPreviewTemplateId =
   | '3d-bar-chart'
   | '3d-scatter'
   | '3d-scene'
-  | '3d-gltf-model';
+  | '3d-gltf-model'
+  | '3d-geo-globe';
 
 @Injectable({ providedIn: 'root' })
 export class ComponentPreviewAdapterRegistry {
@@ -37,4 +38,5 @@ export function registerDefaultComponentPreviewAdapters(
   registry.register('visual.display.3d-scatter', '3d-scatter');
   registry.register('visual.display.3d-scene', '3d-scene');
   registry.register('visual.display.3d-gltf-model', '3d-gltf-model');
+  registry.register('visual.display.3d-geo-globe', '3d-geo-globe');
 }

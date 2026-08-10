@@ -5,6 +5,7 @@ import {
   generateThreeScatterPlot,
   generateThreeScenePointCloud,
   generateThreeGltfModel,
+  generateThreeGeoGlobe,
 } from './three-visual-templates';
 import { joinLines, selectorFromClass } from './utils';
 
@@ -24,6 +25,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-scatter',
   'visual.display.3d-scene',
   'visual.display.3d-gltf-model',
+  'visual.display.3d-geo-globe',
   'logic.timer',
 ]);
 
@@ -63,6 +65,8 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateThreeScenePointCloud(className);
     case 'visual.display.3d-gltf-model':
       return generateThreeGltfModel(className);
+    case 'visual.display.3d-geo-globe':
+      return generateThreeGeoGlobe(className);
     case 'logic.timer':
       return generateTimer(className);
     default:

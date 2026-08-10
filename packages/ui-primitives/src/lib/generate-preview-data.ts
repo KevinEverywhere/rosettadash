@@ -4,6 +4,7 @@ import type {
   PreviewScatterPoint,
   PreviewSelectOption,
 } from './preview-types';
+import { mapRowsToGlobeMarkers, resolveGlobeFields, type PreviewGlobeMarker } from './map-globe-markers';
 import { mapRowsToScatterPoints, resolveScatterFields } from './map-scatter-points';
 
 export interface PreviewBindingInput {
@@ -40,6 +41,7 @@ export interface NodePreviewSlice {
   tableRows?: PreviewRow[];
   chartPoints?: PreviewChartPoint[];
   scatterPoints?: PreviewScatterPoint[];
+  globeMarkers?: PreviewGlobeMarker[];
   dateRangeLabel?: string;
   linkedFromTable?: boolean;
   filteredByDateRange?: boolean;
@@ -326,6 +328,21 @@ export function resolvePreviewGraph(
     nodeSlices[sceneNode.id] = {
       chartPoints: rowsToChartPoints(sceneRows),
       scatterPoints: mapRowsToScatterPoints(sceneRows, resolveScatterFields(sceneNode.properties)),
+      linkedFromTable,
+    };
+  }
+
+  const globeNodes = nodes.filter((node) => node.type === 'visual.display.3d-geo-globe');
+  for (const globeNode of globeNodes) {
+    const dataBinding = findBindingSource(bindings, globeNode.id, 'data');
+    const linkedFromTable =
+      tableNodes.length > 0 &&
+      (!dataBinding || tableNodes.some((table) => table.id === dataBinding.sourceNodeId));
+
+    const globeRows = linkedFromTable ? primaryTableRows : filteredRows;
+
+    nodeSlices[globeNode.id] = {
+      globeMarkers: mapRowsToGlobeMarkers(globeRows, resolveGlobeFields(globeNode.properties)),
       linkedFromTable,
     };
   }

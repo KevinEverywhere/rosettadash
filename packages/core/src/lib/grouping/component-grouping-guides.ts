@@ -100,6 +100,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Set a model URL and scale; pair with KPI cards for spatial context.',
   },
   {
+    type: 'visual.display.3d-geo-globe',
+    summary: 'Geo globe — plot rowset lat/lng markers on an orbiting Earth sphere.',
+    animationKey: 'filter-chart',
+    companionTypes: ['visual.table', 'visual.input.date-range'],
+    placementMessage: 'Bind a table rowset and configure latitude/longitude field names.',
+  },
+  {
     type: 'visual.kpi',
     summary: 'Single metric card — typically fed by a database or table aggregate.',
     animationKey: 'data-stack',

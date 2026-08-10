@@ -93,4 +93,28 @@ describe('resolvePreviewGraph', () => {
     expect(sceneSlice?.scatterPoints?.length).toBeGreaterThan(0);
     expect(sceneSlice?.scatterPoints?.every((point) => Number.isFinite(point.x))).toBe(true);
   });
+
+  it('derives geo globe markers from table rowset', () => {
+    const globeNodes = [
+      ...nodes,
+      {
+        id: 'g1',
+        type: 'visual.display.3d-geo-globe',
+        properties: { latField: 'lat', lngField: 'lng', labelField: 'name' },
+      },
+    ];
+
+    const result = resolvePreviewGraph({
+      projectName: 'Sales',
+      compositeName: 'Overview',
+      limit: 8,
+      nodes: globeNodes,
+      bindings: [],
+    });
+
+    const globeSlice = result.nodes['g1'];
+    expect(globeSlice?.linkedFromTable).toBe(true);
+    expect(globeSlice?.globeMarkers?.length).toBeGreaterThan(0);
+    expect(globeSlice?.globeMarkers?.every((marker) => Number.isFinite(marker.lat))).toBe(true);
+  });
 });

@@ -1,14 +1,20 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { PreviewChartPoint, PreviewScatterPoint } from '@dashbuilder/ui-primitives';
+import type { PreviewChartPoint, PreviewGlobeMarker, PreviewScatterPoint } from '@dashbuilder/ui-primitives';
+import { latLngToGlobePosition } from '@dashbuilder/ui-primitives';
 
 export type ThreeCameraPreset = 'orbit' | 'front' | 'iso';
-export type ThreeVisualMode = 'bar-chart' | 'scatter' | 'scene' | 'gltf-model';
+export type ThreeVisualMode = 'bar-chart' | 'scatter' | 'scene' | 'gltf-model' | 'geo-globe';
 
 export interface ThreeGltfModelConfig {
   url: string;
   scale: number;
+}
+
+export interface ThreeGlobeConfig {
+  textureUrl: string;
+  radius: number;
 }
 
 export interface ThreePreviewOptions {
@@ -21,7 +27,9 @@ export interface ThreePreviewOptions {
 export interface ThreePreviewData {
   points: PreviewChartPoint[];
   scatterPoints?: PreviewScatterPoint[];
+  globeMarkers?: PreviewGlobeMarker[];
   gltfModel?: ThreeGltfModelConfig;
+  globe?: ThreeGlobeConfig;
   mode: ThreeVisualMode;
 }
 
@@ -38,6 +46,7 @@ export class ThreePreviewRuntime {
   private gridHelper?: THREE.GridHelper;
   private gltfLoadId = 0;
   private loadedGltfKey?: string;
+  private globeTextureLoadId = 0;
 
   mount(host: HTMLElement): void {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -64,7 +73,7 @@ export class ThreePreviewRuntime {
 
   update(options: ThreePreviewOptions, data: ThreePreviewData): void {
     this.scene.background = new THREE.Color(options.backgroundColor);
-    this.applyCameraPreset(options.cameraPreset);
+    this.applyCameraPreset(options.cameraPreset, data.mode);
 
     if (this.controls) {
       this.controls.autoRotate = options.autoRotate;
@@ -129,16 +138,17 @@ export class ThreePreviewRuntime {
     this.renderer.setSize(width, height, false);
   }
 
-  private applyCameraPreset(preset: ThreeCameraPreset): void {
+  private applyCameraPreset(preset: ThreeCameraPreset, mode: ThreeVisualMode): void {
     const positions: Record<ThreeCameraPreset, THREE.Vector3> = {
-      orbit: new THREE.Vector3(8, 6, 8),
-      front: new THREE.Vector3(0, 4, 12),
-      iso: new THREE.Vector3(10, 10, 10),
+      orbit: mode === 'geo-globe' ? new THREE.Vector3(0, 0, 7) : new THREE.Vector3(8, 6, 8),
+      front: mode === 'geo-globe' ? new THREE.Vector3(0, 0, 10) : new THREE.Vector3(0, 4, 12),
+      iso: mode === 'geo-globe' ? new THREE.Vector3(7, 7, 7) : new THREE.Vector3(10, 10, 10),
     };
 
+    const targetY = mode === 'geo-globe' ? 0 : 1.5;
     this.camera.position.copy(positions[preset]);
-    this.camera.lookAt(0, 1.5, 0);
-    this.controls?.target.set(0, 1.5, 0);
+    this.camera.lookAt(0, targetY, 0);
+    this.controls?.target.set(0, targetY, 0);
     this.controls?.update();
   }
 
@@ -146,6 +156,10 @@ export class ThreePreviewRuntime {
     if (data.mode !== 'gltf-model') {
       this.gltfLoadId += 1;
       this.loadedGltfKey = undefined;
+    }
+
+    if (data.mode !== 'geo-globe') {
+      this.globeTextureLoadId += 1;
     }
 
     this.clearContentGroup();
@@ -169,7 +183,55 @@ export class ThreePreviewRuntime {
 
     if (data.mode === 'gltf-model') {
       this.loadGltfModel(data.gltfModel);
+      return;
     }
+
+    if (data.mode === 'geo-globe') {
+      this.addGeoGlobe(data.globe, data.globeMarkers ?? []);
+    }
+  }
+
+  private addGeoGlobe(config: ThreeGlobeConfig | undefined, markers: PreviewGlobeMarker[]): void {
+    const radius = config?.radius ?? 2;
+    const geometry = new THREE.SphereGeometry(radius, 48, 48);
+    const material = new THREE.MeshStandardMaterial({ color: '#1d4ed8' });
+    const globe = new THREE.Mesh(geometry, material);
+    this.contentGroup.add(globe);
+
+    const textureUrl = config?.textureUrl?.trim();
+    if (textureUrl) {
+      const loadId = ++this.globeTextureLoadId;
+      const loader = new THREE.TextureLoader();
+      loader.load(
+        textureUrl,
+        (texture) => {
+          if (loadId !== this.globeTextureLoadId) {
+            texture.dispose();
+            return;
+          }
+          material.map = texture;
+          material.color.set('#ffffff');
+          material.needsUpdate = true;
+        },
+        undefined,
+        () => {
+          if (loadId !== this.globeTextureLoadId) {
+            return;
+          }
+        },
+      );
+    }
+
+    const markerGeometry = new THREE.SphereGeometry(0.08, 10, 10);
+    markers.forEach((marker, index) => {
+      const position = latLngToGlobePosition(marker.lat, marker.lng, radius);
+      const markerMaterial = new THREE.MeshStandardMaterial({
+        color: BAR_COLORS[index % BAR_COLORS.length],
+      });
+      const mesh = new THREE.Mesh(markerGeometry, markerMaterial);
+      mesh.position.set(position.x, position.y, position.z);
+      this.contentGroup.add(mesh);
+    });
   }
 
   private loadGltfModel(config?: ThreeGltfModelConfig): void {
