@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Composite, ExportIR, buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import {
+  Composite,
+  ExportIR,
+  builtInExporterManifest,
+  buildExportIR,
+  defaultComponentRegistry,
+} from '@dashbuilder/core';
 import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
 import { generateExpressInfraFiles } from '@dashbuilder/exporters-express';
 import { generateMongoInfraFiles } from '@dashbuilder/exporters-mongodb';
@@ -14,6 +20,9 @@ import { generateVueUiFiles } from '@dashbuilder/exporters-vue';
 
 @Injectable()
 export class ExportService {
+  /** Plugin metadata registry — see docs/16-exporter-plugin-sdk.md */
+  readonly exporterManifest = builtInExporterManifest;
+
   buildIr(composite: Composite) {
     return buildExportIR(composite, defaultComponentRegistry);
   }

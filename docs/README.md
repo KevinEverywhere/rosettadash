@@ -25,14 +25,11 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 13. [Local Development & Components](./13-local-development-and-components.md) — startup, e2e, adding components
 14. [Docker Containers](./14-docker-containers.md) — run locally with Docker Compose
 15. [Component & Page Design](./15-component-and-page-design.md) — single components, page patterns, implementation plan
+16. [Exporter Plugin SDK](./16-exporter-plugin-sdk.md) — adding UI/server/database code generators
 
 ## Active work
 
-| Ticket | Branch | Status |
-|--------|--------|--------|
-| [DAS-40](https://planetkevin.atlassian.net/browse/DAS-40) | `feature/DAS-40-page-template-library` | In progress — page template library |
-
-Completed tickets **DAS-1 through DAS-39** are listed in [Planned Tickets](./11-planned-tickets.md).
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 7 (DAS-50–DAS-54) is complete.
 
 ## Current capabilities (at a glance)
 
@@ -43,4 +40,5 @@ Completed tickets **DAS-1 through DAS-39** are listed in [Planned Tickets](./11-
 | Multi-target export (React/Angular/Vue/Svelte + 4 servers + 4 DBs) | Shipped |
 | Defaults engine, domain context, role visibility | Shipped |
 | Docker Compose local dev | Shipped |
-| Full taxonomy + page template library | Phase 6 — planned |
+| Full taxonomy + page template library | Phase 6 — complete |
+| Phase 7 production hardening | Complete (DAS-50–DAS-54) |

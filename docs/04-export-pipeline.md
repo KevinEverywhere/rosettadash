@@ -185,16 +185,13 @@ Re-exporting the same composite version with the same targets should produce equ
 
 ## Extensibility
 
-New exporter registration in `packages/exporters/manifest.ts`:
+Built-in exporter metadata lives in `@dashbuilder/core` (`packages/core/src/lib/export/exporter-manifest.ts`). See **[Exporter Plugin SDK](./16-exporter-plugin-sdk.md)** for the full contract and step-by-step guide.
+
+Register new plugins in the manifest and wire the generator in `apps/server/src/app/export/export.service.ts`:
 
 ```typescript
-export const exporterManifest: ExporterPlugin[] = [
-  reactUiExporter,
-  angularUiExporter,
-  vueUiExporter,
-  nextServerExporter,
-  // ...
-];
+import { builtInExporterManifest } from '@dashbuilder/core';
+// each entry: { id, targetKind, packageName, entryExport, ... }
 ```
 
 ## Related documents
@@ -202,3 +199,4 @@ export const exporterManifest: ExporterPlugin[] = [
 - [Architecture](./02-architecture.md)
 - [Component Model](./03-component-model.md)
 - [Technology Stack](./06-technology-stack.md)
+- [Exporter Plugin SDK](./16-exporter-plugin-sdk.md)

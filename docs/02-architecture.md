@@ -158,9 +158,12 @@ See [04-export-pipeline.md](./04-export-pipeline.md) for detail.
 
 ### Adding a UI framework
 
-1. Implement `ExporterPlugin` interface in `packages/exporters/<framework>/`
-2. Register in exporter manifest
-3. Palette and property schemas unchanged (framework-agnostic)
+1. Create `packages/exporters-<framework>/` implementing `generate*Files(ir) → GeneratedFile[]`
+2. Add descriptor to `builtInExporterManifest` in `@dashbuilder/core`
+3. Wire dispatch in `apps/server/src/app/export/export.service.ts`
+4. Palette and property schemas stay framework-agnostic
+
+See **[Exporter Plugin SDK](./16-exporter-plugin-sdk.md)** for the full checklist.
 
 ### Adding a server partner
 
@@ -195,3 +198,4 @@ Exact hosting TBD; not blocking initial development.
 - [Export Pipeline](./04-export-pipeline.md)
 - [Technology Stack](./06-technology-stack.md)
 - [Component & Page Design](./15-component-and-page-design.md)
+- [Exporter Plugin SDK](./16-exporter-plugin-sdk.md)
