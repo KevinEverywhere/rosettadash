@@ -69,7 +69,7 @@ Initial palette organization for DashBuilder. Components are grouped for palette
 | Drag handle | `interaction.drag-handle` | Reorder lists |
 | Sortable list | `interaction.sortable-list` | |
 | Drop zone | `interaction.drop-zone` | |
-| Timer | `logic.timer` | Intervals, countdown |
+| Timer | `logic.timer` | Shipped (DAS-50) |
 | Debounce | `logic.debounce` | Input throttling |
 | Animation wrapper | `interaction.animation` | Enter/exit transitions |
 | Loading skeleton | `visual.skeleton` | Shipped (DAS-49) |
@@ -122,7 +122,7 @@ Includes: text input, select, date range, data table, detail panel, KPI card, li
 
 ### P1 — Early expansion (planned)
 
-Remaining form inputs, timer. Skeleton shipped (DAS-49).
+Remaining form inputs. Timer shipped (DAS-50).
 
 ### P2 — Full catalog
 

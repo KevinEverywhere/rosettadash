@@ -44,7 +44,7 @@ export function buildExportIR(
   for (const node of composite.nodes) {
     const definition = registry.getOrThrow(node.type);
 
-    if (definition.category === 'visual' || definition.category === 'domain') {
+    if (definition.category === 'visual' || definition.category === 'domain' || definition.category === 'logic') {
       const visibilityRoles = visibilityRolesForComponent({
         id: node.id,
         type: node.type,

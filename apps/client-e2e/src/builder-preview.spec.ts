@@ -104,4 +104,16 @@ test.describe('Builder preview', () => {
     await expect(page.getByTestId('preview-table')).toBeVisible();
     await expect(page.getByTestId('preview-skeleton-loaded')).toBeVisible();
   });
+
+  test('shows timer ticks in preview', async ({ page }) => {
+    await addFromPalette(page, 'logic.timer');
+
+    await page.getByTestId('mode-preview').click();
+    await waitForPreviewData(page);
+
+    await expect(page.getByTestId('preview-timer')).toBeVisible();
+    await expect(page.getByTestId('preview-timer-elapsed')).toContainText('0 ticks');
+    await page.waitForTimeout(1100);
+    await expect(page.getByTestId('preview-timer-elapsed')).toContainText('1 ticks');
+  });
 });

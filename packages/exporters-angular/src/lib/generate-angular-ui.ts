@@ -148,6 +148,10 @@ function generateTokensScss(ir: ExportIR): string {
     `.skeleton__line--title { width: 40%; }`,
     `.skeleton__line--value { height: 1.75rem; width: 55%; }`,
     `@keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }`,
+    `.timer { display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem; border: 1px solid var(--db-border); border-radius: 0.5rem; }`,
+    `.timer__header { display: flex; align-items: center; gap: 0.5rem; }`,
+    `.timer__mode { font-size: 0.75rem; color: var(--db-muted); text-transform: capitalize; }`,
+    `.timer__value { margin: 0; font-size: 1.125rem; font-weight: 600; font-variant-numeric: tabular-nums; }`,
     `/* preset: ${ir.styles.preset} · generated for ${ir.meta.compositeName} */`,
     ``,
   ]);

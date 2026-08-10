@@ -20,6 +20,7 @@ const SUPPORTED_TYPES = new Set([
   'domain.role-gate',
   'domain.person-invite',
   'domain.role-assign',
+  'logic.timer',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -62,6 +63,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generatePersonInvite(exportName);
     case 'domain.role-assign':
       return generateRoleAssign(exportName);
+    case 'logic.timer':
+      return generateTimer(exportName);
     default:
       throw new ReactExportError(`Missing React template for ${component.type}`);
   }
@@ -838,6 +841,78 @@ function generateRoleAssign(name: string): string {
     `      <button type="button" className="button" onClick={() => onConfirm?.(roles[0]?.id ?? '')}>`,
     `        {confirmLabel}`,
     `      </button>`,
+    `    </section>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateTimer(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `import { useEffect, useState } from 'react';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  label?: string;`,
+    `  mode?: 'interval' | 'countdown';`,
+    `  intervalMs?: number;`,
+    `  durationMs?: number;`,
+    `  autoStart?: boolean;`,
+    `  value?: number;`,
+    `  onChange?: (value: number) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  label = 'Timer',`,
+    `  mode = 'interval',`,
+    `  intervalMs = 5000,`,
+    `  durationMs = 30000,`,
+    `  autoStart = true,`,
+    `  value = 0,`,
+    `  onChange,`,
+    `}: ${name}Props) {`,
+    `  const [elapsed, setElapsed] = useState(value);`,
+    `  const [remaining, setRemaining] = useState(`,
+    `    Math.max(1, Math.ceil(durationMs / 1000)),`,
+    `  );`,
+    ``,
+    `  useEffect(() => {`,
+    `    setElapsed(value);`,
+    `  }, [value]);`,
+    ``,
+    `  useEffect(() => {`,
+    `    if (!autoStart) {`,
+    `      return;`,
+    `    }`,
+    ``,
+    `    const stepMs = mode === 'countdown' ? 1000 : intervalMs;`,
+    `    const id = window.setInterval(() => {`,
+    `      setElapsed((current) => {`,
+    `        const next = current + 1;`,
+    `        onChange?.(next);`,
+    `        return next;`,
+    `      });`,
+    `      if (mode === 'countdown') {`,
+    `        setRemaining((current) => Math.max(0, current - 1));`,
+    `      }`,
+    `    }, stepMs);`,
+    ``,
+    `    return () => window.clearInterval(id);`,
+    `  }, [autoStart, intervalMs, mode, onChange]);`,
+    ``,
+    `  return (`,
+    `    <section className="timer" id={id}>`,
+    `      <div className="timer__header">`,
+    `        <span className="timer__label">{label}</span>`,
+    `        <span className="timer__mode">{mode}</span>`,
+    `      </div>`,
+    `      <p className="timer__value">`,
+    `        {mode === 'countdown' ? \`\${remaining}s remaining\` : \`\${elapsed} ticks\`}`,
+    `      </p>`,
     `    </section>`,
     `  );`,
     `}`,

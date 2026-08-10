@@ -108,9 +108,9 @@ These types are registered, previewable, and covered by exporters (visual → UI
 3. ~~`layout.flex`~~ — shipped (DAS-46)
 4. ~~`visual.detail`~~ — shipped (DAS-47)
 5. ~~`domain.time-preset`~~ — shipped (DAS-48)
-6. `visual.skeleton` — DAS-49 (in progress)
+6. ~~`visual.skeleton`~~ — shipped (DAS-49)
 
-Each should be **one Jira ticket** with registry + preview + at least React exporter + e2e hook.
+P1 component expansion from the suggested order is **complete**. Next components come from Phase 7 / P2 taxonomy (starting with `logic.timer`, DAS-50).
 
 ---
 
@@ -281,6 +281,18 @@ Bind `[table].selected-row → [detail].row`. Preview supports clickable table r
 | `visual.skeleton` | Shimmer placeholder (table/chart/kpi/card variants) | React, Angular, Vue, Svelte UI exporters |
 
 Bind `[checkbox].value → [skeleton].loading` or pair with data visuals — preview hides the skeleton once mock data finishes loading.
+
+### Phase 6 complete
+
+All planned Phase 6 tickets (DAS-39–DAS-49) are shipped. The registry now includes **27 component types** across form inputs, data display, logic/motion, charts, layout, access/onboarding, and infrastructure targets.
+
+### Timer (DAS-50)
+
+| Type | Preview | Export |
+|------|---------|--------|
+| `logic.timer` | Live interval/countdown tick display | React, Angular, Vue, Svelte UI exporters |
+
+Outputs `tick` (event) and `elapsed` (number). Pair with tables and charts for polling refresh patterns.
 
 ---
 

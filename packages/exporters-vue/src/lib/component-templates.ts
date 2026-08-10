@@ -14,6 +14,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.chart.line',
   'visual.chart.bar',
   'visual.chart.pie',
+  'logic.timer',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -44,6 +45,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateBarChart(exportName);
     case 'visual.chart.pie':
       return generatePieChart(exportName);
+    case 'logic.timer':
+      return generateTimer(exportName);
     default:
       throw new VueExportError(`Missing Vue template for ${component.type}`);
   }
@@ -524,6 +527,62 @@ function generatePieChart(name: string): string {
     `        {{ String(row[labelField] ?? row.id ?? index) }}`,
     `      </li>`,
     `    </ul>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateTimer(name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { onUnmounted, ref, watch } from 'vue';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    label?: string;`,
+    `    mode?: 'interval' | 'countdown';`,
+    `    intervalMs?: number;`,
+    `    durationMs?: number;`,
+    `    autoStart?: boolean;`,
+    `    modelValue?: number;`,
+    `  }>(),`,
+    `  { label: 'Timer', mode: 'interval', intervalMs: 5000, durationMs: 30000, autoStart: true, modelValue: 0 },`,
+    `);`,
+    `const emit = defineEmits<{ 'update:modelValue': [value: number] }>();`,
+    `const elapsed = ref(props.modelValue ?? 0);`,
+    `const remaining = ref(Math.max(1, Math.ceil((props.durationMs ?? 30000) / 1000)));`,
+    `watch(`,
+    `  () => props.modelValue,`,
+    `  (value) => {`,
+    `    elapsed.value = value ?? 0;`,
+    `  },`,
+    `);`,
+    `let handle: ReturnType<typeof setInterval> | undefined;`,
+    `if (props.autoStart) {`,
+    `  const stepMs = props.mode === 'countdown' ? 1000 : props.intervalMs;`,
+    `  handle = setInterval(() => {`,
+    `    elapsed.value += 1;`,
+    `    emit('update:modelValue', elapsed.value);`,
+    `    if (props.mode === 'countdown') {`,
+    `      remaining.value = Math.max(0, remaining.value - 1);`,
+    `    }`,
+    `  }, stepMs);`,
+    `}`,
+    `onUnmounted(() => {`,
+    `  if (handle) clearInterval(handle);`,
+    `});`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="timer" :id="id">`,
+    `    <div class="timer__header">`,
+    `      <span class="timer__label">{{ label }}</span>`,
+    `      <span class="timer__mode">{{ mode }}</span>`,
+    `    </div>`,
+    `    <p class="timer__value">`,
+    `      {{ mode === 'countdown' ? \`\${remaining}s remaining\` : \`\${elapsed} ticks\` }}`,
+    `    </p>`,
     `  </section>`,
     `</template>`,
     ``,

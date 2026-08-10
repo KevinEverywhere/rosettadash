@@ -14,6 +14,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.chart.line',
   'visual.chart.bar',
   'visual.chart.pie',
+  'logic.timer',
 ]);
 
 export function generateComponentFile(component: IRComponent, className: string): string {
@@ -44,6 +45,8 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateBarChart(className);
     case 'visual.chart.pie':
       return generatePieChart(className);
+    case 'logic.timer':
+      return generateTimer(className);
     default:
       throw new AngularExportError(`Missing Angular template for ${component.type}`);
   }
@@ -646,6 +649,67 @@ function generatePieChart(className: string): string {
     `    }`,
     `    return value >= range.start && value <= range.end;`,
     `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateTimer(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, effect, input, output, signal } from '@angular/core';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <section class="timer" [id]="id()">`,
+    `      <div class="timer__header">`,
+    `        <span class="timer__label">{{ label() }}</span>`,
+    `        <span class="timer__mode">{{ mode() }}</span>`,
+    `      </div>`,
+    `      <p class="timer__value">`,
+    `        @if (mode() === 'countdown') {`,
+    `          {{ remaining() }}s remaining`,
+    `        } @else {`,
+    `          {{ elapsed() }} ticks`,
+    `        }`,
+    `      </p>`,
+    `    </section>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  label = input('Timer');`,
+    `  mode = input<'interval' | 'countdown'>('interval');`,
+    `  intervalMs = input(5000);`,
+    `  durationMs = input(30000);`,
+    `  autoStart = input(true);`,
+    `  value = input(0);`,
+    `  valueChange = output<number>();`,
+    ``,
+    `  elapsed = signal(0);`,
+    `  remaining = signal(1);`,
+    ``,
+    `  constructor() {`,
+    `    effect((onCleanup) => {`,
+    `      this.elapsed.set(this.value());`,
+    `      this.remaining.set(Math.max(1, Math.ceil(this.durationMs() / 1000)));`,
+    `      if (!this.autoStart()) {`,
+    `        return;`,
+    `      }`,
+    `      const stepMs = this.mode() === 'countdown' ? 1000 : this.intervalMs();`,
+    `      const id = window.setInterval(() => {`,
+    `        const next = this.elapsed() + 1;`,
+    `        this.elapsed.set(next);`,
+    `        this.valueChange.emit(next);`,
+    `        if (this.mode() === 'countdown') {`,
+    `          this.remaining.update((current) => Math.max(0, current - 1));`,
+    `        }`,
+    `      }, stepMs);`,
+    `      onCleanup(() => window.clearInterval(id));`,
+    `    });`,
+    `  }`,
     `}`,
     ``,
   ]);

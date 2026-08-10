@@ -44,6 +44,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Bind the loading input to a data hook or toggle while content loads.',
   },
   {
+    type: 'logic.timer',
+    summary: 'Interval or countdown ticks — drive refresh triggers and polling loops.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.table', 'visual.kpi', 'visual.chart.line'],
+    placementMessage: 'Bind tick or elapsed outputs to refresh data-bound components.',
+  },
+  {
     type: 'visual.chart.line',
     summary: 'Time-series chart — works best with a date range and rowset data.',
     animationKey: 'filter-chart',

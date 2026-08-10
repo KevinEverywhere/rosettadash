@@ -46,6 +46,10 @@ describe('component-grouping-guides', () => {
     expect(getGroupingGuide('visual.table')?.companionTypes).toContain('visual.skeleton');
   });
 
+  it('returns a guide for timer with table companion', () => {
+    expect(getGroupingGuide('logic.timer')?.companionTypes).toContain('visual.table');
+  });
+
   it('computes snapped companion layout above the source node', () => {
     const layout = computeCompanionLayout(
       { x: 48, y: 96, width: 220, height: 72 },

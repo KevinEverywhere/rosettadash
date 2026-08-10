@@ -56,12 +56,13 @@ Forward-looking Jira ticket plan for DashBuilder.
 | [DAS-46](https://planetkevin.atlassian.net/browse/DAS-46) | `feature/DAS-46-pie-chart-flex-layout` | Pie chart + flex layout |
 | [DAS-47](https://planetkevin.atlassian.net/browse/DAS-47) | `feature/DAS-47-detail-panel` | Detail panel for table drill-down |
 | [DAS-48](https://planetkevin.atlassian.net/browse/DAS-48) | `feature/DAS-48-time-preset` | Domain time preset filter |
+| [DAS-49](https://planetkevin.atlassian.net/browse/DAS-49) | `feature/DAS-49-skeleton` | Loading skeleton visual component |
 
 ## Active work
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-49](https://planetkevin.atlassian.net/browse/DAS-49) | `feature/DAS-49-skeleton` | In progress — loading skeleton wrapper |
+| [DAS-50](https://planetkevin.atlassian.net/browse/DAS-50) | `feature/DAS-50-logic-timer` | In progress — interval/countdown timer component |
 
 ## Delivery status
 
@@ -69,11 +70,12 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 4 multi-target export:** complete (DAS-17–DAS-31)
 - **Phase 5 smart defaults & domain:** complete (DAS-32–DAS-36)
 - **Docker local containers:** complete (DAS-37)
-- **Phase 6 component & page design:** in progress (DAS-49 loading skeleton active)
+- **Phase 6 component & page design:** complete (DAS-39–DAS-49)
+- **Phase 7 production hardening:** not started
 
-## Phase 6 — planned (create Jira ticket before each)
+## Phase 6 — complete
 
-See [Component & Page Design](./15-component-and-page-design.md) for patterns and suggested order:
+See [Component & Page Design](./15-component-and-page-design.md) for patterns. All planned Phase 6 tickets shipped:
 
 1. ~~P1 form inputs (number, checkbox, textarea)~~ — DAS-39
 2. ~~Page template library (analytics, CRUD, settings)~~ — DAS-40
@@ -83,9 +85,17 @@ See [Component & Page Design](./15-component-and-page-design.md) for patterns an
 6. ~~Pie chart + flex layout~~ — DAS-46
 7. ~~Detail panel~~ — DAS-47
 8. ~~`domain.time-preset`~~ — DAS-48
-9. `visual.skeleton` — DAS-49 (in progress)
+9. ~~`visual.skeleton`~~ — DAS-49
 10. ~~Component grouping guides & animated placement hints~~ — DAS-43
 11. ~~Palette accordion reorganization (2–7 items per group)~~ — DAS-44
+
+## Phase 7 — planned (create Jira ticket before each)
+
+1. `logic.timer` — DAS-50 (in progress)
+2. Builder authentication
+3. Project versioning and diff
+4. Large composite performance
+5. Exporter plugin SDK documentation
 
 ## Future — 3D dashboards (not yet ticketed)
 

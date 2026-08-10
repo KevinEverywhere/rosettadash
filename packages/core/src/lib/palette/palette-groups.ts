@@ -22,7 +22,12 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
   {
     id: 'data-display',
     label: 'Data Display',
-    types: ['visual.table', 'visual.detail', 'visual.kpi', 'visual.skeleton'],
+    types: ['visual.table', 'visual.detail', 'visual.kpi'],
+  },
+  {
+    id: 'logic-motion',
+    label: 'Logic & Motion',
+    types: ['visual.skeleton', 'logic.timer'],
   },
   {
     id: 'charts',

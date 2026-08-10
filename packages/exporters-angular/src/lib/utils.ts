@@ -12,6 +12,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.chart.line': 'LineChart',
   'visual.chart.bar': 'BarChart',
   'visual.chart.pie': 'PieChart',
+  'logic.timer': 'Timer',
 };
 
 export function pascalCase(value: string): string {

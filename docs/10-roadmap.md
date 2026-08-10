@@ -67,24 +67,27 @@ Phased delivery plan for DashBuilder. Tickets are tracked in Jira (DAS project);
 - [x] Docker Compose profiles for dev and production-style app image
 - [x] Mandatory Jira + branch workflow documentation
 
-## Phase 6 — Component & page design (in progress)
+## Phase 6 — Component & page design (complete)
 
-**Ticket:** DAS-38 (docs and planning)
+**Tickets:** DAS-38 through DAS-49
 
-Expand from the current **21-type P0 registry** toward full taxonomy coverage and reusable **page templates** built from component groups.
+Expand from the original **21-type P0 registry** toward full taxonomy coverage and reusable **page templates** built from component groups.
 
-Planned implementation (create Jira ticket before each):
+Shipped:
 
-- P1 single components (form inputs, pie chart, flex layout, detail panel)
+- P1 single components (form inputs, pie chart, flex layout, detail panel, time preset, skeleton)
 - Page template library (analytics, CRUD, settings, onboarding variants)
 - Export wizard: single-component and selection export modes
 - Canvas UX: undo/redo, snap, resize, multi-select
-- Per-target export README improvements
+- Palette accordion groups and component grouping guides
 
 Design reference: [Component & Page Design](./15-component-and-page-design.md).
 
-## Phase 7 — Production hardening
+## Phase 7 — Production hardening (in progress)
 
+**Ticket:** DAS-50 (logic timer — first Phase 7 component)
+
+- [ ] `logic.timer` — interval/countdown ticks (DAS-50, in progress)
 - Builder authentication
 - Project versioning and diff
 - Performance: large composite handling

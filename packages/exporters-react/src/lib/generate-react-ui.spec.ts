@@ -335,6 +335,33 @@ describe('generateReactUiFiles', () => {
     expect(dashboard?.content).toContain('loading={cb1_value}');
   });
 
+  it('generates React timer component', () => {
+    const timer = registry.createNode('logic.timer', {
+      id: 'tm1',
+      properties: { mode: 'interval', intervalMs: 2000 },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Timer Dashboard',
+        version: 1,
+        exportTargets: { ui: 'react', server: 'nest' },
+        nodes: [timer, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateReactUiFiles(ir);
+    const timerFile = files.find((file) => file.path.includes('Timer.tsx'));
+    expect(timerFile?.content).toContain('timer__value');
+    expect(files.some((file) => file.path === 'src/Dashboard.tsx' && file.content.includes('Timer'))).toBe(
+      true,
+    );
+  });
+
   it('rejects non-react UI targets', () => {
     const ir = buildExportIR(
       {

@@ -23,6 +23,7 @@ describe('palette-groups', () => {
     expect(groups.map((group) => group.id)).toEqual([
       'form-inputs',
       'data-display',
+      'logic-motion',
       'charts',
       'layout',
       'access-onboarding',
@@ -34,7 +35,10 @@ describe('palette-groups', () => {
       'visual.table',
       'visual.detail',
       'visual.kpi',
+    ]);
+    expect(groups[2]?.items.map((item) => item.type)).toEqual([
       'visual.skeleton',
+      'logic.timer',
     ]);
   });
 

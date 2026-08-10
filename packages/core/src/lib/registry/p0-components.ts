@@ -155,6 +155,34 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'logic.timer',
+    category: 'logic',
+    label: 'Timer',
+    description: 'Interval or countdown ticks for polling and refresh triggers',
+    isVisual: true,
+    inputs: [],
+    outputs: [
+      { id: 'tick', name: 'tick', dataType: 'event' },
+      { id: 'elapsed', name: 'elapsed', dataType: 'number' },
+    ],
+    properties: [
+      { key: 'label', label: 'Label', type: 'string', default: 'Timer' },
+      {
+        key: 'mode',
+        label: 'Mode',
+        type: 'select',
+        default: 'interval',
+        options: [
+          { label: 'Interval', value: 'interval' },
+          { label: 'Countdown', value: 'countdown' },
+        ],
+      },
+      { key: 'intervalMs', label: 'Interval (ms)', type: 'number', default: 5000 },
+      { key: 'durationMs', label: 'Countdown duration (ms)', type: 'number', default: 30000 },
+      { key: 'autoStart', label: 'Auto start', type: 'boolean', default: true },
+    ],
+  },
+  {
     type: 'visual.kpi',
     category: 'visual',
     label: 'KPI Card',

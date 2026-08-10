@@ -14,6 +14,7 @@ const SUPPORTED_TYPES = new Set([
   'visual.chart.line',
   'visual.chart.bar',
   'visual.chart.pie',
+  'logic.timer',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -44,6 +45,8 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateBarChart();
     case 'visual.chart.pie':
       return generatePieChart();
+    case 'logic.timer':
+      return generateTimer();
     default:
       throw new SvelteExportError(`Missing Svelte template for ${component.type}`);
   }
@@ -590,6 +593,61 @@ function generatePieChart(): string {
     `      </li>`,
     `    {/each}`,
     `  </ul>`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generateTimer(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  import { onDestroy } from 'svelte';`,
+    `  let {`,
+    `    id,`,
+    `    label = 'Timer',`,
+    `    mode = 'interval' as 'interval' | 'countdown',`,
+    `    intervalMs = 5000,`,
+    `    durationMs = 30000,`,
+    `    autoStart = true,`,
+    `    value = $bindable(0),`,
+    `  }: {`,
+    `    id?: string;`,
+    `    label?: string;`,
+    `    mode?: 'interval' | 'countdown';`,
+    `    intervalMs?: number;`,
+    `    durationMs?: number;`,
+    `    autoStart?: boolean;`,
+    `    value?: number;`,
+    `  } = $props();`,
+    ``,
+    `  let elapsed = $state(value);`,
+    `  let remaining = $state(Math.max(1, Math.ceil(durationMs / 1000)));`,
+    `  let handle: ReturnType<typeof setInterval> | undefined;`,
+    ``,
+    `  if (autoStart) {`,
+    `    const stepMs = mode === 'countdown' ? 1000 : intervalMs;`,
+    `    handle = setInterval(() => {`,
+    `      elapsed += 1;`,
+    `      value = elapsed;`,
+    `      if (mode === 'countdown') {`,
+    `        remaining = Math.max(0, remaining - 1);`,
+    `      }`,
+    `    }, stepMs);`,
+    `  }`,
+    ``,
+    `  onDestroy(() => {`,
+    `    if (handle) clearInterval(handle);`,
+    `  });`,
+    `</script>`,
+    ``,
+    `<section class="timer" {id}>`,
+    `  <div class="timer__header">`,
+    `    <span class="timer__label">{label}</span>`,
+    `    <span class="timer__mode">{mode}</span>`,
+    `  </div>`,
+    `  <p class="timer__value">`,
+    `    {mode === 'countdown' ? \`\${remaining}s remaining\` : \`\${elapsed} ticks\`}`,
+    `  </p>`,
     `</section>`,
     ``,
   ]);

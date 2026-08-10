@@ -182,6 +182,23 @@
       <div class="preview-skeleton__loaded" data-testid="preview-skeleton-loaded">Content loaded</div>
     }
   }
+  @case ('logic.timer') {
+    <div class="preview-timer" data-testid="preview-timer">
+      <div class="preview-timer__header">
+        <span class="preview-field__label">{{ readString('label', 'Timer') }}</span>
+        <span class="preview-chip">{{ readString('mode', 'interval') }}</span>
+      </div>
+      @if (readString('mode', 'interval') === 'countdown') {
+        <span class="preview-timer__value" data-testid="preview-timer-remaining">
+          {{ timerRemaining() }}s remaining
+        </span>
+      } @else {
+        <span class="preview-timer__value" data-testid="preview-timer-elapsed">
+          {{ timerElapsed() }} ticks
+        </span>
+      }
+    </div>
+  }
   @case ('visual.kpi') {
     <div class="preview-kpi" data-testid="preview-kpi">
       <span class="preview-kpi__title">{{ readString('title', 'Metric') }}</span>

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
 import { PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
@@ -16,6 +16,40 @@ export class PreviewNodeComponent {
 
   private readonly previewData = inject(PreviewDataService);
   private readonly state = inject(BuilderStateService);
+
+  constructor() {
+    effect((onCleanup) => {
+      const node = this.node();
+      if (node.type !== 'logic.timer') {
+        return;
+      }
+
+      this.timerElapsed.set(0);
+      if (!this.readBoolean('autoStart', true)) {
+        this.timerRemaining.set(0);
+        return;
+      }
+
+      const mode = this.readString('mode', 'interval');
+      const previewStepMs = 1000;
+
+      if (mode === 'countdown') {
+        const totalSeconds = Math.max(1, Math.ceil(this.readNumber('durationMs', 30000) / 1000));
+        this.timerRemaining.set(totalSeconds);
+        const id = window.setInterval(() => {
+          this.timerElapsed.update((value) => value + 1);
+          this.timerRemaining.update((value) => Math.max(0, value - 1));
+        }, previewStepMs);
+        onCleanup(() => window.clearInterval(id));
+        return;
+      }
+
+      const id = window.setInterval(() => {
+        this.timerElapsed.update((value) => value + 1);
+      }, previewStepMs);
+      onCleanup(() => window.clearInterval(id));
+    });
+  }
 
   private readonly slice = computed(() =>
     this.previewData.sliceForNode(this.node().id),
@@ -43,6 +77,9 @@ export class PreviewNodeComponent {
     const count = Math.max(1, Math.min(lines, 8));
     return Array.from({ length: count }, (_, index) => index);
   });
+
+  protected readonly timerElapsed = signal(0);
+  protected readonly timerRemaining = signal(0);
 
   protected readonly timePresetOptions = [
     { id: 'last-7-days', label: PRESET_LABELS['last-7-days'] },
