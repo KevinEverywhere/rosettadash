@@ -80,6 +80,12 @@ export interface ExportTargetConfig {
   database?: 'mongodb' | 'postgresql' | 'supabase' | 'mysql';
 }
 
+export interface StackProfile {
+  ui: 'react' | 'angular' | 'vue' | 'svelte' | 'any';
+  server?: ExportTargetConfig['server'];
+  database?: ExportTargetConfig['database'];
+}
+
 export interface Composite {
   id: string;
   name: string;
@@ -96,6 +102,7 @@ export interface Project {
   id: string;
   name: string;
   description?: string;
+  stackProfile?: StackProfile;
   composites: Composite[];
   createdAt: string;
   updatedAt: string;

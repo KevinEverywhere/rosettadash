@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { Composite, CompositeDiff, CompositeVersionSummary, Project } from '@dashbuilder/core';
+import type { Composite, CompositeDiff, CompositeVersionSummary, Project, StackProfile } from '@dashbuilder/core';
 import { Observable } from 'rxjs';
 
 export interface CreateProjectBody {
   name: string;
   description?: string;
+  stackProfile?: StackProfile;
 }
 
 export type CreateCompositeBody = Omit<Composite, 'id' | 'version'> & { id?: string };

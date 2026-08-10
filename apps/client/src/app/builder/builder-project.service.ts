@@ -1,14 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import {
+  normalizeStackProfile,
+  stackProfileToExportTargets,
+  type StackProfile,
+} from '@dashbuilder/core';
 import { BuilderStateService } from './builder-state.service';
 import { ProjectsApiService } from './projects-api.service';
+import {
+  BUILDER_SESSION_KEY,
+  clearPendingStackProfile,
+  readPendingStackProfile,
+} from '../stack-setup/stack-profile-session';
 
 interface BuilderSession {
   projectId: string;
   compositeId: string;
 }
-
-const SESSION_KEY = 'dashbuilder:session';
 
 @Injectable({ providedIn: 'root' })
 export class BuilderProjectService {
@@ -79,8 +87,19 @@ export class BuilderProjectService {
   }
 
   private async createNewWorkspace(): Promise<void> {
+    const pendingStack = readPendingStackProfile();
+    const stackProfile: StackProfile = normalizeStackProfile(pendingStack ?? { ui: 'any' }) ?? {
+      ui: 'any',
+    };
+    clearPendingStackProfile();
+
+    const exportTargets = stackProfileToExportTargets(stackProfile);
+
     const project = await firstValueFrom(
-      this.api.createProject({ name: 'Untitled Dashboard' }),
+      this.api.createProject({
+        name: 'Untitled Dashboard',
+        stackProfile,
+      }),
     );
 
     const composite = await firstValueFrom(
@@ -88,6 +107,7 @@ export class BuilderProjectService {
         name: 'Main',
         nodes: [],
         bindings: [],
+        ...(exportTargets ? { exportTargets } : {}),
       }),
     );
 
@@ -97,7 +117,7 @@ export class BuilderProjectService {
   }
 
   private readSession(): BuilderSession | null {
-    const raw = sessionStorage.getItem(SESSION_KEY);
+    const raw = sessionStorage.getItem(BUILDER_SESSION_KEY);
     if (!raw) {
       return null;
     }
@@ -109,7 +129,7 @@ export class BuilderProjectService {
   }
 
   private writeSession(session: BuilderSession): void {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    sessionStorage.setItem(BUILDER_SESSION_KEY, JSON.stringify(session));
   }
 
   private toMessage(error: unknown): string {

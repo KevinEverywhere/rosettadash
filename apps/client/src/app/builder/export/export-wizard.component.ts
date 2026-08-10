@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, effect, inject, input, output, signal } from '@angular/core';
 import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
-import { resolveExportComposite } from '@dashbuilder/core';
+import { resolveEffectiveExportTargets, resolveExportComposite } from '@dashbuilder/core';
 import { firstValueFrom } from 'rxjs';
 import { BuilderStateService } from '../builder-state.service';
 import {
@@ -105,6 +105,7 @@ export class ExportWizardComponent {
   constructor() {
     effect(() => {
       if (this.open()) {
+        this.seedTargetsFromState();
         void this.refreshPreview();
       }
     });
@@ -217,6 +218,16 @@ export class ExportWizardComponent {
     const server = current?.ir.targets.server ?? this.serverTarget();
     const database = current?.ir.targets.database ?? this.databaseTarget();
     return `${ui} UI + ${server} + ${database}`;
+  }
+
+  private seedTargetsFromState(): void {
+    const project = this.state.project();
+    const composite = this.state.composite();
+    const targets = resolveEffectiveExportTargets(composite?.exportTargets, project?.stackProfile);
+
+    this.uiTarget.set(targets.ui);
+    this.serverTarget.set(targets.server);
+    this.databaseTarget.set(targets.database);
   }
 
   private buildExportComposite(): Composite {

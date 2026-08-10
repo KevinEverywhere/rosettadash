@@ -72,7 +72,18 @@ export async function selectCanvasNodeHeader(
 export async function openBuilder(page: Page): Promise<void> {
   await page.goto('/');
   await page.evaluate(() => sessionStorage.clear());
+  await page.goto('/builder');
+  await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
+  await expect(page.getByTestId('builder-shell')).toBeVisible();
+  await expect(page.getByTestId('palette')).toBeVisible({ timeout: 30_000 });
+}
+
+export async function openBuilderViaStackSetup(page: Page): Promise<void> {
+  await page.goto('/');
+  await page.evaluate(() => sessionStorage.clear());
   await page.reload();
+  await expect(page.getByTestId('stack-setup')).toBeVisible();
+  await page.getByTestId('stack-setup-continue').click();
   await expect(page.getByTestId('builder-loading')).toBeHidden({ timeout: 120_000 });
   await expect(page.getByTestId('builder-shell')).toBeVisible();
   await expect(page.getByTestId('palette')).toBeVisible({ timeout: 30_000 });

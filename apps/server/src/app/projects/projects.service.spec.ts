@@ -14,6 +14,24 @@ describe('ProjectsService', () => {
     expect(service.listProjects()).toHaveLength(1);
   });
 
+  it('persists and normalizes stack profile on create', () => {
+    const concrete = service.createProject({
+      name: 'React stack',
+      stackProfile: { ui: 'react', server: 'next', database: 'postgresql' },
+    });
+    expect(concrete.stackProfile).toEqual({
+      ui: 'react',
+      server: 'next',
+      database: 'postgresql',
+    });
+
+    const scratch = service.createProject({
+      name: 'Scratch pad',
+      stackProfile: { ui: 'any', server: 'nest', database: 'mongodb' },
+    });
+    expect(scratch.stackProfile).toEqual({ ui: 'any' });
+  });
+
   it('creates a valid composite', () => {
     const project = service.createProject({ name: 'Test' });
     const node = defaultComponentRegistry.createNode('visual.input.text', { id: 'n1' });

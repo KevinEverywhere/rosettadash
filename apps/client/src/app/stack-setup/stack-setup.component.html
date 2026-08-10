@@ -1,0 +1,87 @@
+<main class="stack-setup" data-testid="stack-setup">
+  <section class="stack-setup__panel">
+    <header class="stack-setup__header">
+      <h1>Choose your stack</h1>
+      <p>
+        Pick a UI framework first. We will suggest compatible server and database partners — or
+        choose <strong>Any</strong> to use DashBuilder as a scratch pad.
+      </p>
+    </header>
+
+    <section class="stack-setup__section" aria-labelledby="stack-ui-heading">
+      <h2 id="stack-ui-heading">UI framework</h2>
+      <ul class="stack-setup__options">
+        @for (option of uiOptions; track option.id) {
+          <li>
+            <button
+              type="button"
+              class="stack-setup__option"
+              [class.stack-setup__option--selected]="uiChoice() === option.id"
+              [attr.data-testid]="'stack-ui-' + option.id"
+              (click)="selectUi(option.id)"
+            >
+              <span class="stack-setup__option-label">{{ option.label }}</span>
+              <span class="stack-setup__option-desc">{{ option.description }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+
+    @if (!isScratchPad()) {
+      <section class="stack-setup__section" aria-labelledby="stack-server-heading">
+        <h2 id="stack-server-heading">Server partner</h2>
+        <ul class="stack-setup__chip-row">
+          @for (option of serverOptions; track option.id) {
+            <li>
+              <button
+                type="button"
+                class="stack-setup__chip"
+                [class.stack-setup__chip--selected]="serverChoice() === option.id"
+                [attr.data-testid]="'stack-server-' + option.id"
+                (click)="selectServer(option.id)"
+              >
+                {{ option.label }}
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section class="stack-setup__section" aria-labelledby="stack-database-heading">
+        <h2 id="stack-database-heading">Database</h2>
+        <ul class="stack-setup__chip-row">
+          @for (option of databaseOptions; track option.id) {
+            <li>
+              <button
+                type="button"
+                class="stack-setup__chip"
+                [class.stack-setup__chip--selected]="databaseChoice() === option.id"
+                [attr.data-testid]="'stack-database-' + option.id"
+                (click)="selectDatabase(option.id)"
+              >
+                {{ option.label }}
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    } @else {
+      <p class="stack-setup__scratch-note" data-testid="stack-scratch-note">
+        Scratch-pad mode keeps all export targets available in the builder. You can export to any
+        supported combination later.
+      </p>
+    }
+
+    <footer class="stack-setup__footer">
+      <button
+        type="button"
+        class="stack-setup__continue"
+        data-testid="stack-setup-continue"
+        (click)="continueToBuilder()"
+      >
+        Continue to builder
+      </button>
+    </footer>
+  </section>
+</main>

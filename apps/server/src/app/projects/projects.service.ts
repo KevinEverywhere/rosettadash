@@ -5,20 +5,24 @@ import {
   CompositeRevision,
   CompositeVersionSummary,
   Project,
+  StackProfile,
   ValidationIssue,
   defaultComponentRegistry,
   diffComposite,
+  normalizeStackProfile,
   validateComposite,
 } from '@dashbuilder/core';
 
 export interface CreateProjectInput {
   name: string;
   description?: string;
+  stackProfile?: StackProfile;
 }
 
 export interface UpdateProjectInput {
   name?: string;
   description?: string;
+  stackProfile?: StackProfile;
 }
 
 export type CreateCompositeInput = Omit<Composite, 'id' | 'version'> & {
@@ -57,6 +61,7 @@ export class ProjectsService {
       id: crypto.randomUUID(),
       name: input.name.trim(),
       description: input.description?.trim(),
+      stackProfile: normalizeStackProfile(input.stackProfile),
       composites: [],
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -72,6 +77,10 @@ export class ProjectsService {
       name: input.name?.trim() ?? project.name,
       description:
         input.description !== undefined ? input.description.trim() : project.description,
+      stackProfile:
+        input.stackProfile !== undefined
+          ? normalizeStackProfile(input.stackProfile)
+          : project.stackProfile,
       updatedAt: new Date().toISOString(),
     };
     this.projects.set(id, updated);
