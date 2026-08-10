@@ -170,6 +170,9 @@
             </button>
           </header>
           <p class="canvas__placement-message">{{ prompt.message }}</p>
+          @if (promptHasInstructionSteps(prompt)) {
+            <p class="grouping-instruction__outcome">{{ promptOutcome(prompt) }}</p>
+          }
           <div
             class="grouping-animation"
             [class]="'grouping-animation grouping-animation--' + prompt.animationKey"
@@ -179,6 +182,23 @@
             }
           </div>
           <p class="grouping-animation__label">{{ promptAnimationLabel(prompt) }}</p>
+          @if (promptHasInstructionSteps(prompt)) {
+            <p class="grouping-instruction__step-count">{{ promptSteps(prompt).length }} steps</p>
+            <ol class="grouping-instruction__steps">
+              @for (step of promptSteps(prompt); track step.order) {
+                <li
+                  [class]="'grouping-instruction__step ' + instructionStepClass(step)"
+                  [attr.data-testid]="'canvas-instruction-step-' + prompt.sourceType + '-' + step.order"
+                >
+                  <span class="grouping-instruction__step-order">{{ step.order }}</span>
+                  <div class="grouping-instruction__step-body">
+                    <p class="grouping-instruction__step-title">{{ step.title }}</p>
+                    <p class="grouping-instruction__step-text">{{ step.body }}</p>
+                  </div>
+                </li>
+              }
+            </ol>
+          }
           <ul class="canvas__placement-actions">
             @for (companion of prompt.companions; track companion.type) {
               <li>

@@ -3,8 +3,12 @@ import {
   ComponentDefinition,
   defaultComponentRegistry,
   getGroupingGuide,
+  getInstructionSteps,
   groupingAnimationLabel,
+  hasInstructionGuide,
+  resolveGroupingAnimationBlocks,
   resolvePaletteGroups,
+  type InstructionStep,
   type ResolvedPaletteGroup,
 } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
@@ -85,6 +89,22 @@ export class PaletteComponent {
     return key ? groupingAnimationLabel(key) : '';
   }
 
+  protected hasInstructionSteps(type: string): boolean {
+    return hasInstructionGuide(type);
+  }
+
+  protected guideOutcome(type: string): string {
+    return getGroupingGuide(type)?.outcomeSummary ?? '';
+  }
+
+  protected guideSteps(type: string): InstructionStep[] {
+    return getInstructionSteps(type);
+  }
+
+  protected instructionStepClass(step: InstructionStep): string {
+    return step.highlight ? `grouping-instruction__step--${step.highlight}` : '';
+  }
+
   protected guideCompanions(type: string): ComponentDefinition[] {
     const guide = getGroupingGuide(type);
     if (!guide) {
@@ -121,22 +141,7 @@ export class PaletteComponent {
   }
 
   protected animationBlocks(type: string): string[] {
-    const key = getGroupingGuide(type)?.animationKey;
-    switch (key) {
-      case 'filter-table':
-        return ['Date Range', 'Data Table'];
-      case 'filter-chart':
-        return ['Date Range', 'Chart'];
-      case 'data-stack':
-        return ['Database', 'Server', 'Table'];
-      case 'form-row':
-        return ['Text Input', 'Checkbox'];
-      case 'access-flow':
-        return ['Role Gate', 'Role Assign', 'Invite'];
-      case 'server-data':
-        return ['NestJS Server', 'PostgreSQL', 'Table'];
-      default:
-        return ['Component', 'Companion'];
-    }
+    const guide = getGroupingGuide(type);
+    return guide ? resolveGroupingAnimationBlocks(guide) : ['Component', 'Companion'];
   }
 }

@@ -6,6 +6,12 @@ import type {
   ResolvedCompanionLayout,
 } from './types';
 import type { NodeLayout } from '../model/types';
+import {
+  INSTRUCTION_GUIDE_TYPES,
+  getInstructionSteps,
+  hasInstructionGuide,
+  mergeInstructionGuide,
+} from './component-instruction-guides';
 
 const GROUPING_GUIDES: ComponentGroupingGuide[] = [
   {
@@ -233,7 +239,42 @@ const FORM_INPUT_TYPES = new Set([
 ]);
 
 export function getGroupingGuide(type: string): ComponentGroupingGuide | undefined {
-  return guideByType.get(type);
+  const guide = guideByType.get(type);
+  if (!guide) {
+    return undefined;
+  }
+  return mergeInstructionGuide(guide);
+}
+
+export function listInstructionGuides(): ComponentGroupingGuide[] {
+  return INSTRUCTION_GUIDE_TYPES.map((type) => getGroupingGuide(type)).filter(
+    (guide): guide is ComponentGroupingGuide => guide !== undefined,
+  );
+}
+
+export { getInstructionSteps, hasInstructionGuide };
+
+export function resolveGroupingAnimationBlocks(guide: ComponentGroupingGuide): string[] {
+  if (guide.animationBlocks?.length) {
+    return guide.animationBlocks;
+  }
+
+  switch (guide.animationKey) {
+    case 'filter-table':
+      return ['Date Range', 'Data Table'];
+    case 'filter-chart':
+      return ['Date Range', 'Chart'];
+    case 'data-stack':
+      return ['Database', 'Server', 'Table'];
+    case 'form-row':
+      return ['Text Input', 'Checkbox'];
+    case 'access-flow':
+      return ['Role Gate', 'Role Assign', 'Invite'];
+    case 'server-data':
+      return ['NestJS Server', 'PostgreSQL', 'Table'];
+    default:
+      return ['Component', 'Companion'];
+  }
 }
 
 export function listGroupingGuides(): ComponentGroupingGuide[] {

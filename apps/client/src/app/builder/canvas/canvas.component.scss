@@ -7,6 +7,7 @@
 }
 
 @import '../grouping/grouping-animation.scss';
+@import '../grouping/grouping-instruction.scss';
 
 .canvas__header {
   display: flex;
@@ -288,7 +289,9 @@
 .canvas__placement-prompt {
   position: absolute;
   z-index: 2;
-  width: 14rem;
+  width: 17rem;
+  max-height: min(28rem, calc(100% - 2rem));
+  overflow-y: auto;
   padding: 0.625rem;
   border: 1px solid var(--db-accent);
   border-radius: 0.5rem;

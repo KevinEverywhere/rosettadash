@@ -167,13 +167,40 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - [x] Toolbar toggles and compact toolbar simplification
 - [x] Custom app-select dropdowns (iOS-safe overlays)
 
-## Phase 17 — Welcome onboarding UX (in progress)
+## Phase 17 — Welcome onboarding UX (complete)
 
 **Ticket:** DAS-68
 
 - [x] Empty initial stack — all sections collapsed, no pre-selected labels
 - [x] Gated continue until UI framework chosen
 - [x] Returning-user stack hydration and change confirmations
+
+## Phase 18 — Builder creation assistance (in progress)
+
+**Ticket:** [DAS-69](https://planetkevin.atlassian.net/browse/DAS-69) — animated guides for 10 common components
+
+- [ ] Multi-step animated instructions with text (extends DAS-43)
+- [ ] Ten high-frequency component guides in core registry
+- [ ] Upgraded palette info panels and canvas placement prompts
+- [ ] See [Builder Creation Assistance](./21-builder-creation-assistance.md)
+
+## Phase 19 — BYOK key management (planned)
+
+Users bring their own AI provider API keys. DashBuilder stores keys client-side only, never on the server or in exports.
+
+- [ ] Provider manifest (OpenAI, Anthropic, Google, Azure OpenAI, Ollama)
+- [ ] Encrypted session/local key storage
+- [ ] Settings UI with test connection
+- [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
+
+## Phase 20 — AI-assisted component creation (planned)
+
+Natural-language help for adding components, bindings, and templates — powered by Phase 19 BYOK.
+
+- [ ] AI assistant drawer in builder
+- [ ] Structured action responses applied through builder history
+- [ ] Integrates with grouping guides and stack profile context
+- [ ] See [AI & BYOK Integration](./20-ai-and-byok-integration.md)
 
 ## Future — VR / 3D expansion
 
@@ -188,6 +215,7 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 - Custom component SDK for third-party palette plugins
 - ~~Framework-first project stack entry screen~~ — DAS-57 (complete)
 - ~~Welcome page with stack selection above builder~~ — DAS-59 (complete)
+- ~~BYOK + AI-assisted builder~~ — Phases 19–20 (planned; see [AI & BYOK Integration](./20-ai-and-byok-integration.md))
 
 ## Ticket creation guidance
 

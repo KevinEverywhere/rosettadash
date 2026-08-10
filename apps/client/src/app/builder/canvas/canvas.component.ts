@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, computed, inject, signal } from '@angular/core';
-import { Binding, ComponentNode, PlacementPrompt, groupingAnimationLabel } from '@dashbuilder/core';
+import { Binding, ComponentNode, PlacementPrompt, getGroupingGuide, getInstructionSteps, groupingAnimationLabel, hasInstructionGuide, resolveGroupingAnimationBlocks, type InstructionStep } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import {
   CANVAS_MIN_NODE_HEIGHT,
@@ -115,22 +115,24 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   protected promptAnimationBlocks(prompt: PlacementPrompt): string[] {
-    switch (prompt.animationKey) {
-      case 'filter-table':
-        return ['Date Range', 'Data Table'];
-      case 'filter-chart':
-        return ['Date Range', 'Chart'];
-      case 'data-stack':
-        return ['Database', 'Server', 'Table'];
-      case 'form-row':
-        return ['Text Input', 'Checkbox'];
-      case 'access-flow':
-        return ['Role Gate', 'Role Assign', 'Invite'];
-      case 'server-data':
-        return ['NestJS Server', 'PostgreSQL', 'Table'];
-      default:
-        return ['Component', 'Companion'];
-    }
+    const guide = getGroupingGuide(prompt.sourceType);
+    return guide ? resolveGroupingAnimationBlocks(guide) : ['Component', 'Companion'];
+  }
+
+  protected promptHasInstructionSteps(prompt: PlacementPrompt): boolean {
+    return hasInstructionGuide(prompt.sourceType);
+  }
+
+  protected promptOutcome(prompt: PlacementPrompt): string {
+    return getGroupingGuide(prompt.sourceType)?.outcomeSummary ?? '';
+  }
+
+  protected promptSteps(prompt: PlacementPrompt): InstructionStep[] {
+    return getInstructionSteps(prompt.sourceType);
+  }
+
+  protected instructionStepClass(step: InstructionStep): string {
+    return step.highlight ? `grouping-instruction__step--${step.highlight}` : '';
   }
 
   protected promptLeft(prompt: PlacementPrompt): number {

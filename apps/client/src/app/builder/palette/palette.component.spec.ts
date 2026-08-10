@@ -47,5 +47,8 @@ describe('PaletteComponent', () => {
     infoButton.click();
     fixture.detectChanges();
     expect(element.querySelector('[data-testid="palette-guide-info-visual.table"]')).toBeTruthy();
+    expect(element.querySelector('[data-testid="palette-instruction-step-visual.table-1"]')).toBeTruthy();
+    expect(element.textContent).toContain('5 steps');
+    expect(element.textContent).toContain('Add a table');
   });
 });

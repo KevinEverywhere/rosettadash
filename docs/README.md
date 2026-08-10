@@ -28,10 +28,12 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 16. [Exporter Plugin SDK](./16-exporter-plugin-sdk.md) — adding UI/server/database code generators
 17. [Component Plugin SDK](./17-component-plugin-sdk.md) — registering custom palette and preview components
 18. [Display Availability](./19-display-availability.md) — phone/tablet/desktop tiers and builder gating
+19. [AI & BYOK Integration](./20-ai-and-byok-integration.md) — BYOK key management and AI-assisted creation (Phases 19–20)
+20. [Builder Creation Assistance](./21-builder-creation-assistance.md) — animated guides for common components (Phase 18, DAS-69)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 17 (DAS-68) is in progress.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 18 (DAS-69) is in progress.
 
 ## Current capabilities (at a glance)
 
@@ -43,7 +45,9 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. Phase 17 (DA
 | Defaults engine, domain context, role visibility | Shipped |
 | Display availability gate (phone / tablet portrait) | Shipped (DAS-66) |
 | Compact builder layout (tablet / small desktop) | Shipped (DAS-67) |
-| Welcome onboarding UX (empty stack, confirmations) | DAS-68 — in progress |
+| Welcome onboarding UX (empty stack, confirmations) | Shipped (DAS-68) |
+| Builder creation assistance (animated guides) | DAS-69 — in progress |
+| BYOK + AI-assisted component creation | Phases 19–20 — planned |
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |
 | Phase 7 production hardening | Complete (DAS-50–DAS-54) |

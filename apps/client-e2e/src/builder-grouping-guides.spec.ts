@@ -10,9 +10,12 @@ test.describe('Builder grouping guides', () => {
     await openPaletteInfo(page, 'visual.table');
     await expect(page.getByTestId('palette-guide-info-visual.table')).toBeVisible();
     await expect(page.getByTestId('palette-guide-info-visual.table')).toContainText('Tabular data view');
+    await expect(page.getByTestId('palette-instruction-step-visual.table-1')).toBeVisible();
+    await expect(page.getByTestId('palette-guide-info-visual.table')).toContainText('5 steps');
 
     await addFromPalette(page, 'visual.table');
     await expect(page.getByTestId('canvas-placement-prompt')).toBeVisible();
+    await expect(page.getByTestId('canvas-instruction-step-visual.table-1')).toBeVisible();
     await expect(page.getByTestId('canvas-placement-add-visual.input.date-range')).toBeVisible();
 
     await page.getByTestId('canvas-placement-add-visual.input.date-range').click();

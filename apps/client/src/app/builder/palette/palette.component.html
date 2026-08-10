@@ -86,6 +86,9 @@
                   [attr.data-testid]="'palette-guide-info-' + item.type"
                 >
                   <p class="palette__guide-summary">{{ guideSummary(item.type) }}</p>
+                  @if (hasInstructionSteps(item.type)) {
+                    <p class="grouping-instruction__outcome">{{ guideOutcome(item.type) }}</p>
+                  }
                   <div
                     class="grouping-animation"
                     [class]="'grouping-animation grouping-animation--' + guideAnimationKey(item.type)"
@@ -95,6 +98,25 @@
                     }
                   </div>
                   <p class="grouping-animation__label">{{ guideAnimationLabel(item.type) }}</p>
+                  @if (hasInstructionSteps(item.type)) {
+                    <p class="grouping-instruction__step-count">
+                      {{ guideSteps(item.type).length }} steps
+                    </p>
+                    <ol class="grouping-instruction__steps">
+                      @for (step of guideSteps(item.type); track step.order) {
+                        <li
+                          [class]="'grouping-instruction__step ' + instructionStepClass(step)"
+                          [attr.data-testid]="'palette-instruction-step-' + item.type + '-' + step.order"
+                        >
+                          <span class="grouping-instruction__step-order">{{ step.order }}</span>
+                          <div class="grouping-instruction__step-body">
+                            <p class="grouping-instruction__step-title">{{ step.title }}</p>
+                            <p class="grouping-instruction__step-text">{{ step.body }}</p>
+                          </div>
+                        </li>
+                      }
+                    </ol>
+                  }
                 </div>
               }
 
