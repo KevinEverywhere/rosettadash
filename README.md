@@ -228,8 +228,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-83](https://planetkevin.atlassian.net/browse/DAS-83)** — Web Components runtime package — media/WASM equirect extract (Phase 2)  
-Branch: `feature/DAS-83-web-components-runtime`
+**[DAS-84](https://planetkevin.atlassian.net/browse/DAS-84)** — Encode standalone-first export DNA — default WC export to standalone  
+Branch: `feature/DAS-84-standalone-first-export-dna`
 
 ## License
 

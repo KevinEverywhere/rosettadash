@@ -146,6 +146,36 @@ describe('generateWebComponentsUiFiles', () => {
     expect(() => generateWebComponentsUiFiles(ir)).toThrow(/cannot generate UI target "react"/);
   });
 
+  it('defaults to standalone equirect pipeline (no runtime package imports)', () => {
+    const video = registry.createNode('visual.media.video-source', { id: 'vs1' });
+    const viewport = registry.createNode('visual.media.equirect-viewport', { id: 'ev1' });
+    const media = registry.createNode('visual.wasm.media', {
+      id: 'wm1',
+      properties: { operation: 'equirect-extract', extractionMode: 'flat-crop' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Equirect Export',
+        version: 1,
+        exportTargets: { ui: 'web-components', server: 'nest' },
+        nodes: [video, viewport, media, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateWebComponentsUiFiles(ir);
+    expect(files.some((file) => file.path === 'package.json.fragment.json')).toBe(false);
+    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(3);
+    const register = files.find((file) => file.path === 'src/register.ts');
+    expect(register?.content).not.toContain('@dashbuilder/web-components');
+    const readme = files.find((file) => file.path === 'README.export.md');
+    expect(readme?.content).toContain('Standalone export');
+  });
+
   it('generates package-mode equirect pipeline with runtime imports', () => {
     const video = registry.createNode('visual.media.video-source', { id: 'vs1' });
     const viewport = registry.createNode('visual.media.equirect-viewport', { id: 'ev1' });

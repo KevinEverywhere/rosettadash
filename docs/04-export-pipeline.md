@@ -55,6 +55,17 @@ interface ExportIR {
 
 IR is the **only input** to code generators.
 
+### Standalone-first (product DNA)
+
+**Default exports are standalone:** complete source in the zip, no `@dashbuilder/*` runtime packages required. See **[Standalone-first export](./32-standalone-first-export.md)**.
+
+| Mode | Behavior | When |
+|------|----------|------|
+| **Standalone** (default) | Inlines all component source into the export tree | Every developer export |
+| **Package** (opt-in) | Imports `@dashbuilder/web-components` etc. | Dogfooding / maintainers only; `exportMode: 'package'` |
+
+New component groups must ship standalone generation and tests **before** optional runtime package integration.
+
 ### 4. Generate
 
 Parallel invocation of registered exporters:

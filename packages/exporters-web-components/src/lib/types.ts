@@ -7,7 +7,7 @@ export interface GeneratedFile {
 
 export interface WebComponentsExportOptions {
   rootDir?: string;
-  /** `package` imports @dashbuilder/web-components runtime; `standalone` inlines source (default: package). */
+  /** `standalone` inlines full source (default). `package` imports @dashbuilder/web-components — opt-in, for dogfooding only. */
   exportMode?: 'standalone' | 'package';
 }
 

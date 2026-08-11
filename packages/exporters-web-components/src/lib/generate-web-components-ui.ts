@@ -20,7 +20,7 @@ export function generateWebComponentsUiFiles(
     );
   }
 
-  const exportMode = options.exportMode ?? 'package';
+  const exportMode = options.exportMode ?? 'standalone';
   const root = options.rootDir ?? 'src';
   const usedNames = new Set<string>();
   const exportNames = new Map<string, string>();
@@ -243,7 +243,7 @@ function generateDashboardFile(
   ]);
 }
 
-function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'package'): string {
+function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'standalone'): string {
   const envLines =
     ir.envVars.length === 0
       ? ['No environment variables required for the UI fragment.']
@@ -253,19 +253,25 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'pa
     exportMode === 'package'
       ? [
           '',
-          '## Runtime package mode',
+          '## Runtime package mode (opt-in)',
           '',
           'This export imports `@dashbuilder/web-components` for media/WASM elements.',
+          '**Default DashBuilder exports are standalone** — see docs/32-standalone-first-export.md.',
           '',
           '```bash',
           'npm install @dashbuilder/web-components @dashbuilder/core',
           'npm install @ffmpeg/ffmpeg @ffmpeg/util   # equirect extract only',
           '```',
           '',
-          'For local DashBuilder development, link the monorepo packages into your app (e.g. FFMP3 Console).',
-          '',
         ]
-      : [];
+      : [
+          '',
+          '## Standalone export',
+          '',
+          'All component source is included in this zip. No `@dashbuilder/*` runtime packages are required.',
+          'Install only the third-party deps noted below (e.g. `@ffmpeg/ffmpeg` for equirect extract).',
+          '',
+        ];
 
   return joinLines([
     `# ${ir.meta.compositeName} — Web Components Export`,

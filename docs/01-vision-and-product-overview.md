@@ -16,7 +16,11 @@ DashBuilder is a **component factory with a visual composer**:
 2. They configure each piece and drag them together on a canvas.
 3. They attach **invisible infrastructure nodes**—database connections, server framework choices, environment variables—that define how exported code runs.
 4. DashBuilder suggests practical defaults (chart type for time-series data, pagination for large tables, role-gated routes) that users can accept or override.
-5. The tool exports **single components or composite groups** as real source files: templates, styles, scripts, and config stubs.
+5. The tool exports **single components or composite groups** as real source files: templates, styles, scripts, and config stubs — **standalone**, with no required DashBuilder runtime dependency (see [Standalone-first export](./32-standalone-first-export.md)).
+
+## Export philosophy
+
+**Standalone for developers first.** Exports are complete source trees developers own. Optional importable packages (`@dashbuilder/web-components`, etc.) are a follow-on product family for maintainers and advanced integrators — never the default export path.
 
 ## Target users
 

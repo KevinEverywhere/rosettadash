@@ -23,7 +23,7 @@ export interface DashboardContext {
 export function buildDashboardContext(
   ir: ExportIR,
   exportNames: Map<string, string>,
-  exportMode: 'standalone' | 'package' = 'package',
+  exportMode: 'standalone' | 'package' = 'standalone',
 ): DashboardContext {
   const dataSourceIds = new Set(ir.dataSources.map((source) => source.id));
   const stateBySource = new Map<string, { varName: string; dataType: string }>();

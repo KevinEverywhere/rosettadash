@@ -1,8 +1,17 @@
 # FFMP3 Console integration (DAS-83)
 
-Link DashBuilder runtime custom elements into [FFMP3 Console](/Volumes/Three/apps/ffmp3Console) for equirect subsection export.
+Optional **package-mode** linking for dogfooding DashBuilder media/WASM components in [FFMP3 Console](/Volumes/Three/apps/ffmp3Console).
 
-## Packages
+> **Standalone-first:** Developer exports from DashBuilder are **standalone by default** — full source in the zip, no `@dashbuilder/*` deps. This doc is for maintainers integrating the runtime package while proving composites in FFMP3. See [Standalone-first export](./32-standalone-first-export.md).
+
+## When to use this doc
+
+| Goal | Path |
+|------|------|
+| Ship code to another developer | Export from DashBuilder (standalone zip) |
+| Iterate media/WASM in FFMP3 without re-exporting every change | `npm link` `@dashbuilder/web-components` (package mode) |
+
+## Packages (opt-in runtime family)
 
 | Import | Elements |
 |--------|----------|
@@ -19,7 +28,7 @@ cd packages/web-components && npm link
 cd ../core && npm link
 ```
 
-From FFMP3 Console (read-only integration — do not modify FFMP3 in this ticket unless explicitly requested):
+From FFMP3 Console:
 
 ```bash
 npm link @dashbuilder/web-components @dashbuilder/core
@@ -66,10 +75,10 @@ npm install @ffmpeg/ffmpeg @ffmpeg/util
 
 Set `preview-mode="rectilinear"` on `<db-equirect-viewport>` and `yaw`, `pitch`, `horizontal-fov` attributes. WASM media `extraction-mode="rectilinear"` uses the matching v360 filter.
 
-## Export from DashBuilder
+## Package-mode export (opt-in)
 
-Web Components export defaults to **package mode** — generated `register.ts` imports `@dashbuilder/web-components` instead of inlining media/WASM source. Use **standalone** mode in the export wizard when you need a zip with no runtime dependency.
+Pass `{ exportMode: 'package' }` to the Web Components exporter to generate `register.ts` that imports `@dashbuilder/web-components`. **Not the default** — use standalone export for developer handoff.
 
 ## Three.js (FFMP3 DomeSphere)
 
-DashBuilder elements emit crop/filter metadata; FFMP3 `SceneViewport` / `DomeSphere` continue to own Three.js rendering. Wire `crop-region` events into your existing frustum/dome state — do not duplicate Three.js inside `@dashbuilder/web-components`.
+DashBuilder elements emit crop/filter metadata; FFMP3 `SceneViewport` / `DomeSphere` own Three.js rendering. Wire `crop-region` events into your existing frustum/dome state.
