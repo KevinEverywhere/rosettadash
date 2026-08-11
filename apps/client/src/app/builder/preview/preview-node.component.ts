@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
-import { PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
+import { PreviewNewsRow, PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 import { ComponentPreviewAdapterRegistry } from './component-preview-adapter.registry';
@@ -105,6 +105,9 @@ export class PreviewNodeComponent {
   protected readonly tableRows = computed(
     () => this.slice()?.tableRows ?? this.previewData.bundle().tableRows,
   );
+  protected readonly newsRows = computed(
+    () => this.slice()?.newsRows ?? this.previewData.bundle().newsRows,
+  );
   protected readonly selectOptions = computed(
     () => this.previewData.bundle().selectOptions,
   );
@@ -197,6 +200,72 @@ export class PreviewNodeComponent {
       value: String(value ?? ''),
     }));
   });
+
+  protected readonly newsArticleRow = computed(() => {
+    const selected = this.previewData.selectedNewsRow();
+    if (selected) {
+      return selected;
+    }
+    return this.slice()?.selectedNewsRow ?? null;
+  });
+
+  protected readonly newsArticleFields = computed(() => {
+    const row = this.newsArticleRow();
+    if (!row) {
+      return [] as Array<{ key: string; value: string }>;
+    }
+    const fields: Array<{ key: string; value: string }> = [
+      { key: 'Headline', value: row.headline },
+      { key: 'Source', value: row.source },
+      { key: 'Region', value: row.region },
+      { key: 'Published', value: row.publishedAt },
+    ];
+    if (this.readBoolean('showSummary', true)) {
+      fields.push({ key: 'Summary', value: row.summary });
+    }
+    if (this.readBoolean('showUrl', true)) {
+      fields.push({ key: 'URL', value: row.url });
+    }
+    return fields;
+  });
+
+  protected readonly newsSelectOptions = computed(() => {
+    switch (this.node().type) {
+      case 'visual.news.language-select':
+        return [
+          { label: 'English', value: 'en' },
+          { label: 'Spanish', value: 'es' },
+          { label: 'French', value: 'fr' },
+          { label: 'German', value: 'de' },
+        ];
+      case 'visual.news.region-select':
+        return [
+          { label: 'United States', value: 'us' },
+          { label: 'United Kingdom', value: 'uk' },
+          { label: 'European Union', value: 'eu' },
+          { label: 'Global', value: 'global' },
+        ];
+      case 'visual.news.type-select':
+        return [
+          { label: 'Headlines', value: 'headlines' },
+          { label: 'Business', value: 'business' },
+          { label: 'Technology', value: 'technology' },
+          { label: 'Sports', value: 'sports' },
+          { label: 'Science', value: 'science' },
+        ];
+      default:
+        return this.selectOptions();
+    }
+  });
+
+  protected selectNewsRow(row: PreviewNewsRow): void {
+    this.previewData.selectNewsRow(row);
+  }
+
+  protected isSelectedNewsRow(row: PreviewNewsRow): boolean {
+    const selected = this.newsArticleRow();
+    return !!selected && selected.id === row.id;
+  }
 
   protected selectTableRow(row: PreviewRow): void {
     this.previewData.selectTableRow(row);

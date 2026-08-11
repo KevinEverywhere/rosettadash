@@ -4,6 +4,7 @@ import {
   NodePreviewSlice,
   PreviewDataBundle,
   PreviewDataRequest,
+  PreviewNewsRow,
   PreviewRow,
   getDefaultPreviewData,
 } from '@dashbuilder/ui-primitives';
@@ -19,6 +20,7 @@ export class PreviewDataService {
   readonly loading = signal(false);
   readonly source = signal<PreviewDataSource>('default');
   readonly selectedTableRow = signal<PreviewRow | null>(null);
+  readonly selectedNewsRow = signal<PreviewNewsRow | null>(null);
   readonly selectedTimePreset = signal<string | null>(null);
 
   readonly nodeSlices = computed(() => this.bundle().nodes);
@@ -46,6 +48,10 @@ export class PreviewDataService {
     this.selectedTableRow.set(row);
   }
 
+  selectNewsRow(row: PreviewNewsRow): void {
+    this.selectedNewsRow.set(row);
+  }
+
   selectTimePreset(preset: string): void {
     this.selectedTimePreset.set(preset);
   }
@@ -59,5 +65,10 @@ export class PreviewDataService {
       (slice) => slice.linkedToTable && slice.selectedRow,
     );
     this.selectedTableRow.set(detailSlice?.selectedRow ?? bundle.tableRows[0] ?? null);
+
+    const articleSlice = Object.values(bundle.nodes).find(
+      (slice) => slice.linkedToTable && slice.selectedNewsRow,
+    );
+    this.selectedNewsRow.set(articleSlice?.selectedNewsRow ?? bundle.newsRows[0] ?? null);
   }
 }

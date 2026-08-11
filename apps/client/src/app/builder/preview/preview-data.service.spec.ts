@@ -32,6 +32,7 @@ describe('PreviewDataService', () => {
     expect(request.request.method).toBe('POST');
     request.flush({
       tableRows: [{ id: '1', name: 'Ops Systems', status: 'Active', amount: 1000, date: '2026-08-01' }],
+      newsRows: [],
       chartPoints: [{ label: 'Mon', value: 10 }],
       selectOptions: [{ label: 'Ops KPI', value: 'ops' }],
       kpiValue: 5000,

@@ -6,6 +6,16 @@ export interface PreviewRow {
   date: string;
 }
 
+export interface PreviewNewsRow {
+  id: string;
+  headline: string;
+  source: string;
+  region: string;
+  publishedAt: string;
+  summary: string;
+  url: string;
+}
+
 export interface PreviewSelectOption {
   label: string;
   value: string;

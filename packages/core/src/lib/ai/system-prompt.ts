@@ -15,7 +15,7 @@ export function buildAiAssistSystemPrompt(context: AiBuilderContext): string {
     '- add_node: { op, ref?, type, layout?, properties? } — ref is a temporary id for later bind/set_property',
     '- bind: { op, sourceNodeId?|sourceRef?, sourcePort, targetNodeId?|targetRef?, targetPort }',
     '- set_property: { op, nodeId?|nodeRef?, key, value }',
-    '- apply_template: { op, templateId } — replaces canvas (analytics-overview, crud-list, onboarding, settings-admin, empty-starter)',
+    '- apply_template: { op, templateId } — replaces canvas (analytics-overview, crud-list, onboarding, settings-admin, empty-starter, news-finder)',
     '- explain: { op, markdown } — read-only explanation, not applied to canvas',
     '',
     'Rules:',

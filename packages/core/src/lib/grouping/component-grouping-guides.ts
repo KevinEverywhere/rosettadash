@@ -276,6 +276,64 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     companionTypes: ['visual.kpi', 'visual.table', 'layout.flex'],
     placementMessage: 'Bind value from KPI or table aggregate in a flex row.',
   },
+  {
+    type: 'visual.news.language-select',
+    summary: 'Language filter for news discovery dashboards.',
+    animationKey: 'form-row',
+    companionTypes: [
+      'visual.news.region-select',
+      'visual.news.type-select',
+      'visual.news.search-box',
+    ],
+    placementMessage: 'Place language, region, and type filters in a row above search.',
+  },
+  {
+    type: 'visual.news.region-select',
+    summary: 'Region or country filter for localized headlines.',
+    animationKey: 'form-row',
+    companionTypes: [
+      'visual.news.language-select',
+      'visual.news.type-select',
+      'visual.news.search-box',
+    ],
+    placementMessage: 'Group with language and news-type selectors above the search box.',
+  },
+  {
+    type: 'visual.news.type-select',
+    summary: 'Category filter — headlines, business, tech, sports, science.',
+    animationKey: 'form-row',
+    companionTypes: [
+      'visual.news.language-select',
+      'visual.news.region-select',
+      'visual.news.search-box',
+    ],
+    placementMessage: 'Place beside language and region filters before search.',
+  },
+  {
+    type: 'visual.news.search-box',
+    summary: 'Keyword search for news queries.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.news.results-table', 'visual.news.language-select'],
+    placementMessage: 'Put search below filters and above the results table.',
+  },
+  {
+    type: 'visual.news.results-table',
+    summary: 'Headlines table with source, region, and published time.',
+    animationKey: 'filter-table',
+    companionTypes: [
+      'visual.news.search-box',
+      'visual.news.article-detail',
+      'visual.news.language-select',
+    ],
+    placementMessage: 'Place below search; bind selected row to article detail.',
+  },
+  {
+    type: 'visual.news.article-detail',
+    summary: 'Full article view for a selected headline row.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.news.results-table'],
+    placementMessage: 'Place below results; bind results.selectedRow → article.row.',
+  },
 ];
 
 const guideByType = new Map(GROUPING_GUIDES.map((guide) => [guide.type, guide]));

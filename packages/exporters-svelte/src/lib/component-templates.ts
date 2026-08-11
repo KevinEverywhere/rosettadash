@@ -27,6 +27,12 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-gltf-model',
   'visual.display.3d-geo-globe',
   'logic.timer',
+  'visual.news.language-select',
+  'visual.news.region-select',
+  'visual.news.type-select',
+  'visual.news.search-box',
+  'visual.news.results-table',
+  'visual.news.article-detail',
 ]);
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
@@ -69,6 +75,16 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateThreeGeoGlobe();
     case 'logic.timer':
       return generateTimer();
+    case 'visual.news.language-select':
+    case 'visual.news.region-select':
+    case 'visual.news.type-select':
+      return generateSelectInput();
+    case 'visual.news.search-box':
+      return generateTextInput();
+    case 'visual.news.results-table':
+      return generateDataTable();
+    case 'visual.news.article-detail':
+      return generateDetailPanel();
     default:
       throw new SvelteExportError(`Missing Svelte template for ${component.type}`);
   }

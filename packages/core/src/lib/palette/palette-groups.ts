@@ -65,6 +65,18 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
     ],
   },
   {
+    id: 'news-discovery',
+    label: 'News Discovery',
+    types: [
+      'visual.news.language-select',
+      'visual.news.region-select',
+      'visual.news.type-select',
+      'visual.news.search-box',
+      'visual.news.results-table',
+      'visual.news.article-detail',
+    ],
+  },
+  {
     id: 'plugin-extensions',
     label: 'Plugin Extensions',
     types: ['visual.plugin.status-badge', 'visual.plugin.metric-chip'],

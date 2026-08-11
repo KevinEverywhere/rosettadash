@@ -553,3 +553,26 @@
   font-weight: 600;
   cursor: default;
 }
+
+.preview-search__row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.preview-search__input {
+  flex: 1;
+}
+
+.preview-search__button {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--db-border);
+  border-radius: 0.375rem;
+  background: var(--db-panel-bg);
+  color: var(--db-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: default;
+  white-space: nowrap;
+}

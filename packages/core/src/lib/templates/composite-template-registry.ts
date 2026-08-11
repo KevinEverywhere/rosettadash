@@ -4,6 +4,7 @@ import type { Composite } from '../model/types';
 import { buildAnalyticsOverviewComposite } from './analytics-overview-composite';
 import { buildCrudListComposite } from './crud-list-composite';
 import { buildEmptyStarterComposite } from './empty-starter-composite';
+import { buildNewsFinderComposite } from './news-finder-composite';
 import { buildOnboardingComposite } from './onboarding-composite';
 import { buildSettingsAdminComposite } from './settings-admin-composite';
 import {
@@ -13,6 +14,7 @@ import {
   ONBOARDING_TEMPLATE_ID,
   SETTINGS_ADMIN_TEMPLATE_ID,
 } from './template-ids';
+import { NEWS_FINDER_TEMPLATE_ID } from './news-finder-template-id';
 import type {
   BuildCompositeTemplateOptions,
   CompositeTemplateDefinition,
@@ -48,6 +50,12 @@ export const COMPOSITE_TEMPLATE_DEFINITIONS: CompositeTemplateDefinition[] = [
     name: 'Empty starter',
     description: 'Grid layout with env and infra nodes only.',
     build: buildEmptyStarterComposite,
+  },
+  {
+    id: NEWS_FINDER_TEMPLATE_ID,
+    name: 'News finder',
+    description: 'Language, region, type filters, search, results table, and article detail.',
+    build: buildNewsFinderComposite,
   },
 ];
 

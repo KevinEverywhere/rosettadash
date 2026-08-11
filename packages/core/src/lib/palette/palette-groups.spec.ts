@@ -29,6 +29,7 @@ describe('palette-groups', () => {
       'access-onboarding',
       'data-sources',
       'api-servers',
+      'news-discovery',
       'plugin-extensions',
       'vr-visuals',
     ]);

@@ -21,6 +21,12 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.display.3d-gltf-model': 'ThreeGltfModel',
   'visual.display.3d-geo-globe': 'ThreeGeoGlobe',
   'logic.timer': 'Timer',
+  'visual.news.language-select': 'NewsLanguageSelect',
+  'visual.news.region-select': 'NewsRegionSelect',
+  'visual.news.type-select': 'NewsTypeSelect',
+  'visual.news.search-box': 'NewsSearchBox',
+  'visual.news.results-table': 'NewsResultsTable',
+  'visual.news.article-detail': 'NewsArticleDetail',
 };
 
 export function pascalCase(value: string): string {

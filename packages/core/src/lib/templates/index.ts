@@ -5,4 +5,6 @@ export * from './analytics-overview-composite';
 export * from './crud-list-composite';
 export * from './settings-admin-composite';
 export * from './empty-starter-composite';
+export * from './news-finder-template-id';
+export * from './news-finder-composite';
 export * from './composite-template-registry';

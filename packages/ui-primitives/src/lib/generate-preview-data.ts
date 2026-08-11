@@ -1,5 +1,6 @@
 import type {
   PreviewChartPoint,
+  PreviewNewsRow,
   PreviewRow,
   PreviewScatterPoint,
   PreviewSelectOption,
@@ -39,6 +40,7 @@ export interface PreviewDataRequest {
 
 export interface NodePreviewSlice {
   tableRows?: PreviewRow[];
+  newsRows?: PreviewNewsRow[];
   chartPoints?: PreviewChartPoint[];
   scatterPoints?: PreviewScatterPoint[];
   globeMarkers?: PreviewGlobeMarker[];
@@ -46,6 +48,7 @@ export interface NodePreviewSlice {
   linkedFromTable?: boolean;
   filteredByDateRange?: boolean;
   selectedRow?: PreviewRow | null;
+  selectedNewsRow?: PreviewNewsRow | null;
   linkedToTable?: boolean;
   activeTimePreset?: string;
   skeletonLoading?: boolean;
@@ -56,6 +59,7 @@ export interface NodePreviewSlice {
 
 export interface PreviewDataBundle {
   tableRows: PreviewRow[];
+  newsRows: PreviewNewsRow[];
   chartPoints: PreviewChartPoint[];
   selectOptions: PreviewSelectOption[];
   kpiValue: number;
@@ -68,6 +72,16 @@ const COMPANY_PREFIXES = ['Northwind', 'Acme', 'Blue Harbor', 'Summit', 'Lumen']
 const COMPANY_SUFFIXES = ['Logistics', 'Analytics', 'Systems', 'Group', 'Works'];
 const STATUSES = ['Active', 'Pending', 'Review', 'Closed'];
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+const NEWS_HEADLINES = [
+  'Markets rally as inflation cools in latest report',
+  'Regional summit focuses on cross-border trade policy',
+  'Tech leaders unveil open standards for AI safety',
+  'Local team advances after overtime thriller',
+  'Researchers publish breakthrough in battery storage',
+  'City council approves downtown transit expansion',
+];
+const NEWS_SOURCES = ['Global Wire', 'Metro Daily', 'Tech Chronicle', 'Sports Network', 'Science Today'];
+const NEWS_REGIONS = ['US', 'UK', 'EU', 'Global'];
 
 export const PRESET_LABELS: Record<string, string> = {
   'last-7-days': 'Last 7 days',
@@ -184,6 +198,28 @@ function generateBaseRows(request: PreviewDataRequest, random: () => number): Pr
   });
 }
 
+function generateNewsRows(request: PreviewDataRequest, random: () => number): PreviewNewsRow[] {
+  const limit = Math.min(Math.max(request.limit ?? 8, 4), 12);
+  const baseDate = new Date('2026-08-10T12:00:00.000Z');
+
+  return Array.from({ length: limit }, (_, index) => {
+    const headline = pick(NEWS_HEADLINES, random);
+    const source = pick(NEWS_SOURCES, random);
+    const region = pick(NEWS_REGIONS, random);
+    const slug = headline.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 48);
+
+    return {
+      id: `news-${index + 1}`,
+      headline,
+      source,
+      region,
+      publishedAt: formatIsoDate(baseDate, -(index + 1)),
+      summary: `${headline}. Analysts note regional impacts across ${region} markets while ${source} continues coverage.`,
+      url: `https://news.example/${region.toLowerCase()}/${slug}`,
+    };
+  });
+}
+
 function readNodeBoolean(node: PreviewNodeInput | undefined, key: string, fallback: boolean): boolean {
   const value = node?.properties?.[key];
   return typeof value === 'boolean' ? value : fallback;
@@ -256,9 +292,11 @@ export function resolvePreviewGraph(
 
   const baseRows = generateBaseRows(request, random);
   const filteredRows = filterRowsByPreset(baseRows, activePreset);
+  const newsRows = generateNewsRows(request, random);
 
   const nodeSlices: Record<string, NodePreviewSlice> = {};
   const tableNodes = nodes.filter((node) => node.type === 'visual.table');
+  const newsResultsNodes = nodes.filter((node) => node.type === 'visual.news.results-table');
   const chartNodes = nodes.filter(
     (node) =>
       node.type === 'visual.chart.line' ||
@@ -288,6 +326,17 @@ export function resolvePreviewGraph(
     tableNodes.length > 0
       ? (nodeSlices[tableNodes[0].id]?.tableRows ?? filteredRows)
       : filteredRows;
+
+  for (const newsNode of newsResultsNodes) {
+    nodeSlices[newsNode.id] = {
+      newsRows,
+    };
+  }
+
+  const primaryNewsRows =
+    newsResultsNodes.length > 0
+      ? (nodeSlices[newsResultsNodes[0].id]?.newsRows ?? newsRows)
+      : newsRows;
 
   for (const chartNode of chartNodes) {
     const rangeBinding = findBindingSource(bindings, chartNode.id, 'range');
@@ -377,6 +426,22 @@ export function resolvePreviewGraph(
     };
   }
 
+  const articleNodes = nodes.filter((node) => node.type === 'visual.news.article-detail');
+  for (const articleNode of articleNodes) {
+    const rowBinding = findBindingSource(bindings, articleNode.id, 'row');
+    const sourceResults = rowBinding
+      ? newsResultsNodes.find((table) => table.id === rowBinding.sourceNodeId)
+      : undefined;
+    const rows = sourceResults
+      ? (nodeSlices[sourceResults.id]?.newsRows ?? primaryNewsRows)
+      : primaryNewsRows;
+
+    nodeSlices[articleNode.id] = {
+      selectedNewsRow: rows[0] ?? null,
+      linkedToTable: !!sourceResults,
+    };
+  }
+
   const hasDataVisuals =
     tableNodes.length > 0 ||
     chartNodes.length > 0 ||
@@ -393,6 +458,7 @@ export function resolvePreviewGraph(
 
   return {
     tableRows: filteredRows,
+    newsRows: primaryNewsRows,
     chartPoints: tableNodes.length
       ? rowsToChartPoints(primaryTableRows)
       : buildDefaultChartPoints(random),

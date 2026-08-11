@@ -27,6 +27,12 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-gltf-model',
   'visual.display.3d-geo-globe',
   'logic.timer',
+  'visual.news.language-select',
+  'visual.news.region-select',
+  'visual.news.type-select',
+  'visual.news.search-box',
+  'visual.news.results-table',
+  'visual.news.article-detail',
 ]);
 
 export function generateComponentFile(component: IRComponent, className: string): string {
@@ -69,6 +75,16 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateThreeGeoGlobe(className);
     case 'logic.timer':
       return generateTimer(className);
+    case 'visual.news.language-select':
+    case 'visual.news.region-select':
+    case 'visual.news.type-select':
+      return generateSelectInput(className);
+    case 'visual.news.search-box':
+      return generateTextInput(className);
+    case 'visual.news.results-table':
+      return generateDataTable(className);
+    case 'visual.news.article-detail':
+      return generateDetailPanel(className);
     default:
       throw new AngularExportError(`Missing Angular template for ${component.type}`);
   }
