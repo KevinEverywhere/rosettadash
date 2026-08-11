@@ -1,10 +1,11 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR, IRComponent } from '@dashbuilder/core';
 import { buildDashboardContext } from './binding-resolver';
 import {
   generateComponentFile,
   generateDefineElementHelper,
   generateRegisterAllFile,
 } from './component-templates';
+import { runtimePackageImports, usesRuntimePackage } from './package-runtime';
 import type { GeneratedFile, WebComponentsExportOptions } from './types';
 import { WebComponentsExportError } from './types';
 import { componentExportName, customElementTag, joinLines, pascalFromId } from './utils';
@@ -19,6 +20,7 @@ export function generateWebComponentsUiFiles(
     );
   }
 
+  const exportMode = options.exportMode ?? 'package';
   const root = options.rootDir ?? 'src';
   const usedNames = new Set<string>();
   const exportNames = new Map<string, string>();
@@ -39,13 +41,17 @@ export function generateWebComponentsUiFiles(
     if (!exportName) {
       continue;
     }
-    componentNames.push(exportName);
-    files.push({
-      path: `${root}/components/${exportName}.ts`,
-      content: generateComponentFile(component, exportName),
-      encoding: 'utf-8',
-      description: `Custom Element for ${component.label}`,
-    });
+
+    const usePackage = exportMode === 'package' && usesRuntimePackage(component.type, component);
+    if (!usePackage) {
+      componentNames.push(exportName);
+      files.push({
+        path: `${root}/components/${exportName}.ts`,
+        content: generateComponentFile(component, exportName),
+        encoding: 'utf-8',
+        description: `Custom Element for ${component.label}`,
+      });
+    }
   }
 
   files.push({
@@ -82,21 +88,33 @@ export function generateWebComponentsUiFiles(
 
   files.push({
     path: `${root}/dashboard.ts`,
-    content: generateDashboardFile(ir, exportNames),
+    content: generateDashboardFile(ir, exportNames, exportMode),
     encoding: 'utf-8',
     description: 'Composed dashboard Custom Element wired from ExportIR bindings',
   });
 
   files.push({
     path: `${root}/register.ts`,
-    content: generateRegisterAllFile(componentNames),
+    content:
+      exportMode === 'package'
+        ? generatePackageRegisterFile(ir.components, componentNames)
+        : generateRegisterAllFile(componentNames),
     encoding: 'utf-8',
     description: 'Registers all generated Custom Elements',
   });
 
+  if (exportMode === 'package' && runtimePackageImports(ir.components).length > 0) {
+    files.push({
+      path: 'package.json.fragment.json',
+      content: generatePackageJsonFragment(),
+      encoding: 'utf-8',
+      description: 'Merge into consumer package.json dependencies',
+    });
+  }
+
   files.push({
     path: 'README.export.md',
-    content: generateReadme(ir),
+    content: generateReadme(ir, exportMode),
     encoding: 'utf-8',
     description: 'Setup notes for exported Web Components bundle',
   });
@@ -155,8 +173,12 @@ function generateDataModule(fnName: string, route: string): string {
   ]);
 }
 
-function generateDashboardFile(ir: ExportIR, exportNames: Map<string, string>): string {
-  const context = buildDashboardContext(ir, exportNames);
+function generateDashboardFile(
+  ir: ExportIR,
+  exportNames: Map<string, string>,
+  exportMode: 'standalone' | 'package',
+): string {
+  const context = buildDashboardContext(ir, exportNames, exportMode);
   const componentImportLines = context.componentImports.map(
     (name) => `import { ${name} } from './components/${name}';`,
   );
@@ -221,17 +243,37 @@ function generateDashboardFile(ir: ExportIR, exportNames: Map<string, string>): 
   ]);
 }
 
-function generateReadme(ir: ExportIR): string {
+function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'package'): string {
   const envLines =
     ir.envVars.length === 0
       ? ['No environment variables required for the UI fragment.']
       : ir.envVars.map((env) => `- \`${env.key}\`${env.required ? ' (required)' : ''}`);
+
+  const packageNotes =
+    exportMode === 'package'
+      ? [
+          '',
+          '## Runtime package mode',
+          '',
+          'This export imports `@dashbuilder/web-components` for media/WASM elements.',
+          '',
+          '```bash',
+          'npm install @dashbuilder/web-components @dashbuilder/core',
+          'npm install @ffmpeg/ffmpeg @ffmpeg/util   # equirect extract only',
+          '```',
+          '',
+          'For local DashBuilder development, link the monorepo packages into your app (e.g. FFMP3 Console).',
+          '',
+        ]
+      : [];
 
   return joinLines([
     `# ${ir.meta.compositeName} — Web Components Export`,
     ``,
     `Generated at ${ir.meta.generatedAt} from composite \`${ir.meta.compositeId}\` v${ir.meta.version}.`,
     ``,
+    `Export mode: **${exportMode}**`,
+    ...packageNotes,
     `## Files`,
     ``,
     `- \`src/dashboard.ts\` — root \`<db-dashboard>\` Custom Element composed from builder bindings`,
@@ -249,6 +291,43 @@ function generateReadme(ir: ExportIR): string {
     `1. Import \`registerDashBuilderElements()\` from \`src/register.ts\` in your app entry.`,
     `2. Add \`<db-dashboard></db-dashboard>\` to your page (or embed in React/Vue/Angular via the tag).`,
     `3. Ensure server routes referenced by data modules are available.`,
+    ``,
+  ]);
+}
+
+function generatePackageRegisterFile(components: IRComponent[], standaloneNames: string[]): string {
+  const runtimeImports = runtimePackageImports(components);
+  const runtimeImportLines = runtimeImports.map(
+    (name) => `import { ${name} } from '@dashbuilder/web-components';`,
+  );
+  const standaloneImportLines = standaloneNames.map(
+    (name) => `import { register${name} } from './components/${name}';`,
+  );
+
+  return joinLines([
+    ...runtimeImportLines,
+    ...standaloneImportLines,
+    `import { registerDbDashboard } from './dashboard';`,
+    ``,
+    `export function registerDashBuilderElements(): void {`,
+    ...runtimeImports.map((name) => `  ${name}();`),
+    ...standaloneNames.map((name) => `  register${name}();`),
+    `  registerDbDashboard();`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generatePackageJsonFragment(): string {
+  return joinLines([
+    `{`,
+    `  "dependencies": {`,
+    `    "@dashbuilder/core": "^0.0.1",`,
+    `    "@dashbuilder/web-components": "^0.0.1",`,
+    `    "@ffmpeg/ffmpeg": "^0.12.10",`,
+    `    "@ffmpeg/util": "^0.12.1"`,
+    `  }`,
+    `}`,
     ``,
   ]);
 }

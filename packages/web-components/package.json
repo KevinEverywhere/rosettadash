@@ -1,0 +1,29 @@
+{
+  "name": "@dashbuilder/web-components",
+  "version": "0.0.1",
+  "description": "DashBuilder runtime custom elements — media and WASM pipelines for vanilla apps (FFMP3, etc.)",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./media": "./src/media/index.ts",
+    "./wasm": "./src/wasm/index.ts"
+  },
+  "peerDependencies": {
+    "@ffmpeg/ffmpeg": ">=0.12.0",
+    "@ffmpeg/util": ">=0.12.0"
+  },
+  "peerDependenciesMeta": {
+    "@ffmpeg/ffmpeg": {
+      "optional": true
+    },
+    "@ffmpeg/util": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@dashbuilder/core": "*",
+    "tslib": "^2.3.0"
+  }
+}

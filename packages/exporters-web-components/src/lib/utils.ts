@@ -19,6 +19,8 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.display.3d-geo-globe': 'ThreeGeoGlobe',
   'visual.svg.inline': 'SvgInline',
   'visual.svg.icon': 'SvgIcon',
+  'visual.media.video-source': 'VideoSource',
+  'visual.media.equirect-viewport': 'EquirectViewport',
   'infra.wasm.asset': 'WasmAsset',
   'visual.wasm.worker-host': 'WasmWorkerHost',
   'visual.wasm.module': 'WasmModule',

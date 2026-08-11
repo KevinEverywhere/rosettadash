@@ -1,5 +1,10 @@
 import type { IRComponent } from '@dashbuilder/core';
 import { WebComponentsExportError } from './types';
+import {
+  generateEquirectViewportStandalone,
+  generateVideoSourceStandalone,
+  generateWasmMediaEquirectStandalone,
+} from './media-component-templates';
 import { customElementTag, joinLines } from './utils';
 
 const SUPPORTED_TYPES = new Set([
@@ -21,6 +26,8 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-geo-globe',
   'visual.svg.inline',
   'visual.svg.icon',
+  'visual.media.video-source',
+  'visual.media.equirect-viewport',
   'infra.wasm.asset',
   'visual.wasm.worker-host',
   'visual.wasm.module',
@@ -74,6 +81,10 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateSvgInline(exportName);
     case 'visual.svg.icon':
       return generateSvgIcon(exportName);
+    case 'visual.media.video-source':
+      return generateVideoSourceStandalone(exportName, customElementTag(exportName));
+    case 'visual.media.equirect-viewport':
+      return generateEquirectViewportStandalone(exportName, customElementTag(exportName));
     case 'infra.wasm.asset':
       return generateWasmAsset(exportName);
     case 'visual.wasm.worker-host':
@@ -81,7 +92,9 @@ export function generateComponentFile(component: IRComponent, exportName: string
     case 'visual.wasm.module':
       return generateWasmModule(exportName);
     case 'visual.wasm.media':
-      return generateWasmMedia(exportName);
+      return component.properties?.['operation'] === 'equirect-extract'
+        ? generateWasmMediaEquirectStandalone(exportName, customElementTag(exportName))
+        : generateWasmMedia(exportName);
     case 'logic.timer':
       return generateTimer(exportName);
     default:

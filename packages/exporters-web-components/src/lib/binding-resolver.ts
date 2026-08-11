@@ -1,4 +1,5 @@
 import type { ExportIR, IRComponent, IREventBinding } from '@dashbuilder/core';
+import { getRuntimePackageSpec, usesRuntimePackage } from './package-runtime';
 import { customElementTag, dataModuleName, stateVarName } from './utils';
 
 export interface ComponentMountContext {
@@ -22,6 +23,7 @@ export interface DashboardContext {
 export function buildDashboardContext(
   ir: ExportIR,
   exportNames: Map<string, string>,
+  exportMode: 'standalone' | 'package' = 'package',
 ): DashboardContext {
   const dataSourceIds = new Set(ir.dataSources.map((source) => source.id));
   const stateBySource = new Map<string, { varName: string; dataType: string }>();
@@ -58,7 +60,11 @@ export function buildDashboardContext(
 
   const components = ir.components.map((component) => {
     const exportName = exportNames.get(component.id) ?? component.id;
-    const tagName = customElementTag(exportName);
+    const runtimeSpec =
+      exportMode === 'package' && usesRuntimePackage(component.type, component)
+        ? getRuntimePackageSpec(component.type)
+        : undefined;
+    const tagName = runtimeSpec?.tagName ?? customElementTag(exportName);
     const varName = `this.${component.id}El`;
     const mountLines: string[] = [`    ${varName} = document.createElement('${tagName}');`];
 
@@ -68,7 +74,7 @@ export function buildDashboardContext(
 
     for (const [key, value] of Object.entries(component.properties)) {
       if (typeof value === 'string') {
-        mountLines.push(`    ${varName}.setAttribute('${key}', ${JSON.stringify(value)});`);
+        mountLines.push(`    ${varName}.setProperty('${key}', ${JSON.stringify(value)});`);
       } else if (typeof value === 'number' || typeof value === 'boolean') {
         mountLines.push(`    ${varName}.setProperty('${key}', ${String(value)});`);
       }
@@ -106,7 +112,16 @@ export function buildDashboardContext(
     };
   });
 
-  const componentImports = components.map((component) => component.exportName);
+  const componentImports = components
+    .filter((component) => {
+      const irComponent = ir.components.find((entry) => entry.id === component.nodeId);
+      return !(
+        exportMode === 'package' &&
+        irComponent &&
+        usesRuntimePackage(irComponent.type, irComponent)
+      );
+    })
+    .map((component) => component.exportName);
   const registerImports = [...componentImports, 'DbDashboard'];
   const registerCalls = componentImports.map(
     (name) => `  register${name}();`,
@@ -149,12 +164,55 @@ function wireComponentOutputs(
     }
 
     if (output.dataType === 'row') {
-      mountLines.push(`    ${elementVar}.selectedRow = this.${state.varName};`);
-      mountLines.push(
-        `    ${elementVar}.addEventListener('row-select', (event) => { this.${state.varName} = (event as CustomEvent<Row | undefined>).detail; this.syncBindings(); });`,
-      );
+      const rowEvent = resolveRowOutputEvent(output.id);
+      if (rowEvent) {
+        mountLines.push(
+          `    ${elementVar}.addEventListener('${rowEvent}', (event) => { this.${state.varName} = (event as CustomEvent<Row>).detail; this.syncBindings(); });`,
+        );
+      } else {
+        mountLines.push(`    ${elementVar}.selectedRow = this.${state.varName};`);
+        mountLines.push(
+          `    ${elementVar}.addEventListener('row-select', (event) => { this.${state.varName} = (event as CustomEvent<Row | undefined>).detail; this.syncBindings(); });`,
+        );
+      }
+    }
+
+    if (output.dataType === 'any') {
+      if (output.id === 'video-file') {
+        mountLines.push(
+          `    ${elementVar}.addEventListener('video-file', (event) => { this.${state.varName} = (event as CustomEvent<{ file: File | Blob }>).detail.file; this.syncBindings(); });`,
+        );
+        continue;
+      }
+
+      const anyEvent = resolveAnyOutputEvent(output.id);
+      if (anyEvent) {
+        mountLines.push(
+          `    ${elementVar}.addEventListener('${anyEvent}', (event) => { this.${state.varName} = (event as CustomEvent).detail; this.syncBindings(); });`,
+        );
+      }
     }
   }
+}
+
+function resolveRowOutputEvent(portId: string): string | undefined {
+  if (portId === 'crop-region') {
+    return 'crop-region';
+  }
+  if (portId === 'metadata') {
+    return 'metadata';
+  }
+  return undefined;
+}
+
+function resolveAnyOutputEvent(portId: string): string | undefined {
+  if (portId === 'video-file') {
+    return 'video-file';
+  }
+  if (portId === 'capture-blob') {
+    return 'capture-blob';
+  }
+  return undefined;
 }
 
 function resolveSourceExpression(

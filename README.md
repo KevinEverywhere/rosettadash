@@ -15,6 +15,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `client` | `apps/client` | Angular builder UI |
 | `server` | `apps/server` | NestJS API |
 | `core` | `packages/core` | Shared types and utilities |
+| `web-components` | `packages/web-components` | Runtime custom elements (`@dashbuilder/web-components`) |
 | `ui-primitives` | `packages/ui-primitives` | Preview mock data and generators |
 | `exporters-react` | `packages/exporters-react` | React UI code generator from ExportIR |
 | `exporters-nest` | `packages/exporters-nest` | NestJS + PostgreSQL server generator from ExportIR |
@@ -227,8 +228,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-82](https://planetkevin.atlassian.net/browse/DAS-82)** — Equirectangular video subsection export — React ffmpeg pipeline (Phase 1)  
-Branch: `feature/DAS-82-equirect-media-react`
+**[DAS-83](https://planetkevin.atlassian.net/browse/DAS-83)** — Web Components runtime package — media/WASM equirect extract (Phase 2)  
+Branch: `feature/DAS-83-web-components-runtime`
 
 ## License
 

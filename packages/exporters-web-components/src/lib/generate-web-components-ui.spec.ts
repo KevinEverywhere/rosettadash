@@ -145,4 +145,81 @@ describe('generateWebComponentsUiFiles', () => {
 
     expect(() => generateWebComponentsUiFiles(ir)).toThrow(/cannot generate UI target "react"/);
   });
+
+  it('generates package-mode equirect pipeline with runtime imports', () => {
+    const video = registry.createNode('visual.media.video-source', { id: 'vs1' });
+    const viewport = registry.createNode('visual.media.equirect-viewport', { id: 'ev1' });
+    const media = registry.createNode('visual.wasm.media', {
+      id: 'wm1',
+      properties: { operation: 'equirect-extract', extractionMode: 'flat-crop' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Equirect Export',
+        version: 1,
+        exportTargets: { ui: 'web-components', server: 'nest' },
+        nodes: [video, viewport, media, server],
+        bindings: [
+          {
+            id: 'b1',
+            sourceNodeId: 'ev1',
+            sourcePortId: 'crop-region',
+            targetNodeId: 'wm1',
+            targetPortId: 'crop-region',
+          },
+          {
+            id: 'b2',
+            sourceNodeId: 'vs1',
+            sourcePortId: 'video-file',
+            targetNodeId: 'wm1',
+            targetPortId: 'input-file',
+          },
+        ],
+      },
+      registry,
+    );
+
+    const files = generateWebComponentsUiFiles(ir, { exportMode: 'package' });
+    const register = files.find((file) => file.path === 'src/register.ts');
+    expect(register?.content).toContain('@dashbuilder/web-components');
+    expect(register?.content).toContain('registerDashBuilderMediaElements');
+    expect(register?.content).toContain('registerDashBuilderWasmElements');
+    expect(files.some((file) => file.path === 'package.json.fragment.json')).toBe(true);
+    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(0);
+
+    const dashboard = files.find((file) => file.path === 'src/dashboard.ts');
+    expect(dashboard?.content).toContain("document.createElement('db-video-source')");
+    expect(dashboard?.content).toContain("document.createElement('db-wasm-media')");
+    expect(dashboard?.content).toContain("addEventListener('video-file'");
+    expect(dashboard?.content).toContain("addEventListener('crop-region'");
+  });
+
+  it('generates standalone-mode equirect component files', () => {
+    const video = registry.createNode('visual.media.video-source', { id: 'vs1' });
+    const media = registry.createNode('visual.wasm.media', {
+      id: 'wm1',
+      properties: { operation: 'equirect-extract' },
+    });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'Standalone Equirect',
+        version: 1,
+        exportTargets: { ui: 'web-components', server: 'nest' },
+        nodes: [video, media, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateWebComponentsUiFiles(ir, { exportMode: 'standalone' });
+    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(2);
+    const wasm = files.find((file) => file.content.includes('@ffmpeg/ffmpeg'));
+    expect(wasm?.content).toContain('buildEquirectExtractFilter');
+  });
 });
