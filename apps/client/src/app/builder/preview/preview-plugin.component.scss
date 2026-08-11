@@ -38,3 +38,23 @@
 .preview-plugin__chip-value {
   font-weight: 700;
 }
+
+.preview-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--db-text);
+}
+
+.preview-svg :is(svg, img) {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-svg__placeholder {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--db-text-muted);
+  text-align: center;
+}

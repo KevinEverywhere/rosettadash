@@ -17,6 +17,26 @@
       </span>
     </div>
   }
+  @case ('svg-inline') {
+    <div
+      class="preview-svg preview-svg--inline"
+      [style.width.px]="readNumber('width', 120)"
+      [style.height.px]="readNumber('height', 120)"
+      [innerHTML]="svgInlineMarkup()"
+      data-testid="preview-plugin-svg-inline"
+    ></div>
+  }
+  @case ('svg-icon') {
+    <div
+      class="preview-svg preview-svg--icon"
+      [style.width.px]="readNumber('size', 24)"
+      [style.height.px]="readNumber('size', 24)"
+      [style.color]="readString('color', 'currentColor')"
+      [attr.title]="readString('title', 'Icon')"
+      [innerHTML]="svgIconMarkup()"
+      data-testid="preview-plugin-svg-icon"
+    ></div>
+  }
   @case ('3d-bar-chart') {
     <app-preview-three-visual [node]="node()" mode="bar-chart" />
   }

@@ -32,6 +32,7 @@ describe('palette-groups', () => {
       'news-discovery',
       'plugin-extensions',
       'vr-visuals',
+      'svg-visuals',
     ]);
     expect(groups[0]?.items[0]?.type).toBe('visual.input.text');
     expect(groups[1]?.items.map((item) => item.type)).toEqual([

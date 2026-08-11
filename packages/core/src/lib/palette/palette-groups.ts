@@ -92,6 +92,11 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
       'visual.display.3d-geo-globe',
     ],
   },
+  {
+    id: 'svg-visuals',
+    label: 'SVG',
+    types: ['visual.svg.inline', 'visual.svg.icon'],
+  },
 ];
 
 const MIN_ITEMS_PER_GROUP = 2;

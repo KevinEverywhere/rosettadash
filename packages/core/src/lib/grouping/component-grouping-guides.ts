@@ -277,6 +277,20 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Bind value from KPI or table aggregate in a flex row.',
   },
   {
+    type: 'visual.svg.inline',
+    summary: 'Inline or linked SVG graphics with optional row-driven fill color.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.table', 'visual.kpi', 'visual.svg.icon'],
+    placementMessage: 'Place beside KPIs or bind fill color from a table row field.',
+  },
+  {
+    type: 'visual.svg.icon',
+    summary: 'Compact SVG icon with configurable size and color.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.svg.inline', 'visual.kpi', 'layout.flex'],
+    placementMessage: 'Use in flex rows or pair with inline SVG for status visuals.',
+  },
+  {
     type: 'visual.news.language-select',
     summary: 'Language filter for news discovery dashboards.',
     animationKey: 'form-row',

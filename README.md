@@ -227,8 +227,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-79](https://planetkevin.atlassian.net/browse/DAS-79)** — Dedicated Web Components exporter package (W3C Custom Elements)  
-Branch: `feature/DAS-79-web-components-exporter`
+**[DAS-80](https://planetkevin.atlassian.net/browse/DAS-80)** — SVG component group (inline + icon hosts)  
+Branch: `feature/DAS-80-svg-components`
 
 ## License
 

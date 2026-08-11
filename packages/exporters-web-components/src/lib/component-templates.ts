@@ -19,6 +19,8 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-scene',
   'visual.display.3d-gltf-model',
   'visual.display.3d-geo-globe',
+  'visual.svg.inline',
+  'visual.svg.icon',
   'logic.timer',
   'visual.news.language-select',
   'visual.news.region-select',
@@ -64,6 +66,10 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateBarChart(exportName);
     case 'visual.chart.pie':
       return generatePieChart(exportName);
+    case 'visual.svg.inline':
+      return generateSvgInline(exportName);
+    case 'visual.svg.icon':
+      return generateSvgIcon(exportName);
     case 'logic.timer':
       return generateTimer(exportName);
     default:
@@ -498,6 +504,108 @@ function generatePieChart(exportName: string): string {
 
 function generateTimer(exportName: string): string {
   return generatePlaceholder(exportName, 'Timer', 'logic.timer');
+}
+
+function generateSvgInline(exportName: string): string {
+  return joinLines([
+    `import type { Row } from '../types';`,
+    `import { defineDashElement } from '../define-element';`,
+    ``,
+    `const STYLES = \`${shellStyles()} .svg-inline { display: inline-flex; align-items: center; justify-content: center; } .svg-inline :is(svg, img) { width: 100%; height: 100%; } .svg-inline__placeholder { margin: 0; font-size: 0.75rem; color: var(--db-muted, #6b7280); }\`;`,
+    ``,
+    `export class ${exportName} extends HTMLElement {`,
+    `  static readonly tagName = '${customElementTag(exportName)}';`,
+    `  sourceMode: 'inline' | 'url' | 'path' = 'inline';`,
+    `  markup = '';`,
+    `  url = '';`,
+    `  assetPath = '';`,
+    `  width = 120;`,
+    `  height = 120;`,
+    `  ariaLabel = 'SVG graphic';`,
+    `  fillField = '';`,
+    `  row: Row | undefined;`,
+    ``,
+    `  connectedCallback(): void {`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  setProperty(name: string, value: unknown): void {`,
+    `    (this as Record<string, unknown>)[name] = value;`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  private render(): void {`,
+    `    if (!this.shadowRoot) {`,
+    `      this.attachShadow({ mode: 'open' });`,
+    `    }`,
+    `    const fillColor =`,
+    `      this.fillField && this.row && this.row[this.fillField] !== undefined`,
+    `        ? String(this.row[this.fillField])`,
+    `        : '';`,
+    `    const style = \`width:\${this.width}px;height:\${this.height}px;\${fillColor ? \`color:\${fillColor};\` : ''}\`;`,
+    `    let body = \`<p class="svg-inline__placeholder">Add SVG markup</p>\`;`,
+    `    if (this.sourceMode === 'url' && this.url) {`,
+    `      body = \`<img src="\${this.url}" alt="\${this.ariaLabel}" />\`;`,
+    `    } else if (this.sourceMode === 'path' && this.assetPath) {`,
+    `      body = \`<p class="svg-inline__placeholder">Asset: \${this.assetPath}</p>\`;`,
+    `    } else if (this.markup) {`,
+    `      body = this.markup;`,
+    `    }`,
+    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><figure class="svg-inline" style="\${style}" aria-label="\${this.ariaLabel}">\${body}</figure>\`;`,
+    `  }`,
+    `}`,
+    ``,
+    `export function register${exportName}(): void {`,
+    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateSvgIcon(exportName: string): string {
+  return joinLines([
+    `import type { Row } from '../types';`,
+    `import { defineDashElement } from '../define-element';`,
+    ``,
+    `const STYLES = \`${shellStyles()} .svg-icon { display: inline-flex; align-items: center; justify-content: center; } .svg-icon :is(svg) { width: 100%; height: 100%; }\`;`,
+    ``,
+    `export class ${exportName} extends HTMLElement {`,
+    `  static readonly tagName = '${customElementTag(exportName)}';`,
+    `  markup = '';`,
+    `  size = 24;`,
+    `  color = 'currentColor';`,
+    `  title = 'Icon';`,
+    `  ariaLabel = '';`,
+    `  colorField = '';`,
+    `  row: Row | undefined;`,
+    ``,
+    `  connectedCallback(): void {`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  setProperty(name: string, value: unknown): void {`,
+    `    (this as Record<string, unknown>)[name] = value;`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  private render(): void {`,
+    `    if (!this.shadowRoot) {`,
+    `      this.attachShadow({ mode: 'open' });`,
+    `    }`,
+    `    const resolvedColor =`,
+    `      this.colorField && this.row && this.row[this.colorField] !== undefined`,
+    `        ? String(this.row[this.colorField])`,
+    `        : this.color;`,
+    `    const label = this.ariaLabel || this.title;`,
+    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><span class="svg-icon" title="\${this.title}" aria-label="\${label}" style="width:\${this.size}px;height:\${this.size}px;color:\${resolvedColor}">\${this.markup}</span>\`;`,
+    `  }`,
+    `}`,
+    ``,
+    `export function register${exportName}(): void {`,
+    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `}`,
+    ``,
+  ]);
 }
 
 function generatePlaceholder(exportName: string, label: string, type: string): string {

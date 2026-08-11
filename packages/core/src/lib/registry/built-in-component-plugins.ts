@@ -3,6 +3,7 @@ import { P0_COMPONENT_DEFINITIONS } from './p0-components';
 import type { ComponentPlugin, ComponentPluginDescriptor } from './component-plugin';
 import { toComponentPluginDescriptor } from './component-plugin';
 import { EXTENSION_COMPONENT_PLUGINS } from './extension-component-plugins';
+import { SVG_COMPONENT_PLUGINS } from './svg-component-plugins';
 import { VR_COMPONENT_PLUGINS } from './vr-component-plugins';
 
 function previewKindForCategory(category: ComponentPlugin['definition']['category']): ComponentPlugin['metadata']['previewKind'] {
@@ -27,6 +28,7 @@ export const builtInComponentPluginDescriptors: ComponentPluginDescriptor[] = [
   ...createBuiltInComponentPlugins().map(toComponentPluginDescriptor),
   ...EXTENSION_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
   ...VR_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
+  ...SVG_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
 ];
 
 export function getComponentPluginDescriptor(type: string): ComponentPluginDescriptor | undefined {
