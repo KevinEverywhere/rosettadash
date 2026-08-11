@@ -1,5 +1,7 @@
 # RosettaDash
 
+[![GitHub](https://img.shields.io/badge/GitHub-KevinEverywhere%2Frosettadash-181717?logo=github)](https://github.com/KevinEverywhere/rosettadash)
+
 RosettaDash is a visual dashboard component builder for **developers working locally**. Design dashboard UIs—forms, tables, charts, layouts—assemble them into composites, and export code for your target stack.
 
 ## Who this is for
