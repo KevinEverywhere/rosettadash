@@ -196,7 +196,7 @@ Client validates actions against registry and binding compatibility (`areDataTyp
 
 | Surface | Phase | Behavior |
 |---------|-------|----------|
-| **AI drawer** | 20 | Chat thread + “Apply to canvas” / “Preview diff” |
+| **AI drawer** | 20 | Chat thread + “Apply to canvas” / voice input (Web Speech API) |
 | **Palette “Ask AI”** | 20 | Quick add from palette search box |
 | **Inspector “Suggest”** | 20 | Property-level suggestions for selected node |
 | **Grouping guide “Ask AI”** | 20 | Extends DAS-69 animated guides with “Build this for me” |

@@ -70,7 +70,8 @@
       <div class="ai-drawer__messages" data-testid="ai-messages">
         @if (!assist.messages().length) {
           <p class="ai-drawer__empty">
-            Describe what to build — for example: “Add a date filter, KPI row, and sales table.”
+            Type or tap Speak and describe what to build — for example: “Add a date filter, KPI row,
+            and sales table.”
           </p>
         }
         @for (message of assist.messages(); track $index) {
@@ -107,15 +108,39 @@
           </button>
         }
         <form class="ai-drawer__form" (ngSubmit)="submit()">
-          <textarea
-            rows="3"
-            placeholder="Describe components, bindings, or a template to apply…"
-            data-testid="ai-prompt"
-            [disabled]="assist.pending()"
-            [ngModel]="prompt()"
-            (ngModelChange)="prompt.set($event)"
-            name="aiPrompt"
-          ></textarea>
+          @if (speech.status() === 'listening' && speech.livePreview()) {
+            <p class="ai-drawer__voice-preview" data-testid="ai-voice-preview">
+              Hearing: {{ speech.livePreview() }}
+            </p>
+          }
+          @if (speech.errorMessage(); as voiceError) {
+            <p class="ai-drawer__error" data-testid="ai-voice-error">{{ voiceError }}</p>
+          }
+          @if (speech.safariHint(); as safariHint) {
+            <p class="ai-drawer__hint" data-testid="ai-safari-voice-hint">{{ safariHint }}</p>
+          }
+          <div class="ai-drawer__input-row">
+            <textarea
+              rows="3"
+              placeholder="Describe components, bindings, or a template to apply…"
+              data-testid="ai-prompt"
+              [disabled]="assist.pending()"
+              [ngModel]="prompt()"
+              (ngModelChange)="prompt.set($event)"
+              name="aiPrompt"
+            ></textarea>
+            <button
+              type="button"
+              class="ai-drawer__mic"
+              data-testid="ai-voice-toggle"
+              [class.ai-drawer__mic--active]="speech.status() === 'listening'"
+              [disabled]="assist.pending() || speech.status() === 'unsupported'"
+              [attr.aria-pressed]="speech.status() === 'listening'"
+              (click)="toggleVoiceInput()"
+            >
+              {{ voiceButtonLabel() }}
+            </button>
+          </div>
           <button
             type="submit"
             class="ai-drawer__send"
