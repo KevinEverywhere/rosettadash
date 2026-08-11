@@ -8,6 +8,10 @@ import { buildNewsFinderComposite } from './news-finder-composite';
 import { buildOnboardingComposite } from './onboarding-composite';
 import { buildSettingsAdminComposite } from './settings-admin-composite';
 import {
+  DASHBOARD_STARTER_SPECS,
+  buildDashboardStarterById,
+} from './dashboard-starter-composites';
+import {
   ANALYTICS_OVERVIEW_TEMPLATE_ID,
   CRUD_LIST_TEMPLATE_ID,
   EMPTY_STARTER_TEMPLATE_ID,
@@ -57,6 +61,15 @@ export const COMPOSITE_TEMPLATE_DEFINITIONS: CompositeTemplateDefinition[] = [
     description: 'Language, region, type filters, search, results table, and article detail.',
     build: buildNewsFinderComposite,
   },
+  ...DASHBOARD_STARTER_SPECS.map((spec) => ({
+    id: spec.templateId,
+    name: spec.name,
+    description: spec.description,
+    build: (
+      registry: typeof defaultComponentRegistry,
+      options?: BuildCompositeTemplateOptions,
+    ) => buildDashboardStarterById(spec.templateId, registry, options),
+  })),
 ];
 
 const templateById = new Map(

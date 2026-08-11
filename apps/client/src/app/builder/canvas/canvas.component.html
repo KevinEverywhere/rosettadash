@@ -23,6 +23,7 @@
   <div
     #surface
     class="canvas__surface canvas__surface--grid"
+    [class.canvas__surface--dashboard]="!!dashboardBanner()"
     tabindex="0"
     role="region"
     aria-label="Canvas design surface"
@@ -39,6 +40,19 @@
         </p>
       </div>
     } @else {
+      @if (dashboardBanner(); as dashboard) {
+        <div class="canvas__dashboard" data-testid="canvas-dashboard-banner">
+          <div class="canvas__dashboard-heading">
+            <span class="canvas__dashboard-label">Dashboard</span>
+            <strong class="canvas__dashboard-name">{{ dashboard.name }}</strong>
+          </div>
+          @if (dashboard.description) {
+            <p class="canvas__dashboard-description">{{ dashboard.description }}</p>
+          }
+          <code class="canvas__dashboard-id">{{ dashboard.templateId }}</code>
+        </div>
+      }
+
       <svg class="canvas__edges" aria-hidden="true">
         @for (edge of bindingEdges(); track edge.id) {
           <line
@@ -68,20 +82,20 @@
             (keydown.enter)="selectNode(node.id, $event)"
             (keydown.space)="selectNode(node.id, $event)"
           >
-            <header
-              class="canvas__node-header"
-              role="group"
-              tabindex="0"
-              [attr.aria-label]="node.label + ' header'"
-              (click)="stopHeaderEvent($event)"
-              (keydown.enter)="stopHeaderEvent($event)"
-              (keydown.space)="stopHeaderEvent($event)"
-              (pointerdown)="onHeaderPointerDown(node.id, $event)"
-              (pointermove)="onHeaderPointerMove($event)"
-              (pointerup)="onHeaderPointerUp($event)"
-            >
-              <div class="canvas__node-header-row">
-                <span class="canvas__node-label">{{ node.label }}</span>
+            <div class="canvas__node-frame">
+              <header
+                class="canvas__node-namebar"
+                role="group"
+                tabindex="0"
+                [attr.aria-label]="node.label + ' component'"
+                (click)="stopHeaderEvent($event)"
+                (keydown.enter)="stopHeaderEvent($event)"
+                (keydown.space)="stopHeaderEvent($event)"
+                (pointerdown)="onHeaderPointerDown(node.id, $event)"
+                (pointermove)="onHeaderPointerMove($event)"
+                (pointerup)="onHeaderPointerUp($event)"
+              >
+                <span class="canvas__node-name">{{ node.label }}</span>
                 <button
                   type="button"
                   class="canvas__node-close"
@@ -91,11 +105,20 @@
                 >
                   ×
                 </button>
-              </div>
-              <span class="canvas__node-type">{{ node.type }}</span>
-            </header>
+              </header>
 
-            <div class="canvas__node-ports">
+              <div class="canvas__node-body">
+                <div class="canvas__node-meta">
+                  <code class="canvas__node-type">{{ node.type }}</code>
+                  @if (nodeSubtitle(node); as subtitle) {
+                    <p class="canvas__node-subtitle">{{ subtitle }}</p>
+                  }
+                  @if (nodeDataSource(node); as dataSource) {
+                    <p class="canvas__node-datasource">{{ dataSource }}</p>
+                  }
+                </div>
+
+                <div class="canvas__node-ports">
               <ul class="canvas__ports canvas__ports--inputs">
                 @for (port of node.ports.inputs; track port.id) {
                   <li>
@@ -132,6 +155,8 @@
                   </li>
                 }
               </ul>
+            </div>
+              </div>
             </div>
 
             @if (state.selectedNodeIdsSet().has(node.id)) {

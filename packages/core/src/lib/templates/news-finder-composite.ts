@@ -46,14 +46,26 @@ export function buildNewsFinderComposite(
     layout: { x: 24, y: 416, width: 572, height: 180 },
   });
 
+  const postgres = registry.createNode('infra.postgresql', {
+    id: 'news-pg',
+    properties: { connectionEnvKey: 'DATABASE_URL', table: 'news_articles' },
+  });
+
   return {
     id: options.id ?? crypto.randomUUID(),
     name: 'News finder',
     description: 'Language, region, and type filters with search and article detail.',
     templateId: NEWS_FINDER_TEMPLATE_ID,
     version: options.version ?? 1,
-    nodes: [language, region, newsType, search, results, article],
+    nodes: [language, region, newsType, search, results, article, postgres],
     bindings: [
+      {
+        id: 'news-b0',
+        sourceNodeId: 'news-pg',
+        sourcePortId: 'rowset',
+        targetNodeId: 'news-results',
+        targetPortId: 'data',
+      },
       {
         id: 'news-b1',
         sourceNodeId: 'news-results',
@@ -62,5 +74,10 @@ export function buildNewsFinderComposite(
         targetPortId: 'row',
       },
     ],
+    exportTargets: {
+      ui: 'react',
+      server: 'nest',
+      database: 'postgresql',
+    },
   };
 }

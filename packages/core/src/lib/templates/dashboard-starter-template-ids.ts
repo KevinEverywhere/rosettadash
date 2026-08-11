@@ -1,0 +1,23 @@
+export const MEDIA_SOCIAL_CONTENT_TEMPLATE_ID = 'media-social-content';
+export const MEDIA_WEB_SEO_TEMPLATE_ID = 'media-web-seo';
+export const MEDIA_CAMPAIGN_ROI_TEMPLATE_ID = 'media-campaign-roi';
+export const DEV_INFRA_MONITOR_TEMPLATE_ID = 'dev-infra-monitor';
+export const DEV_APM_OVERVIEW_TEMPLATE_ID = 'dev-apm-overview';
+export const DEV_CICD_PIPELINE_TEMPLATE_ID = 'dev-cicd-pipeline';
+export const OFFICE_PROJECT_SPRINT_TEMPLATE_ID = 'office-project-sprint';
+export const OFFICE_SALES_PIPELINE_TEMPLATE_ID = 'office-sales-pipeline';
+export const OFFICE_SUPPORT_DESK_TEMPLATE_ID = 'office-support-desk';
+export const OFFICE_EXECUTIVE_KPI_TEMPLATE_ID = 'office-executive-kpi';
+
+export const DASHBOARD_STARTER_TEMPLATE_IDS = [
+  MEDIA_SOCIAL_CONTENT_TEMPLATE_ID,
+  MEDIA_WEB_SEO_TEMPLATE_ID,
+  MEDIA_CAMPAIGN_ROI_TEMPLATE_ID,
+  DEV_INFRA_MONITOR_TEMPLATE_ID,
+  DEV_APM_OVERVIEW_TEMPLATE_ID,
+  DEV_CICD_PIPELINE_TEMPLATE_ID,
+  OFFICE_PROJECT_SPRINT_TEMPLATE_ID,
+  OFFICE_SALES_PIPELINE_TEMPLATE_ID,
+  OFFICE_SUPPORT_DESK_TEMPLATE_ID,
+  OFFICE_EXECUTIVE_KPI_TEMPLATE_ID,
+] as const;

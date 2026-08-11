@@ -7,4 +7,7 @@ export * from './settings-admin-composite';
 export * from './empty-starter-composite';
 export * from './news-finder-template-id';
 export * from './news-finder-composite';
+export * from './dashboard-starter-template-ids';
+export * from './build-dashboard-starter';
+export * from './dashboard-starter-composites';
 export * from './composite-template-registry';

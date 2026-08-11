@@ -4,6 +4,7 @@ export * from './lib/model/data-types';
 export * from './lib/model/types';
 export * from './lib/domain';
 export * from './lib/registry/component-registry';
+export * from './lib/registry/node-display-hints';
 export * from './lib/registry/component-plugin';
 export * from './lib/registry/built-in-component-plugins';
 export * from './lib/registry/extension-component-plugins';

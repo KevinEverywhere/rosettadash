@@ -143,6 +143,19 @@
       >
         Export
       </button>
+      @if (contentLibrary.message(); as libraryMessage) {
+        <span class="builder__library-notice" data-testid="library-save-notice">{{ libraryMessage }}</span>
+      }
+      <button
+        type="button"
+        class="builder__library-save"
+        data-testid="save-to-library-button"
+        title="Save current layout to Admin → Saved content"
+        [disabled]="state.loading() || state.nodes().length === 0"
+        (click)="saveToLibrary()"
+      >
+        Save to library
+      </button>
       <button
         type="button"
         class="builder__save"

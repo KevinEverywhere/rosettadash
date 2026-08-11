@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, computed, inject, signal } from '@angular/core';
-import { Binding, ComponentNode, PlacementPrompt, getGroupingGuide, getInstructionSteps, groupingAnimationLabel, hasInstructionGuide, resolveGroupingAnimationBlocks, type InstructionStep } from '@dashbuilder/core';
+import { Binding, ComponentNode, PlacementPrompt, getGroupingGuide, getInstructionSteps, groupingAnimationLabel, hasInstructionGuide, readNodeDisplayDataSource, readNodeDisplaySubtitle, resolveGroupingAnimationBlocks, type InstructionStep } from '@dashbuilder/core';
 import { BuilderStateService } from '../builder-state.service';
 import {
   CANVAS_MIN_NODE_HEIGHT,
@@ -13,7 +13,8 @@ import {
 } from './canvas-viewport';
 
 const PORT_ROW_HEIGHT = 24;
-const NODE_HEADER_HEIGHT = 44;
+const NODE_NAME_BAR_HEIGHT = 36;
+const NODE_TYPE_ROW_HEIGHT = 22;
 
 export interface BindingEdge {
   id: string;
@@ -353,6 +354,37 @@ export class CanvasComponent implements AfterViewInit {
     return !this.isPendingOutput(nodeId, portId);
   }
 
+  protected nodeSubtitle(node: ComponentNode): string | undefined {
+    return readNodeDisplaySubtitle(node.properties);
+  }
+
+  protected nodeDataSource(node: ComponentNode): string | undefined {
+    return readNodeDisplayDataSource(node.properties);
+  }
+
+  protected nodeHeaderHeight(node: ComponentNode): number {
+    let height = NODE_NAME_BAR_HEIGHT + NODE_TYPE_ROW_HEIGHT;
+    if (this.nodeSubtitle(node)) {
+      height += 16;
+    }
+    if (this.nodeDataSource(node)) {
+      height += 14;
+    }
+    return height;
+  }
+
+  protected readonly dashboardBanner = computed(() => {
+    const composite = this.state.composite();
+    if (!composite?.templateId) {
+      return null;
+    }
+    return {
+      name: composite.name,
+      description: composite.description,
+      templateId: composite.templateId,
+    };
+  });
+
   protected nodeHeight(node: ComponentNode): number {
     const minHeight = this.minNodeHeight(node);
     const layoutHeight = node.layout?.height;
@@ -364,7 +396,10 @@ export class CanvasComponent implements AfterViewInit {
 
   protected minNodeHeight(node: ComponentNode): number {
     const portCount = Math.max(node.ports.inputs.length, node.ports.outputs.length, 1);
-    return Math.max(CANVAS_MIN_NODE_HEIGHT, NODE_HEADER_HEIGHT + portCount * PORT_ROW_HEIGHT + 12);
+    return Math.max(
+      CANVAS_MIN_NODE_HEIGHT,
+      this.nodeHeaderHeight(node) + portCount * PORT_ROW_HEIGHT + 12,
+    );
   }
 
   private edgeForBinding(
@@ -406,7 +441,7 @@ export class CanvasComponent implements AfterViewInit {
       direction === 'input'
         ? node.layout.x
         : node.layout.x + node.layout.width;
-    const y = node.layout.y + NODE_HEADER_HEIGHT + index * PORT_ROW_HEIGHT + PORT_ROW_HEIGHT / 2;
+    const y = node.layout.y + this.nodeHeaderHeight(node) + index * PORT_ROW_HEIGHT + PORT_ROW_HEIGHT / 2;
 
     return { x, y };
   }

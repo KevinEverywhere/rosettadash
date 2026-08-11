@@ -42,7 +42,12 @@
             [style.width.px]="node.layout?.width ?? 220"
             [style.minHeight.px]="node.layout?.height ?? 72"
           >
-            <app-preview-node [node]="node" />
+            <div class="preview__node-frame">
+              <header class="preview__node-namebar">{{ node.label }}</header>
+              <div class="preview__node-body">
+                <app-preview-node [node]="node" />
+              </div>
+            </div>
           </div>
         }
       </div>

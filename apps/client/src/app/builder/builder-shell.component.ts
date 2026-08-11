@@ -15,6 +15,7 @@ import { CanvasComponent } from './canvas/canvas.component';
 import { ExportWizardComponent } from './export/export-wizard.component';
 import { AiDrawerComponent } from './ai/ai-drawer.component';
 import { AdminFeatureFlagsService } from '../admin/admin-feature-flags.service';
+import { ContentLibraryService } from '../admin/content-library.service';
 import { InspectorComponent } from './inspector/inspector.component';
 import { PaletteComponent } from './palette/palette.component';
 import { PreviewPanelComponent } from './preview/preview-panel.component';
@@ -45,6 +46,7 @@ export class BuilderShellComponent implements OnInit {
   protected readonly viewport = inject(DisplayAvailabilityService);
   protected readonly layout = inject(BuilderWorkspaceLayoutService);
   protected readonly featureFlags = inject(AdminFeatureFlagsService);
+  protected readonly contentLibrary = inject(ContentLibraryService);
 
   protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
@@ -68,6 +70,7 @@ export class BuilderShellComponent implements OnInit {
 
     await this.auth.initialize();
     this.featureFlags.initialize();
+    this.contentLibrary.initialize();
     if (this.auth.authenticated()) {
       await this.projectService.initialize();
     }
@@ -82,6 +85,19 @@ export class BuilderShellComponent implements OnInit {
 
   protected save(): void {
     void this.projectService.save();
+  }
+
+  protected saveToLibrary(): void {
+    if (this.state.nodes().length === 0) {
+      return;
+    }
+    const composite = this.state.buildCompositePayload();
+    const label = composite.name?.trim() || 'Untitled dashboard';
+    this.contentLibrary.saveComposite({
+      label,
+      composite,
+      stackProfile: this.state.project()?.stackProfile ?? null,
+    });
   }
 
   protected applySelectedTemplate(): void {
