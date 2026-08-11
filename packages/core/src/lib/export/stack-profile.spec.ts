@@ -1,6 +1,8 @@
 import {
   createEmptyStylingProfile,
   DEFAULT_EXPORT_TARGETS,
+  getCompatibleDatabaseStackOptions,
+  getCompatibleServerStackOptions,
   getCompatibleStackDefaults,
   getCompatibleStylingAuthoring,
   getCompatibleStylingOptions,
@@ -8,12 +10,17 @@ import {
   getDefaultStylingProfile,
   getStylingAuthoringStackOptions,
   getStylingFoundationStackOptions,
+  isDatabaseCompatibleWithUi,
   isEmptyStylingProfile,
+  isServerCompatibleWithUi,
   normalizeStackProfile,
   normalizeStackStyling,
+  normalizeUiFrameworkChoice,
   resolveEffectiveExportTargets,
   resolveEffectiveStyling,
   resolveEffectiveStylingProfile,
+  resolveStackDatabaseChoiceForUi,
+  resolveStackServerChoiceForUi,
   stackProfileToExportTargets,
 } from './stack-profile';
 
@@ -39,12 +46,31 @@ describe('stack profile', () => {
     });
   });
 
-  it('returns scratch-pad profile for any', () => {
-    expect(getCompatibleStackDefaults('any')).toEqual({
-      ui: 'any',
+  it('returns web components profile defaults', () => {
+    expect(getCompatibleStackDefaults('web-components')).toEqual({
+      ui: 'web-components',
+      server: 'none',
+      database: 'none',
       styling: createEmptyStylingProfile(),
     });
-    expect(stackProfileToExportTargets({ ui: 'any', styling: 'tailwind' })).toBeUndefined();
+    expect(stackProfileToExportTargets({ ui: 'web-components', styling: 'tailwind' })).toBeUndefined();
+  });
+
+  it('migrates legacy scratch-pad any to web-components', () => {
+    expect(normalizeUiFrameworkChoice('any')).toBe('web-components');
+    expect(
+      normalizeStackProfile({
+        ui: 'any' as never,
+        server: 'nest',
+        database: 'mongodb',
+        styling: 'tailwind',
+      }),
+    ).toEqual({
+      ui: 'web-components',
+      server: 'nest',
+      database: 'mongodb',
+      styling: normalizeStackStyling('web-components', 'tailwind'),
+    });
   });
 
   it('includes None chips in styling stack options', () => {
@@ -53,7 +79,7 @@ describe('stack profile', () => {
       'neutral-tokens',
       'tailwind',
     ]);
-    expect(getStylingAuthoringStackOptions('any').map((option) => option.id)).toEqual([
+    expect(getStylingAuthoringStackOptions('web-components').map((option) => option.id)).toEqual([
       'none',
       'css-modules',
       'plain-css',
@@ -84,7 +110,7 @@ describe('stack profile', () => {
       'mui',
       'plain-css',
     ]);
-    expect(getCompatibleStylingOptions('any').map((option) => option.id)).toEqual([
+    expect(getCompatibleStylingOptions('web-components').map((option) => option.id)).toEqual([
       'neutral',
       'tailwind',
     ]);
@@ -93,6 +119,105 @@ describe('stack profile', () => {
       'styled-components',
       'plain-css',
     ]);
+  });
+
+  it('filters server and database options by UI framework', () => {
+    expect(getCompatibleServerStackOptions('react').map((option) => option.id)).toEqual([
+      'none',
+      'next',
+      'nest',
+      'express',
+    ]);
+    expect(getCompatibleServerStackOptions('vue').map((option) => option.id)).toEqual([
+      'none',
+      'nuxt',
+      'nest',
+      'express',
+    ]);
+    expect(getCompatibleServerStackOptions('angular').map((option) => option.id)).toEqual([
+      'none',
+      'nest',
+      'express',
+    ]);
+    expect(getCompatibleServerStackOptions('web-components').map((option) => option.id)).toEqual([
+      'none',
+      'next',
+      'nuxt',
+      'nest',
+      'express',
+    ]);
+
+    expect(getCompatibleDatabaseStackOptions('react').map((option) => option.id)).toEqual([
+      'none',
+      'postgresql',
+      'mongodb',
+      'supabase',
+      'mysql',
+    ]);
+  });
+
+  it('checks server and database compatibility', () => {
+    expect(isServerCompatibleWithUi('react', 'next')).toBe(true);
+    expect(isServerCompatibleWithUi('react', 'nuxt')).toBe(false);
+    expect(isServerCompatibleWithUi('vue', 'next')).toBe(false);
+    expect(isServerCompatibleWithUi('angular', 'nest')).toBe(true);
+    expect(isDatabaseCompatibleWithUi('react', 'postgresql')).toBe(true);
+    expect(isDatabaseCompatibleWithUi('react', 'invalid' as never)).toBe(false);
+  });
+
+  it('resolves server and database choices for UI framework', () => {
+    expect(resolveStackServerChoiceForUi('react', null)).toBe('next');
+    expect(resolveStackServerChoiceForUi('react', 'none')).toBe('none');
+    expect(resolveStackServerChoiceForUi('react', 'nuxt')).toBe('next');
+    expect(resolveStackServerChoiceForUi('vue', 'next')).toBe('nuxt');
+    expect(resolveStackDatabaseChoiceForUi('react', 'none')).toBe('none');
+    expect(resolveStackDatabaseChoiceForUi('react', null)).toBe('postgresql');
+  });
+
+  it('resolves server and database choices for web components', () => {
+    expect(resolveStackServerChoiceForUi('web-components', null)).toBe('none');
+    expect(resolveStackServerChoiceForUi('web-components', 'none')).toBe('none');
+    expect(resolveStackServerChoiceForUi('web-components', 'nuxt')).toBe('nuxt');
+    expect(resolveStackDatabaseChoiceForUi('web-components', 'mongodb')).toBe('mongodb');
+  });
+
+  it('preserves server and database on web components profiles during normalization', () => {
+    expect(
+      normalizeStackProfile({
+        ui: 'web-components',
+        server: 'nest',
+        database: 'mongodb',
+        styling: 'tailwind',
+      }),
+    ).toEqual({
+      ui: 'web-components',
+      server: 'nest',
+      database: 'mongodb',
+      styling: normalizeStackStyling('web-components', 'tailwind'),
+    });
+  });
+
+  it('strips incompatible server choices during normalization', () => {
+    expect(normalizeStackProfile({ ui: 'react', server: 'nuxt' })).toEqual({
+      ui: 'react',
+      server: 'next',
+      database: 'postgresql',
+      styling: createEmptyStylingProfile(),
+    });
+
+    expect(normalizeStackProfile({ ui: 'vue', server: 'next' })).toEqual({
+      ui: 'vue',
+      server: 'nuxt',
+      database: 'postgresql',
+      styling: createEmptyStylingProfile(),
+    });
+
+    expect(normalizeStackProfile({ ui: 'angular', server: 'next' })).toEqual({
+      ui: 'angular',
+      server: 'nest',
+      database: 'postgresql',
+      styling: createEmptyStylingProfile(),
+    });
   });
 
   it('normalizes partial profiles and styling compatibility', () => {
@@ -157,7 +282,7 @@ describe('stack profile', () => {
       }),
     ).toEqual({ ui: 'vue', server: 'nuxt', database: 'postgresql' });
 
-    expect(resolveEffectiveExportTargets(undefined, { ui: 'any', styling: 'tailwind' })).toEqual(
+    expect(resolveEffectiveExportTargets(undefined, { ui: 'web-components', styling: 'tailwind' })).toEqual(
       DEFAULT_EXPORT_TARGETS,
     );
   });

@@ -67,13 +67,16 @@ describe('WelcomePageComponent', () => {
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeTruthy();
   });
 
-  it('shows scratch-pad note when Any is selected', () => {
+  it('shows server and database sections for Web Components', () => {
     expandSection(fixture, 'ui');
-    fixture.nativeElement.querySelector('[data-testid="stack-ui-any"]').click();
+    fixture.nativeElement.querySelector('[data-testid="stack-ui-web-components"]').click();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-scratch-note"]')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeFalsy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-database"]')).toBeTruthy();
+    expandSection(fixture, 'server');
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-nuxt"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-next"]')).toBeTruthy();
   });
 
   it('shows framework-filtered styling options when styling section is expanded', () => {
@@ -87,7 +90,7 @@ describe('WelcomePageComponent', () => {
       fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-styled-components"]'),
     ).toBeTruthy();
 
-    fixture.nativeElement.querySelector('[data-testid="stack-ui-any"]').click();
+    fixture.nativeElement.querySelector('[data-testid="stack-ui-web-components"]').click();
     fixture.detectChanges();
     expandSection(fixture, 'styling');
 
@@ -166,6 +169,42 @@ describe('WelcomePageComponent', () => {
 
     expect(fixture.nativeElement.querySelector('[data-testid="stack-server-none"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-database-none"]')).toBeTruthy();
+  });
+
+  it('filters server options by UI framework', () => {
+    selectReact(fixture);
+    expandSection(fixture, 'server');
+
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-next"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-nest"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-express"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-nuxt"]')).toBeFalsy();
+
+    expandSection(fixture, 'ui');
+    fixture.nativeElement.querySelector('[data-testid="stack-ui-vue"]').click();
+    fixture.detectChanges();
+    expandSection(fixture, 'server');
+
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-nuxt"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-server-next"]')).toBeFalsy();
+  });
+
+  it('resets incompatible server when switching UI framework', () => {
+    expandSection(fixture, 'ui');
+    fixture.nativeElement.querySelector('[data-testid="stack-ui-vue"]').click();
+    fixture.detectChanges();
+    expandSection(fixture, 'server');
+    fixture.nativeElement.querySelector('[data-testid="stack-server-nuxt"]').click();
+    fixture.detectChanges();
+
+    expandSection(fixture, 'ui');
+    fixture.nativeElement.querySelector('[data-testid="stack-ui-react"]').click();
+    fixture.detectChanges();
+
+    const serverSummary = fixture.nativeElement.querySelector(
+      '[data-testid="stack-section-toggle-server"] .app-collapsible__summary',
+    );
+    expect(serverSummary?.textContent).toContain('Next.js');
   });
 
   it('persists None server and database in pending stack profile', async () => {

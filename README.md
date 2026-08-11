@@ -227,10 +227,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-77](https://planetkevin.atlassian.net/browse/DAS-77)** — Fix Admin builder guides UI and document guides + AI usage  
-Branch: `feature/DAS-77-builder-guides-readme`
+**[DAS-78](https://planetkevin.atlassian.net/browse/DAS-78)** — Stack server and database compatibility validation  
+Branch: `feature/DAS-78-stack-server-database-validation`
 
-See [docs/28-app-component-css-convention.md](docs/28-app-component-css-convention.md) for shared `app-*` component class naming.
+See [docs/29-stack-server-database-validation.md](docs/29-stack-server-database-validation.md) for compatibility rules and Welcome filtering behavior.
 
 ## License
 

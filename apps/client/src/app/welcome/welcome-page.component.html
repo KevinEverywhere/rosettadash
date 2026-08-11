@@ -14,16 +14,16 @@
     <section class="welcome__hero" aria-labelledby="welcome-heading">
       <p class="welcome__lead">
         Design composite dashboards visually, preview with mock data, and export production-ready
-        code for your UI framework, server, and database.
+        code — either framework-native (React, Angular, Vue, Svelte) or as W3C Web Components.
       </p>
       <ul class="welcome__highlights">
         <li>Drag-and-drop canvas with bindings and live preview</li>
-        <li>Multi-target export to React, Angular, Vue, Svelte, and more</li>
-        <li>Start focused on one stack, or pick <strong>Any</strong> to experiment freely</li>
+        <li>Framework-based export or standards-based Custom Elements</li>
+        <li>Pair your UI target with server, database, and styling on day one</li>
       </ul>
       @if (showFrameworkPrompt()) {
         <p class="welcome__framework-prompt" data-testid="welcome-framework-prompt">
-          Choose a framework to begin →
+          Choose a component model to begin →
         </p>
       }
     </section>
@@ -32,8 +32,8 @@
       <header class="welcome__stack-header">
         <h2>Choose your tech stack</h2>
         <p>
-          Expand each section after picking your UI framework. Styling options update to match your
-          framework — or choose <strong>Any</strong> for scratch-pad mode.
+          Pick a <strong>framework-based</strong> UI target or <strong>W3C Web Components</strong>, then
+          expand server, database, and styling. Styling options adapt to your component model.
         </p>
       </header>
 
@@ -46,31 +46,36 @@
         panelTestId="stack-section-panel-ui"
         (toggled)="toggleSection('ui')"
       >
-        <span appCollapsibleTitle>UI framework</span>
+        <span appCollapsibleTitle>Component model</span>
         <span appCollapsibleSummary>{{ uiSectionSummary() }}</span>
 
-        <ul class="welcome__options">
-          @for (option of uiOptions; track option.id) {
-            <li>
-              <button
-                type="button"
-                class="welcome__option"
-                [class.welcome__option--selected]="uiChoice() === option.id"
-                [attr.data-testid]="'stack-ui-' + option.id"
-                (click)="selectUi(option.id)"
-              >
-                <span class="welcome__option-label">{{ option.label }}</span>
-                <span class="welcome__option-desc">{{ option.description }}</span>
-              </button>
-            </li>
-          }
-        </ul>
+        @for (group of uiTargetGroups; track group.id) {
+          <div class="welcome__option-group">
+            <h3 class="welcome__option-group-title">{{ group.label }}</h3>
+            <p class="welcome__option-group-lead">{{ group.description }}</p>
+            <ul class="welcome__options">
+              @for (option of group.options; track option.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="welcome__option"
+                    [class.welcome__option--selected]="uiChoice() === option.id"
+                    [attr.data-testid]="'stack-ui-' + option.id"
+                    (click)="selectUi(option.id)"
+                  >
+                    <span class="welcome__option-label">{{ option.label }}</span>
+                    <span class="welcome__option-desc">{{ option.description }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
       </app-collapsible>
 
-      @if (!isScratchPad()) {
-        <app-collapsible
-          appearance="stack"
-          [expanded]="isSectionOpen('server')"
+      <app-collapsible
+        appearance="stack"
+        [expanded]="isSectionOpen('server')"
           [summaryPlaceholder]="isPlaceholderSummary(serverSectionSummary())"
           toggleTestId="stack-section-toggle-server"
           panelTestId="stack-section-panel-server"
@@ -81,7 +86,7 @@
 
           <p class="welcome__section-lead">{{ serverEcosystemNote }}</p>
           <ul class="welcome__chip-row">
-            @for (option of serverOptions; track option.id) {
+            @for (option of serverOptions(); track option.id) {
               <li>
                 <button
                   type="button"
@@ -113,7 +118,7 @@
             Optional — choose <strong>None</strong> if you are exporting UI components only.
           </p>
           <ul class="welcome__chip-row">
-            @for (option of databaseOptions; track option.id) {
+            @for (option of databaseOptions(); track option.id) {
               <li>
                 <button
                   type="button"
@@ -129,12 +134,6 @@
             }
           </ul>
         </app-collapsible>
-      } @else {
-        <p class="welcome__scratch-note" data-testid="stack-scratch-note">
-          Scratch-pad mode keeps all export targets available in the builder. You can export to any
-          supported combination later.
-        </p>
-      }
 
       <app-collapsible
         appearance="stack"

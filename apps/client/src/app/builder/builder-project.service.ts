@@ -107,8 +107,8 @@ export class BuilderProjectService {
 
   private async createNewWorkspace(): Promise<void> {
     const pendingStack = readPendingStackProfile();
-    const stackProfile: StackProfile = normalizeStackProfile(pendingStack ?? { ui: 'any' }) ?? {
-      ui: 'any',
+    const stackProfile: StackProfile = normalizeStackProfile(pendingStack ?? { ui: 'web-components' }) ?? {
+      ui: 'web-components',
     };
     clearPendingStackProfile();
 

@@ -118,7 +118,7 @@ export interface StackStylingProfile {
 }
 
 export interface StackProfile {
-  ui: 'react' | 'angular' | 'vue' | 'svelte' | 'any';
+  ui: 'react' | 'angular' | 'vue' | 'svelte' | 'web-components';
   server?: StackServerChoice;
   database?: StackDatabaseChoice;
   /** Composable styling profile, or legacy single {@link StylingFrameworkChoice}. */

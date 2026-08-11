@@ -4,16 +4,17 @@ import { firstValueFrom } from 'rxjs';
 import {
   APP_NAME,
   createEmptyStylingProfile,
-  DATABASE_STACK_OPTIONS,
   formatStylingProfileSummary,
-  getCompatibleStackDefaults,
+  getCompatibleDatabaseStackOptions,
+  getCompatibleServerStackOptions,
   getStylingAuthoringStackOptions,
   getStylingComponentLibraryStackOptions,
   getStylingFoundationStackOptions,
   normalizeStackProfile,
   normalizeStackStyling,
+  resolveStackDatabaseChoiceForUi,
+  resolveStackServerChoiceForUi,
   SERVER_STACK_ECOSYSTEM_NOTE,
-  SERVER_STACK_OPTIONS,
   type StackDatabaseChoice,
   type StackProfile,
   type StackServerChoice,
@@ -22,6 +23,7 @@ import {
   type StylingComponentLibraryStackChoice,
   type StylingFoundationStackChoice,
   type UiFrameworkChoice,
+  UI_TARGET_GROUPS,
   UI_FRAMEWORK_OPTIONS,
 } from '@dashbuilder/core';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';
@@ -52,10 +54,18 @@ export class WelcomePageComponent implements OnInit {
   private readonly projectsApi = inject(ProjectsApiService);
 
   protected readonly appName = APP_NAME;
-  protected readonly uiOptions = UI_FRAMEWORK_OPTIONS;
-  protected readonly serverOptions = SERVER_STACK_OPTIONS;
-  protected readonly databaseOptions = DATABASE_STACK_OPTIONS;
+  protected readonly uiTargetGroups = UI_TARGET_GROUPS;
+  protected readonly allUiOptions = UI_FRAMEWORK_OPTIONS;
   protected readonly serverEcosystemNote = SERVER_STACK_ECOSYSTEM_NOTE;
+
+  protected readonly serverOptions = computed(() => {
+    const ui = this.uiChoice();
+    return ui ? getCompatibleServerStackOptions(ui) : [];
+  });
+  protected readonly databaseOptions = computed(() => {
+    const ui = this.uiChoice();
+    return ui ? getCompatibleDatabaseStackOptions(ui) : [];
+  });
 
   protected readonly uiChoice = signal<UiFrameworkChoice | null>(null);
   protected readonly serverChoice = signal<StackServerChoice | null>(null);
@@ -94,7 +104,7 @@ export class WelcomePageComponent implements OnInit {
     if (!ui) {
       return '';
     }
-    return this.uiOptions.find((option) => option.id === ui)?.label ?? '';
+    return this.allUiOptions.find((option) => option.id === ui)?.label ?? '';
   });
 
   protected readonly stylingSummary = computed(() => {
@@ -107,7 +117,7 @@ export class WelcomePageComponent implements OnInit {
     if (!server) {
       return '';
     }
-    return this.serverOptions.find((option) => option.id === server)?.label ?? '';
+    return this.serverOptions().find((option) => option.id === server)?.label ?? '';
   });
 
   protected readonly databaseSummary = computed(() => {
@@ -115,14 +125,20 @@ export class WelcomePageComponent implements OnInit {
     if (!database) {
       return '';
     }
-    return this.databaseOptions.find((option) => option.id === database)?.label ?? '';
+    return this.databaseOptions().find((option) => option.id === database)?.label ?? '';
   });
 
   protected readonly showFrameworkPrompt = computed(() => this.uiChoice() === null);
 
   protected stylingSectionTitle(): string {
     const ui = this.uiChoice();
-    return ui ? `Styling for ${this.selectedUiLabel()}` : 'Styling';
+    if (!ui) {
+      return 'Styling';
+    }
+    if (ui === 'web-components') {
+      return 'Styling for Web Components';
+    }
+    return `Styling for ${this.selectedUiLabel()}`;
   }
 
   ngOnInit(): void {
@@ -262,10 +278,6 @@ export class WelcomePageComponent implements OnInit {
     });
   }
 
-  protected isScratchPad(): boolean {
-    return this.uiChoice() === 'any';
-  }
-
   protected requestContinue(): void {
     void this.continueToBuilder();
   }
@@ -309,14 +321,14 @@ export class WelcomePageComponent implements OnInit {
   }
 
   protected serverSectionSummary(): string {
-    if (!this.hasUiChoice() || this.isScratchPad()) {
+    if (!this.hasUiChoice()) {
       return 'Select';
     }
     return this.serverSummary() || 'Select';
   }
 
   protected databaseSectionSummary(): string {
-    if (!this.hasUiChoice() || this.isScratchPad()) {
+    if (!this.hasUiChoice()) {
       return 'Select';
     }
     return this.databaseSummary() || 'Select';
@@ -362,7 +374,7 @@ export class WelcomePageComponent implements OnInit {
           useBaselineStack && this.baselineProfile
             ? this.baselineProfile
             : this.buildProfile(),
-        ) ?? { ui: 'any' };
+        ) ?? { ui: 'web-components' };
       writePendingStackProfile(profile);
       void this.router.navigate(['/builder']);
       return;
@@ -373,7 +385,7 @@ export class WelcomePageComponent implements OnInit {
       return;
     }
 
-    const profile = normalizeStackProfile(this.buildProfile()) ?? { ui: 'any' };
+    const profile = normalizeStackProfile(this.buildProfile()) ?? { ui: 'web-components' };
     writePendingStackProfile(profile);
     void this.router.navigate(['/builder']);
   }
@@ -436,40 +448,25 @@ export class WelcomePageComponent implements OnInit {
   }
 
   private applyUiDefaults(ui: UiFrameworkChoice): void {
-    const defaults = getCompatibleStackDefaults(ui);
-    if (defaults.server) {
-      this.serverChoice.set(defaults.server);
-    }
-    if (defaults.database) {
-      this.databaseChoice.set(defaults.database);
-    }
+    this.serverChoice.set(resolveStackServerChoiceForUi(ui, this.serverChoice()));
+    this.databaseChoice.set(resolveStackDatabaseChoiceForUi(ui, this.databaseChoice()));
     this.stylingProfile.set(createEmptyStylingProfile());
   }
 
   private buildProfile(): StackProfile {
-    const ui = this.uiChoice() ?? 'any';
+    const ui = this.uiChoice() ?? 'web-components';
     return {
       ui,
-      ...(ui === 'any'
-        ? {}
-        : {
-            server: this.serverChoice() ?? 'none',
-            database: this.databaseChoice() ?? 'none',
-          }),
+      server: this.serverChoice() ?? 'none',
+      database: this.databaseChoice() ?? 'none',
       styling: this.stylingProfile() ?? createEmptyStylingProfile(),
     };
   }
 
   private hydrateFromProfile(profile: StackProfile): void {
     this.uiChoice.set(profile.ui);
-    if (profile.ui === 'any') {
-      this.serverChoice.set(null);
-      this.databaseChoice.set(null);
-    } else {
-      const defaults = getCompatibleStackDefaults(profile.ui);
-      this.serverChoice.set(profile.server ?? defaults.server ?? 'none');
-      this.databaseChoice.set(profile.database ?? defaults.database ?? 'none');
-    }
+    this.serverChoice.set(resolveStackServerChoiceForUi(profile.ui, profile.server ?? null));
+    this.databaseChoice.set(resolveStackDatabaseChoiceForUi(profile.ui, profile.database ?? null));
     this.stylingProfile.set(
       normalizeStackStyling(profile.ui, profile.styling ?? createEmptyStylingProfile()),
     );

@@ -30,13 +30,15 @@ describe('ProjectsService', () => {
       styling: createEmptyStylingProfile(),
     });
 
-    const scratch = service.createProject({
-      name: 'Scratch pad',
-      stackProfile: { ui: 'any', server: 'nest', database: 'mongodb', styling: 'tailwind' },
+    const webComponents = service.createProject({
+      name: 'Web Components',
+      stackProfile: { ui: 'web-components', server: 'nest', database: 'mongodb', styling: 'tailwind' },
     });
-    expect(scratch.stackProfile).toEqual({
-      ui: 'any',
-      styling: normalizeStackStyling('any', 'tailwind'),
+    expect(webComponents.stackProfile).toEqual({
+      ui: 'web-components',
+      server: 'nest',
+      database: 'mongodb',
+      styling: normalizeStackStyling('web-components', 'tailwind'),
     });
   });
 

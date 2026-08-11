@@ -28,13 +28,63 @@ export type {
 export const SERVER_STACK_ECOSYSTEM_NOTE =
   'v1 server exporters cover Node.js stacks below. Python (FastAPI, Django), Java (Spring), and Azure Functions are planned — pick None if you are UI-only for now.';
 
-export const UI_FRAMEWORK_OPTIONS: Array<{ id: UiFrameworkChoice; label: string; description: string }> = [
-  { id: 'any', label: 'Any (scratch pad)', description: 'Experiment freely — pick export targets later' },
+export type UiTargetOption = { id: UiFrameworkChoice; label: string; description: string };
+
+export type UiTargetGroup = {
+  id: 'framework-based' | 'web-components';
+  label: string;
+  description: string;
+  options: UiTargetOption[];
+};
+
+export const FRAMEWORK_UI_OPTIONS: UiTargetOption[] = [
   { id: 'react', label: 'React', description: 'TSX components and hooks' },
   { id: 'angular', label: 'Angular', description: 'Standalone components' },
   { id: 'vue', label: 'Vue', description: 'Composition API SFCs' },
   { id: 'svelte', label: 'Svelte', description: 'Svelte 5 runes + SFCs' },
 ];
+
+export const WEB_COMPONENTS_UI_OPTION: UiTargetOption = {
+  id: 'web-components',
+  label: 'Web Components',
+  description: 'W3C Custom Elements — standards-based components for any browser or host framework',
+};
+
+export const UI_TARGET_GROUPS: UiTargetGroup[] = [
+  {
+    id: 'framework-based',
+    label: 'Framework-based',
+    description:
+      'Build dashboards and components native to React, Angular, Vue, or Svelte — exported in that framework’s idioms.',
+    options: FRAMEWORK_UI_OPTIONS,
+  },
+  {
+    id: 'web-components',
+    label: 'W3C Web Components',
+    description:
+      'Build Custom Elements on the web platform — embed the same dashboard or component in any framework or plain HTML.',
+    options: [WEB_COMPONENTS_UI_OPTION],
+  },
+];
+
+/** Flat list of all UI targets (framework-based + Web Components). */
+export const UI_FRAMEWORK_OPTIONS: UiTargetOption[] = UI_TARGET_GROUPS.flatMap((group) => group.options);
+
+/** Maps legacy scratch-pad `any` to W3C Web Components. */
+export function normalizeUiFrameworkChoice(ui: string | UiFrameworkChoice): UiFrameworkChoice {
+  if (ui === 'any') {
+    return 'web-components';
+  }
+  return ui as UiFrameworkChoice;
+}
+
+export function isWebComponentsUi(ui: UiFrameworkChoice): ui is 'web-components' {
+  return ui === 'web-components';
+}
+
+export function isFrameworkBasedUi(ui: UiFrameworkChoice): ui is Exclude<UiFrameworkChoice, 'web-components'> {
+  return ui !== 'web-components';
+}
 
 export const SERVER_TARGET_OPTIONS: Array<{ id: ServerTargetChoice; label: string }> = [
   { id: 'nest', label: 'NestJS' },
@@ -117,7 +167,7 @@ export const STYLING_FRAMEWORK_OPTIONS: Array<{
 ];
 
 const STYLING_BY_UI: Record<UiFrameworkChoice, StylingFrameworkChoice[]> = {
-  any: ['neutral', 'tailwind'],
+  'web-components': ['neutral', 'tailwind'],
   react: ['neutral', 'tailwind', 'mui', 'plain-css'],
   angular: ['neutral', 'angular-material', 'tailwind', 'plain-scss'],
   vue: ['neutral', 'tailwind', 'vuetify', 'plain-css'],
@@ -175,7 +225,7 @@ export const STYLING_AUTHORING_OPTIONS: Array<{
 ];
 
 const STYLING_FOUNDATION_BY_UI: Record<UiFrameworkChoice, StylingFoundation[]> = {
-  any: ['neutral-tokens', 'tailwind'],
+  'web-components': ['neutral-tokens', 'tailwind'],
   react: ['neutral-tokens', 'tailwind'],
   angular: ['neutral-tokens', 'tailwind'],
   vue: ['neutral-tokens', 'tailwind'],
@@ -183,7 +233,7 @@ const STYLING_FOUNDATION_BY_UI: Record<UiFrameworkChoice, StylingFoundation[]> =
 };
 
 const STYLING_COMPONENT_LIBRARY_BY_UI: Record<UiFrameworkChoice, StylingComponentLibrary[]> = {
-  any: [],
+  'web-components': [],
   react: ['mui'],
   angular: ['angular-material'],
   vue: ['vuetify'],
@@ -191,7 +241,7 @@ const STYLING_COMPONENT_LIBRARY_BY_UI: Record<UiFrameworkChoice, StylingComponen
 };
 
 const STYLING_AUTHORING_BY_UI: Record<UiFrameworkChoice, StylingAuthoring[]> = {
-  any: ['css-modules', 'plain-css'],
+  'web-components': ['css-modules', 'plain-css'],
   react: ['css-modules', 'styled-components', 'plain-css'],
   angular: ['plain-scss', 'plain-css'],
   vue: ['css-modules', 'plain-css'],
@@ -199,7 +249,7 @@ const STYLING_AUTHORING_BY_UI: Record<UiFrameworkChoice, StylingAuthoring[]> = {
 };
 
 const DEFAULT_STYLING_PROFILE_BY_UI: Record<UiFrameworkChoice, StackStylingProfile> = {
-  any: { foundation: ['neutral-tokens'], authoring: ['plain-css'], inlineStyles: true },
+  'web-components': { foundation: ['neutral-tokens'], authoring: ['plain-css'], inlineStyles: true },
   react: { foundation: ['tailwind'], authoring: ['css-modules'], inlineStyles: true },
   angular: {
     foundation: ['neutral-tokens'],
@@ -237,7 +287,7 @@ const LEGACY_STYLING_TO_PROFILE: Record<StylingFrameworkChoice, StackStylingProf
 };
 
 const DEFAULT_STYLING_BY_UI: Record<UiFrameworkChoice, StylingFrameworkChoice> = {
-  any: 'neutral',
+  'web-components': 'neutral',
   react: 'tailwind',
   angular: 'angular-material',
   vue: 'tailwind',
@@ -246,13 +296,29 @@ const DEFAULT_STYLING_BY_UI: Record<UiFrameworkChoice, StylingFrameworkChoice> =
 
 /** Idiomatic default partners per UI framework. */
 const UI_PARTNER_DEFAULTS: Record<
-  Exclude<UiFrameworkChoice, 'any'>,
+  Exclude<UiFrameworkChoice, 'web-components'>,
   { server: ServerTargetChoice; database: DatabaseTargetChoice; styling: StylingFrameworkChoice }
 > = {
   react: { server: 'next', database: 'postgresql', styling: 'tailwind' },
   angular: { server: 'nest', database: 'postgresql', styling: 'angular-material' },
   vue: { server: 'nuxt', database: 'postgresql', styling: 'tailwind' },
   svelte: { server: 'nest', database: 'postgresql', styling: 'tailwind' },
+};
+
+const SERVER_BY_UI: Record<UiFrameworkChoice, StackServerChoice[]> = {
+  'web-components': ['none', 'next', 'nuxt', 'nest', 'express'],
+  react: ['none', 'next', 'nest', 'express'],
+  vue: ['none', 'nuxt', 'nest', 'express'],
+  angular: ['none', 'nest', 'express'],
+  svelte: ['none', 'nest', 'express'],
+};
+
+const DATABASE_BY_UI: Record<UiFrameworkChoice, StackDatabaseChoice[]> = {
+  'web-components': ['none', 'postgresql', 'mongodb', 'supabase', 'mysql'],
+  react: ['none', 'postgresql', 'mongodb', 'supabase', 'mysql'],
+  angular: ['none', 'postgresql', 'mongodb', 'supabase', 'mysql'],
+  vue: ['none', 'postgresql', 'mongodb', 'supabase', 'mysql'],
+  svelte: ['none', 'postgresql', 'mongodb', 'supabase', 'mysql'],
 };
 
 function isExportServerChoice(server: StackServerChoice | undefined): server is ServerTargetChoice {
@@ -263,6 +329,108 @@ function isExportDatabaseChoice(
   database: StackDatabaseChoice | undefined,
 ): database is DatabaseTargetChoice {
   return !!database && database !== 'none';
+}
+
+export function isServerCompatibleWithUi(
+  ui: UiFrameworkChoice,
+  server: StackServerChoice | undefined,
+): boolean {
+  if (isWebComponentsUi(ui) || server === undefined) {
+    return true;
+  }
+  return SERVER_BY_UI[ui].includes(server);
+}
+
+export function isDatabaseCompatibleWithUi(
+  ui: UiFrameworkChoice,
+  database: StackDatabaseChoice | undefined,
+): boolean {
+  if (isWebComponentsUi(ui) || database === undefined) {
+    return true;
+  }
+  return DATABASE_BY_UI[ui].includes(database);
+}
+
+export function getCompatibleServerStackOptions(
+  ui: UiFrameworkChoice,
+): Array<{ id: StackServerChoice; label: string; description?: string }> {
+  const allowed = new Set(SERVER_BY_UI[ui]);
+  return SERVER_STACK_OPTIONS.filter((option) => allowed.has(option.id));
+}
+
+export function getCompatibleDatabaseStackOptions(
+  ui: UiFrameworkChoice,
+): Array<{ id: StackDatabaseChoice; label: string; description?: string }> {
+  const allowed = new Set(DATABASE_BY_UI[ui]);
+  return DATABASE_STACK_OPTIONS.filter((option) => allowed.has(option.id));
+}
+
+export function resolveStackServerChoiceForUi(
+  ui: UiFrameworkChoice,
+  server: StackServerChoice | null | undefined,
+): StackServerChoice {
+  if (isWebComponentsUi(ui)) {
+    if (server === 'none') {
+      return 'none';
+    }
+    if (server && isServerCompatibleWithUi(ui, server)) {
+      return server;
+    }
+    return 'none';
+  }
+
+  const partner = UI_PARTNER_DEFAULTS[ui].server;
+  if (server === 'none') {
+    return 'none';
+  }
+  if (server && isServerCompatibleWithUi(ui, server)) {
+    return server;
+  }
+  return partner;
+}
+
+export function resolveStackDatabaseChoiceForUi(
+  ui: UiFrameworkChoice,
+  database: StackDatabaseChoice | null | undefined,
+): StackDatabaseChoice {
+  if (isWebComponentsUi(ui)) {
+    if (database === 'none') {
+      return 'none';
+    }
+    if (database && isDatabaseCompatibleWithUi(ui, database)) {
+      return database;
+    }
+    return 'none';
+  }
+
+  const partner = UI_PARTNER_DEFAULTS[ui].database;
+  if (database === 'none') {
+    return 'none';
+  }
+  if (database && isDatabaseCompatibleWithUi(ui, database)) {
+    return database;
+  }
+  return partner;
+}
+
+function normalizeStackServerChoice(
+  ui: UiFrameworkChoice,
+  server: StackServerChoice | undefined,
+): StackServerChoice {
+  if (isWebComponentsUi(ui)) {
+    return resolveStackServerChoiceForUi('web-components', server ?? 'none');
+  }
+  return resolveStackServerChoiceForUi(ui, server ?? UI_PARTNER_DEFAULTS[ui].server);
+}
+
+function normalizeStackDatabaseChoice(
+  ui: UiFrameworkChoice,
+  database: StackDatabaseChoice | undefined,
+): StackDatabaseChoice {
+  if (isWebComponentsUi(ui)) {
+    return resolveStackDatabaseChoiceForUi('web-components', database ?? 'none');
+  }
+  return resolveStackDatabaseChoiceForUi(ui, database ?? UI_PARTNER_DEFAULTS[ui].database);
 }
 
 export const DEFAULT_EXPORT_TARGETS: Required<ExportTargetConfig> = {
@@ -471,7 +639,7 @@ export function resolveEffectiveStylingProfile(
     return getDefaultStylingProfile(uiTarget);
   }
 
-  if (normalized.ui !== 'any' && normalized.ui !== uiTarget) {
+  if (isFrameworkBasedUi(normalized.ui) && normalized.ui !== uiTarget) {
     return getDefaultStylingProfile(uiTarget);
   }
 
@@ -480,8 +648,13 @@ export function resolveEffectiveStylingProfile(
 }
 
 export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile {
-  if (ui === 'any') {
-    return { ui: 'any', styling: createEmptyStylingProfile() };
+  if (isWebComponentsUi(ui)) {
+    return {
+      ui: 'web-components',
+      server: 'none',
+      database: 'none',
+      styling: createEmptyStylingProfile(),
+    };
   }
 
   const partners = UI_PARTNER_DEFAULTS[ui];
@@ -494,7 +667,7 @@ export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile 
 }
 
 export function stackProfileToExportTargets(profile: StackProfile): ExportTargetConfig | undefined {
-  if (profile.ui === 'any') {
+  if (isWebComponentsUi(profile.ui)) {
     return undefined;
   }
 
@@ -520,17 +693,23 @@ export function normalizeStackProfile(profile: StackProfile | undefined): StackP
     return undefined;
   }
 
-  const styling = normalizeStackStyling(profile.ui, profile.styling);
+  const ui = normalizeUiFrameworkChoice(profile.ui as string);
+  const styling = normalizeStackStyling(ui, profile.styling);
 
-  if (profile.ui === 'any') {
-    return { ui: 'any', styling };
+  if (isWebComponentsUi(ui)) {
+    return {
+      ui: 'web-components',
+      server: normalizeStackServerChoice('web-components', profile.server),
+      database: normalizeStackDatabaseChoice('web-components', profile.database),
+      styling,
+    };
   }
 
-  const defaults = getCompatibleStackDefaults(profile.ui);
+  const defaults = getCompatibleStackDefaults(ui);
   return {
-    ui: profile.ui,
-    server: profile.server ?? defaults.server,
-    database: profile.database ?? defaults.database,
+    ui,
+    server: normalizeStackServerChoice(ui, profile.server ?? defaults.server),
+    database: normalizeStackDatabaseChoice(ui, profile.database ?? defaults.database),
     styling,
   };
 }
@@ -547,7 +726,9 @@ export function resolveEffectiveExportTargets(
     };
   }
 
-  const fromProfile = stackProfileToExportTargets(normalizeStackProfile(projectProfile) ?? { ui: 'any' });
+  const fromProfile = stackProfileToExportTargets(
+    normalizeStackProfile(projectProfile) ?? { ui: 'web-components' },
+  );
   if (fromProfile?.ui) {
     return {
       ui: fromProfile.ui,
@@ -578,6 +759,9 @@ export function databaseStackLabel(database: StackDatabaseChoice | undefined): s
   return DATABASE_STACK_OPTIONS.find((option) => option.id === database)?.label ?? database ?? 'None';
 }
 
-export function isScratchPadStack(profile: StackProfile | undefined): boolean {
-  return profile?.ui === 'any' || !profile;
+export function isWebComponentsStack(profile: StackProfile | undefined): boolean {
+  if (!profile) {
+    return true;
+  }
+  return isWebComponentsUi(normalizeUiFrameworkChoice(profile.ui as string));
 }
