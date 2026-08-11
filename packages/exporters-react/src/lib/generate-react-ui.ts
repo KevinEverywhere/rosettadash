@@ -2,6 +2,7 @@ import type { ExportIR } from '@dashbuilder/core';
 import { collectExportRoleIds, irHasRoleGates } from '@dashbuilder/core';
 import { buildDashboardContext } from './binding-resolver';
 import { generateComponentFile } from './component-templates';
+import { generateEquirectFilterHelperFile } from './media-component-templates';
 import type { GeneratedFile, ReactExportOptions } from './types';
 import { ReactExportError } from './types';
 import { componentExportName, joinLines, pascalFromId } from './utils';
@@ -65,6 +66,15 @@ export function generateReactUiFiles(
       content: generateDataHook(hookName, route),
       encoding: 'utf-8',
       description: `Data hook for ${source.label}`,
+    });
+  }
+
+  if (irHasEquirectMediaPipeline(ir)) {
+    files.push({
+      path: `${root}/media/equirect-filter.ts`,
+      content: generateEquirectFilterHelperFile(),
+      encoding: 'utf-8',
+      description: 'ffmpeg filter helpers for equirect subsection export',
     });
   }
 
@@ -359,6 +369,20 @@ function generateReadme(ir: ExportIR): string {
     `1. Copy the generated \`src/\` folder into your React or Next.js app.`,
     `2. Mount \`Dashboard\` on a route.`,
     `3. Ensure server routes referenced by data hooks are available.`,
+    irHasEquirectMediaPipeline(ir)
+      ? `4. Install ffmpeg.wasm for media pipelines: \`npm install @ffmpeg/ffmpeg @ffmpeg/util\`.`
+      : '',
     ``,
-  ]);
+  ].filter(Boolean));
+}
+
+const EQUIRECT_MEDIA_TYPES = new Set([
+  'visual.media.video-source',
+  'visual.media.equirect-viewport',
+  'visual.media.live-capture',
+  'visual.wasm.media',
+]);
+
+function irHasEquirectMediaPipeline(ir: ExportIR): boolean {
+  return ir.components.some((component) => EQUIRECT_MEDIA_TYPES.has(component.type));
 }

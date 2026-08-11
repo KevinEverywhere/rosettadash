@@ -10,6 +10,7 @@ export * from './lib/registry/built-in-component-plugins';
 export * from './lib/registry/extension-component-plugins';
 export * from './lib/registry/vr-component-plugins';
 export * from './lib/registry/svg-component-plugins';
+export * from './lib/media';
 export * from './lib/registry/wasm-component-plugins';
 export * from './lib/registry/p0-components';
 export * from './lib/validation/validate-composite';

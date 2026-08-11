@@ -227,8 +227,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-81](https://planetkevin.atlassian.net/browse/DAS-81)** — WASM compute component group + SVG exporters (Angular, Svelte, Vue)  
-Branch: `feature/DAS-81-wasm-compute-svg-exporters`
+**[DAS-82](https://planetkevin.atlassian.net/browse/DAS-82)** — Equirectangular video subsection export — React ffmpeg pipeline (Phase 1)  
+Branch: `feature/DAS-82-equirect-media-react`
 
 ## License
 

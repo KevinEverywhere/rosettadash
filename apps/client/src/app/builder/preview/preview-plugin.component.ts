@@ -1,12 +1,13 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import type { ComponentNode } from '@dashbuilder/core';
+import { buildEquirectExtractFilter, type ComponentNode } from '@dashbuilder/core';
 import type { ComponentPreviewTemplateId } from './component-preview-adapter.registry';
 import { PreviewThreeVisualComponent } from './preview-three-visual.component';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-preview-plugin',
-  imports: [PreviewThreeVisualComponent],
+  imports: [PreviewThreeVisualComponent, NgStyle],
   templateUrl: './preview-plugin.component.html',
   styleUrl: './preview-plugin.component.scss',
 })
@@ -46,6 +47,45 @@ export class PreviewPluginComponent {
   protected readonly svgIconMarkup = computed(() =>
     this.sanitizer.bypassSecurityTrustHtml(this.readString('markup')),
   );
+
+  protected readonly equirectCropStyle = computed(() => {
+    const sourceWidth = Math.max(1, this.readNumber('sourceWidth', 4096));
+    const sourceHeight = Math.max(1, this.readNumber('sourceHeight', 2048));
+    const cropX = this.readNumber('cropX', 1508);
+    const cropY = this.readNumber('cropY', 664);
+    const cropWidth = this.readNumber('cropWidth', 1080);
+    const cropHeight = this.readNumber('cropHeight', 720);
+    return {
+      left: `${(cropX / sourceWidth) * 100}%`,
+      top: `${(cropY / sourceHeight) * 100}%`,
+      width: `${(cropWidth / sourceWidth) * 100}%`,
+      height: `${(cropHeight / sourceHeight) * 100}%`,
+    };
+  });
+
+  protected readonly equirectOutputLabel = computed(
+    () =>
+      `${this.readNumber('outputWidth', 720)}×${this.readNumber('outputHeight', 480)}`,
+  );
+
+  protected readonly wasmMediaFilter = computed(() => {
+    const operation = this.readString('operation', 'transcode');
+    if (operation !== 'equirect-extract') {
+      return '';
+    }
+    const mode = this.readString('extractionMode', 'flat-crop') as 'flat-crop' | 'rectilinear';
+    return buildEquirectExtractFilter(mode, {
+      cropX: this.readNumber('cropX', 1508),
+      cropY: this.readNumber('cropY', 664),
+      cropWidth: this.readNumber('cropWidth', 1080),
+      cropHeight: this.readNumber('cropHeight', 720),
+      outputWidth: this.readNumber('outputWidth', 720),
+      outputHeight: this.readNumber('outputHeight', 480),
+      yaw: this.readNumber('yaw', 0),
+      pitch: this.readNumber('pitch', 0),
+      horizontalFov: this.readNumber('horizontalFov', 90),
+    });
+  });
 
   protected readString(key: string, fallback = ''): string {
     const value = this.node().properties[key];

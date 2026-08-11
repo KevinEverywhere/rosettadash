@@ -62,9 +62,44 @@
     <div class="preview-wasm preview-wasm--media" data-testid="preview-plugin-wasm-media">
       <span class="preview-wasm__label">{{ readString('label', 'Media transcode') }}</span>
       <span class="preview-wasm__meta">{{ readString('operation', 'transcode') }} → {{ readString('outputFormat', 'mp4') }}</span>
+      @if (readString('operation', 'transcode') === 'equirect-extract' && wasmMediaFilter()) {
+        <code class="preview-wasm__filter">{{ wasmMediaFilter() }}</code>
+      }
       @if (readBoolean('showProgress', true)) {
         <div class="preview-wasm__progress" aria-hidden="true"><span style="width: 35%"></span></div>
       }
+    </div>
+  }
+  @case ('media-video-source') {
+    <div class="preview-media preview-media--source" data-testid="preview-plugin-media-video-source">
+      <span class="preview-media__label">{{ readString('label', 'Video source') }}</span>
+      <span class="preview-media__meta">
+        {{ readNumber('sourceWidth', 4096) }}×{{ readNumber('sourceHeight', 2048) }}
+      </span>
+      <label class="preview-media__upload">
+        <span>Choose video file</span>
+        <input type="file" accept="video/*" disabled />
+      </label>
+    </div>
+  }
+  @case ('media-equirect-viewport') {
+    <div class="preview-media preview-media--viewport" data-testid="preview-plugin-media-equirect-viewport">
+      <div class="preview-media__equirect-frame">
+        <div class="preview-media__crop-rect" [ngStyle]="equirectCropStyle()"></div>
+      </div>
+      <p class="preview-media__meta">
+        Crop → {{ readNumber('cropWidth', 1080) }}×{{ readNumber('cropHeight', 720) }}
+        · Output {{ equirectOutputLabel() }}
+      </p>
+    </div>
+  }
+  @case ('media-live-capture') {
+    <div class="preview-media preview-media--capture" data-testid="preview-plugin-media-live-capture">
+      <span class="preview-media__label">{{ readString('label', 'Live capture') }}</span>
+      <button type="button" class="preview-media__capture-btn" disabled>Start camera</button>
+      <span class="preview-media__meta">
+        {{ readBoolean('includeInExport', false) ? 'Included in export' : 'Authoring only' }}
+      </span>
     </div>
   }
   @case ('3d-bar-chart') {

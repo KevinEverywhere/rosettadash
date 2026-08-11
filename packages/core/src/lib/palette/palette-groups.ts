@@ -98,6 +98,15 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
     types: ['visual.svg.inline', 'visual.svg.icon'],
   },
   {
+    id: 'media-authoring',
+    label: 'Media Authoring',
+    types: [
+      'visual.media.video-source',
+      'visual.media.equirect-viewport',
+      'visual.media.live-capture',
+    ],
+  },
+  {
     id: 'wasm-compute',
     label: 'WASM Compute',
     types: [

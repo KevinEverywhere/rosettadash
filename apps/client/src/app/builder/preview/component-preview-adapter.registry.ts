@@ -9,6 +9,9 @@ export type ComponentPreviewTemplateId =
   | 'wasm-worker-host'
   | 'wasm-module'
   | 'wasm-media'
+  | 'media-video-source'
+  | 'media-equirect-viewport'
+  | 'media-live-capture'
   | '3d-bar-chart'
   | '3d-scatter'
   | '3d-scene'
@@ -46,6 +49,9 @@ export function registerDefaultComponentPreviewAdapters(
   registry.register('visual.wasm.worker-host', 'wasm-worker-host');
   registry.register('visual.wasm.module', 'wasm-module');
   registry.register('visual.wasm.media', 'wasm-media');
+  registry.register('visual.media.video-source', 'media-video-source');
+  registry.register('visual.media.equirect-viewport', 'media-equirect-viewport');
+  registry.register('visual.media.live-capture', 'media-live-capture');
   registry.register('visual.display.3d-bar-chart', '3d-bar-chart');
   registry.register('visual.display.3d-scatter', '3d-scatter');
   registry.register('visual.display.3d-scene', '3d-scene');

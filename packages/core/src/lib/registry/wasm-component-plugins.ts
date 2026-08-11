@@ -1,9 +1,11 @@
 import type { ComponentPlugin } from './component-plugin';
+import { DEFAULT_EQUIRECT_FLAT_CROP } from '../media/equirect-filter';
 
 const mediaOperationOptions = [
   { label: 'Transcode', value: 'transcode' },
   { label: 'Extract frame', value: 'extract-frame' },
   { label: 'Thumbnail', value: 'thumbnail' },
+  { label: 'Equirect extract', value: 'equirect-extract' },
 ] as const;
 
 const mediaInputOptions = [
@@ -93,6 +95,7 @@ export const WASM_COMPONENT_PLUGINS: ComponentPlugin[] = [
       inputs: [
         { id: 'asset-ref', name: 'assetRef', dataType: 'any' },
         { id: 'input-file', name: 'inputFile', dataType: 'any' },
+        { id: 'crop-region', name: 'cropRegion', dataType: 'row' },
       ],
       outputs: [
         { id: 'output-blob', name: 'outputBlob', dataType: 'any' },
@@ -115,7 +118,46 @@ export const WASM_COMPONENT_PLUGINS: ComponentPlugin[] = [
           options: [...mediaInputOptions],
         },
         { key: 'outputFormat', label: 'Output format', type: 'string', default: 'mp4' },
-        { key: 'ffmpegArgs', label: 'ffmpeg args', type: 'string', default: '' },
+        {
+          key: 'extractionMode',
+          label: 'Extraction mode',
+          type: 'select',
+          default: 'flat-crop',
+          options: [
+            { label: 'Flat crop on 2:1 frame', value: 'flat-crop' },
+            { label: 'Rectilinear reprojection', value: 'rectilinear' },
+          ],
+        },
+        { key: 'cropX', label: 'Crop X', type: 'number', default: DEFAULT_EQUIRECT_FLAT_CROP.cropX },
+        { key: 'cropY', label: 'Crop Y', type: 'number', default: DEFAULT_EQUIRECT_FLAT_CROP.cropY },
+        {
+          key: 'cropWidth',
+          label: 'Crop width',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.cropWidth,
+        },
+        {
+          key: 'cropHeight',
+          label: 'Crop height',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.cropHeight,
+        },
+        {
+          key: 'outputWidth',
+          label: 'Output width',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.outputWidth,
+        },
+        {
+          key: 'outputHeight',
+          label: 'Output height',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.outputHeight,
+        },
+        { key: 'yaw', label: 'Yaw (rectilinear)', type: 'number', default: 0 },
+        { key: 'pitch', label: 'Pitch (rectilinear)', type: 'number', default: 0 },
+        { key: 'horizontalFov', label: 'Horizontal FOV', type: 'number', default: 90 },
+        { key: 'ffmpegArgs', label: 'Extra ffmpeg args', type: 'string', default: '' },
         { key: 'showProgress', label: 'Show progress UI', type: 'boolean', default: true },
         { key: 'label', label: 'Label', type: 'string', default: 'Media transcode' },
       ],

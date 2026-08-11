@@ -313,10 +313,41 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
   },
   {
     type: 'visual.wasm.media',
-    summary: 'ffmpeg.wasm-style media transcode with progress and blob output.',
+    summary: 'ffmpeg.wasm media host — transcode or extract equirect subsections with crop + scale.',
     animationKey: 'filter-table',
-    companionTypes: ['infra.wasm.asset', 'visual.wasm.worker-host', 'visual.table'],
-    placementMessage: 'Place near upload inputs; bind metadata rowset to a results table.',
+    companionTypes: [
+      'visual.media.video-source',
+      'visual.media.equirect-viewport',
+      'infra.wasm.asset',
+      'visual.table',
+    ],
+    placementMessage:
+      'Bind video source + crop region; route output metadata to a results table.',
+  },
+  {
+    type: 'visual.media.video-source',
+    summary: 'Upload or link equirectangular video for downstream WASM media processing.',
+    animationKey: 'filter-table',
+    companionTypes: [
+      'visual.media.equirect-viewport',
+      'visual.media.live-capture',
+      'visual.wasm.media',
+    ],
+    placementMessage: 'Place above equirect viewport and WASM media extract components.',
+  },
+  {
+    type: 'visual.media.equirect-viewport',
+    summary: 'Pick a 1080×720 region on a 4096×2048 equirect frame; output 720×480.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.media.video-source', 'visual.wasm.media'],
+    placementMessage: 'Bind crop region output to WASM media equirect-extract input.',
+  },
+  {
+    type: 'visual.media.live-capture',
+    summary: 'Live camera capture during authoring to feed video-source preview.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.media.video-source', 'visual.media.equirect-viewport'],
+    placementMessage: 'Optional during authoring; bind capture blob to video source.',
   },
   {
     type: 'visual.news.language-select',

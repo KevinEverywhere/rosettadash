@@ -33,6 +33,7 @@ describe('palette-groups', () => {
       'plugin-extensions',
       'vr-visuals',
       'svg-visuals',
+      'media-authoring',
       'wasm-compute',
     ]);
     expect(groups[0]?.items[0]?.type).toBe('visual.input.text');

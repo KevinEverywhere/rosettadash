@@ -1,5 +1,11 @@
 import type { IRComponent } from '@dashbuilder/core';
 import { ReactExportError } from './types';
+import {
+  generateEquirectViewport,
+  generateLiveCapture,
+  generateVideoSource,
+  generateWasmMediaEquirect,
+} from './media-component-templates';
 import { joinLines } from './utils';
 
 const SUPPORTED_TYPES = new Set([
@@ -28,6 +34,9 @@ const SUPPORTED_TYPES = new Set([
   'visual.wasm.worker-host',
   'visual.wasm.module',
   'visual.wasm.media',
+  'visual.media.video-source',
+  'visual.media.equirect-viewport',
+  'visual.media.live-capture',
   'domain.role-gate',
   'domain.person-invite',
   'domain.role-assign',
@@ -95,7 +104,15 @@ export function generateComponentFile(component: IRComponent, exportName: string
     case 'visual.wasm.module':
       return generateWasmModule(exportName);
     case 'visual.wasm.media':
-      return generateWasmMedia(exportName);
+      return component.properties?.['operation'] === 'equirect-extract'
+        ? generateWasmMediaEquirect(exportName)
+        : generateWasmMedia(exportName);
+    case 'visual.media.video-source':
+      return generateVideoSource(exportName);
+    case 'visual.media.equirect-viewport':
+      return generateEquirectViewport(exportName);
+    case 'visual.media.live-capture':
+      return generateLiveCapture(exportName);
     case 'domain.role-gate':
       return generateRoleGate(exportName);
     case 'domain.person-invite':
