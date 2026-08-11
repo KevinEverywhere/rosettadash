@@ -26,6 +26,7 @@
 
         <nav class="env-page__nav" aria-label="Page navigation">
           <a routerLink="/" class="env-page__nav-link" data-testid="env-link-welcome">← Welcome / stack</a>
+          <a routerLink="/admin" class="env-page__nav-link" data-testid="env-link-admin">Admin</a>
           @if (canOpenBuilder()) {
             <a routerLink="/builder" class="env-page__nav-link" data-testid="env-link-builder">Open builder →</a>
           } @else {

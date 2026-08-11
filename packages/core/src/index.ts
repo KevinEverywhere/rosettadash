@@ -23,3 +23,4 @@ export * from './lib/viewport';
 export * from './lib/byok';
 export * from './lib/vault';
 export * from './lib/ai';
+export * from './lib/content-library';

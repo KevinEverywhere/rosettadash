@@ -134,7 +134,7 @@
               class="ai-drawer__mic"
               data-testid="ai-voice-toggle"
               [class.ai-drawer__mic--active]="speech.status() === 'listening'"
-              [disabled]="assist.pending() || speech.status() === 'unsupported'"
+              [disabled]="assist.pending() || speech.status() === 'unsupported' || !featureFlags.isVoiceInputEnabled()"
               [attr.aria-pressed]="speech.status() === 'listening'"
               (click)="toggleVoiceInput()"
             >

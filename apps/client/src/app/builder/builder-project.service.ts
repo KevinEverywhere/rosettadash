@@ -9,8 +9,10 @@ import { BuilderStateService } from './builder-state.service';
 import { ProjectsApiService } from './projects-api.service';
 import {
   BUILDER_SESSION_KEY,
+  clearLibraryRestore,
   clearPendingStackProfile,
   readBuilderSession,
+  readLibraryRestore,
   readPendingStackProfile,
   writeActiveStackProfile,
   type BuilderSession,
@@ -26,6 +28,22 @@ export class BuilderProjectService {
     this.state.errorMessage.set(null);
 
     try {
+      const libraryRestore = readLibraryRestore();
+      if (libraryRestore) {
+        clearLibraryRestore();
+        await this.createNewWorkspace();
+        this.state.applySavedComposite({
+          ...libraryRestore.composite,
+          name: libraryRestore.composite.name || 'Restored dashboard',
+        });
+        if (libraryRestore.stackProfile) {
+          writeActiveStackProfile(libraryRestore.stackProfile);
+        }
+        this.state.dirty.set(true);
+        this.state.saveStatus.set('idle');
+        return;
+      }
+
       const session = this.readSession();
       if (session) {
         const restored = await this.tryRestore(session);

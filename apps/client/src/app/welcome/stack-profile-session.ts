@@ -1,12 +1,19 @@
-import type { StackProfile } from '@dashbuilder/core';
+import type { Composite, StackProfile } from '@dashbuilder/core';
 
 export const BUILDER_SESSION_KEY = 'dashbuilder:session';
 export const PENDING_STACK_KEY = 'dashbuilder:pending-stack';
 export const ACTIVE_STACK_KEY = 'dashbuilder:active-stack';
+export const LIBRARY_RESTORE_KEY = 'dashbuilder:library-restore';
 
 export interface BuilderSession {
   projectId: string;
   compositeId: string;
+}
+
+export interface LibraryRestorePayload {
+  entryId: string;
+  composite: Composite;
+  stackProfile?: StackProfile | null;
 }
 
 export function readPendingStackProfile(): StackProfile | null {
@@ -70,6 +77,27 @@ export function writeActiveStackProfile(profile: StackProfile): void {
 
 export function clearActiveStackProfile(): void {
   sessionStorage.removeItem(ACTIVE_STACK_KEY);
+}
+
+export function writeLibraryRestore(payload: LibraryRestorePayload): void {
+  sessionStorage.setItem(LIBRARY_RESTORE_KEY, JSON.stringify(payload));
+}
+
+export function readLibraryRestore(): LibraryRestorePayload | null {
+  const raw = sessionStorage.getItem(LIBRARY_RESTORE_KEY);
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(raw) as LibraryRestorePayload;
+  } catch {
+    return null;
+  }
+}
+
+export function clearLibraryRestore(): void {
+  sessionStorage.removeItem(LIBRARY_RESTORE_KEY);
 }
 
 export function canEnterBuilder(): boolean {

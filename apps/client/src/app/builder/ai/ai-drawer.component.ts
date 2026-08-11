@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AiAssistService } from './ai-assist.service';
 import { SpeechInputService } from './speech-input.service';
+import { AdminFeatureFlagsService } from '../../admin/admin-feature-flags.service';
 
 @Component({
   selector: 'app-ai-drawer',
@@ -16,12 +17,14 @@ export class AiDrawerComponent implements OnDestroy {
 
   protected readonly assist = inject(AiAssistService);
   protected readonly speech = inject(SpeechInputService);
+  protected readonly featureFlags = inject(AdminFeatureFlagsService);
   protected readonly prompt = signal('');
   protected readonly applyMessage = signal<string | null>(null);
 
   constructor() {
     effect(() => {
       if (this.open()) {
+        this.featureFlags.initialize();
         void this.assist.initialize();
       } else {
         this.stopVoiceCapture(false);

@@ -84,8 +84,7 @@ Forward-looking Jira ticket plan for DashBuilder.
 
 | Ticket | Branch | Status |
 |--------|--------|--------|
-| [DAS-73](https://planetkevin.atlassian.net/browse/DAS-73) | `feature/DAS-73-ai-assist-drawer` | AI assist drawer — Ollama-first BYOK |
-| [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71) | `feature/DAS-71-content-library` | Content library (spec + implementation) |
+| [DAS-74](https://planetkevin.atlassian.net/browse/DAS-74) | `feature/DAS-74-admin-control-panel` | Admin control panel + content library |
 
 ## Planned (not yet ticketed)
 
@@ -115,8 +114,8 @@ Forward-looking Jira ticket plan for DashBuilder.
 - **Phase 19 BYOK key management:** complete (DAS-70)
 - **DAS-71 app lock:** complete (merged); content library remains on DAS-71
 - **DAS-72 app lock recovery codes:** complete (branch ready)
-- **DAS-73 AI assist drawer:** in progress
-- **Phase 20 AI-assisted creation:** in progress (DAS-73)
+- **DAS-73 AI assist drawer:** complete
+- **DAS-74 admin control panel:** in progress
 - **Phase 21 animated demo dashboards:** planned — discuss after Phase 20
 
 ## Phase 6 — complete

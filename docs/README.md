@@ -33,10 +33,11 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 21. [Demo Dashboards](./22-demo-dashboards.md) — three animated example dashboards (Phase 21, post–Phase 20)
 22. [Content Library](./23-content-library.md) — user-controlled save/revisit (DAS-71, spec)
 23. [App Lock](./24-app-lock.md) — optional local password for env secrets (DAS-71)
+24. [Admin Control Panel](./25-admin-control-panel.md) — content library hub (DAS-74)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-73** — AI assist drawer (Ollama-first, BYOK) — is in progress.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-74** — admin control panel — is in progress.
 
 ## Current capabilities (at a glance)
 
@@ -52,7 +53,8 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-73** �
 | Builder creation assistance (animated guides) | Shipped (DAS-69) |
 | BYOK key management | Shipped (DAS-70, Phase 19) |
 | App lock (local env password) | Shipped (DAS-71); recovery codes in progress (DAS-72) |
-| AI-assisted component creation | DAS-73 — in progress (Ollama free local default) |
+| AI-assisted component creation | Shipped (DAS-73) |
+| Admin control panel + content library | DAS-74 — in progress |
 | Animated demo dashboards (3 examples) | Phase 21 — planned after Phase 20 |
 | Docker Compose local dev | Shipped |
 | Full taxonomy + page template library | Phase 6 — complete |

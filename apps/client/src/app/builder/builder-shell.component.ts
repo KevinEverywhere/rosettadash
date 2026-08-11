@@ -14,6 +14,7 @@ import { BuilderWorkspaceLayoutService } from './builder-workspace-layout.servic
 import { CanvasComponent } from './canvas/canvas.component';
 import { ExportWizardComponent } from './export/export-wizard.component';
 import { AiDrawerComponent } from './ai/ai-drawer.component';
+import { AdminFeatureFlagsService } from '../admin/admin-feature-flags.service';
 import { InspectorComponent } from './inspector/inspector.component';
 import { PaletteComponent } from './palette/palette.component';
 import { PreviewPanelComponent } from './preview/preview-panel.component';
@@ -43,6 +44,7 @@ export class BuilderShellComponent implements OnInit {
   protected readonly state = inject(BuilderStateService);
   protected readonly viewport = inject(DisplayAvailabilityService);
   protected readonly layout = inject(BuilderWorkspaceLayoutService);
+  protected readonly featureFlags = inject(AdminFeatureFlagsService);
 
   protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
@@ -65,6 +67,7 @@ export class BuilderShellComponent implements OnInit {
     }
 
     await this.auth.initialize();
+    this.featureFlags.initialize();
     if (this.auth.authenticated()) {
       await this.projectService.initialize();
     }
