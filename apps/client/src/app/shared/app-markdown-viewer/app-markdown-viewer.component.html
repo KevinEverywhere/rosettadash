@@ -1,0 +1,9 @@
+<div class="app-markdown-viewer" data-testid="markdown-viewer">
+  @if (loading()) {
+    <p class="app-markdown-viewer__status">Loading documentation…</p>
+  } @else if (errorMessage(); as message) {
+    <p class="app-markdown-viewer__error" data-testid="markdown-viewer-error">{{ message }}</p>
+  } @else if (html(); as content) {
+    <article class="app-markdown-viewer__content" [innerHTML]="content"></article>
+  }
+</div>

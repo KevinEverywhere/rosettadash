@@ -2,7 +2,10 @@ import type { ExportIR, IRComponent } from '@rosettadash/core';
 import { buildDashboardContext } from './binding-resolver';
 import {
   generateComponentFile,
+  generateComponentCssFile,
   generateDefineElementHelper,
+  generateLayoutCollapsibleCss,
+  generateLayoutCollapsibleFile,
   generateRegisterAllFile,
 } from './component-templates';
 import { runtimePackageImports, usesRuntimePackage } from './package-runtime';
@@ -51,7 +54,42 @@ export function generateWebComponentsUiFiles(
         encoding: 'utf-8',
         description: `Custom Element for ${component.label}`,
       });
+      files.push({
+        path: `${root}/components/${exportName}.css`,
+        content: generateComponentCssFile(component, exportName),
+        encoding: 'utf-8',
+        description: `Styles for ${component.label}`,
+      });
     }
+  }
+
+  for (const layout of ir.layouts) {
+    if (layout.type !== 'layout.collapsible') {
+      continue;
+    }
+    const layoutAsComponent: IRComponent = {
+      id: layout.id,
+      type: layout.type,
+      label: layout.label,
+      category: 'layout',
+      properties: { ...layout.properties },
+      inputs: [],
+      outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    };
+    const exportName = componentExportName(layoutAsComponent, usedNames);
+    componentNames.push(exportName);
+    files.push({
+      path: `${root}/components/${exportName}.ts`,
+      content: generateLayoutCollapsibleFile(exportName),
+      encoding: 'utf-8',
+      description: `Collapsible layout for ${layout.label}`,
+    });
+    files.push({
+      path: `${root}/components/${exportName}.css`,
+      content: generateLayoutCollapsibleCss(exportName),
+      encoding: 'utf-8',
+      description: `Styles for ${layout.label}`,
+    });
   }
 
   files.push({
@@ -284,6 +322,7 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'st
     ``,
     `- \`src/dashboard.ts\` — root \`<rd-dashboard>\` Custom Element composed from builder bindings`,
     `- \`src/components/*.ts\` — W3C Custom Elements (native \`HTMLElement\` + Shadow DOM)`,
+    `- \`src/components/*.css\` — per-component stylesheets (root class matches component export name)`,
     `- \`src/register.ts\` — calls \`customElements.define\` for all generated tags`,
     `- \`src/lib/data/*.ts\` — fetch helpers targeting exported API routes`,
     `- \`src/styles/tokens.css\` — neutral dashboard styling tokens`,

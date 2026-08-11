@@ -68,6 +68,7 @@ describe('generateWebComponentsUiFiles', () => {
         'src/styles/tokens.css',
         'README.export.md',
         expect.stringMatching(/^src\/components\/.*\.ts$/),
+        expect.stringMatching(/^src\/components\/.*\.css$/),
         'src/lib/data/fetchPg1Data.ts',
       ]),
     );
@@ -90,7 +91,7 @@ describe('generateWebComponentsUiFiles', () => {
     const chartComponent = files.find((file) => file.path.includes('LineChart'));
     expect(chartComponent?.content).toContain('polyline');
 
-    expect(files.filter((file) => file.path.startsWith('src/components/'))).toHaveLength(3);
+    expect(files.filter((file) => file.path.startsWith('src/components/'))).toHaveLength(6);
   });
 
   it('generates Web Components pie chart template', () => {
@@ -169,7 +170,7 @@ describe('generateWebComponentsUiFiles', () => {
 
     const files = generateWebComponentsUiFiles(ir);
     expect(files.some((file) => file.path === 'package.json.fragment.json')).toBe(false);
-    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(3);
+    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(6);
     const register = files.find((file) => file.path === 'src/register.ts');
     expect(register?.content).not.toContain('@rosettadash/web-components');
     const readme = files.find((file) => file.path === 'README.export.md');
@@ -248,7 +249,7 @@ describe('generateWebComponentsUiFiles', () => {
     );
 
     const files = generateWebComponentsUiFiles(ir, { exportMode: 'standalone' });
-    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(2);
+    expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(4);
     const wasm = files.find((file) => file.content.includes('@ffmpeg/ffmpeg'));
     expect(wasm?.content).toContain('buildEquirectExtractFilter');
   });

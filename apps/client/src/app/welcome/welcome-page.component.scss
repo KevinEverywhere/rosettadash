@@ -65,6 +65,14 @@
   padding-top: 0.25rem;
 }
 
+.welcome__docs {
+  margin-top: 1.5rem;
+
+  .app-collapsible + .app-collapsible {
+    margin-top: 0;
+  }
+}
+
 .welcome__eyebrow {
   margin: 0 0 0.75rem;
   font-size: 0.8125rem;

@@ -1,7 +1,8 @@
 import { DEFAULT_EQUIRECT_SOURCE } from '@rosettadash/core';
-import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+import { defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
 
 export const DB_VIDEO_SOURCE_TAG = 'rd-video-source';
+export const VIDEO_SOURCE_STYLESHEET = './video-source.css';
 
 export class RdVideoSourceElement extends HTMLElement {
   static readonly tagName = DB_VIDEO_SOURCE_TAG;
@@ -43,28 +44,17 @@ export class RdVideoSourceElement extends HTMLElement {
     }
 
     root.innerHTML = `
-      <style>${BASE_STYLES}
-        .media-source__upload {
-          display: block;
-          border: 1px dashed var(--db-border, #cbd5e1);
-          border-radius: 0.375rem;
-          padding: 1rem;
-          text-align: center;
-          cursor: pointer;
-        }
-        .media-source__upload input { display: none; }
-        .media-source__name { margin-top: 0.5rem; font-size: 0.8125rem; color: var(--db-muted, #6b7280); }
-      </style>
-      <section class="panel media-source">
-        <header class="panel__header">
+      <link rel="stylesheet" href="${VIDEO_SOURCE_STYLESHEET}" />
+      <section class="video-source">
+        <header class="video-source__header">
           <h3>${this.label}</h3>
-          <span class="panel__meta">${this.sourceWidth}×${this.sourceHeight}</span>
+          <span class="video-source__meta">${this.sourceWidth}×${this.sourceHeight}</span>
         </header>
-        <label class="media-source__upload">
+        <label class="video-source__upload">
           <input type="file" accept="${this.accept}" />
           <span>Choose video file</span>
         </label>
-        <p class="media-source__name" data-role="file-name"></p>
+        <p class="video-source__name" data-role="file-name"></p>
       </section>
     `;
 

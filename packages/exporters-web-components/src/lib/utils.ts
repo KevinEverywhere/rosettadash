@@ -32,6 +32,7 @@ const DEFAULT_NAMES: Record<string, string> = {
   'visual.news.search-box': 'NewsSearchBox',
   'visual.news.results-table': 'NewsResultsTable',
   'visual.news.article-detail': 'NewsArticleDetail',
+  'layout.collapsible': 'Collapsible',
 };
 
 export function pascalCase(value: string): string {
@@ -64,6 +65,11 @@ export function customElementTag(exportName: string): string {
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/_/g, '-')
     .toLowerCase()}`;
+}
+
+/** Root BEM block for exported component CSS (matches custom element tag without `rd-` prefix). */
+export function componentClassName(exportName: string): string {
+  return customElementTag(exportName).replace(/^rd-/, '');
 }
 
 export function dataModuleName(sourceId: string, exportNames: Map<string, string>): string {

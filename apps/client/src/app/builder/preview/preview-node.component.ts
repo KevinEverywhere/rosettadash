@@ -3,6 +3,7 @@ import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@rosettadash/core';
 import { PreviewNewsRow, PreviewRow, PRESET_LABELS } from '@rosettadash/ui-primitives';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
+import { AppCollapsibleComponent } from '../../shared/app-collapsible/app-collapsible.component';
 import { BuilderStateService } from '../builder-state.service';
 import { ComponentPreviewAdapterRegistry } from './component-preview-adapter.registry';
 import { PreviewDataService } from './preview-data.service';
@@ -10,7 +11,7 @@ import { PreviewPluginComponent } from './preview-plugin.component';
 
 @Component({
   selector: 'app-preview-node',
-  imports: [CurrencyPipe, JsonPipe, PreviewPluginComponent, AppSelectComponent],
+  imports: [CurrencyPipe, JsonPipe, PreviewPluginComponent, AppSelectComponent, AppCollapsibleComponent],
   templateUrl: './preview-node.component.html',
   styleUrl: './preview-node.component.scss',
 })

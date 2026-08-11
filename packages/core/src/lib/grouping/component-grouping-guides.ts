@@ -186,6 +186,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Add Text Input and Checkbox fields inside modal forms.',
   },
   {
+    type: 'layout.collapsible',
+    summary: 'Collapsible section — expand/collapse dashboard panels with title and summary.',
+    animationKey: 'form-row',
+    companionTypes: ['visual.kpi', 'visual.chart.line', 'visual.chart.bar', 'layout.flex'],
+    placementMessage: 'Wrap KPI rows, filters, or chart groups in collapsible sections.',
+  },
+  {
     type: 'layout.grid',
     summary: 'Grid layout — groups KPIs and charts in dashboard rows.',
     animationKey: 'filter-chart',

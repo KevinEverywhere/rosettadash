@@ -311,6 +311,18 @@
       </div>
     </div>
   }
+  @case ('layout.collapsible') {
+    <app-collapsible
+      appearance="card"
+      [expanded]="readBoolean('expanded', false)"
+      toggleTestId="preview-collapsible-toggle"
+      panelTestId="preview-collapsible-panel"
+    >
+      <span appCollapsibleTitle>{{ readString('title', 'Section') }}</span>
+      <span appCollapsibleSummary>{{ readString('summary', 'Collapsible panel') }}</span>
+      <div class="preview-layout__slot">Slot content</div>
+    </app-collapsible>
+  }
   @case ('domain.role-gate') {
     <div
       class="preview-role-gate"

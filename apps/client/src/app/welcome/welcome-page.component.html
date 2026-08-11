@@ -26,6 +26,20 @@
           Choose a component model to begin →
         </p>
       }
+
+      <div class="welcome__docs" data-testid="welcome-docs">
+        <app-collapsible
+          appearance="stack"
+          [expanded]="isSectionOpen('docs')"
+          toggleTestId="welcome-docs-toggle"
+          panelTestId="welcome-docs-panel"
+          (toggled)="toggleSection('docs')"
+        >
+          <span appCollapsibleTitle>Documentation</span>
+          <span appCollapsibleSummary>README</span>
+          <app-markdown-viewer src="/readme.md" />
+        </app-collapsible>
+      </div>
     </section>
 
     <section class="welcome__stack-panel" data-testid="welcome-stack">

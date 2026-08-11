@@ -28,6 +28,7 @@ import {
 } from '@rosettadash/core';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { AppCollapsibleComponent } from '../shared/app-collapsible/app-collapsible.component';
+import { AppMarkdownViewerComponent } from '../shared/app-markdown-viewer/app-markdown-viewer.component';
 import { ProjectsApiService } from '../builder/projects-api.service';
 import {
   clearBuilderSession,
@@ -39,13 +40,13 @@ import {
   writePendingStackProfile,
 } from './stack-profile-session';
 
-type WelcomeSection = 'ui' | 'server' | 'database' | 'styling';
+type WelcomeSection = 'ui' | 'server' | 'database' | 'styling' | 'docs';
 type WelcomeConfirmKind = 'stack-change-target' | 'start-fresh-unchanged';
 type StackChangeTarget = 'current' | 'fresh';
 
 @Component({
   selector: 'app-welcome-page',
-  imports: [AppNavComponent, AppCollapsibleComponent],
+  imports: [AppNavComponent, AppCollapsibleComponent, AppMarkdownViewerComponent],
   templateUrl: './welcome-page.component.html',
   styleUrl: './welcome-page.component.scss',
 })

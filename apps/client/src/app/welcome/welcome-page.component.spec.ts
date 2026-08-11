@@ -52,6 +52,7 @@ describe('WelcomePageComponent', () => {
       'Build Components and Dashboards for your stack',
     );
     expect(fixture.nativeElement.querySelector('[data-testid="welcome-framework-prompt"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="welcome-docs-panel"]')).toBeFalsy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-panel-ui"]')).toBeFalsy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-styling"]')).toBeTruthy();
@@ -383,7 +384,9 @@ describe('WelcomePageComponent', () => {
     fixture.detectChanges();
 
     const summaries = [
-      ...fixture.nativeElement.querySelectorAll('.app-collapsible__summary'),
+      ...fixture.nativeElement.querySelectorAll(
+        '[data-testid^="stack-section-toggle-"] .app-collapsible__summary',
+      ),
     ].map((node: Element) => node.textContent?.trim());
     expect(summaries.every((text) => text === 'Select')).toBe(true);
     expect(fixture.nativeElement.querySelector('[data-testid="welcome-framework-prompt"]')).toBeTruthy();

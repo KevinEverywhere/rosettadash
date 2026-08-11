@@ -5,7 +5,8 @@ import {
   generateVideoSourceStandalone,
   generateWasmMediaEquirectStandalone,
 } from './media-component-templates';
-import { customElementTag, joinLines } from './utils';
+import { generateComponentCss } from './component-styles';
+import { componentClassName, customElementTag, joinLines } from './utils';
 
 const SUPPORTED_TYPES = new Set([
   'visual.input.text',
@@ -40,6 +41,29 @@ const SUPPORTED_TYPES = new Set([
   'visual.news.results-table',
   'visual.news.article-detail',
 ]);
+
+export function generateComponentCssFile(component: IRComponent, exportName: string): string {
+  return generateComponentCss(component, exportName);
+}
+
+export function generateLayoutCollapsibleFile(exportName: string): string {
+  return generateCollapsible(exportName);
+}
+
+export function generateLayoutCollapsibleCss(exportName: string): string {
+  return generateComponentCss(
+    {
+      id: exportName,
+      type: 'layout.collapsible',
+      label: 'Collapsible',
+      category: 'layout',
+      properties: {},
+      inputs: [],
+      outputs: [],
+    },
+    exportName,
+  );
+}
 
 export function generateComponentFile(component: IRComponent, exportName: string): string {
   if (!SUPPORTED_TYPES.has(component.type)) {
@@ -102,20 +126,6 @@ export function generateComponentFile(component: IRComponent, exportName: string
   }
 }
 
-function shellStyles(): string {
-  return [
-    `:host { display: block; font-family: system-ui, sans-serif; color: var(--db-text, #1f2937); }`,
-    `.field, .input, .select, .table, .kpi-card, .chart-card, .detail-panel, .timer, .skeleton {`,
-    `  border: 1px solid var(--db-border, #d9dee7); border-radius: 0.5rem; }`,
-    `.input, .select { width: 100%; padding: 0.5rem 0.75rem; box-sizing: border-box; }`,
-    `.table { width: 100%; border-collapse: collapse; }`,
-    `.table th, .table td { padding: 0.5rem 0.75rem; text-align: left; }`,
-    `.kpi-card, .chart-card, .detail-panel, .timer, .skeleton { padding: 1rem; }`,
-    `.table-row { cursor: pointer; }`,
-    `.table-row--selected { background: color-mix(in srgb, var(--db-accent, #2563eb) 12%, transparent); }`,
-  ].join('\n');
-}
-
 function generateClassShell(
   exportName: string,
   bodyHtml: string,
@@ -127,7 +137,6 @@ function generateClassShell(
     `import type { DateRange, Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()}\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${tag}';`,
@@ -139,7 +148,7 @@ function generateClassShell(
     `  }`,
     ``,
     `  connectedCallback(): void {`,
-    `    this.renderRoot.innerHTML = \`<style>\${STYLES}</style>${bodyHtml}\`;`,
+    `    this.renderRoot.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" />${bodyHtml}\`;`,
     `    this.bindDom();`,
     `  }`,
     ``,
@@ -166,7 +175,6 @@ function generateTextInput(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()}\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -188,7 +196,7 @@ function generateTextInput(exportName: string): string {
     `    if (!this.shadowRoot) {`,
     `      this.attachShadow({ mode: 'open' });`,
     `    }`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><label class="field"><input class="input" type="text" placeholder="\${this.placeholder}" ?required="\${this.required}" value="\${this.value}" /></label>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><label class="field"><input class="input" type="text" placeholder="\${this.placeholder}" ?required="\${this.required}" value="\${this.value}" /></label>\`;`,
     `    this.input = this.shadowRoot!.querySelector('input');`,
     `    this.input?.addEventListener('input', () => {`,
     `      this.value = this.input?.value ?? '';`,
@@ -209,7 +217,6 @@ function generateSelectInput(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()}\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -237,7 +244,7 @@ function generateSelectInput(exportName: string): string {
     `        return \`<option value="\${value}">\${label}</option>\`;`,
     `      })`,
     `      .join('');`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><label class="field"><select class="select"><option value="">\${this.placeholder}</option>\${optionMarkup}</select></label>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><label class="field"><select class="select"><option value="">\${this.placeholder}</option>\${optionMarkup}</select></label>\`;`,
     `    const select = this.shadowRoot!.querySelector('select');`,
     `    if (select) {`,
     `      select.value = this.value;`,
@@ -261,7 +268,6 @@ function generateDateRangeFilter(exportName: string): string {
     `import type { DateRange } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .date-range { display: grid; gap: 0.5rem; padding: 0.75rem; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -286,7 +292,7 @@ function generateDateRangeFilter(exportName: string): string {
     `    }`,
     `    const start = this.range?.start ?? '';`,
     `    const end = this.range?.end ?? '';`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><div class="date-range"><label>Start<input class="input" type="date" value="\${start}" /></label><label>End<input class="input" type="date" value="\${end}" /></label></div>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><div class="date-range"><label>Start<input class="input" type="date" value="\${start}" /></label><label>End<input class="input" type="date" value="\${end}" /></label></div>\`;`,
     `    const inputs = this.shadowRoot!.querySelectorAll('input');`,
     `    inputs.forEach((input) => {`,
     `      input.addEventListener('change', () => {`,
@@ -313,7 +319,6 @@ function generateDataTable(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()}\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -342,7 +347,7 @@ function generateDataTable(exportName: string): string {
     `        return \`<tr class="table-row\${selected}" data-index="\${index}">\${cells}</tr>\`;`,
     `      })`,
     `      .join('');`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><table class="table"><thead><tr>\${head}</tr></thead><tbody>\${rows}</tbody></table>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><table class="table"><thead><tr>\${head}</tr></thead><tbody>\${rows}</tbody></table>\`;`,
     `    this.shadowRoot!.querySelectorAll('.table-row').forEach((rowEl) => {`,
     `      rowEl.addEventListener('click', () => {`,
     `        const index = Number((rowEl as HTMLElement).dataset.index ?? '-1');`,
@@ -367,7 +372,6 @@ function generateDetailPanel(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .detail-panel__empty { color: var(--db-muted, #6b7280); }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -387,13 +391,13 @@ function generateDetailPanel(exportName: string): string {
     `      this.attachShadow({ mode: 'open' });`,
     `    }`,
     `    if (!this.selectedRow) {`,
-    `      this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="detail-panel"><p class="detail-panel__empty">Select a row to view details.</p></section>\`;`,
+    `      this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="detail-panel"><p class="detail-panel__empty">Select a row to view details.</p></section>\`;`,
     `      return;`,
     `    }`,
     `    const fields = Object.entries(this.selectedRow)`,
     `      .map(([key, value]) => \`<div><dt>\${key}</dt><dd>\${String(value ?? '')}</dd></div>\`)`,
     `      .join('');`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="detail-panel"><dl>\${fields}</dl></section>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="detail-panel"><dl>\${fields}</dl></section>\`;`,
     `  }`,
     `}`,
     ``,
@@ -413,7 +417,6 @@ function generateKpiCard(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .kpi-card__value { font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0 0; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -434,7 +437,7 @@ function generateKpiCard(exportName: string): string {
     `      this.attachShadow({ mode: 'open' });`,
     `    }`,
     `    const value = this.data.length > 0 ? String(Object.values(this.data[0])[0] ?? '—') : '—';`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="kpi-card"><h3>\${this.title}</h3><p class="kpi-card__value">\${value}</p></section>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="kpi-card"><h3>\${this.title}</h3><p class="kpi-card__value">\${value}</p></section>\`;`,
     `  }`,
     `}`,
     ``,
@@ -450,7 +453,6 @@ function generateLineChart(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .chart-card svg { width: 100%; height: 8rem; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -474,7 +476,7 @@ function generateLineChart(exportName: string): string {
     `    const points = values.length`,
     `      ? values.map((value, index) => \`\${(index / Math.max(values.length - 1, 1)) * 100},\${100 - value}\`).join(' ')`,
     `      : '0,100 100,0';`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="chart-card"><h3>\${this.title}</h3><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline fill="none" stroke="var(--db-accent, #2563eb)" stroke-width="2" points="\${points}" /></svg></section>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="chart-card"><h3>\${this.title}</h3><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline fill="none" stroke="var(--db-accent, #2563eb)" stroke-width="2" points="\${points}" /></svg></section>\`;`,
     `  }`,
     `}`,
     ``,
@@ -494,7 +496,6 @@ function generatePieChart(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .pie-chart { width: 8rem; height: 8rem; border-radius: 999px; border: 1px solid var(--db-border, #d9dee7); margin: 0 auto; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -516,7 +517,7 @@ function generatePieChart(exportName: string): string {
     `      this.attachShadow({ mode: 'open' });`,
     `    }`,
     `    const donutClass = this.donut ? ' pie-chart--donut' : '';`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="chart-card"><h3>\${this.title}</h3><div class="pie-chart\${donutClass}"></div></section>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="chart-card"><h3>\${this.title}</h3><div class="pie-chart\${donutClass}"></div></section>\`;`,
     `  }`,
     `}`,
     ``,
@@ -536,7 +537,6 @@ function generateSvgInline(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .svg-inline { display: inline-flex; align-items: center; justify-content: center; } .svg-inline :is(svg, img) { width: 100%; height: 100%; } .svg-inline__placeholder { margin: 0; font-size: 0.75rem; color: var(--db-muted, #6b7280); }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -576,7 +576,7 @@ function generateSvgInline(exportName: string): string {
     `    } else if (this.markup) {`,
     `      body = this.markup;`,
     `    }`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><figure class="svg-inline" style="\${style}" aria-label="\${this.ariaLabel}">\${body}</figure>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><figure class="svg-inline" style="\${style}" aria-label="\${this.ariaLabel}">\${body}</figure>\`;`,
     `  }`,
     `}`,
     ``,
@@ -592,7 +592,6 @@ function generateSvgIcon(exportName: string): string {
     `import type { Row } from '../types';`,
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .svg-icon { display: inline-flex; align-items: center; justify-content: center; } .svg-icon :is(svg) { width: 100%; height: 100%; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -622,7 +621,7 @@ function generateSvgIcon(exportName: string): string {
     `        ? String(this.row[this.colorField])`,
     `        : this.color;`,
     `    const label = this.ariaLabel || this.title;`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><span class="svg-icon" title="\${this.title}" aria-label="\${label}" style="width:\${this.size}px;height:\${this.size}px;color:\${resolvedColor}">\${this.markup}</span>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><span class="svg-icon" title="\${this.title}" aria-label="\${label}" style="width:\${this.size}px;height:\${this.size}px;color:\${resolvedColor}">\${this.markup}</span>\`;`,
     `  }`,
     `}`,
     ``,
@@ -637,7 +636,6 @@ function generateWasmAsset(exportName: string): string {
   return joinLines([
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .wasm-asset__badge { display: inline-block; margin-right: 0.5rem; padding: 0.125rem 0.5rem; border-radius: 999px; background: rgb(99 102 241 / 15%); color: #4338ca; font-size: 0.6875rem; font-weight: 700; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -651,7 +649,7 @@ function generateWasmAsset(exportName: string): string {
     `  }`,
     `  private render(): void {`,
     `    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="wasm-asset"><span class="wasm-asset__badge">WASM</span><code>\${this.modulePath}</code>\${this.gluePath ? \`<span> + \${this.gluePath}</span>\` : ''}</section>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="wasm-asset"><span class="wasm-asset__badge">WASM</span><code>\${this.modulePath}</code>\${this.gluePath ? \`<span> + \${this.gluePath}</span>\` : ''}</section>\`;`,
     `  }`,
     `}`,
     ``,
@@ -674,7 +672,6 @@ function generateWasmMedia(exportName: string): string {
   return joinLines([
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`${shellStyles()} .wasm-media__progress { height: 0.375rem; border-radius: 999px; background: rgb(148 163 184 / 25%); overflow: hidden; } .wasm-media__progress span { display: block; height: 100%; background: #6366f1; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -694,7 +691,56 @@ function generateWasmMedia(exportName: string): string {
     `    const progressMarkup = this.showProgress`,
     `      ? \`<div class="wasm-media__progress" role="progressbar" aria-valuenow="\${this.progress}"><span style="width:\${this.progress}%"></span></div>\``,
     `      : '';`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="wasm-media"><header><h3>\${this.label}</h3><span>\${this.operation} → \${this.outputFormat}</span></header>\${progressMarkup}</section>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="wasm-media"><header><h3>\${this.label}</h3><span>\${this.operation} → \${this.outputFormat}</span></header>\${progressMarkup}</section>\`;`,
+    `  }`,
+    `}`,
+    ``,
+    `export function register${exportName}(): void {`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateCollapsible(exportName: string): string {
+  const tag = customElementTag(exportName);
+  const rootClass = componentClassName(exportName);
+  return joinLines([
+    `import { defineRosettaElement } from '../define-element';`,
+    ``,
+    `export class ${exportName} extends HTMLElement {`,
+    `  static readonly tagName = '${tag}';`,
+    `  title = 'Section';`,
+    `  summary = '';`,
+    `  expanded = false;`,
+    `  private toggle: HTMLButtonElement | null = null;`,
+    `  private panel: HTMLElement | null = null;`,
+    ``,
+    `  connectedCallback(): void {`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  setProperty(name: string, value: unknown): void {`,
+    `    (this as Record<string, unknown>)[name] = value;`,
+    `    this.render();`,
+    `  }`,
+    ``,
+    `  private render(): void {`,
+    `    if (!this.shadowRoot) {`,
+    `      this.attachShadow({ mode: 'open' });`,
+    `    }`,
+    `    const openClass = this.expanded ? ' ${rootClass}--open' : '';`,
+    `    const panelMarkup = this.expanded`,
+    `      ? \`<div class="${rootClass}__panel"><div class="${rootClass}__slot"><slot></slot></div></div>\``,
+    `      : '';`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><section class="${rootClass}\${openClass}"><button type="button" class="${rootClass}__toggle" aria-expanded="\${this.expanded}"><span class="${rootClass}__heading"><span class="${rootClass}__title">\${this.title}</span><span class="${rootClass}__summary">\${this.summary}</span></span><span class="${rootClass}__chevron" aria-hidden="true"></span></button>\${panelMarkup}</section>\`;`,
+    `    this.toggle = this.shadowRoot!.querySelector('button');`,
+    `    this.panel = this.shadowRoot!.querySelector('.${rootClass}__panel');`,
+    `    this.toggle?.addEventListener('click', () => {`,
+    `      this.expanded = !this.expanded;`,
+    `      this.dispatchEvent(new CustomEvent('toggle', { detail: this.expanded, bubbles: true }));`,
+    `      this.render();`,
+    `    });`,
     `  }`,
     `}`,
     ``,
@@ -709,7 +755,6 @@ function generatePlaceholder(exportName: string, label: string, type: string): s
   return joinLines([
     `import { defineRosettaElement } from '../define-element';`,
     ``,
-    `const STYLES = \`:host { display: block; padding: 1rem; border: 1px dashed var(--db-border, #d9dee7); border-radius: 0.5rem; color: var(--db-muted, #6b7280); font: 0.875rem system-ui, sans-serif; }\`;`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag(exportName)}';`,
@@ -718,7 +763,7 @@ function generatePlaceholder(exportName: string, label: string, type: string): s
     `    if (!this.shadowRoot) {`,
     `      this.attachShadow({ mode: 'open' });`,
     `    }`,
-    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><p>${label} <code>${type}</code></p>\`;`,
+    `    this.shadowRoot!.innerHTML = \`<link rel="stylesheet" href="./${exportName}.css" /><p>${label} <code>${type}</code></p>\`;`,
     `  }`,
     ``,
     `  setProperty(_name: string, _value: unknown): void {}`,

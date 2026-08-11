@@ -11,6 +11,8 @@
     "url": "https://github.com/KevinEverywhere/rosettadash/issues"
   },
   "scripts": {
+    "sync:readme": "cp README.md apps/client/public/readme.md",
+    "prestart:client": "npm run sync:readme",
     "start:client": "nx serve client",
     "start:server": "nx serve server",
     "start": "nx run-many -t serve -p client,server --parallel=2",
@@ -93,6 +95,7 @@
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "jszip": "^3.10.1",
+    "marked": "^18.0.9",
     "reflect-metadata": "^0.2.0",
     "rxjs": "~7.8.0",
     "three": "^0.172.0"

@@ -317,6 +317,20 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'layout.collapsible',
+    category: 'layout',
+    label: 'Collapsible',
+    description: 'Expand/collapse section with title and summary',
+    isVisual: true,
+    inputs: [],
+    outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: 'Section' },
+      { key: 'summary', label: 'Summary', type: 'string', default: '' },
+      { key: 'expanded', label: 'Expanded by default', type: 'boolean', default: false },
+    ],
+  },
+  {
     type: 'domain.role-gate',
     category: 'domain',
     label: 'Role Gate',
