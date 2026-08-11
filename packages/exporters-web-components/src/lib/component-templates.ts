@@ -21,6 +21,10 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-geo-globe',
   'visual.svg.inline',
   'visual.svg.icon',
+  'infra.wasm.asset',
+  'visual.wasm.worker-host',
+  'visual.wasm.module',
+  'visual.wasm.media',
   'logic.timer',
   'visual.news.language-select',
   'visual.news.region-select',
@@ -70,6 +74,14 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateSvgInline(exportName);
     case 'visual.svg.icon':
       return generateSvgIcon(exportName);
+    case 'infra.wasm.asset':
+      return generateWasmAsset(exportName);
+    case 'visual.wasm.worker-host':
+      return generateWasmWorkerHost(exportName);
+    case 'visual.wasm.module':
+      return generateWasmModule(exportName);
+    case 'visual.wasm.media':
+      return generateWasmMedia(exportName);
     case 'logic.timer':
       return generateTimer(exportName);
     default:
@@ -598,6 +610,78 @@ function generateSvgIcon(exportName: string): string {
     `        : this.color;`,
     `    const label = this.ariaLabel || this.title;`,
     `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><span class="svg-icon" title="\${this.title}" aria-label="\${label}" style="width:\${this.size}px;height:\${this.size}px;color:\${resolvedColor}">\${this.markup}</span>\`;`,
+    `  }`,
+    `}`,
+    ``,
+    `export function register${exportName}(): void {`,
+    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmAsset(exportName: string): string {
+  return joinLines([
+    `import { defineDashElement } from '../define-element';`,
+    ``,
+    `const STYLES = \`${shellStyles()} .wasm-asset__badge { display: inline-block; margin-right: 0.5rem; padding: 0.125rem 0.5rem; border-radius: 999px; background: rgb(99 102 241 / 15%); color: #4338ca; font-size: 0.6875rem; font-weight: 700; }\`;`,
+    ``,
+    `export class ${exportName} extends HTMLElement {`,
+    `  static readonly tagName = '${customElementTag(exportName)}';`,
+    `  modulePath = 'wasm/modules/example.wasm';`,
+    `  gluePath = 'wasm/glue/example.js';`,
+    ``,
+    `  connectedCallback(): void { this.render(); }`,
+    `  setProperty(name: string, value: unknown): void {`,
+    `    (this as Record<string, unknown>)[name] = value;`,
+    `    this.render();`,
+    `  }`,
+    `  private render(): void {`,
+    `    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });`,
+    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="wasm-asset"><span class="wasm-asset__badge">WASM</span><code>\${this.modulePath}</code>\${this.gluePath ? \`<span> + \${this.gluePath}</span>\` : ''}</section>\`;`,
+    `  }`,
+    `}`,
+    ``,
+    `export function register${exportName}(): void {`,
+    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmWorkerHost(exportName: string): string {
+  return generatePlaceholder(exportName, 'WASM Worker Host', 'visual.wasm.worker-host');
+}
+
+function generateWasmModule(exportName: string): string {
+  return generatePlaceholder(exportName, 'WASM Module', 'visual.wasm.module');
+}
+
+function generateWasmMedia(exportName: string): string {
+  return joinLines([
+    `import { defineDashElement } from '../define-element';`,
+    ``,
+    `const STYLES = \`${shellStyles()} .wasm-media__progress { height: 0.375rem; border-radius: 999px; background: rgb(148 163 184 / 25%); overflow: hidden; } .wasm-media__progress span { display: block; height: 100%; background: #6366f1; }\`;`,
+    ``,
+    `export class ${exportName} extends HTMLElement {`,
+    `  static readonly tagName = '${customElementTag(exportName)}';`,
+    `  label = 'Media transcode';`,
+    `  operation = 'transcode';`,
+    `  outputFormat = 'mp4';`,
+    `  showProgress = true;`,
+    `  progress = 0;`,
+    ``,
+    `  connectedCallback(): void { this.render(); }`,
+    `  setProperty(name: string, value: unknown): void {`,
+    `    (this as Record<string, unknown>)[name] = value;`,
+    `    this.render();`,
+    `  }`,
+    `  private render(): void {`,
+    `    if (!this.shadowRoot) this.attachShadow({ mode: 'open' });`,
+    `    const progressMarkup = this.showProgress`,
+    `      ? \`<div class="wasm-media__progress" role="progressbar" aria-valuenow="\${this.progress}"><span style="width:\${this.progress}%"></span></div>\``,
+    `      : '';`,
+    `    this.shadowRoot!.innerHTML = \`<style>\${STYLES}</style><section class="wasm-media"><header><h3>\${this.label}</h3><span>\${this.operation} → \${this.outputFormat}</span></header>\${progressMarkup}</section>\`;`,
     `  }`,
     `}`,
     ``,

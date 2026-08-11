@@ -37,6 +37,36 @@
       data-testid="preview-plugin-svg-icon"
     ></div>
   }
+  @case ('wasm-asset') {
+    <div class="preview-wasm preview-wasm--asset" data-testid="preview-plugin-wasm-asset">
+      <span class="preview-wasm__badge">WASM</span>
+      <code>{{ readString('modulePath', 'wasm/modules/example.wasm') }}</code>
+      @if (readString('gluePath')) {
+        <span class="preview-wasm__glue">+ {{ readString('gluePath') }}</span>
+      }
+    </div>
+  }
+  @case ('wasm-worker-host') {
+    <div class="preview-wasm preview-wasm--worker" data-testid="preview-plugin-wasm-worker">
+      <span class="preview-wasm__label">{{ readString('moduleName', 'dash-wasm-worker') }}</span>
+      <span class="preview-wasm__status">Worker idle</span>
+    </div>
+  }
+  @case ('wasm-module') {
+    <div class="preview-wasm preview-wasm--module" data-testid="preview-plugin-wasm-module">
+      <span class="preview-wasm__label">{{ readString('label', 'WASM Module') }}</span>
+      <code>{{ readString('entryExport', 'run') }}()</code>
+    </div>
+  }
+  @case ('wasm-media') {
+    <div class="preview-wasm preview-wasm--media" data-testid="preview-plugin-wasm-media">
+      <span class="preview-wasm__label">{{ readString('label', 'Media transcode') }}</span>
+      <span class="preview-wasm__meta">{{ readString('operation', 'transcode') }} → {{ readString('outputFormat', 'mp4') }}</span>
+      @if (readBoolean('showProgress', true)) {
+        <div class="preview-wasm__progress" aria-hidden="true"><span style="width: 35%"></span></div>
+      }
+    </div>
+  }
   @case ('3d-bar-chart') {
     <app-preview-three-visual [node]="node()" mode="bar-chart" />
   }

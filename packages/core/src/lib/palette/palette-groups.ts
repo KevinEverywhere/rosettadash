@@ -97,6 +97,16 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
     label: 'SVG',
     types: ['visual.svg.inline', 'visual.svg.icon'],
   },
+  {
+    id: 'wasm-compute',
+    label: 'WASM Compute',
+    types: [
+      'infra.wasm.asset',
+      'visual.wasm.worker-host',
+      'visual.wasm.module',
+      'visual.wasm.media',
+    ],
+  },
 ];
 
 const MIN_ITEMS_PER_GROUP = 2;

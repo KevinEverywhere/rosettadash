@@ -227,8 +227,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-80](https://planetkevin.atlassian.net/browse/DAS-80)** — SVG component group (inline + icon hosts)  
-Branch: `feature/DAS-80-svg-components`
+**[DAS-81](https://planetkevin.atlassian.net/browse/DAS-81)** — WASM compute component group + SVG exporters (Angular, Svelte, Vue)  
+Branch: `feature/DAS-81-wasm-compute-svg-exporters`
 
 ## License
 

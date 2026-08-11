@@ -26,6 +26,12 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-scene',
   'visual.display.3d-gltf-model',
   'visual.display.3d-geo-globe',
+  'visual.svg.inline',
+  'visual.svg.icon',
+  'infra.wasm.asset',
+  'visual.wasm.worker-host',
+  'visual.wasm.module',
+  'visual.wasm.media',
   'logic.timer',
   'visual.news.language-select',
   'visual.news.region-select',
@@ -73,6 +79,18 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateThreeGltfModel();
     case 'visual.display.3d-geo-globe':
       return generateThreeGeoGlobe();
+    case 'visual.svg.inline':
+      return generateSvgInline();
+    case 'visual.svg.icon':
+      return generateSvgIcon();
+    case 'infra.wasm.asset':
+      return generateWasmAsset();
+    case 'visual.wasm.worker-host':
+      return generateWasmWorkerHost();
+    case 'visual.wasm.module':
+      return generateWasmModule();
+    case 'visual.wasm.media':
+      return generateWasmMedia();
     case 'logic.timer':
       return generateTimer();
     case 'visual.news.language-select':
@@ -686,6 +704,192 @@ function generateTimer(): string {
     `  <p class="timer__value">`,
     `    {mode === 'countdown' ? \`\${remaining}s remaining\` : \`\${elapsed} ticks\`}`,
     `  </p>`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generateSvgInline(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  import type { Row } from '../types';`,
+    `  let {`,
+    `    id,`,
+    `    sourceMode = 'inline',`,
+    `    markup = '',`,
+    `    url = '',`,
+    `    assetPath = '',`,
+    `    width = 120,`,
+    `    height = 120,`,
+    `    ariaLabel = 'SVG graphic',`,
+    `    fillField = '',`,
+    `    row,`,
+    `  }: {`,
+    `    id?: string;`,
+    `    sourceMode?: 'inline' | 'url' | 'path';`,
+    `    markup?: string;`,
+    `    url?: string;`,
+    `    assetPath?: string;`,
+    `    width?: number;`,
+    `    height?: number;`,
+    `    ariaLabel?: string;`,
+    `    fillField?: string;`,
+    `    row?: Row;`,
+    `  } = $props();`,
+    `  const fillColor =`,
+    `    fillField && row && row[fillField] !== undefined ? String(row[fillField]) : undefined;`,
+    `</script>`,
+    ``,
+    `{#if sourceMode === 'url' && url}`,
+    `  <figure class="svg-inline" style:width="{width}px" style:height="{height}px" aria-label={ariaLabel}>`,
+    `    <img src={url} alt={ariaLabel} />`,
+    `  </figure>`,
+    `{:else if sourceMode === 'path' && assetPath}`,
+    `  <figure class="svg-inline svg-inline--asset" style:width="{width}px" style:height="{height}px" aria-label={ariaLabel}>`,
+    `    <p class="svg-inline__placeholder">Asset: {assetPath}</p>`,
+    `  </figure>`,
+    `{:else}`,
+    `  <figure class="svg-inline" style:width="{width}px" style:height="{height}px" style:color={fillColor} aria-label={ariaLabel}>`,
+    `    {@html markup}`,
+    `  </figure>`,
+    `{/if}`,
+    ``,
+  ]);
+}
+
+function generateSvgIcon(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  import type { Row } from '../types';`,
+    `  let {`,
+    `    id,`,
+    `    markup = '',`,
+    `    size = 24,`,
+    `    color = 'currentColor',`,
+    `    title = 'Icon',`,
+    `    ariaLabel = '',`,
+    `    colorField = '',`,
+    `    row,`,
+    `  }: {`,
+    `    id?: string;`,
+    `    markup?: string;`,
+    `    size?: number;`,
+    `    color?: string;`,
+    `    title?: string;`,
+    `    ariaLabel?: string;`,
+    `    colorField?: string;`,
+    `    row?: Row;`,
+    `  } = $props();`,
+    `  const resolvedColor =`,
+    `    colorField && row && row[colorField] !== undefined ? String(row[colorField]) : color;`,
+    `</script>`,
+    ``,
+    `<span`,
+    `  class="svg-icon"`,
+    `  style:width="{size}px"`,
+    `  style:height="{size}px"`,
+    `  style:color={resolvedColor}`,
+    `  {title}`,
+    `  aria-label={ariaLabel || title}`,
+    `>`,
+    `  {@html markup}`,
+    `</span>`,
+    ``,
+  ]);
+}
+
+function generateWasmAsset(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  let {`,
+    `    id,`,
+    `    modulePath = 'wasm/modules/example.wasm',`,
+    `    gluePath = 'wasm/glue/example.js',`,
+    `  }: { id?: string; modulePath?: string; gluePath?: string } = $props();`,
+    `</script>`,
+    ``,
+    `<section class="wasm-asset" {id}>`,
+    `  <span class="wasm-asset__badge">WASM</span>`,
+    `  <code>{modulePath}</code>`,
+    `  {#if gluePath}`,
+    `    <span class="wasm-asset__glue">+ {gluePath}</span>`,
+    `  {/if}`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generateWasmWorkerHost(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  let {`,
+    `    id,`,
+    `    moduleName = 'dash-wasm-worker',`,
+    `    showStatus = true,`,
+    `  }: { id?: string; moduleName?: string; showStatus?: boolean } = $props();`,
+    `</script>`,
+    ``,
+    `<section class="wasm-worker" {id}>`,
+    `  <header class="wasm-worker__header">`,
+    `    <span>{moduleName}</span>`,
+    `    <span class="wasm-worker__status">Worker host</span>`,
+    `  </header>`,
+    `  {#if showStatus}`,
+    `    <p class="wasm-worker__hint">Bind a WASM asset ref to initialize.</p>`,
+    `  {/if}`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generateWasmModule(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  let {`,
+    `    id,`,
+    `    entryExport = 'run',`,
+    `    label = 'WASM Module',`,
+    `  }: { id?: string; entryExport?: string; label?: string } = $props();`,
+    `</script>`,
+    ``,
+    `<section class="wasm-module" {id}>`,
+    `  <h3>{label}</h3>`,
+    `  <p class="wasm-module__export"><code>{entryExport}()</code></p>`,
+    `</section>`,
+    ``,
+  ]);
+}
+
+function generateWasmMedia(): string {
+  return joinLines([
+    `<script lang="ts">`,
+    `  let {`,
+    `    id,`,
+    `    operation = 'transcode',`,
+    `    outputFormat = 'mp4',`,
+    `    showProgress = true,`,
+    `    label = 'Media transcode',`,
+    `    progress = 0,`,
+    `  }: {`,
+    `    id?: string;`,
+    `    operation?: string;`,
+    `    outputFormat?: string;`,
+    `    showProgress?: boolean;`,
+    `    label?: string;`,
+    `    progress?: number;`,
+    `  } = $props();`,
+    `</script>`,
+    ``,
+    `<section class="wasm-media" {id}>`,
+    `  <header class="wasm-media__header">`,
+    `    <h3>{label}</h3>`,
+    `    <span>{operation} → {outputFormat}</span>`,
+    `  </header>`,
+    `  {#if showProgress}`,
+    `    <div class="wasm-media__progress" role="progressbar" aria-valuenow={progress}>`,
+    `      <span style:width="{progress}%"></span>`,
+    `    </div>`,
+    `  {/if}`,
     `</section>`,
     ``,
   ]);

@@ -26,6 +26,12 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-scene',
   'visual.display.3d-gltf-model',
   'visual.display.3d-geo-globe',
+  'visual.svg.inline',
+  'visual.svg.icon',
+  'infra.wasm.asset',
+  'visual.wasm.worker-host',
+  'visual.wasm.module',
+  'visual.wasm.media',
   'logic.timer',
   'visual.news.language-select',
   'visual.news.region-select',
@@ -73,6 +79,18 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateThreeGltfModel(exportName);
     case 'visual.display.3d-geo-globe':
       return generateThreeGeoGlobe(exportName);
+    case 'visual.svg.inline':
+      return generateSvgInline(exportName);
+    case 'visual.svg.icon':
+      return generateSvgIcon(exportName);
+    case 'infra.wasm.asset':
+      return generateWasmAsset(exportName);
+    case 'visual.wasm.worker-host':
+      return generateWasmWorkerHost(exportName);
+    case 'visual.wasm.module':
+      return generateWasmModule(exportName);
+    case 'visual.wasm.media':
+      return generateWasmMedia(exportName);
     case 'logic.timer':
       return generateTimer(exportName);
     case 'visual.news.language-select':
@@ -621,6 +639,194 @@ function generateTimer(name: string): string {
     `    <p class="timer__value">`,
     `      {{ mode === 'countdown' ? \`\${remaining}s remaining\` : \`\${elapsed} ticks\` }}`,
     `    </p>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateSvgInline(_name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    sourceMode?: 'inline' | 'url' | 'path';`,
+    `    markup?: string;`,
+    `    url?: string;`,
+    `    assetPath?: string;`,
+    `    width?: number;`,
+    `    height?: number;`,
+    `    ariaLabel?: string;`,
+    `    fillField?: string;`,
+    `    row?: Row;`,
+    `  }>(),`,
+    `  { sourceMode: 'inline', markup: '', width: 120, height: 120, ariaLabel: 'SVG graphic' },`,
+    `);`,
+    `const fillColor = computed(() => {`,
+    `  if (!props.fillField || !props.row || props.row[props.fillField] === undefined) {`,
+    `    return undefined;`,
+    `  }`,
+    `  return String(props.row[props.fillField]);`,
+    `});`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <figure`,
+    `    v-if="sourceMode === 'url' && url"`,
+    `    class="svg-inline"`,
+    `    :style="{ width: \`\${width}px\`, height: \`\${height}px\` }"`,
+    `    :aria-label="ariaLabel"`,
+    `  >`,
+    `    <img :src="url" :alt="ariaLabel" />`,
+    `  </figure>`,
+    `  <figure`,
+    `    v-else-if="sourceMode === 'path' && assetPath"`,
+    `    class="svg-inline svg-inline--asset"`,
+    `    :style="{ width: \`\${width}px\`, height: \`\${height}px\` }"`,
+    `    :aria-label="ariaLabel"`,
+    `  >`,
+    `    <p class="svg-inline__placeholder">Asset: {{ assetPath }}</p>`,
+    `  </figure>`,
+    `  <figure`,
+    `    v-else`,
+    `    class="svg-inline"`,
+    `    :style="{ width: \`\${width}px\`, height: \`\${height}px\`, color: fillColor }"`,
+    `    :aria-label="ariaLabel"`,
+    `    v-html="markup"`,
+    `  />`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateSvgIcon(_name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `import { computed } from 'vue';`,
+    `import type { Row } from '../types';`,
+    `const props = withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    markup?: string;`,
+    `    size?: number;`,
+    `    color?: string;`,
+    `    title?: string;`,
+    `    ariaLabel?: string;`,
+    `    colorField?: string;`,
+    `    row?: Row;`,
+    `  }>(),`,
+    `  { markup: '', size: 24, color: 'currentColor', title: 'Icon' },`,
+    `);`,
+    `const resolvedColor = computed(() => {`,
+    `  if (props.colorField && props.row && props.row[props.colorField] !== undefined) {`,
+    `    return String(props.row[props.colorField]);`,
+    `  }`,
+    `  return props.color;`,
+    `});`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <span`,
+    `    class="svg-icon"`,
+    `    :style="{ width: \`\${size}px\`, height: \`\${size}px\`, color: resolvedColor, display: 'inline-flex' }"`,
+    `    :title="title"`,
+    `    :aria-label="ariaLabel || title"`,
+    `    v-html="markup"`,
+    `  />`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateWasmAsset(_name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `withDefaults(`,
+    `  defineProps<{ id?: string; modulePath?: string; gluePath?: string }>(),`,
+    `  { modulePath: 'wasm/modules/example.wasm', gluePath: 'wasm/glue/example.js' },`,
+    `);`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="wasm-asset" :id="id">`,
+    `    <span class="wasm-asset__badge">WASM</span>`,
+    `    <code>{{ modulePath }}</code>`,
+    `    <span v-if="gluePath" class="wasm-asset__glue">+ {{ gluePath }}</span>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateWasmWorkerHost(_name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `withDefaults(`,
+    `  defineProps<{ id?: string; moduleName?: string; showStatus?: boolean }>(),`,
+    `  { moduleName: 'dash-wasm-worker', showStatus: true },`,
+    `);`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="wasm-worker" :id="id">`,
+    `    <header class="wasm-worker__header">`,
+    `      <span>{{ moduleName }}</span>`,
+    `      <span class="wasm-worker__status">Worker host</span>`,
+    `    </header>`,
+    `    <p v-if="showStatus" class="wasm-worker__hint">Bind a WASM asset ref to initialize.</p>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateWasmModule(_name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `withDefaults(`,
+    `  defineProps<{ id?: string; entryExport?: string; label?: string }>(),`,
+    `  { entryExport: 'run', label: 'WASM Module' },`,
+    `);`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="wasm-module" :id="id">`,
+    `    <h3>{{ label }}</h3>`,
+    `    <p class="wasm-module__export"><code>{{ entryExport }}()</code></p>`,
+    `  </section>`,
+    `</template>`,
+    ``,
+  ]);
+}
+
+function generateWasmMedia(_name: string): string {
+  return joinLines([
+    `<script setup lang="ts">`,
+    `withDefaults(`,
+    `  defineProps<{`,
+    `    id?: string;`,
+    `    operation?: string;`,
+    `    outputFormat?: string;`,
+    `    showProgress?: boolean;`,
+    `    label?: string;`,
+    `    progress?: number;`,
+    `  }>(),`,
+    `  { operation: 'transcode', outputFormat: 'mp4', showProgress: true, label: 'Media transcode', progress: 0 },`,
+    `);`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <section class="wasm-media" :id="id">`,
+    `    <header class="wasm-media__header">`,
+    `      <h3>{{ label }}</h3>`,
+    `      <span>{{ operation }} → {{ outputFormat }}</span>`,
+    `    </header>`,
+    `    <div v-if="showProgress" class="wasm-media__progress" role="progressbar" :aria-valuenow="progress">`,
+    `      <span :style="{ width: \`\${progress}%\` }"></span>`,
+    `    </div>`,
     `  </section>`,
     `</template>`,
     ``,

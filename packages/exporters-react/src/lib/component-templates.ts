@@ -24,6 +24,10 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-geo-globe',
   'visual.svg.inline',
   'visual.svg.icon',
+  'infra.wasm.asset',
+  'visual.wasm.worker-host',
+  'visual.wasm.module',
+  'visual.wasm.media',
   'domain.role-gate',
   'domain.person-invite',
   'domain.role-assign',
@@ -84,6 +88,14 @@ export function generateComponentFile(component: IRComponent, exportName: string
       return generateSvgInline(exportName);
     case 'visual.svg.icon':
       return generateSvgIcon(exportName);
+    case 'infra.wasm.asset':
+      return generateWasmAsset(exportName);
+    case 'visual.wasm.worker-host':
+      return generateWasmWorkerHost(exportName);
+    case 'visual.wasm.module':
+      return generateWasmModule(exportName);
+    case 'visual.wasm.media':
+      return generateWasmMedia(exportName);
     case 'domain.role-gate':
       return generateRoleGate(exportName);
     case 'domain.person-invite':
@@ -1492,6 +1504,131 @@ function generateSvgIcon(name: string): string {
     `      style={{ width: size, height: size, color: resolvedColor, display: 'inline-flex' }}`,
     `      dangerouslySetInnerHTML={{ __html: markup }}`,
     `    />`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmAsset(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  modulePath?: string;`,
+    `  gluePath?: string;`,
+    `  version?: string;`,
+    `  lazyLoad?: boolean;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  modulePath = 'wasm/modules/example.wasm',`,
+    `  gluePath = 'wasm/glue/example.js',`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <section className="wasm-asset" id={id}>`,
+    `      <span className="wasm-asset__badge">WASM</span>`,
+    `      <code>{modulePath}</code>`,
+    `      {gluePath ? <span className="wasm-asset__glue">+ {gluePath}</span> : null}`,
+    `    </section>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmWorkerHost(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  moduleName?: string;`,
+    `  showStatus?: boolean;`,
+    `  onProgress?: (value: number) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  moduleName = 'dash-wasm-worker',`,
+    `  showStatus = true,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <section className="wasm-worker" id={id}>`,
+    `      <header className="wasm-worker__header">`,
+    `        <span>{moduleName}</span>`,
+    `        <span className="wasm-worker__status">Worker host</span>`,
+    `      </header>`,
+    `      {showStatus ? (`,
+    `        <p className="wasm-worker__hint">Bind a WASM asset ref to initialize.</p>`,
+    `      ) : null}`,
+    `    </section>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmModule(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  entryExport?: string;`,
+    `  label?: string;`,
+    `  onResult?: (value: unknown) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({ id, entryExport = 'run', label = 'WASM Module' }: ${name}Props) {`,
+    `  return (`,
+    `    <section className="wasm-module" id={id}>`,
+    `      <h3>{label}</h3>`,
+    `      <p className="wasm-module__export"><code>{entryExport}()</code></p>`,
+    `    </section>`,
+    `  );`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmMedia(name: string): string {
+  return joinLines([
+    `'use client';`,
+    ``,
+    `export interface ${name}Props {`,
+    `  id?: string;`,
+    `  operation?: string;`,
+    `  outputFormat?: string;`,
+    `  showProgress?: boolean;`,
+    `  label?: string;`,
+    `  progress?: number;`,
+    `  onOutputBlob?: (blob: Blob) => void;`,
+    `}`,
+    ``,
+    `export function ${name}({`,
+    `  id,`,
+    `  operation = 'transcode',`,
+    `  outputFormat = 'mp4',`,
+    `  showProgress = true,`,
+    `  label = 'Media transcode',`,
+    `  progress = 0,`,
+    `}: ${name}Props) {`,
+    `  return (`,
+    `    <section className="wasm-media" id={id}>`,
+    `      <header className="wasm-media__header">`,
+    `        <h3>{label}</h3>`,
+    `        <span>{operation} → {outputFormat}</span>`,
+    `      </header>`,
+    `      {showProgress ? (`,
+    `        <div className="wasm-media__progress" role="progressbar" aria-valuenow={progress}>`,
+    `          <span style={{ width: \`\${progress}%\` }} />`,
+    `        </div>`,
+    `      ) : null}`,
+    `      <p className="wasm-media__hint">ffmpeg.wasm host — wire input file/blob and asset ref.</p>`,
+    `    </section>`,
     `  );`,
     `}`,
     ``,

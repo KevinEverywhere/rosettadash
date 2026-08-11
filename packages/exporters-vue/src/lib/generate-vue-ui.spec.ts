@@ -264,6 +264,28 @@ describe('generateVueUiFiles', () => {
     expect(globeFile?.content).toContain('latField');
   });
 
+  it('generates Vue SVG inline and WASM worker stubs', () => {
+    const svg = registry.createNode('visual.svg.inline', { id: 'svg1' });
+    const worker = registry.createNode('visual.wasm.worker-host', { id: 'ww1' });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'SVG WASM Dashboard',
+        version: 1,
+        exportTargets: { ui: 'vue', server: 'nest' },
+        nodes: [svg, worker, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateVueUiFiles(ir);
+    expect(files.some((file) => file.content.includes('v-html="markup"'))).toBe(true);
+    expect(files.some((file) => file.content.includes('wasm-worker'))).toBe(true);
+  });
+
   it('rejects non-vue UI targets', () => {
     const ir = buildExportIR(
       {

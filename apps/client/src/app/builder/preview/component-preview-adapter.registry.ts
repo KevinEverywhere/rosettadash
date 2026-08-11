@@ -5,6 +5,10 @@ export type ComponentPreviewTemplateId =
   | 'metric-chip'
   | 'svg-inline'
   | 'svg-icon'
+  | 'wasm-asset'
+  | 'wasm-worker-host'
+  | 'wasm-module'
+  | 'wasm-media'
   | '3d-bar-chart'
   | '3d-scatter'
   | '3d-scene'
@@ -38,6 +42,10 @@ export function registerDefaultComponentPreviewAdapters(
   registry.register('visual.plugin.metric-chip', 'metric-chip');
   registry.register('visual.svg.inline', 'svg-inline');
   registry.register('visual.svg.icon', 'svg-icon');
+  registry.register('infra.wasm.asset', 'wasm-asset');
+  registry.register('visual.wasm.worker-host', 'wasm-worker-host');
+  registry.register('visual.wasm.module', 'wasm-module');
+  registry.register('visual.wasm.media', 'wasm-media');
   registry.register('visual.display.3d-bar-chart', '3d-bar-chart');
   registry.register('visual.display.3d-scatter', '3d-scatter');
   registry.register('visual.display.3d-scene', '3d-scene');

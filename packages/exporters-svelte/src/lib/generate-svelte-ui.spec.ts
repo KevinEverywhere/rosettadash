@@ -264,6 +264,28 @@ describe('generateSvelteUiFiles', () => {
     expect(globeFile?.content).toContain('latField');
   });
 
+  it('generates Svelte SVG icon and WASM media stubs', () => {
+    const icon = registry.createNode('visual.svg.icon', { id: 'svg1' });
+    const media = registry.createNode('visual.wasm.media', { id: 'wm1' });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'SVG WASM Dashboard',
+        version: 1,
+        exportTargets: { ui: 'svelte', server: 'nest' },
+        nodes: [icon, media, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateSvelteUiFiles(ir);
+    expect(files.some((file) => file.content.includes('{@html markup}'))).toBe(true);
+    expect(files.some((file) => file.content.includes('wasm-media'))).toBe(true);
+  });
+
   it('rejects non-svelte UI targets', () => {
     const ir = buildExportIR(
       {

@@ -264,6 +264,28 @@ describe('generateAngularUiFiles', () => {
     expect(globeFile?.content).toContain('latField');
   });
 
+  it('generates Angular SVG inline and WASM media stubs', () => {
+    const svg = registry.createNode('visual.svg.inline', { id: 'svg1' });
+    const media = registry.createNode('visual.wasm.media', { id: 'wm1' });
+    const server = registry.createNode('infra.server.nest', { id: 's1' });
+
+    const ir = buildExportIR(
+      {
+        id: 'comp1',
+        name: 'SVG WASM Dashboard',
+        version: 1,
+        exportTargets: { ui: 'angular', server: 'nest' },
+        nodes: [svg, media, server],
+        bindings: [],
+      },
+      registry,
+    );
+
+    const files = generateAngularUiFiles(ir);
+    expect(files.some((file) => file.content.includes('bypassSecurityTrustHtml'))).toBe(true);
+    expect(files.some((file) => file.content.includes('wasm-media'))).toBe(true);
+  });
+
   it('rejects non-angular UI targets', () => {
     const ir = buildExportIR(
       {

@@ -26,6 +26,12 @@ const SUPPORTED_TYPES = new Set([
   'visual.display.3d-scene',
   'visual.display.3d-gltf-model',
   'visual.display.3d-geo-globe',
+  'visual.svg.inline',
+  'visual.svg.icon',
+  'infra.wasm.asset',
+  'visual.wasm.worker-host',
+  'visual.wasm.module',
+  'visual.wasm.media',
   'logic.timer',
   'visual.news.language-select',
   'visual.news.region-select',
@@ -73,6 +79,18 @@ export function generateComponentFile(component: IRComponent, className: string)
       return generateThreeGltfModel(className);
     case 'visual.display.3d-geo-globe':
       return generateThreeGeoGlobe(className);
+    case 'visual.svg.inline':
+      return generateSvgInline(className);
+    case 'visual.svg.icon':
+      return generateSvgIcon(className);
+    case 'infra.wasm.asset':
+      return generateWasmAsset(className);
+    case 'visual.wasm.worker-host':
+      return generateWasmWorkerHost(className);
+    case 'visual.wasm.module':
+      return generateWasmModule(className);
+    case 'visual.wasm.media':
+      return generateWasmMedia(className);
     case 'logic.timer':
       return generateTimer(className);
     case 'visual.news.language-select':
@@ -748,6 +766,235 @@ function generateTimer(className: string): string {
     `      onCleanup(() => window.clearInterval(id));`,
     `    });`,
     `  }`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateSvgInline(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, computed, inject, input } from '@angular/core';`,
+    `import { DomSanitizer } from '@angular/platform-browser';`,
+    `import type { Row } from '../types';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    @if (sourceMode() === 'url' && url()) {`,
+    `      <figure class="svg-inline" [style.width.px]="width()" [style.height.px]="height()" [attr.aria-label]="ariaLabel()">`,
+    `        <img [src]="url()" [alt]="ariaLabel()" />`,
+    `      </figure>`,
+    `    } @else if (sourceMode() === 'path' && assetPath()) {`,
+    `      <figure class="svg-inline svg-inline--asset" [style.width.px]="width()" [style.height.px]="height()" [attr.aria-label]="ariaLabel()">`,
+    `        <p class="svg-inline__placeholder">Asset: {{ assetPath() }}</p>`,
+    `      </figure>`,
+    `    } @else {`,
+    `      <figure`,
+    `        class="svg-inline"`,
+    `        [style.width.px]="width()"`,
+    `        [style.height.px]="height()"`,
+    `        [style.color]="fillColor()"`,
+    `        [attr.aria-label]="ariaLabel()"`,
+    `        [innerHTML]="safeMarkup()"`,
+    `      ></figure>`,
+    `    }`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  private readonly sanitizer = inject(DomSanitizer);`,
+    `  id = input<string>();`,
+    `  sourceMode = input<'inline' | 'url' | 'path'>('inline');`,
+    `  markup = input('');`,
+    `  url = input('');`,
+    `  assetPath = input('');`,
+    `  width = input(120);`,
+    `  height = input(120);`,
+    `  ariaLabel = input('SVG graphic');`,
+    `  fillField = input('');`,
+    `  row = input<Row>();`,
+    `  safeMarkup = computed(() => this.sanitizer.bypassSecurityTrustHtml(this.markup()));`,
+    `  fillColor = computed(() => {`,
+    `    const field = this.fillField();`,
+    `    const current = this.row();`,
+    `    if (!field || !current || current[field] === undefined) {`,
+    `      return undefined;`,
+    `    }`,
+    `    return String(current[field]);`,
+    `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateSvgIcon(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, computed, inject, input } from '@angular/core';`,
+    `import { DomSanitizer } from '@angular/platform-browser';`,
+    `import type { Row } from '../types';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <span`,
+    `      class="svg-icon"`,
+    `      [style.width.px]="size()"`,
+    `      [style.height.px]="size()"`,
+    `      [style.color]="resolvedColor()"`,
+    `      [attr.title]="title()"`,
+    `      [attr.aria-label]="ariaLabel() || title()"`,
+    `      [innerHTML]="safeMarkup()"`,
+    `    ></span>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  private readonly sanitizer = inject(DomSanitizer);`,
+    `  id = input<string>();`,
+    `  markup = input('');`,
+    `  size = input(24);`,
+    `  color = input('currentColor');`,
+    `  title = input('Icon');`,
+    `  ariaLabel = input('');`,
+    `  colorField = input('');`,
+    `  row = input<Row>();`,
+    `  safeMarkup = computed(() => this.sanitizer.bypassSecurityTrustHtml(this.markup()));`,
+    `  resolvedColor = computed(() => {`,
+    `    const field = this.colorField();`,
+    `    const current = this.row();`,
+    `    if (field && current && current[field] !== undefined) {`,
+    `      return String(current[field]);`,
+    `    }`,
+    `    return this.color();`,
+    `  });`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmAsset(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, input } from '@angular/core';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <section class="wasm-asset" [id]="id()">`,
+    `      <span class="wasm-asset__badge">WASM</span>`,
+    `      <code>{{ modulePath() }}</code>`,
+    `      @if (gluePath()) {`,
+    `        <span class="wasm-asset__glue">+ {{ gluePath() }}</span>`,
+    `      }`,
+    `    </section>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  modulePath = input('wasm/modules/example.wasm');`,
+    `  gluePath = input('wasm/glue/example.js');`,
+    `  version = input('1');`,
+    `  lazyLoad = input(true);`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmWorkerHost(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, input, output } from '@angular/core';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <section class="wasm-worker" [id]="id()">`,
+    `      <header class="wasm-worker__header">`,
+    `        <span>{{ moduleName() }}</span>`,
+    `        <span class="wasm-worker__status">Worker host</span>`,
+    `      </header>`,
+    `      @if (showStatus()) {`,
+    `        <p class="wasm-worker__hint">Bind a WASM asset ref to initialize.</p>`,
+    `      }`,
+    `    </section>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  workerScriptUrl = input('');`,
+    `  moduleName = input('dash-wasm-worker');`,
+    `  autoStart = input(false);`,
+    `  showStatus = input(true);`,
+    `  progress = output<number>();`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmModule(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, input, output } from '@angular/core';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <section class="wasm-module" [id]="id()">`,
+    `      <h3>{{ label() }}</h3>`,
+    `      <p class="wasm-module__export"><code>{{ entryExport() }}()</code></p>`,
+    `      <p class="wasm-module__hint">Invoke after asset ref and payload bindings.</p>`,
+    `    </section>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  entryExport = input('run');`,
+    `  memoryPages = input(256);`,
+    `  label = input('WASM Module');`,
+    `  result = output<unknown>();`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateWasmMedia(className: string): string {
+  const selector = selectorFromClass(className);
+  return joinLines([
+    `import { Component, input, output, signal } from '@angular/core';`,
+    ``,
+    `@Component({`,
+    `  selector: '${selector}',`,
+    `  standalone: true,`,
+    `  template: \``,
+    `    <section class="wasm-media" [id]="id()">`,
+    `      <header class="wasm-media__header">`,
+    `        <h3>{{ label() }}</h3>`,
+    `        <span>{{ operation() }} → {{ outputFormat() }}</span>`,
+    `      </header>`,
+    `      @if (showProgress()) {`,
+    `        <div class="wasm-media__progress" role="progressbar" [attr.aria-valuenow]="progress()">`,
+    `          <span [style.width.%]="progress()"></span>`,
+    `        </div>`,
+    `      }`,
+    `      <p class="wasm-media__hint">ffmpeg.wasm host — wire input file/blob and asset ref.</p>`,
+    `    </section>`,
+    `  \`,`,
+    `})`,
+    `export class ${className} {`,
+    `  id = input<string>();`,
+    `  operation = input('transcode');`,
+    `  inputSource = input('file');`,
+    `  outputFormat = input('mp4');`,
+    `  ffmpegArgs = input('');`,
+    `  showProgress = input(true);`,
+    `  label = input('Media transcode');`,
+    `  progress = signal(0);`,
+    `  outputBlob = output<Blob>();`,
     `}`,
     ``,
   ]);

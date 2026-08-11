@@ -5,6 +5,7 @@ import { toComponentPluginDescriptor } from './component-plugin';
 import { EXTENSION_COMPONENT_PLUGINS } from './extension-component-plugins';
 import { SVG_COMPONENT_PLUGINS } from './svg-component-plugins';
 import { VR_COMPONENT_PLUGINS } from './vr-component-plugins';
+import { WASM_COMPONENT_PLUGINS } from './wasm-component-plugins';
 
 function previewKindForCategory(category: ComponentPlugin['definition']['category']): ComponentPlugin['metadata']['previewKind'] {
   if (category === 'infra') {
@@ -29,6 +30,7 @@ export const builtInComponentPluginDescriptors: ComponentPluginDescriptor[] = [
   ...EXTENSION_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
   ...VR_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
   ...SVG_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
+  ...WASM_COMPONENT_PLUGINS.map(toComponentPluginDescriptor),
 ];
 
 export function getComponentPluginDescriptor(type: string): ComponentPluginDescriptor | undefined {

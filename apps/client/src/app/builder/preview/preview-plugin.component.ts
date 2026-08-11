@@ -56,6 +56,11 @@ export class PreviewPluginComponent {
     const value = this.node().properties[key];
     return typeof value === 'number' ? value : fallback;
   }
+
+  protected readBoolean(key: string, fallback = false): boolean {
+    const value = this.node().properties[key];
+    return typeof value === 'boolean' ? value : fallback;
+  }
 }
 
 function escapeAttribute(value: string): string {
