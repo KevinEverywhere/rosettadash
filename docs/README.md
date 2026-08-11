@@ -1,6 +1,6 @@
-# DashBuilder Documentation
+# RosettaDash Documentation
 
-Foundational documents for the DashBuilder project. Start with the vision doc, then architecture, then dive into specifics.
+Foundational documents for the RosettaDash project. Start with the vision doc, then architecture, then dive into specifics.
 
 ## Ticket plan
 

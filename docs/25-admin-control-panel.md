@@ -1,6 +1,6 @@
 # Admin control panel
 
-Local **admin hub** at `/admin` for saved content, feature toggles, integration status, and the component catalog. Part of the “DashBuilder builds itself” path — hand-crafted shell first (DAS-74), dogfooded admin UI later (DAS-75).
+Local **admin hub** at `/admin` for saved content, feature toggles, integration status, and the component catalog. Part of the “RosettaDash builds itself” path — hand-crafted shell first (DAS-74), dogfooded admin UI later (DAS-75).
 
 **Ticket:** [DAS-74](https://planetkevin.atlassian.net/browse/DAS-74) · Branch: `feature/DAS-74-admin-control-panel`
 
@@ -25,7 +25,7 @@ Local **admin hub** at `/admin` for saved content, feature toggles, integration 
 | **Saved content** | Save current builder canvas, list entries, open in builder, remove |
 | **AI, voice & environment** | Status cards + links to `/environment` and `/builder` |
 | **Feature toggles** | `aiDrawerEnabled`, `voiceInputEnabled` |
-| **Component catalog** | Palette groups from `@dashbuilder/core` registry |
+| **Component catalog** | Palette groups from `@rosettadash/core` registry |
 
 ---
 
@@ -33,8 +33,8 @@ Local **admin hub** at `/admin` for saved content, feature toggles, integration 
 
 1. User builds on `/builder` (session keeps canvas in memory).
 2. User opens `/admin` → **Saved content** → enter label → **Save current canvas**.
-3. Entry stored in `localStorage` (`dashbuilder:content-library:index`).
-4. **Open in builder** writes `dashbuilder:library-restore` and navigates to `/builder`.
+3. Entry stored in `localStorage` (`rosettadash:content-library:index`).
+4. **Open in builder** writes `rosettadash:library-restore` and navigates to `/builder`.
 5. `BuilderProjectService` applies the snapshot to a fresh workspace.
 
 Path notation and export bundles remain a DAS-71/DAS-74 follow-up.

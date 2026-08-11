@@ -1,4 +1,4 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
 import { buildDashboardContext } from './binding-resolver';
 import { generateComponentFile } from './component-templates';
 import type { GeneratedFile, VueExportOptions } from './types';

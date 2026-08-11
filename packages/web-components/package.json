@@ -1,7 +1,7 @@
 {
-  "name": "@dashbuilder/web-components",
+  "name": "@rosettadash/web-components",
   "version": "0.0.1",
-  "description": "DashBuilder runtime custom elements — media and WASM pipelines for vanilla apps (FFMP3, etc.)",
+  "description": "RosettaDash runtime custom elements — media and WASM pipelines for vanilla apps (FFMP3, etc.)",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -23,7 +23,7 @@
     }
   },
   "dependencies": {
-    "@dashbuilder/core": "*",
+    "@rosettadash/core": "*",
     "tslib": "^2.3.0"
   }
 }

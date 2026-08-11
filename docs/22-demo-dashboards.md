@@ -1,6 +1,6 @@
 # Animated Demo Dashboards
 
-Three purpose-built example dashboards that demonstrate how to use DashBuilder for different real-world scenarios. Each dashboard will include an **animated walkthrough** — step-by-step guidance showing how to compose layouts from palette components, wire bindings, and apply grouping patterns.
+Three purpose-built example dashboards that demonstrate how to use RosettaDash for different real-world scenarios. Each dashboard will include an **animated walkthrough** — step-by-step guidance showing how to compose layouts from palette components, wire bindings, and apply grouping patterns.
 
 **Phase:** 21  
 **Status:** Planned — **design discussion required after Phase 20, before implementation**  
@@ -10,7 +10,7 @@ Three purpose-built example dashboards that demonstrate how to use DashBuilder f
 
 ## Why three dashboards
 
-DashBuilder serves multiple audiences. One demo cannot cover every workflow. Three focused examples let us show:
+RosettaDash serves multiple audiences. One demo cannot cover every workflow. Three focused examples let us show:
 
 1. **Different component mixes** — charts vs forms vs tables vs 3D
 2. **Different domain contexts** — operations, analytics, admin

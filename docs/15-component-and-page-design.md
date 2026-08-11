@@ -1,6 +1,6 @@
 # Component & Page Design
 
-Planning guide for **single components** and **pages built from component groups**. This doc reflects what DashBuilder ships today (DAS-1–DAS-37) and how we expand the palette and composite patterns next.
+Planning guide for **single components** and **pages built from component groups**. This doc reflects what RosettaDash ships today (DAS-1–DAS-37) and how we expand the palette and composite patterns next.
 
 ## Current project state (summary)
 

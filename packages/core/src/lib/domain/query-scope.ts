@@ -14,10 +14,10 @@ export const DEFAULT_SCOPE_COLUMNS = {
 } as const;
 
 export const QUERY_SCOPE_ENV_KEYS = {
-  clientId: 'DASHBUILDER_CLIENT_ID',
-  projectId: 'DASHBUILDER_PROJECT_ID',
-  rangeStart: 'DASHBUILDER_RANGE_START',
-  rangeEnd: 'DASHBUILDER_RANGE_END',
+  clientId: 'ROSETTADASH_CLIENT_ID',
+  projectId: 'ROSETTADASH_PROJECT_ID',
+  rangeStart: 'ROSETTADASH_RANGE_START',
+  rangeEnd: 'ROSETTADASH_RANGE_END',
 } as const;
 
 const PRESET_DAY_COUNT: Record<TimeRangePreset, number> = {
@@ -183,7 +183,7 @@ export function generateScopeModuleSource(scope: QueryScope): string {
 
 export function scopeEnvExampleLines(): string[] {
   return [
-    `# Optional domain scope overrides (from DashBuilder export)`,
+    `# Optional domain scope overrides (from RosettaDash export)`,
     `${QUERY_SCOPE_ENV_KEYS.clientId}=`,
     `${QUERY_SCOPE_ENV_KEYS.projectId}=`,
     `${QUERY_SCOPE_ENV_KEYS.rangeStart}=`,

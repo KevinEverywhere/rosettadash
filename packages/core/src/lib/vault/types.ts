@@ -21,6 +21,6 @@ export interface AppLockConfig {
   recoveryCodes?: RecoveryCodeRecord[];
 }
 
-export const APP_LOCK_SESSION_KEY = 'dashbuilder:vault:unlocked';
+export const APP_LOCK_SESSION_KEY = 'rosettadash:vault:unlocked';
 
-export const APP_LOCK_CONFIG_KEY = 'dashbuilder:vault:config';
+export const APP_LOCK_CONFIG_KEY = 'rosettadash:vault:config';

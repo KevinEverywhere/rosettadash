@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, computed, inject, signal } from '@angular/core';
-import { Binding, ComponentNode, PlacementPrompt, getGroupingGuide, getInstructionSteps, groupingAnimationLabel, hasInstructionGuide, readNodeDisplayDataSource, readNodeDisplaySubtitle, resolveGroupingAnimationBlocks, type InstructionStep } from '@dashbuilder/core';
+import { Binding, ComponentNode, PlacementPrompt, getGroupingGuide, getInstructionSteps, groupingAnimationLabel, hasInstructionGuide, readNodeDisplayDataSource, readNodeDisplaySubtitle, resolveGroupingAnimationBlocks, type InstructionStep } from '@rosettadash/core';
 import { BuilderStateService } from '../builder-state.service';
 import {
   CANVAS_MIN_NODE_HEIGHT,

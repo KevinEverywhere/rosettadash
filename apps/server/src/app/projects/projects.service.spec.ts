@@ -3,7 +3,7 @@ import {
   createEmptyStylingProfile,
   defaultComponentRegistry,
   normalizeStackStyling,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 describe('ProjectsService', () => {
   let service: ProjectsService;

@@ -58,7 +58,7 @@ Animation implementation stays in `apps/client/src/app/builder/grouping/grouping
 
 ## Ten initial animated instructions
 
-These are the **most common dashboard building blocks** in DashBuilder today, ordered for learning progression (filters → data → visuals → infra → motion).
+These are the **most common dashboard building blocks** in RosettaDash today, ordered for learning progression (filters → data → visuals → infra → motion).
 
 ### 1. Date range filter
 

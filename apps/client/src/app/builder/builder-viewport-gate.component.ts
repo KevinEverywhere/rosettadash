@@ -4,7 +4,7 @@ import {
   APP_NAME,
   DISPLAY_AVAILABILITY_COPY,
   type DisplayAvailability,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { DisplayAvailabilityService } from './display-availability.service';
 
 @Component({

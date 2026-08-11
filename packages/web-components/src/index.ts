@@ -1,11 +1,11 @@
 export * from './media/index';
 export * from './wasm/index';
 
-import { registerDashBuilderMediaElements } from './media/index';
-import { registerDashBuilderWasmElements } from './wasm/index';
+import { registerRosettaDashMediaElements } from './media/index';
+import { registerRosettaDashWasmElements } from './wasm/index';
 
-/** Register all DashBuilder runtime custom elements (media + wasm). */
-export function registerDashBuilderElements(): void {
-  registerDashBuilderMediaElements();
-  registerDashBuilderWasmElements();
+/** Register all RosettaDash runtime custom elements (media + wasm). */
+export function registerRosettaDashElements(): void {
+  registerRosettaDashMediaElements();
+  registerRosettaDashWasmElements();
 }

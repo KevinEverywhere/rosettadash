@@ -6,7 +6,7 @@ import {
   hasInstructionGuide,
   resolveGroupingAnimationBlocks,
   type InstructionStep,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { AppCollapsibleComponent } from '../../shared/app-collapsible/app-collapsible.component';
 
 @Component({

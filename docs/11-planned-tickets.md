@@ -1,6 +1,6 @@
 # Planned Tickets
 
-Forward-looking Jira ticket plan for DashBuilder.
+Forward-looking Jira ticket plan for RosettaDash.
 
 **Rule:** Every change requires a **Jira ticket first**, then a **matching feature branch** (`feature/DAS-<n>-…`). One ticket at a time. See [Workflow & Branching](./07-workflow-and-branching.md) and `.cursor/rules/jira-ticket-and-branch.mdc`.
 

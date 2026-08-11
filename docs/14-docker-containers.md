@@ -1,6 +1,6 @@
-# Running DashBuilder in Containers
+# Running RosettaDash in Containers
 
-DashBuilder can run locally with **Docker** and **Docker Compose** — no Node.js install on the host required (only Docker).
+RosettaDash can run locally with **Docker** and **Docker Compose** — no Node.js install on the host required (only Docker).
 
 Two modes are supported:
 
@@ -27,7 +27,7 @@ Node.js on the host is **optional** when using containers only.
 Best for day-to-day builder work inside Docker. Source is bind-mounted; `node_modules` uses a named volume for performance.
 
 ```bash
-# From repo root (dashbuilder/)
+# From repo root (rosettadash/)
 npm run docker:dev
 ```
 
@@ -88,7 +88,7 @@ The NestJS API supports an optional shared API key gate (DAS-51). **Disabled by 
 | `BUILDER_AUTH_ENABLED` | `false` | When `true`, all `/api/*` routes except health and auth config/login require a key |
 | `BUILDER_API_KEY` | unset | Shared secret; required when auth is enabled |
 
-Clients send the key via `Authorization: Bearer <key>` or `x-dashbuilder-api-key`. The Angular builder stores the key in `sessionStorage` after a successful login prompt.
+Clients send the key via `Authorization: Bearer <key>` or `x-rosettadash-api-key`. The Angular builder stores the key in `sessionStorage` after a successful login prompt.
 
 Example (dev profile):
 

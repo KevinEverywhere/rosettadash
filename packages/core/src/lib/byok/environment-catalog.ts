@@ -103,7 +103,7 @@ const SERVER_FIELDS: EnvFieldDefinition[] = [
 const BUILDER_FIELDS: EnvFieldDefinition[] = [
   {
     id: 'builder-api-key',
-    envKey: 'DASHBUILDER_API_KEY',
+    envKey: 'ROSETTADASH_API_KEY',
     label: 'Shared builder API key (advanced)',
     description:
       'Only when your local NestJS API has BUILDER_AUTH_ENABLED for shared/deployed installs — not the app lock password.',
@@ -177,7 +177,7 @@ export const ENVIRONMENT_FIELD_CATALOG: EnvFieldDefinition[] = [
 ];
 
 export const ENV_CONFIG_CATEGORY_LABELS: Record<EnvConfigCategory, string> = {
-  builder: 'DashBuilder access',
+  builder: 'RosettaDash access',
   database: 'Database',
   server: 'Server',
   ai: 'AI providers (BYOK)',

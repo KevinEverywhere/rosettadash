@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateNuxtInfraFiles } from './generate-nuxt-infra';
 import { NuxtExportError } from './types';
 

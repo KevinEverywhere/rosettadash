@@ -1,10 +1,10 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
 import {
   generateScopeModuleSource,
   hasQueryScope,
   resolveExportQueryScope,
   scopedMysqlListRowsLines,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import type { GeneratedFile, MysqlExportOptions, TableResource } from './types';
 import { MysqlExportError } from './types';
 import {

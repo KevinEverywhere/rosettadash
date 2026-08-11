@@ -1,7 +1,7 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@dashbuilder/core';
-import { PreviewNewsRow, PreviewRow, PRESET_LABELS } from '@dashbuilder/ui-primitives';
+import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@rosettadash/core';
+import { PreviewNewsRow, PreviewRow, PRESET_LABELS } from '@rosettadash/ui-primitives';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 import { ComponentPreviewAdapterRegistry } from './component-preview-adapter.registry';

@@ -18,7 +18,7 @@ Optional: [Cursor](https://cursor.com) or VS Code with Angular/NestJS extensions
 
 ## First-time setup
 
-From the repository root (`dashbuilder/`):
+From the repository root (`rosettadash/`):
 
 ```bash
 # 1. Install JavaScript dependencies

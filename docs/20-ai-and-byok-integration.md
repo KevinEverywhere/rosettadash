@@ -1,6 +1,6 @@
 # AI & BYOK Integration
 
-How DashBuilder will bring AI-assisted component creation to users while keeping **Bring Your Own Key (BYOK)** as the default security model. Users supply their own provider API keys; DashBuilder orchestrates prompts and applies results to the canvas — it does not resell or proxy AI at DashBuilder's expense.
+How RosettaDash will bring AI-assisted component creation to users while keeping **Bring Your Own Key (BYOK)** as the default security model. Users supply their own provider API keys; RosettaDash orchestrates prompts and applies results to the canvas — it does not resell or proxy AI at RosettaDash's expense.
 
 **Phases:** [Phase 19 — BYOK](./10-roadmap.md#phase-19--byok-key-management-planned) · [Phase 20 — AI-assisted creation](./10-roadmap.md#phase-20--ai-assisted-component-creation-planned)
 
@@ -15,16 +15,16 @@ How DashBuilder will bring AI-assisted component creation to users while keeping
 | **Help users build faster** | Suggest components, bindings, layouts, and property values from natural language |
 | **Respect user choice of provider** | OpenAI, Anthropic, Google, Azure OpenAI, local Ollama, etc. via BYOK |
 | **Never leak keys** | Keys stay in the user's browser session (or their own backend proxy if they choose) |
-| **Keep exports clean** | Generated composites export as normal DashBuilder output — no runtime dependency on DashBuilder AI |
+| **Keep exports clean** | Generated composites export as normal RosettaDash output — no runtime dependency on RosettaDash AI |
 | **Composable with existing UX** | Works alongside palette, grouping guides (DAS-43), defaults engine (DAS-32), and stack profile |
 
 ---
 
 ## Why BYOK first
 
-DashBuilder is a **developer tool**, not a hosted AI product. Requiring BYOK:
+RosettaDash is a **developer tool**, not a hosted AI product. Requiring BYOK:
 
-1. **Avoids DashBuilder operating cost** for inference at scale
+1. **Avoids RosettaDash operating cost** for inference at scale
 2. **Matches enterprise policy** — teams use approved vendors and billing accounts
 3. **Simplifies compliance** — user data flows to *their* provider under *their* DPA
 4. **Enables air-gapped / local models** — Ollama, vLLM, or corporate gateways via custom base URL
@@ -75,7 +75,7 @@ flowchart TB
 
 ### Request path (enterprise — optional user proxy)
 
-Some organizations forbid browser-to-vendor calls. DashBuilder will support an optional **custom inference base URL** (user-operated proxy) that accepts the same request envelope and attaches the org key server-side. DashBuilder does not host this proxy.
+Some organizations forbid browser-to-vendor calls. RosettaDash will support an optional **custom inference base URL** (user-operated proxy) that accepts the same request envelope and attaches the org key server-side. RosettaDash does not host this proxy.
 
 ---
 
@@ -89,13 +89,13 @@ Some organizations forbid browser-to-vendor calls. DashBuilder will support an o
 | **Encryption at rest** | AES-GCM with per-browser salt; optional **app lock passphrase** (DAS-71) for stronger protection |
 | **Server persistence** | **Never** — NestJS server must not store raw provider API keys in project/composite records |
 | **Export artifacts** | Never embed AI keys in exported zip; use `.env.example` placeholders only |
-| **Telemetry** | No logging of prompts or keys in DashBuilder server logs |
+| **Telemetry** | No logging of prompts or keys in RosettaDash server logs |
 
 Session key namespace (proposed):
 
 ```
-dashbuilder:byok:<providerId>   → encrypted payload
-dashbuilder:byok:settings     → { activeProvider, rememberKeys, customBaseUrl }
+rosettadash:byok:<providerId>   → encrypted payload
+rosettadash:byok:settings     → { activeProvider, rememberKeys, customBaseUrl }
 ```
 
 ### Supported providers (initial)
@@ -108,7 +108,7 @@ dashbuilder:byok:settings     → { activeProvider, rememberKeys, customBaseUrl 
 | `azure-openai` | Azure deployment URL + key | Resource name + deployment id in settings |
 | `ollama` | Local HTTP | Base URL default `http://localhost:11434` — no key required |
 
-Provider metadata (models list, context limits) lives in `@dashbuilder/core` as static config; live model discovery is a stretch goal.
+Provider metadata (models list, context limits) lives in `@rosettadash/core` as static config; live model discovery is a stretch goal.
 
 ### Settings UI (Phase 19)
 
@@ -128,7 +128,7 @@ Location: **`/environment`** — unified **Environment & API keys** page (Welcom
 
 ### Security rules
 
-1. Keys are **never** sent to DashBuilder's NestJS API in Phase 19–20 MVP.
+1. Keys are **never** sent to RosettaDash's NestJS API in Phase 19–20 MVP.
 2. Keys are **never** included in composite JSON saved to projects.
 3. Clipboard export of keys is disabled in the settings UI.
 4. Clearing builder session (`clearBuilderSession`) optionally clears BYOK keys (user preference).
@@ -231,7 +231,7 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 **Ticket:** [DAS-73](https://planetkevin.atlassian.net/browse/DAS-73) · Branch: `feature/DAS-73-ai-assist-drawer`
 
 - Cost-point-zero: Ollama local default; cloud BYOK optional
-- Prompt builder + action parser + validator in `@dashbuilder/core`
+- Prompt builder + action parser + validator in `@rosettadash/core`
 - AI drawer UI with Ollama setup guidance
 - Provider adapters (Ollama, OpenAI, Anthropic)
 - Apply pipeline through builder history
@@ -241,7 +241,7 @@ Animated guides remain the **fallback and onboarding path** when users decline A
 
 ## Non-goals (initial releases)
 
-- DashBuilder-hosted inference or bundled API credits
+- RosettaDash-hosted inference or bundled API credits
 - Storing conversation history on NestJS server
 - Autonomous apply without user confirmation
 - Generating full application code outside ExportIR pipeline

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   PreviewDataRequest,
   generatePreviewData,
-} from '@dashbuilder/ui-primitives';
+} from '@rosettadash/ui-primitives';
 
 @Injectable()
 export class PreviewService {

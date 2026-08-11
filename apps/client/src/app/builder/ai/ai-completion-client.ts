@@ -1,4 +1,4 @@
-import type { AiProviderId } from '@dashbuilder/core';
+import type { AiProviderId } from '@rosettadash/core';
 
 export interface AiChatMessage {
   role: 'system' | 'user' | 'assistant';

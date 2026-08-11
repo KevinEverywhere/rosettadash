@@ -1,6 +1,6 @@
 # News finder voice script (DAS-75)
 
-Dogfood script for building a news discovery dashboard with **AI assist + voice** on Chrome/macOS. In production, the user's BYOK/Ollama parses speech into structured actions; DashBuilder never pays for inference.
+Dogfood script for building a news discovery dashboard with **AI assist + voice** on Chrome/macOS. In production, the user's BYOK/Ollama parses speech into structured actions; RosettaDash never pays for inference.
 
 ## Prerequisites
 

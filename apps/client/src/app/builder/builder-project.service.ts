@@ -4,7 +4,7 @@ import {
   normalizeStackProfile,
   stackProfileToExportTargets,
   type StackProfile,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { BuilderStateService } from './builder-state.service';
 import { ProjectsApiService } from './projects-api.service';
 import {

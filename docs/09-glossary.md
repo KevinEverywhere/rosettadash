@@ -2,7 +2,7 @@
 
 | Term | Definition |
 |------|------------|
-| **Builder runtime** | The DashBuilder application used to design components (Angular client + NestJS server). |
+| **Builder runtime** | The RosettaDash application used to design components (Angular client + NestJS server). |
 | **Exported runtime** | The user's application that receives generated code. |
 | **Component** | A typed node in the composite graph with properties and ports. |
 | **Visual component** | A component rendered in the end-user browser UI. |
@@ -19,8 +19,8 @@
 | **Smart defaults** | Automated suggestions for properties, bindings, and companion components. |
 | **Domain context** | Client, project, role, and time scoping metadata attached to a composite. |
 | **Piecemeal export** | Exporting a single component with minimal dependencies. |
-| **Standalone export** | Default export mode: all source inlined in the zip; no `@dashbuilder/*` runtime packages required. See [Standalone-first export](./32-standalone-first-export.md). |
-| **Runtime package** | Optional npm package (e.g. `@dashbuilder/web-components`) mirroring palette components; opt-in via `exportMode: 'package'`. Built after standalone is complete. |
+| **Standalone export** | Default export mode: all source inlined in the zip; no `@rosettadash/*` runtime packages required. See [Standalone-first export](./32-standalone-first-export.md). |
+| **Runtime package** | Optional npm package (e.g. `@rosettadash/web-components`) mirroring palette components; opt-in via `exportMode: 'package'`. Built after standalone is complete. |
 | **Grouped export** | Exporting a selection or full composite with wiring and infrastructure. |
 | **Preview** | Builder-side approximation of component behavior before export. |
 | **Env var spec** | Definition of an environment variable name, description, and required flag—never the secret value. |

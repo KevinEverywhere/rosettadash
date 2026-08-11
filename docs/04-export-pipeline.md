@@ -57,12 +57,12 @@ IR is the **only input** to code generators.
 
 ### Standalone-first (product DNA)
 
-**Default exports are standalone:** complete source in the zip, no `@dashbuilder/*` runtime packages required. See **[Standalone-first export](./32-standalone-first-export.md)**.
+**Default exports are standalone:** complete source in the zip, no `@rosettadash/*` runtime packages required. See **[Standalone-first export](./32-standalone-first-export.md)**.
 
 | Mode | Behavior | When |
 |------|----------|------|
 | **Standalone** (default) | Inlines all component source into the export tree | Every developer export |
-| **Package** (opt-in) | Imports `@dashbuilder/web-components` etc. | Dogfooding / maintainers only; `exportMode: 'package'` |
+| **Package** (opt-in) | Imports `@rosettadash/web-components` etc. | Dogfooding / maintainers only; `exportMode: 'package'` |
 
 New component groups must ship standalone generation and tests **before** optional runtime package integration.
 
@@ -196,12 +196,12 @@ Re-exporting the same composite version with the same targets should produce equ
 
 ## Extensibility
 
-Built-in exporter metadata lives in `@dashbuilder/core` (`packages/core/src/lib/export/exporter-manifest.ts`). See **[Exporter Plugin SDK](./16-exporter-plugin-sdk.md)** for the full contract and step-by-step guide.
+Built-in exporter metadata lives in `@rosettadash/core` (`packages/core/src/lib/export/exporter-manifest.ts`). See **[Exporter Plugin SDK](./16-exporter-plugin-sdk.md)** for the full contract and step-by-step guide.
 
 Register new plugins in the manifest and wire the generator in `apps/server/src/app/export/export.service.ts`:
 
 ```typescript
-import { builtInExporterManifest } from '@dashbuilder/core';
+import { builtInExporterManifest } from '@rosettadash/core';
 // each entry: { id, targetKind, packageName, entryExport, ... }
 ```
 

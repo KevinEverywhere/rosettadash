@@ -11,7 +11,7 @@ import {
   diffComposite,
   normalizeStackProfile,
   validateComposite,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 export interface CreateProjectInput {
   name: string;

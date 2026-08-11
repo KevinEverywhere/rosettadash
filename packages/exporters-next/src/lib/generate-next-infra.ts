@@ -1,10 +1,10 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
 import {
   generateScopeModuleSource,
   hasQueryScope,
   resolveExportQueryScope,
   scopedPostgresListRowsLines,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import type { GeneratedFile, NextExportOptions, RouteResource } from './types';
 import { NextExportError } from './types';
 import {

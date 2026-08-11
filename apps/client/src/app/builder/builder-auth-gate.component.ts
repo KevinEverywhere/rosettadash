@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { APP_NAME } from '@dashbuilder/core';
+import { APP_NAME } from '@rosettadash/core';
 
 @Component({
   selector: 'app-builder-auth-gate',

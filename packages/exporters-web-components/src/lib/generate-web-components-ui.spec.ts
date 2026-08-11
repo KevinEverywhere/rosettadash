@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateWebComponentsUiFiles } from './generate-web-components-ui';
 
 describe('generateWebComponentsUiFiles', () => {
@@ -75,8 +75,8 @@ describe('generateWebComponentsUiFiles', () => {
     const dashboard = files.find((file) => file.path === 'src/dashboard.ts');
     expect(dashboard?.content).toContain('Sales Dashboard');
     expect(dashboard?.content).toContain('fetchPg1Data');
-    expect(dashboard?.content).toContain('defineDashElement');
-    expect(dashboard?.content).toContain('DbDashboard');
+    expect(dashboard?.content).toContain('defineRosettaElement');
+    expect(dashboard?.content).toContain('RdDashboard');
 
     const dataModule = files.find((file) => file.path === 'src/lib/data/fetchPg1Data.ts');
     expect(dataModule?.content).toContain("fetch('/api/sales')");
@@ -127,7 +127,7 @@ describe('generateWebComponentsUiFiles', () => {
     const files = generateWebComponentsUiFiles(ir);
     const pieComponent = files.find((file) => file.path.includes('PieChart'));
     expect(pieComponent?.content).toContain('pie-chart');
-    expect(pieComponent?.content).toContain('defineDashElement');
+    expect(pieComponent?.content).toContain('defineRosettaElement');
   });
 
   it('rejects non-web-components UI targets', () => {
@@ -171,7 +171,7 @@ describe('generateWebComponentsUiFiles', () => {
     expect(files.some((file) => file.path === 'package.json.fragment.json')).toBe(false);
     expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(3);
     const register = files.find((file) => file.path === 'src/register.ts');
-    expect(register?.content).not.toContain('@dashbuilder/web-components');
+    expect(register?.content).not.toContain('@rosettadash/web-components');
     const readme = files.find((file) => file.path === 'README.export.md');
     expect(readme?.content).toContain('Standalone export');
   });
@@ -214,15 +214,15 @@ describe('generateWebComponentsUiFiles', () => {
 
     const files = generateWebComponentsUiFiles(ir, { exportMode: 'package' });
     const register = files.find((file) => file.path === 'src/register.ts');
-    expect(register?.content).toContain('@dashbuilder/web-components');
-    expect(register?.content).toContain('registerDashBuilderMediaElements');
-    expect(register?.content).toContain('registerDashBuilderWasmElements');
+    expect(register?.content).toContain('@rosettadash/web-components');
+    expect(register?.content).toContain('registerRosettaDashMediaElements');
+    expect(register?.content).toContain('registerRosettaDashWasmElements');
     expect(files.some((file) => file.path === 'package.json.fragment.json')).toBe(true);
     expect(files.filter((file) => file.path.startsWith('src/components/')).length).toBe(0);
 
     const dashboard = files.find((file) => file.path === 'src/dashboard.ts');
-    expect(dashboard?.content).toContain("document.createElement('db-video-source')");
-    expect(dashboard?.content).toContain("document.createElement('db-wasm-media')");
+    expect(dashboard?.content).toContain("document.createElement('rd-video-source')");
+    expect(dashboard?.content).toContain("document.createElement('rd-wasm-media')");
     expect(dashboard?.content).toContain("addEventListener('video-file'");
     expect(dashboard?.content).toContain("addEventListener('crop-region'");
   });

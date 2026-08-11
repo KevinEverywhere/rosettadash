@@ -23,7 +23,7 @@ import {
   suggestionsForSelectedNode,
   type AiBuilderAction,
   type PlacementPrompt,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import {
   CANVAS_GRID_SIZE,
   clampCanvasNodeHeight,

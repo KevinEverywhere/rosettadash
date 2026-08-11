@@ -17,7 +17,7 @@
       <header class="ai-drawer__header">
         <div>
           <h2 id="ai-drawer-title">AI assist</h2>
-          <p>Free-first with local Ollama. Cloud keys are BYOK — you pay the provider, not DashBuilder.</p>
+          <p>Free-first with local Ollama. Cloud keys are BYOK — you pay the provider, not RosettaDash.</p>
         </div>
         <button
           type="button"
@@ -59,7 +59,7 @@
           </section>
         } @else if (!readiness.ready) {
           <section class="ai-drawer__setup-panel">
-            <p>Add your provider API key on the Settings page — DashBuilder never stores keys on the server.</p>
+            <p>Add your provider API key on the Settings page — RosettaDash never stores keys on the server.</p>
             <a class="ai-drawer__secondary ai-drawer__link-button" routerLink="/environment" [queryParams]="{ from: 'byok' }">
               Open Settings
             </a>

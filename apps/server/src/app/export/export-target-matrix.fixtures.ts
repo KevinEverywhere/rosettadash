@@ -1,5 +1,5 @@
-import type { Composite, ExportTargetConfig } from '@dashbuilder/core';
-import { defaultComponentRegistry } from '@dashbuilder/core';
+import type { Composite, ExportTargetConfig } from '@rosettadash/core';
+import { defaultComponentRegistry } from '@rosettadash/core';
 
 export type UiTarget = NonNullable<ExportTargetConfig['ui']>;
 export type ServerTarget = NonNullable<ExportTargetConfig['server']>;

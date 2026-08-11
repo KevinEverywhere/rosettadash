@@ -1,4 +1,4 @@
-import type { IRComponent } from '@dashbuilder/core';
+import type { IRComponent } from '@rosettadash/core';
 
 const DEFAULT_NAMES: Record<string, string> = {
   'visual.input.text': 'TextInput',
@@ -60,7 +60,7 @@ export function componentExportName(component: IRComponent, usedNames: Set<strin
 }
 
 export function customElementTag(exportName: string): string {
-  return `db-${exportName
+  return `rd-${exportName
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/_/g, '-')
     .toLowerCase()}`;

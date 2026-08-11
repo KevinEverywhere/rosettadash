@@ -1,7 +1,7 @@
-export { DbWasmMediaElement, DB_WASM_MEDIA_TAG, registerDbWasmMedia } from './wasm-media';
+export { RdWasmMediaElement, DB_WASM_MEDIA_TAG, registerRdWasmMedia } from './wasm-media';
 
-import { registerDbWasmMedia } from './wasm-media';
+import { registerRdWasmMedia } from './wasm-media';
 
-export function registerDashBuilderWasmElements(): void {
-  registerDbWasmMedia();
+export function registerRosettaDashWasmElements(): void {
+  registerRdWasmMedia();
 }

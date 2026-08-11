@@ -1,10 +1,10 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
 import {
   generateScopeModuleSource,
   hasQueryScope,
   resolveExportQueryScope,
   scopedMongoListDocumentsLines,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import type { CollectionResource, GeneratedFile, MongoExportOptions } from './types';
 import { MongoExportError } from './types';
 import {

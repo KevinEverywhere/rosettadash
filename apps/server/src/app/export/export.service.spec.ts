@@ -1,4 +1,4 @@
-import { ExportBuildError, defaultComponentRegistry } from '@dashbuilder/core';
+import { ExportBuildError, defaultComponentRegistry } from '@rosettadash/core';
 import { ExportService } from './export.service';
 
 describe('ExportService', () => {

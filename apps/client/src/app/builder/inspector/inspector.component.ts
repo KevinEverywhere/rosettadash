@@ -8,7 +8,7 @@ import {
   defaultComponentRegistry,
   parseRoleGateAllowedRoles,
   resolveRoleOptions,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import {
   AppSelectComponent,
   AppSelectOption,

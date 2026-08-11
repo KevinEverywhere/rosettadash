@@ -132,7 +132,7 @@ export const STYLING_FRAMEWORK_OPTIONS: Array<{
   {
     id: 'neutral',
     label: 'Neutral tokens',
-    description: 'DashBuilder CSS variables and semantic classes (current default export)',
+    description: 'RosettaDash CSS variables and semantic classes (current default export)',
   },
   {
     id: 'tailwind',
@@ -182,7 +182,7 @@ export const STYLING_FOUNDATION_OPTIONS: Array<{
   {
     id: 'neutral-tokens',
     label: 'Neutral tokens',
-    description: 'DashBuilder CSS variables and semantic classes',
+    description: 'RosettaDash CSS variables and semantic classes',
   },
   {
     id: 'tailwind',

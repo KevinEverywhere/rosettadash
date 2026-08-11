@@ -1,7 +1,7 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { listCompositeTemplates } from '@dashbuilder/core';
+import { listCompositeTemplates } from '@rosettadash/core';
 import { canEnterBuilder } from '../welcome/stack-profile-session';
 import { AppSelectComponent } from '../shared/app-select/app-select.component';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';

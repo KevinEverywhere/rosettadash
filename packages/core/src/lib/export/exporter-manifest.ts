@@ -7,7 +7,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'React UI',
     targetKind: 'ui',
     supportedTargets: ['react'],
-    packageName: '@dashbuilder/exporters-react',
+    packageName: '@rosettadash/exporters-react',
     entryExport: 'generateReactUiFiles',
   },
   {
@@ -15,7 +15,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Angular UI',
     targetKind: 'ui',
     supportedTargets: ['angular'],
-    packageName: '@dashbuilder/exporters-angular',
+    packageName: '@rosettadash/exporters-angular',
     entryExport: 'generateAngularUiFiles',
   },
   {
@@ -23,7 +23,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Vue UI',
     targetKind: 'ui',
     supportedTargets: ['vue'],
-    packageName: '@dashbuilder/exporters-vue',
+    packageName: '@rosettadash/exporters-vue',
     entryExport: 'generateVueUiFiles',
   },
   {
@@ -31,7 +31,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Svelte UI',
     targetKind: 'ui',
     supportedTargets: ['svelte'],
-    packageName: '@dashbuilder/exporters-svelte',
+    packageName: '@rosettadash/exporters-svelte',
     entryExport: 'generateSvelteUiFiles',
   },
   {
@@ -39,7 +39,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Web Components UI',
     targetKind: 'ui',
     supportedTargets: ['web-components'],
-    packageName: '@dashbuilder/exporters-web-components',
+    packageName: '@rosettadash/exporters-web-components',
     entryExport: 'generateWebComponentsUiFiles',
   },
   {
@@ -47,7 +47,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'NestJS server',
     targetKind: 'server',
     supportedTargets: ['nest'],
-    packageName: '@dashbuilder/exporters-nest',
+    packageName: '@rosettadash/exporters-nest',
     entryExport: 'generateNestInfraFiles',
   },
   {
@@ -55,7 +55,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Express server',
     targetKind: 'server',
     supportedTargets: ['express'],
-    packageName: '@dashbuilder/exporters-express',
+    packageName: '@rosettadash/exporters-express',
     entryExport: 'generateExpressInfraFiles',
   },
   {
@@ -63,7 +63,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Next.js server',
     targetKind: 'server',
     supportedTargets: ['next'],
-    packageName: '@dashbuilder/exporters-next',
+    packageName: '@rosettadash/exporters-next',
     entryExport: 'generateNextInfraFiles',
   },
   {
@@ -71,7 +71,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Nuxt server',
     targetKind: 'server',
     supportedTargets: ['nuxt'],
-    packageName: '@dashbuilder/exporters-nuxt',
+    packageName: '@rosettadash/exporters-nuxt',
     entryExport: 'generateNuxtInfraFiles',
   },
   {
@@ -79,7 +79,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'MongoDB layer',
     targetKind: 'database',
     supportedTargets: ['mongodb'],
-    packageName: '@dashbuilder/exporters-mongodb',
+    packageName: '@rosettadash/exporters-mongodb',
     entryExport: 'generateMongoInfraFiles',
   },
   {
@@ -87,7 +87,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'Supabase layer',
     targetKind: 'database',
     supportedTargets: ['supabase'],
-    packageName: '@dashbuilder/exporters-supabase',
+    packageName: '@rosettadash/exporters-supabase',
     entryExport: 'generateSupabaseInfraFiles',
   },
   {
@@ -95,7 +95,7 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     label: 'MySQL layer',
     targetKind: 'database',
     supportedTargets: ['mysql'],
-    packageName: '@dashbuilder/exporters-mysql',
+    packageName: '@rosettadash/exporters-mysql',
     entryExport: 'generateMysqlInfraFiles',
   },
 ] as const;

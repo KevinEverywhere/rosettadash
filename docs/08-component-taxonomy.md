@@ -1,6 +1,6 @@
 # Component Taxonomy
 
-Initial palette organization for DashBuilder. Components are grouped for palette navigation; each maps to a `type` string in the component model.
+Initial palette organization for RosettaDash. Components are grouped for palette navigation; each maps to a `type` string in the component model.
 
 ## 1. Form & Input
 

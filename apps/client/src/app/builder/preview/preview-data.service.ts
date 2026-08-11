@@ -7,7 +7,7 @@ import {
   PreviewNewsRow,
   PreviewRow,
   getDefaultPreviewData,
-} from '@dashbuilder/ui-primitives';
+} from '@rosettadash/ui-primitives';
 import { firstValueFrom } from 'rxjs';
 
 export type PreviewDataSource = 'default' | 'api';

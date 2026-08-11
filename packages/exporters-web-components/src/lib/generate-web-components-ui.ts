@@ -1,4 +1,4 @@
-import type { ExportIR, IRComponent } from '@dashbuilder/core';
+import type { ExportIR, IRComponent } from '@rosettadash/core';
 import { buildDashboardContext } from './binding-resolver';
 import {
   generateComponentFile,
@@ -206,11 +206,11 @@ function generateDashboardFile(
 
   return joinLines([
     `import type { DateRange, Row } from './types';`,
-    `import { defineDashElement } from './define-element';`,
+    `import { defineRosettaElement } from './define-element';`,
     ...componentImportLines,
     ...dataImportLines,
     ``,
-    `export class DbDashboard extends HTMLElement {`,
+    `export class RdDashboard extends HTMLElement {`,
     `  static readonly tagName = '${customElementTag('Dashboard')}';`,
     ...context.fieldDeclarations,
     ...fieldRefs,
@@ -236,8 +236,8 @@ function generateDashboardFile(
     `  }`,
     `}`,
     ``,
-    `export function registerDbDashboard(): void {`,
-    `  defineDashElement(DbDashboard.tagName, DbDashboard);`,
+    `export function registerRdDashboard(): void {`,
+    `  defineRosettaElement(RdDashboard.tagName, RdDashboard);`,
     `}`,
     ``,
   ]);
@@ -255,11 +255,11 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'st
           '',
           '## Runtime package mode (opt-in)',
           '',
-          'This export imports `@dashbuilder/web-components` for media/WASM elements.',
-          '**Default DashBuilder exports are standalone** — see docs/32-standalone-first-export.md.',
+          'This export imports `@rosettadash/web-components` for media/WASM elements.',
+          '**Default RosettaDash exports are standalone** — see docs/32-standalone-first-export.md.',
           '',
           '```bash',
-          'npm install @dashbuilder/web-components @dashbuilder/core',
+          'npm install @rosettadash/web-components @rosettadash/core',
           'npm install @ffmpeg/ffmpeg @ffmpeg/util   # equirect extract only',
           '```',
           '',
@@ -268,7 +268,7 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'st
           '',
           '## Standalone export',
           '',
-          'All component source is included in this zip. No `@dashbuilder/*` runtime packages are required.',
+          'All component source is included in this zip. No `@rosettadash/*` runtime packages are required.',
           'Install only the third-party deps noted below (e.g. `@ffmpeg/ffmpeg` for equirect extract).',
           '',
         ];
@@ -282,7 +282,7 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'st
     ...packageNotes,
     `## Files`,
     ``,
-    `- \`src/dashboard.ts\` — root \`<db-dashboard>\` Custom Element composed from builder bindings`,
+    `- \`src/dashboard.ts\` — root \`<rd-dashboard>\` Custom Element composed from builder bindings`,
     `- \`src/components/*.ts\` — W3C Custom Elements (native \`HTMLElement\` + Shadow DOM)`,
     `- \`src/register.ts\` — calls \`customElements.define\` for all generated tags`,
     `- \`src/lib/data/*.ts\` — fetch helpers targeting exported API routes`,
@@ -294,8 +294,8 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'st
     ``,
     `## Next steps`,
     ``,
-    `1. Import \`registerDashBuilderElements()\` from \`src/register.ts\` in your app entry.`,
-    `2. Add \`<db-dashboard></db-dashboard>\` to your page (or embed in React/Vue/Angular via the tag).`,
+    `1. Import \`registerRosettaDashElements()\` from \`src/register.ts\` in your app entry.`,
+    `2. Add \`<rd-dashboard></rd-dashboard>\` to your page (or embed in React/Vue/Angular via the tag).`,
     `3. Ensure server routes referenced by data modules are available.`,
     ``,
   ]);
@@ -304,7 +304,7 @@ function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'st
 function generatePackageRegisterFile(components: IRComponent[], standaloneNames: string[]): string {
   const runtimeImports = runtimePackageImports(components);
   const runtimeImportLines = runtimeImports.map(
-    (name) => `import { ${name} } from '@dashbuilder/web-components';`,
+    (name) => `import { ${name} } from '@rosettadash/web-components';`,
   );
   const standaloneImportLines = standaloneNames.map(
     (name) => `import { register${name} } from './components/${name}';`,
@@ -313,12 +313,12 @@ function generatePackageRegisterFile(components: IRComponent[], standaloneNames:
   return joinLines([
     ...runtimeImportLines,
     ...standaloneImportLines,
-    `import { registerDbDashboard } from './dashboard';`,
+    `import { registerRdDashboard } from './dashboard';`,
     ``,
-    `export function registerDashBuilderElements(): void {`,
+    `export function registerRosettaDashElements(): void {`,
     ...runtimeImports.map((name) => `  ${name}();`),
     ...standaloneNames.map((name) => `  register${name}();`),
-    `  registerDbDashboard();`,
+    `  registerRdDashboard();`,
     `}`,
     ``,
   ]);
@@ -328,8 +328,8 @@ function generatePackageJsonFragment(): string {
   return joinLines([
     `{`,
     `  "dependencies": {`,
-    `    "@dashbuilder/core": "^0.0.1",`,
-    `    "@dashbuilder/web-components": "^0.0.1",`,
+    `    "@rosettadash/core": "^0.0.1",`,
+    `    "@rosettadash/web-components": "^0.0.1",`,
     `    "@ffmpeg/ffmpeg": "^0.12.10",`,
     `    "@ffmpeg/util": "^0.12.1"`,
     `  }`,

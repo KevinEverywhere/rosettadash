@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateExpressInfraFiles } from './generate-express-infra';
 import { ExpressExportError } from './types';
 

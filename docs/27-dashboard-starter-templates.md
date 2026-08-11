@@ -60,13 +60,13 @@ Replace endpoints-table with my custom API table and keep trace-detail bound.
 
 ## Saving edited dashboards
 
-Saved content lives in **localStorage** under `dashbuilder:content-library:index`. Each entry stores the full composite (all node positions, labels, bindings, and properties) so moved or edited components are preserved.
+Saved content lives in **localStorage** under `rosettadash:content-library:index`. Each entry stores the full composite (all node positions, labels, bindings, and properties) so moved or edited components are preserved.
 
 | Action | Where |
 |--------|--------|
 | **Save to library** | Builder toolbar → saves current canvas layout |
 | **Browse / reopen** | Admin → Saved content → Open in builder |
-| **Restore handshake** | `sessionStorage` key `dashbuilder:library-restore` (one-shot) |
+| **Restore handshake** | `sessionStorage` key `rosettadash:library-restore` (one-shot) |
 
 Use **Save to library** after rearranging a template dashboard; reopen from Admin to continue editing or group with other composites.
 

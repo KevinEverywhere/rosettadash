@@ -4,7 +4,7 @@ import {
   type DisplayAvailability,
   readViewportMetrics,
   resolveDisplayAvailability,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayAvailabilityService {

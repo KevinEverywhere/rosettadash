@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import type { PreviewDataRequest } from '@dashbuilder/ui-primitives';
+import type { PreviewDataRequest } from '@rosettadash/ui-primitives';
 import { PreviewService } from './preview.service';
 
 @Controller('preview')

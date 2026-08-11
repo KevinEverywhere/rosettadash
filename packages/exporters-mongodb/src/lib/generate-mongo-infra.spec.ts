@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateMongoInfraFiles } from './generate-mongo-infra';
 import { MongoExportError } from './types';
 

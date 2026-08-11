@@ -1,4 +1,4 @@
-import type { ComponentNode } from '@dashbuilder/core';
+import type { ComponentNode } from '@rosettadash/core';
 import {
   computeCanvasContentBounds,
   filterVisibleCanvasNodes,

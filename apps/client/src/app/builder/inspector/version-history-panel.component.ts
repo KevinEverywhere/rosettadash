@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { CompositeDiff, CompositeDiffChange, CompositeVersionSummary } from '@dashbuilder/core';
+import type { CompositeDiff, CompositeDiffChange, CompositeVersionSummary } from '@rosettadash/core';
 import { firstValueFrom } from 'rxjs';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { PreviewChartPoint, PreviewGlobeMarker, PreviewScatterPoint } from '@dashbuilder/ui-primitives';
-import { latLngToGlobePosition } from '@dashbuilder/ui-primitives';
+import type { PreviewChartPoint, PreviewGlobeMarker, PreviewScatterPoint } from '@rosettadash/ui-primitives';
+import { latLngToGlobePosition } from '@rosettadash/ui-primitives';
 
 export type ThreeCameraPreset = 'orbit' | 'front' | 'iso';
 export type ThreeVisualMode = 'bar-chart' | 'scatter' | 'scene' | 'gltf-model' | 'geo-globe';

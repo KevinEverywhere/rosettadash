@@ -5,7 +5,7 @@ import {
   AI_PROVIDER_MANIFEST,
   findAiProviderByEnvKey,
   type EnvFieldDefinition,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { ByokTestConnectionService } from './byok-test-connection.service';
 import { EnvironmentConfigService } from './environment-config.service';
 
@@ -42,9 +42,9 @@ export class CredentialValidationService {
   }
 
   async validateBuilderAccess(): Promise<void> {
-    const apiKey = this.config.getValue('DASHBUILDER_API_KEY').trim();
+    const apiKey = this.config.getValue('ROSETTADASH_API_KEY').trim();
     if (!apiKey) {
-      this.config.setEnvFieldValidation('DASHBUILDER_API_KEY', 'invalid', 'API key is empty.');
+      this.config.setEnvFieldValidation('ROSETTADASH_API_KEY', 'invalid', 'API key is empty.');
       return;
     }
 
@@ -52,7 +52,7 @@ export class CredentialValidationService {
       const config = await firstValueFrom(this.http.get<{ enabled: boolean }>('/api/auth/config'));
       if (!config.enabled) {
         this.config.setEnvFieldValidation(
-          'DASHBUILDER_API_KEY',
+          'ROSETTADASH_API_KEY',
           'valid',
           'Builder auth is disabled — key not required.',
         );
@@ -60,9 +60,9 @@ export class CredentialValidationService {
       }
 
       await firstValueFrom(this.http.post<{ ok: boolean }>('/api/auth/login', { apiKey }));
-      this.config.setEnvFieldValidation('DASHBUILDER_API_KEY', 'valid', 'DashBuilder access verified.');
+      this.config.setEnvFieldValidation('ROSETTADASH_API_KEY', 'valid', 'RosettaDash access verified.');
     } catch {
-      this.config.setEnvFieldValidation('DASHBUILDER_API_KEY', 'invalid', 'DashBuilder rejected this key.');
+      this.config.setEnvFieldValidation('ROSETTADASH_API_KEY', 'invalid', 'RosettaDash rejected this key.');
     }
   }
 

@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateAngularUiFiles } from './generate-angular-ui';
 
 describe('generateAngularUiFiles', () => {

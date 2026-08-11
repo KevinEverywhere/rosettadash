@@ -9,14 +9,14 @@ alwaysApply: true
 
 ## Rule
 
-1. **Standalone first** — Every exporter emits complete source in the export zip. No required `@dashbuilder/*` runtime packages in generated app code.
-2. **Runtime packages second** — `@dashbuilder/web-components` and future importable packages are opt-in (`exportMode: 'package'`), built after standalone paths work, for dogfooding (e.g. FFMP3).
+1. **Standalone first** — Every exporter emits complete source in the export zip. No required `@rosettadash/*` runtime packages in generated app code.
+2. **Runtime packages second** — `@rosettadash/web-components` and future importable packages are opt-in (`exportMode: 'package'`), built after standalone paths work, for dogfooding (e.g. FFMP3).
 3. **Default = standalone** — Omitting export options must produce standalone output. Tests must assert this.
 
 ## When adding components or exporters
 
 - Implement and test **inlined/standalone** generation before package-mode imports.
-- Document third-party deps only in `README.export.md` (ffmpeg, three, etc.) — not DashBuilder runtime deps unless package mode.
+- Document third-party deps only in `README.export.md` (ffmpeg, three, etc.) — not RosettaDash runtime deps unless package mode.
 - Do not flip defaults to package mode without explicit product decision.
 
 ## Reference

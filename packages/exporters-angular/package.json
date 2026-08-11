@@ -1,5 +1,5 @@
 {
-  "name": "@dashbuilder/exporters-angular",
+  "name": "@rosettadash/exporters-angular",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

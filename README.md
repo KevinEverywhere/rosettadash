@@ -1,10 +1,10 @@
-# DashBuilder
+# RosettaDash
 
-DashBuilder is a visual dashboard component builder for **developers working locally**. Design dashboard UIs—forms, tables, charts, layouts—assemble them into composites, and export code for your target stack.
+RosettaDash is a visual dashboard component builder for **developers working locally**. Design dashboard UIs—forms, tables, charts, layouts—assemble them into composites, and export code for your target stack.
 
 ## Who this is for
 
-DashBuilder is intended to run on **your machine** during development. There is no required public deployment; GitHub Actions only validates PRs.
+RosettaDash is intended to run on **your machine** during development. There is no required public deployment; GitHub Actions only validates PRs.
 
 ## Monorepo
 
@@ -15,7 +15,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `client` | `apps/client` | Angular builder UI |
 | `server` | `apps/server` | NestJS API |
 | `core` | `packages/core` | Shared types and utilities |
-| `web-components` | `packages/web-components` | Runtime custom elements (`@dashbuilder/web-components`) |
+| `web-components` | `packages/web-components` | Runtime custom elements (`@rosettadash/web-components`) |
 | `ui-primitives` | `packages/ui-primitives` | Preview mock data and generators |
 | `exporters-react` | `packages/exporters-react` | React UI code generator from ExportIR |
 | `exporters-nest` | `packages/exporters-nest` | NestJS + PostgreSQL server generator from ExportIR |
@@ -31,7 +31,7 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 
 ### First-time setup
 
-From the repo root (`dashbuilder/`):
+From the repo root (`rosettadash/`):
 
 ```bash
 npm install                  # JavaScript dependencies
@@ -91,7 +91,7 @@ Once the builder is running:
 3. For cloud: enter your provider API key (OpenAI, Anthropic, Google, Azure OpenAI) and pick a model.
 4. Under **Admin → AI, voice & environment**, ensure **AI assist** (and optionally **Voice**) are enabled.
 
-Guides work offline with no API key. AI features require Ollama or BYOK — keys stay in your browser, never on the DashBuilder server.
+Guides work offline with no API key. AI features require Ollama or BYOK — keys stay in your browser, never on the RosettaDash server.
 
 See [Builder creation assistance](docs/21-builder-creation-assistance.md) and [AI & BYOK integration](docs/20-ai-and-byok-integration.md).
 
@@ -228,8 +228,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-84](https://planetkevin.atlassian.net/browse/DAS-84)** — Encode standalone-first export DNA — default WC export to standalone  
-Branch: `feature/DAS-84-standalone-first-export-dna`
+**[DAS-85](https://planetkevin.atlassian.net/browse/DAS-85)** — Rename product from DashBuilder to RosettaDash  
+Branch: `feature/DAS-85-rename-rosettadash`
 
 ## License
 

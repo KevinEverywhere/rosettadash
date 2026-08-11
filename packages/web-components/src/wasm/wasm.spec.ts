@@ -1,17 +1,17 @@
-import { buildEquirectFlatCropFilter } from '@dashbuilder/core';
-import { DbWasmMediaElement, DB_WASM_MEDIA_TAG, registerDbWasmMedia } from './wasm-media';
+import { buildEquirectFlatCropFilter } from '@rosettadash/core';
+import { RdWasmMediaElement, DB_WASM_MEDIA_TAG, registerRdWasmMedia } from './wasm-media';
 
-describe('@dashbuilder/web-components/wasm', () => {
+describe('@rosettadash/web-components/wasm', () => {
   beforeAll(() => {
-    registerDbWasmMedia();
+    registerRdWasmMedia();
   });
 
-  it('registers db-wasm-media tag', () => {
+  it('registers rd-wasm-media tag', () => {
     expect(customElements.get(DB_WASM_MEDIA_TAG)).toBeDefined();
   });
 
   it('shows equirect-extract filter preview from crop region', () => {
-    const media = document.createElement(DB_WASM_MEDIA_TAG) as DbWasmMediaElement;
+    const media = document.createElement(DB_WASM_MEDIA_TAG) as RdWasmMediaElement;
     document.body.appendChild(media);
 
     media.setAttribute('operation', 'equirect-extract');

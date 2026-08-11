@@ -20,7 +20,7 @@ export function isPublicBuilderRoute(path: string): boolean {
 export function extractBuilderApiKey(request: {
   headers: Record<string, string | string[] | undefined>;
 }): string | undefined {
-  const headerKey = request.headers['x-dashbuilder-api-key'];
+  const headerKey = request.headers['x-rosettadash-api-key'];
   if (typeof headerKey === 'string' && headerKey.length > 0) {
     return headerKey;
   }

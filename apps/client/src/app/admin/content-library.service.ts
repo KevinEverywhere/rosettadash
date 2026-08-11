@@ -4,7 +4,7 @@ import {
   type Composite,
   type ContentLibraryEntry,
   type StackProfile,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 @Injectable({ providedIn: 'root' })
 export class ContentLibraryService {

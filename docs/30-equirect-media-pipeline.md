@@ -1,6 +1,6 @@
 # Equirectangular media pipeline (DAS-82)
 
-Export a **subsection** from a 2:1 equirectangular video using composed DashBuilder components and ffmpeg.wasm (React export, Phase 1).
+Export a **subsection** from a 2:1 equirectangular video using composed RosettaDash components and ffmpeg.wasm (React export, Phase 1).
 
 ## Example target
 
@@ -32,7 +32,7 @@ Bind:
 crop=1080:720:1508:664,scale=720:480
 ```
 
-Built by `buildEquirectFlatCropFilter()` in `@dashbuilder/core` and emitted as `src/media/equirect-filter.ts` in React exports.
+Built by `buildEquirectFlatCropFilter()` in `@rosettadash/core` and emitted as `src/media/equirect-filter.ts` in React exports.
 
 ## React export setup
 

@@ -1,6 +1,6 @@
 # App component CSS convention
 
-DashBuilder Angular components use **stable BEM class names tied to the component identity**. Styles live in the component’s own `.scss` file and target those classes — not ad-hoc page-specific accordion/collapsible duplicates.
+RosettaDash Angular components use **stable BEM class names tied to the component identity**. Styles live in the component’s own `.scss` file and target those classes — not ad-hoc page-specific accordion/collapsible duplicates.
 
 ## Rules
 

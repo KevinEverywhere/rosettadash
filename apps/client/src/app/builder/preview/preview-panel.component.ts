@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { Binding, ComponentNode, DomainContext } from '@dashbuilder/core';
+import type { Binding, ComponentNode, DomainContext } from '@rosettadash/core';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { computeCanvasContentBounds } from '../canvas/canvas-viewport';
 import { BuilderStateService } from '../builder-state.service';

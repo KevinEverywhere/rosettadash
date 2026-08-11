@@ -7,7 +7,7 @@ import {
 
 describe('environment-catalog', () => {
   it('includes builder and AI provider fields', () => {
-    expect(ENVIRONMENT_FIELD_CATALOG.some((field) => field.envKey === 'DASHBUILDER_API_KEY')).toBe(
+    expect(ENVIRONMENT_FIELD_CATALOG.some((field) => field.envKey === 'ROSETTADASH_API_KEY')).toBe(
       true,
     );
     expect(ENVIRONMENT_FIELD_CATALOG.some((field) => field.envKey === 'OPENAI_API_KEY')).toBe(true);

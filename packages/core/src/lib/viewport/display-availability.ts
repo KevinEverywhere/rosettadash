@@ -33,12 +33,12 @@ export const DISPLAY_AVAILABILITY_COPY: Record<
 > = {
   'portrait-rotate-required': {
     title: 'Rotate to landscape',
-    lead: 'DashBuilder requires at least 1024px width in landscape mode. Your device can meet that requirement when turned sideways.',
+    lead: 'RosettaDash requires at least 1024px width in landscape mode. Your device can meet that requirement when turned sideways.',
     hint: 'Rotate your tablet to landscape, then tap Try again below.',
   },
   'minimum-viewport-unmet': {
     title: 'Larger display required',
-    lead: 'DashBuilder requires at least 1024px width in landscape mode to open the builder workspace.',
+    lead: 'RosettaDash requires at least 1024px width in landscape mode to open the builder workspace.',
     hint: 'Use a tablet 10 inches or larger in landscape, or a desktop computer. Phones and smaller tablets (such as Samsung Galaxy Tab) cannot run the builder yet.',
   },
 };

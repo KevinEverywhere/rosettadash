@@ -48,7 +48,7 @@ async function deriveKey(salt: Uint8Array): Promise<CryptoKey> {
 
   const material = await crypto.subtle.importKey(
     'raw',
-    new TextEncoder().encode('dashbuilder-byok-v1'),
+    new TextEncoder().encode('rosettadash-byok-v1'),
     'PBKDF2',
     false,
     ['deriveKey'],

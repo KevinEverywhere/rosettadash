@@ -1,24 +1,24 @@
-import { buildEquirectFlatCropFilter } from '@dashbuilder/core';
+import { buildEquirectFlatCropFilter } from '@rosettadash/core';
 import {
-  DbEquirectViewportElement,
+  RdEquirectViewportElement,
   DB_EQUIRECT_VIEWPORT_TAG,
-  registerDbEquirectViewport,
+  registerRdEquirectViewport,
 } from './equirect-viewport';
-import { DbVideoSourceElement, DB_VIDEO_SOURCE_TAG, registerDbVideoSource } from './video-source';
+import { RdVideoSourceElement, DB_VIDEO_SOURCE_TAG, registerRdVideoSource } from './video-source';
 
-describe('@dashbuilder/web-components/media', () => {
+describe('@rosettadash/web-components/media', () => {
   beforeAll(() => {
-    registerDbVideoSource();
-    registerDbEquirectViewport();
+    registerRdVideoSource();
+    registerRdEquirectViewport();
   });
 
-  it('registers db-video-source and db-equirect-viewport tags', () => {
-    expect(customElements.get(DB_VIDEO_SOURCE_TAG)).toBe(DbVideoSourceElement);
-    expect(customElements.get(DB_EQUIRECT_VIEWPORT_TAG)).toBe(DbEquirectViewportElement);
+  it('registers rd-video-source and rd-equirect-viewport tags', () => {
+    expect(customElements.get(DB_VIDEO_SOURCE_TAG)).toBe(RdVideoSourceElement);
+    expect(customElements.get(DB_EQUIRECT_VIEWPORT_TAG)).toBe(RdEquirectViewportElement);
   });
 
   it('emits crop-region with flat-crop filter defaults', () => {
-    const viewport = document.createElement(DB_EQUIRECT_VIEWPORT_TAG) as DbEquirectViewportElement;
+    const viewport = document.createElement(DB_EQUIRECT_VIEWPORT_TAG) as RdEquirectViewportElement;
     document.body.appendChild(viewport);
 
     const handler = jest.fn();
@@ -49,7 +49,7 @@ describe('@dashbuilder/web-components/media', () => {
   });
 
   it('renders rectilinear preview mode with v360 filter', () => {
-    const viewport = document.createElement(DB_EQUIRECT_VIEWPORT_TAG) as DbEquirectViewportElement;
+    const viewport = document.createElement(DB_EQUIRECT_VIEWPORT_TAG) as RdEquirectViewportElement;
     document.body.appendChild(viewport);
 
     viewport.setAttribute('preview-mode', 'rectilinear');

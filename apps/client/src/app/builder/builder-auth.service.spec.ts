@@ -46,7 +46,7 @@ describe('BuilderAuthService', () => {
     await loginPromise;
 
     expect(service.authenticated()).toBe(true);
-    expect(sessionStorage.getItem('dashbuilder:apiKey')).toBe('secret-key');
+    expect(sessionStorage.getItem('rosettadash:apiKey')).toBe('secret-key');
   });
 
   it('requires login when auth is enabled and no key is stored', async () => {

@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { APP_NAME } from '@dashbuilder/core';
+import { APP_NAME } from '@rosettadash/core';
 
 @Component({
   selector: 'app-nav',

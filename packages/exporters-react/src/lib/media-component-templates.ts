@@ -1,6 +1,6 @@
 import { joinLines } from './utils';
 
-/** Inlined into exported React apps (mirrors @dashbuilder/core media helpers). */
+/** Inlined into exported React apps (mirrors @rosettadash/core media helpers). */
 export function generateEquirectFilterHelperFile(): string {
   return joinLines([
     `export interface EquirectFlatCropOptions {`,

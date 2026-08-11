@@ -1,15 +1,15 @@
-export { DbVideoSourceElement, DB_VIDEO_SOURCE_TAG, registerDbVideoSource } from './video-source';
+export { RdVideoSourceElement, DB_VIDEO_SOURCE_TAG, registerRdVideoSource } from './video-source';
 export {
-  DbEquirectViewportElement,
+  RdEquirectViewportElement,
   DB_EQUIRECT_VIEWPORT_TAG,
-  registerDbEquirectViewport,
+  registerRdEquirectViewport,
   type EquirectPreviewMode,
 } from './equirect-viewport';
 
-import { registerDbEquirectViewport } from './equirect-viewport';
-import { registerDbVideoSource } from './video-source';
+import { registerRdEquirectViewport } from './equirect-viewport';
+import { registerRdVideoSource } from './video-source';
 
-export function registerDashBuilderMediaElements(): void {
-  registerDbVideoSource();
-  registerDbEquirectViewport();
+export function registerRosettaDashMediaElements(): void {
+  registerRdVideoSource();
+  registerRdEquirectViewport();
 }

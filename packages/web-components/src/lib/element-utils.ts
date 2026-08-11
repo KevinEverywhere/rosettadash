@@ -1,4 +1,4 @@
-export function defineDashElement(
+export function defineRosettaElement(
   tagName: string,
   ctor: CustomElementConstructor,
 ): void {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { APP_NAME } from '@dashbuilder/core';
+import { APP_NAME } from '@rosettadash/core';
 
 @Injectable()
 export class AppService {

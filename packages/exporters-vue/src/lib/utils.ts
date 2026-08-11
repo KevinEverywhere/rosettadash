@@ -1,4 +1,4 @@
-import type { IRComponent } from '@dashbuilder/core';
+import type { IRComponent } from '@rosettadash/core';
 
 const DEFAULT_NAMES: Record<string, string> = {
   'visual.input.text': 'TextInput',

@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TIME_RANGE_PRESET_OPTIONS, TimeRangePreset, DEFAULT_ROLE_PRESETS } from '@dashbuilder/core';
+import { TIME_RANGE_PRESET_OPTIONS, TimeRangePreset, DEFAULT_ROLE_PRESETS } from '@rosettadash/core';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
 

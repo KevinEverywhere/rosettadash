@@ -11,7 +11,7 @@ export function buildAiAssistSystemPrompt(context: AiBuilderContext): string {
     : 'none';
 
   return [
-    'You are DashBuilder AI assist. Return ONLY valid JSON matching this schema:',
+    'You are RosettaDash AI assist. Return ONLY valid JSON matching this schema:',
     '{ "summary": string, "actions": AiBuilderAction[], "followUp"?: string }',
     '',
     'AiBuilderAction ops:',

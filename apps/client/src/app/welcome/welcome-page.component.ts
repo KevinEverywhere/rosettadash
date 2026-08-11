@@ -25,7 +25,7 @@ import {
   type UiFrameworkChoice,
   UI_TARGET_GROUPS,
   UI_FRAMEWORK_OPTIONS,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { AppCollapsibleComponent } from '../shared/app-collapsible/app-collapsible.component';
 import { ProjectsApiService } from '../builder/projects-api.service';

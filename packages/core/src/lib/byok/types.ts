@@ -50,7 +50,7 @@ export interface EnvironmentStorageSettings {
 }
 
 export interface EnvironmentValues {
-  /** Plain env key → value map (never sent to DashBuilder server). */
+  /** Plain env key → value map (never sent to RosettaDash server). */
   values: Record<string, string>;
 }
 

@@ -6,19 +6,19 @@ import {
   builtInExporterManifest,
   buildExportIR,
   defaultComponentRegistry,
-} from '@dashbuilder/core';
-import { generateAngularUiFiles } from '@dashbuilder/exporters-angular';
-import { generateExpressInfraFiles } from '@dashbuilder/exporters-express';
-import { generateMongoInfraFiles } from '@dashbuilder/exporters-mongodb';
-import { generateMysqlInfraFiles } from '@dashbuilder/exporters-mysql';
-import { generateSupabaseInfraFiles } from '@dashbuilder/exporters-supabase';
-import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
-import { generateNextInfraFiles } from '@dashbuilder/exporters-next';
-import { generateNuxtInfraFiles } from '@dashbuilder/exporters-nuxt';
-import { generateReactUiFiles } from '@dashbuilder/exporters-react';
-import { generateWebComponentsUiFiles } from '@dashbuilder/exporters-web-components';
-import { generateSvelteUiFiles } from '@dashbuilder/exporters-svelte';
-import { generateVueUiFiles } from '@dashbuilder/exporters-vue';
+} from '@rosettadash/core';
+import { generateAngularUiFiles } from '@rosettadash/exporters-angular';
+import { generateExpressInfraFiles } from '@rosettadash/exporters-express';
+import { generateMongoInfraFiles } from '@rosettadash/exporters-mongodb';
+import { generateMysqlInfraFiles } from '@rosettadash/exporters-mysql';
+import { generateSupabaseInfraFiles } from '@rosettadash/exporters-supabase';
+import { generateNestInfraFiles } from '@rosettadash/exporters-nest';
+import { generateNextInfraFiles } from '@rosettadash/exporters-next';
+import { generateNuxtInfraFiles } from '@rosettadash/exporters-nuxt';
+import { generateReactUiFiles } from '@rosettadash/exporters-react';
+import { generateWebComponentsUiFiles } from '@rosettadash/exporters-web-components';
+import { generateSvelteUiFiles } from '@rosettadash/exporters-svelte';
+import { generateVueUiFiles } from '@rosettadash/exporters-vue';
 
 @Injectable()
 export class ExportService {

@@ -1,6 +1,6 @@
 # Component Plugin SDK
 
-Guide for registering **new component types** with the DashBuilder graph, palette, and preview runtime.
+Guide for registering **new component types** with the RosettaDash graph, palette, and preview runtime.
 
 **Prerequisite for:** three.js visuals (DAS-56), third-party palette plugins.
 
@@ -10,7 +10,7 @@ Guide for registering **new component types** with the DashBuilder graph, palett
 
 ## Overview
 
-DashBuilder components flow through four layers:
+RosettaDash components flow through four layers:
 
 ```
 ComponentPlugin (core)  →  registry + palette group
@@ -39,7 +39,7 @@ Types live in `packages/core/src/lib/registry/component-plugin.ts`:
 Register on the shared registry:
 
 ```typescript
-import { ComponentRegistry, type ComponentPlugin } from '@dashbuilder/core';
+import { ComponentRegistry, type ComponentPlugin } from '@rosettadash/core';
 
 const plugin: ComponentPlugin = {
   id: 'plugin.my-widget',

@@ -1,9 +1,9 @@
-import { DEFAULT_EQUIRECT_SOURCE } from '@dashbuilder/core';
-import { BASE_STYLES, defineDashElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+import { DEFAULT_EQUIRECT_SOURCE } from '@rosettadash/core';
+import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
 
-export const DB_VIDEO_SOURCE_TAG = 'db-video-source';
+export const DB_VIDEO_SOURCE_TAG = 'rd-video-source';
 
-export class DbVideoSourceElement extends HTMLElement {
+export class RdVideoSourceElement extends HTMLElement {
   static readonly tagName = DB_VIDEO_SOURCE_TAG;
 
   private inputEl: HTMLInputElement | null = null;
@@ -107,6 +107,6 @@ export class DbVideoSourceElement extends HTMLElement {
   }
 }
 
-export function registerDbVideoSource(): void {
-  defineDashElement(DbVideoSourceElement.tagName, DbVideoSourceElement);
+export function registerRdVideoSource(): void {
+  defineRosettaElement(RdVideoSourceElement.tagName, RdVideoSourceElement);
 }

@@ -1,10 +1,10 @@
 import {
   buildEquirectExtractFilter,
   DEFAULT_EQUIRECT_FLAT_CROP,
-} from '@dashbuilder/core';
-import { BASE_STYLES, defineDashElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+} from '@rosettadash/core';
+import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
 
-export const DB_WASM_MEDIA_TAG = 'db-wasm-media';
+export const DB_WASM_MEDIA_TAG = 'rd-wasm-media';
 
 type ExtractionMode = 'flat-crop' | 'rectilinear';
 
@@ -26,7 +26,7 @@ interface FfmpegInstance {
   exec(args: string[]): Promise<void>;
 }
 
-export class DbWasmMediaElement extends HTMLElement {
+export class RdWasmMediaElement extends HTMLElement {
   static readonly tagName = DB_WASM_MEDIA_TAG;
 
   private ffmpeg: FfmpegInstance | null = null;
@@ -302,6 +302,6 @@ export class DbWasmMediaElement extends HTMLElement {
   }
 }
 
-export function registerDbWasmMedia(): void {
-  defineDashElement(DbWasmMediaElement.tagName, DbWasmMediaElement);
+export function registerRdWasmMedia(): void {
+  defineRosettaElement(RdWasmMediaElement.tagName, RdWasmMediaElement);
 }

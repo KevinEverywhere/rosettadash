@@ -1,4 +1,4 @@
-import type { IRComponent } from '@dashbuilder/core';
+import type { IRComponent } from '@rosettadash/core';
 import { ReactExportError } from './types';
 import {
   generateEquirectViewport,

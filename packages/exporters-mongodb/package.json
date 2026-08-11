@@ -1,5 +1,5 @@
 {
-  "name": "@dashbuilder/exporters-mongodb",
+  "name": "@rosettadash/exporters-mongodb",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

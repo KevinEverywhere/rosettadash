@@ -1,6 +1,6 @@
 # User-Controlled Content Library
 
-Save, revisit, and organize DashBuilder composites and exported artifacts under **user-controlled storage**. When users choose where to put output, DashBuilder records directory and file paths — it does not host content on the DashBuilder server.
+Save, revisit, and organize RosettaDash composites and exported artifacts under **user-controlled storage**. When users choose where to put output, RosettaDash records directory and file paths — it does not host content on the RosettaDash server.
 
 **Phase:** Post–Phase 20 (implementation after BYOK + AI assist)  
 **Ticket:** [DAS-71](https://planetkevin.atlassian.net/browse/DAS-71)  
@@ -23,7 +23,7 @@ Save, revisit, and organize DashBuilder composites and exported artifacts under 
 
 ## Non-goals (initial)
 
-- DashBuilder-hosted content repository
+- RosettaDash-hosted content repository
 - Automatic sync / backup
 - Version control (Git) integration
 - Collaborative sharing
@@ -59,7 +59,7 @@ type ContentFormatTag =
   | 'json' | 'md' | 'env' | 'other';
 ```
 
-Path notation is **advisory metadata** stored in the browser (or user export manifest) — DashBuilder does not write to arbitrary paths without explicit user action (File System Access API or download).
+Path notation is **advisory metadata** stored in the browser (or user export manifest) — RosettaDash does not write to arbitrary paths without explicit user action (File System Access API or download).
 
 ---
 
@@ -85,7 +85,7 @@ Path notation is **advisory metadata** stored in the browser (or user export man
 ## Open questions
 
 1. File System Access API vs download-only for path picking?
-2. Index stored in `localStorage` vs sidecar `dashbuilder-library.json` in user folder?
+2. Index stored in `localStorage` vs sidecar `rosettadash-library.json` in user folder?
 3. Single ticket vs epic with format-registry + UI + builder integration stories?
 
 ---

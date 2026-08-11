@@ -37,14 +37,14 @@ export interface ContentLibraryEntry {
   formatTags?: ContentFormatTag[];
 }
 
-export const CONTENT_LIBRARY_INDEX_KEY = 'dashbuilder:content-library:index';
+export const CONTENT_LIBRARY_INDEX_KEY = 'rosettadash:content-library:index';
 
 export interface AdminFeatureFlags {
   aiDrawerEnabled: boolean;
   voiceInputEnabled: boolean;
 }
 
-export const ADMIN_FEATURE_FLAGS_KEY = 'dashbuilder:admin:feature-flags';
+export const ADMIN_FEATURE_FLAGS_KEY = 'rosettadash:admin:feature-flags';
 
 export const DEFAULT_ADMIN_FEATURE_FLAGS: AdminFeatureFlags = {
   aiDrawerEnabled: true,

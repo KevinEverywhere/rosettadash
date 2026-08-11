@@ -1,4 +1,4 @@
-import type { ExportIR, IRComponent, IREventBinding } from '@dashbuilder/core';
+import type { ExportIR, IRComponent, IREventBinding } from '@rosettadash/core';
 import { composableName, stateVarName } from './utils';
 
 export interface ComponentBindingContext {

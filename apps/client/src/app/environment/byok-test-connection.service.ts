@@ -3,7 +3,7 @@ import {
   getAiProvider,
   type AiProviderId,
   type ConnectionTestResult,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 @Injectable({ providedIn: 'root' })
 export class ByokTestConnectionService {

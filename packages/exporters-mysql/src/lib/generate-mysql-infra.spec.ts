@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateMysqlInfraFiles } from './generate-mysql-infra';
 import { MysqlExportError } from './types';
 

@@ -1,4 +1,4 @@
-import type { ExportIR, IRComponent, IREventBinding } from '@dashbuilder/core';
+import type { ExportIR, IRComponent, IREventBinding } from '@rosettadash/core';
 import { getRuntimePackageSpec, usesRuntimePackage } from './package-runtime';
 import { customElementTag, dataModuleName, stateVarName } from './utils';
 
@@ -122,7 +122,7 @@ export function buildDashboardContext(
       );
     })
     .map((component) => component.exportName);
-  const registerImports = [...componentImports, 'DbDashboard'];
+  const registerImports = [...componentImports, 'RdDashboard'];
   const registerCalls = componentImports.map(
     (name) => `  register${name}();`,
   );
@@ -134,7 +134,7 @@ export function buildDashboardContext(
     componentImports,
     fieldDeclarations,
     registerImports,
-    registerCalls: [...registerCalls, '  registerDbDashboard();'],
+    registerCalls: [...registerCalls, '  registerRdDashboard();'],
   };
 }
 

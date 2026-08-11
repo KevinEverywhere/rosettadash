@@ -1,5 +1,5 @@
 {
-  "name": "@dashbuilder/exporters-mysql",
+  "name": "@rosettadash/exporters-mysql",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

@@ -1,4 +1,4 @@
-import type { Binding, ComponentNode, Composite } from '@dashbuilder/core';
+import type { Binding, ComponentNode, Composite } from '@rosettadash/core';
 
 export interface BuilderGraphSnapshot {
   nodes: ComponentNode[];

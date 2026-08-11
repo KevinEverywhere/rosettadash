@@ -1,6 +1,6 @@
 # Display Availability
 
-DashBuilder supports different form factors with explicit availability rules. Users on unsupported viewports see a dedicated guidance screen instead of a broken builder layout.
+RosettaDash supports different form factors with explicit availability rules. Users on unsupported viewports see a dedicated guidance screen instead of a broken builder layout.
 
 **Tickets:** [DAS-66](https://planetkevin.atlassian.net/browse/DAS-66), [DAS-67](https://planetkevin.atlassian.net/browse/DAS-67)
 
@@ -54,7 +54,7 @@ When the device is in **portrait** but its longer edge is at least 1024px (e.g. 
 When rotation cannot help — phones, small tablets in any orientation, narrow desktop windows — users see:
 
 - **Title:** Larger display required
-- **Message:** DashBuilder requires at least 1024px width in landscape mode.
+- **Message:** RosettaDash requires at least 1024px width in landscape mode.
 - **Hint:** Use a tablet 10 inches or larger in landscape, or a desktop computer.
 - **Actions:** **Try again** and link back to stack setup
 

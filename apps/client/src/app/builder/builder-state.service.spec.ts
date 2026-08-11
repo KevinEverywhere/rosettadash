@@ -1,4 +1,4 @@
-import { defaultComponentRegistry } from '@dashbuilder/core';
+import { defaultComponentRegistry } from '@rosettadash/core';
 import {
   CANVAS_GRID_SIZE,
   clampCanvasNodeWidth,

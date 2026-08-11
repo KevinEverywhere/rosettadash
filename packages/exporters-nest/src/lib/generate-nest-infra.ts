@@ -1,4 +1,4 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
 import {
   collectExportRoleIds,
   generateScopeModuleSource,
@@ -7,7 +7,7 @@ import {
   irHasRoleGates,
   resolveExportQueryScope,
   scopedPostgresListRowsLines,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import type { GeneratedFile, NestExportOptions, RouteResource } from './types';
 import { NestExportError } from './types';
 import {
@@ -143,7 +143,7 @@ export function generateNestInfraFiles(
         path: `${root}/auth/roles.guard.ts`,
         content: generateRolesGuard(roleIds),
         encoding: 'utf-8',
-        description: 'Role guard stub reading x-dashbuilder-role header',
+        description: 'Role guard stub reading x-rosettadash-role header',
       },
       {
         path: `${root}/auth/auth.module.ts`,
@@ -352,7 +352,7 @@ function generateRolesDecorator(): string {
   return joinLines([
     `import { SetMetadata } from '@nestjs/common';`,
     ``,
-    `export const ROLES_KEY = 'dashbuilder.roles';`,
+    `export const ROLES_KEY = 'rosettadash.roles';`,
     `export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);`,
     ``,
   ]);
@@ -380,7 +380,7 @@ function generateRolesGuard(roleIds: string[]): string {
     `    }`,
     ``,
     `    const request = context.switchToHttp().getRequest<{ headers?: Record<string, string | string[] | undefined> }>();`,
-    `    const header = request.headers?.['x-dashbuilder-role'];`,
+    `    const header = request.headers?.['x-rosettadash-role'];`,
     `    const role = Array.isArray(header) ? header[0] : header ?? '${knownRoles[0]}';`,
     `    return requiredRoles.includes(role);`,
     `  }`,
@@ -471,7 +471,7 @@ function generateReadme(ir: ExportIR, globalPrefix: string, connectionEnvKey: st
     `- \`server/src/database/*\` — PostgreSQL pool module using \`${connectionEnvKey}\``,
     `- \`server/src/*/*.controller.ts\` — list endpoints derived from ExportIR routes`,
     ...(irHasRoleGates(ir) || (ir.domain?.roles?.length ?? 0) > 0
-      ? [`- \`server/src/auth/*\` — role guard stub using \`x-dashbuilder-role\` header`]
+      ? [`- \`server/src/auth/*\` — role guard stub using \`x-rosettadash-role\` header`]
       : []),
     ...(irHasOnboardingFlow(ir)
       ? [`- \`server/src/onboarding/*\` — invite and role assignment route stubs`]

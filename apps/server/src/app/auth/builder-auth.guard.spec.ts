@@ -56,7 +56,7 @@ describe('BuilderAuthGuard', () => {
 
     expect(
       guard.canActivate(
-        createContext('/api/projects', { 'x-dashbuilder-api-key': 'secret' }),
+        createContext('/api/projects', { 'x-rosettadash-api-key': 'secret' }),
       ),
     ).toBe(true);
   });
@@ -67,7 +67,7 @@ describe('BuilderAuthGuard', () => {
 
     expect(() =>
       guard.canActivate(
-        createContext('/api/projects', { 'x-dashbuilder-api-key': 'wrong' }),
+        createContext('/api/projects', { 'x-rosettadash-api-key': 'wrong' }),
       ),
     ).toThrow(UnauthorizedException);
   });

@@ -2,7 +2,7 @@
 
 ## Mission
 
-DashBuilder empowers developers and technical users to design dashboard components visually and export production-ready code for the frameworks and infrastructure they already use—without locking them into a proprietary runtime.
+RosettaDash empowers developers and technical users to design dashboard components visually and export production-ready code for the frameworks and infrastructure they already use—without locking them into a proprietary runtime.
 
 ## Problem
 
@@ -10,17 +10,17 @@ Dashboard UIs are repetitive to build: forms, data tables, charts, filters, role
 
 ## Solution
 
-DashBuilder is a **component factory with a visual composer**:
+RosettaDash is a **component factory with a visual composer**:
 
 1. Users pick primitives from a palette (inputs, tables, charts, layout regions, timers, animations).
 2. They configure each piece and drag them together on a canvas.
 3. They attach **invisible infrastructure nodes**—database connections, server framework choices, environment variables—that define how exported code runs.
-4. DashBuilder suggests practical defaults (chart type for time-series data, pagination for large tables, role-gated routes) that users can accept or override.
-5. The tool exports **single components or composite groups** as real source files: templates, styles, scripts, and config stubs — **standalone**, with no required DashBuilder runtime dependency (see [Standalone-first export](./32-standalone-first-export.md)).
+4. RosettaDash suggests practical defaults (chart type for time-series data, pagination for large tables, role-gated routes) that users can accept or override.
+5. The tool exports **single components or composite groups** as real source files: templates, styles, scripts, and config stubs — **standalone**, with no required RosettaDash runtime dependency (see [Standalone-first export](./32-standalone-first-export.md)).
 
 ## Export philosophy
 
-**Standalone for developers first.** Exports are complete source trees developers own. Optional importable packages (`@dashbuilder/web-components`, etc.) are a follow-on product family for maintainers and advanced integrators — never the default export path.
+**Standalone for developers first.** Exports are complete source trees developers own. Optional importable packages (`@rosettadash/web-components`, etc.) are a follow-on product family for maintainers and advanced integrators — never the default export path.
 
 ## Target users
 
@@ -87,7 +87,7 @@ The builder itself is Angular (client + NestJS server during creation). Exported
 
 ### Smart defaults
 
-DashBuilder acts as a design partner:
+RosettaDash acts as a design partner:
 
 - Suggesting chart types based on bound data shape
 - Pre-wiring CRUD tables to REST patterns matching the chosen server
@@ -108,7 +108,7 @@ Real dashboards are not just widgets—they encode business context:
 - **Onboarding** — flows to add persons, assign roles, grant access
 - **Historical vs live data** — toggling old vs new records in table, chart, or custom views
 
-DashBuilder's domain model (see [05-domain-model.md](./05-domain-model.md)) captures these concepts so exported components can include filters, guards, and data scoping out of the box.
+RosettaDash's domain model (see [05-domain-model.md](./05-domain-model.md)) captures these concepts so exported components can include filters, guards, and data scoping out of the box.
 
 ## Success criteria (product)
 

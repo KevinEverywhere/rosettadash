@@ -14,7 +14,7 @@ import {
   type CredentialValidationStatus,
   type EnvConfigCategory,
   type EnvFieldDefinition,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import {
   canEnterBuilder,
   readActiveStackProfile,
@@ -178,7 +178,7 @@ export class EnvironmentConfigPageComponent implements OnInit {
         }
         return this.config.settings().rememberKeys ? 'Remembered' : 'Session only';
       case 'builder':
-        return this.config.hasSecretValue('DASHBUILDER_API_KEY') ? 'Key stored' : null;
+        return this.config.hasSecretValue('ROSETTADASH_API_KEY') ? 'Key stored' : null;
       case 'database':
       case 'server':
       case 'auth':
@@ -405,7 +405,7 @@ export class EnvironmentConfigPageComponent implements OnInit {
   async validateField(field: EnvFieldDefinition): Promise<void> {
     this.validatingField.set(field.envKey);
     try {
-      if (field.envKey === 'DASHBUILDER_API_KEY') {
+      if (field.envKey === 'ROSETTADASH_API_KEY') {
         await this.credentialValidation.validateBuilderAccess();
         return;
       }

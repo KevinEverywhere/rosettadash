@@ -116,7 +116,7 @@ Agents draft commit messages; Kevin performs commits.
 docs(DAS-1): add project foundation and architecture docs
 
 Establish vision, architecture, component model, export pipeline,
-domain model, and workflow conventions for DashBuilder.
+domain model, and workflow conventions for RosettaDash.
 ```
 
 ## Pull requests
@@ -145,7 +145,7 @@ domain model, and workflow conventions for DashBuilder.
 
 ## Repository notes
 
-- **GitHub:** `https://github.com/KevinEverywhere/dashbuilder.git`
+- **GitHub:** `https://github.com/KevinEverywhere/rosettadash.git`
 - **Integration branch:** `development`
 - **Current ticket:** [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) — Docker local containers
 - **Current branch:** `feature/DAS-37-docker-local-containers`

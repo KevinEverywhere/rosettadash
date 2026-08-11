@@ -9,7 +9,7 @@ import {
   getGroupingGuide,
   resolvePaletteGroups,
   type ComponentGroupingGuide,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { AppCollapsibleComponent } from '../shared/app-collapsible/app-collapsible.component';
@@ -145,7 +145,7 @@ export class AdminPageComponent implements OnInit {
 
   saveCurrentWorkspace(): void {
     if (!this.hasActiveWorkspace()) {
-      this.library.message.set('Open the builder first so DashBuilder can capture the current canvas.');
+      this.library.message.set('Open the builder first so RosettaDash can capture the current canvas.');
       return;
     }
 

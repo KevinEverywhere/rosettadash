@@ -97,7 +97,7 @@ export async function openBuilder(page: Page): Promise<void> {
   await page.evaluate(() => {
     sessionStorage.clear();
     sessionStorage.setItem(
-      'dashbuilder:pending-stack',
+      'rosettadash:pending-stack',
       JSON.stringify({ ui: 'react', server: 'nest', database: 'postgresql' }),
     );
   });

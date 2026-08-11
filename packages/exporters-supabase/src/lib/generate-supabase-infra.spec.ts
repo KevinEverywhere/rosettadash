@@ -1,4 +1,4 @@
-import { buildExportIR, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, defaultComponentRegistry } from '@rosettadash/core';
 import { generateSupabaseInfraFiles } from './generate-supabase-infra';
 import { SupabaseExportError } from './types';
 

@@ -1,6 +1,6 @@
 # Roadmap
 
-Phased delivery plan for DashBuilder. Tickets are tracked in Jira (DAS project); see [Planned Tickets](./11-planned-tickets.md).
+Phased delivery plan for RosettaDash. Tickets are tracked in Jira (DAS project); see [Planned Tickets](./11-planned-tickets.md).
 
 ## Phase 0 — Foundation (complete)
 
@@ -188,7 +188,7 @@ Design reference: [Component & Page Design](./15-component-and-page-design.md).
 
 **Ticket:** [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) · Branch: `feature/DAS-70-byok-key-management`
 
-Users bring their own AI provider API keys. DashBuilder stores keys client-side only, never on the server or in exports.
+Users bring their own AI provider API keys. RosettaDash stores keys client-side only, never on the server or in exports.
 
 - [x] Provider manifest (OpenAI, Anthropic, Google, Azure OpenAI, Ollama)
 - [x] Encrypted session/local key storage
@@ -201,7 +201,7 @@ Users bring their own AI provider API keys. DashBuilder stores keys client-side 
 
 **Ticket:** [DAS-73](https://planetkevin.atlassian.net/browse/DAS-73) · Branch: `feature/DAS-73-ai-assist-drawer`
 
-Cost-point-zero: **Ollama local default** (free). Cloud via BYOK — user pays provider, not DashBuilder.
+Cost-point-zero: **Ollama local default** (free). Cloud via BYOK — user pays provider, not RosettaDash.
 
 - [x] Core AI action schema + validator
 - [x] AI drawer in builder toolbar
@@ -238,7 +238,7 @@ Natural-language help for adding components, bindings, and templates — **Ollam
 
 **Ticket:** TBD · **Timing:** After Phase 20; **design discussion required before implementation**
 
-Three purpose-built example dashboards demonstrating DashBuilder end-to-end — animated walkthroughs for real-world layouts using palette components, grouping guides, and (optionally) AI assist.
+Three purpose-built example dashboards demonstrating RosettaDash end-to-end — animated walkthroughs for real-world layouts using palette components, grouping guides, and (optionally) AI assist.
 
 | Dashboard | Purpose (draft) |
 |-----------|-----------------|
@@ -256,7 +256,7 @@ Scope, animation style, and hosting (in-app vs docs vs video) will be decided af
 
 - Real-time collaborative editing
 - Tailwind token export
-- CLI export (`npx dashbuilder export`)
+- CLI export (`npx rosettadash export`)
 - Hosted preview URLs
 - Custom component SDK for third-party palette plugins
 - ~~Framework-first project stack entry screen~~ — DAS-57 (complete)

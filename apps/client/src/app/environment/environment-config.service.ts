@@ -16,13 +16,13 @@ import {
   type CredentialValidationRecord,
   type CredentialValidationStatus,
   type EnvironmentStorageSettings,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { AppLockService } from './app-lock.service';
 
-const SETTINGS_KEY = 'dashbuilder:environment:settings';
-const SECRETS_KEY = 'dashbuilder:environment:secrets';
-const PLAIN_KEY = 'dashbuilder:environment:plain';
-const SALT_KEY = 'dashbuilder:environment:salt';
+const SETTINGS_KEY = 'rosettadash:environment:settings';
+const SECRETS_KEY = 'rosettadash:environment:secrets';
+const PLAIN_KEY = 'rosettadash:environment:plain';
+const SALT_KEY = 'rosettadash:environment:salt';
 
 const DEFAULT_SETTINGS: EnvironmentStorageSettings = {
   rememberKeys: false,
@@ -219,9 +219,9 @@ export class EnvironmentConfigService {
       sessionStorageRef.setItem(SALT_KEY, this.encodeSalt(salt));
     }
 
-    const builderKey = this.secretValues.get('DASHBUILDER_API_KEY');
+    const builderKey = this.secretValues.get('ROSETTADASH_API_KEY');
     if (builderKey) {
-      sessionStorageRef.setItem('dashbuilder:apiKey', builderKey);
+      sessionStorageRef.setItem('rosettadash:apiKey', builderKey);
     }
 
     this.saveMessage.set('Environment settings saved in this browser.');
@@ -245,7 +245,7 @@ export class EnvironmentConfigService {
       storage.removeItem(SALT_KEY);
     }
 
-    this.getSessionStorage()?.removeItem('dashbuilder:apiKey');
+    this.getSessionStorage()?.removeItem('rosettadash:apiKey');
     this.saveMessage.set('Cleared environment values from this browser.');
   }
 

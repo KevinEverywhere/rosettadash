@@ -1,5 +1,5 @@
 {
-  "name": "@dashbuilder/exporters-next",
+  "name": "@rosettadash/exporters-next",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",

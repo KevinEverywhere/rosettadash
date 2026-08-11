@@ -1,6 +1,6 @@
 # Component Model
 
-DashBuilder treats everything on the design surface as a **node** in a composite graph. Nodes are typed, have properties, expose ports for bindings, and participate in export.
+RosettaDash treats everything on the design surface as a **node** in a composite graph. Nodes are typed, have properties, expose ports for bindings, and participate in export.
 
 ## Node categories
 

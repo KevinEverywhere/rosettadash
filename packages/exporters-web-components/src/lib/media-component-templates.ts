@@ -2,7 +2,7 @@ import { joinLines } from './utils';
 
 export function generateVideoSourceStandalone(exportName: string, tag: string): string {
   return joinLines([
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`:host { display: block; font-family: system-ui, sans-serif; }\`;`,
     ``,
@@ -30,7 +30,7 @@ export function generateVideoSourceStandalone(exportName: string, tag: string): 
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -38,8 +38,8 @@ export function generateVideoSourceStandalone(exportName: string, tag: string): 
 
 export function generateEquirectViewportStandalone(exportName: string, tag: string): string {
   return joinLines([
-    `import { buildEquirectExtractFilter } from '@dashbuilder/core';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { buildEquirectExtractFilter } from '@rosettadash/core';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${tag}';`,
@@ -87,7 +87,7 @@ export function generateEquirectViewportStandalone(exportName: string, tag: stri
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -96,8 +96,8 @@ export function generateEquirectViewportStandalone(exportName: string, tag: stri
 export function generateWasmMediaEquirectStandalone(exportName: string, tag: string): string {
   return joinLines([
     `/** Standalone export — install @ffmpeg/ffmpeg @ffmpeg/util for runtime extract. */`,
-    `import { buildEquirectExtractFilter } from '@dashbuilder/core';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { buildEquirectExtractFilter } from '@rosettadash/core';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `export class ${exportName} extends HTMLElement {`,
     `  static readonly tagName = '${tag}';`,
@@ -148,7 +148,7 @@ export function generateWasmMediaEquirectStandalone(exportName: string, tag: str
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);

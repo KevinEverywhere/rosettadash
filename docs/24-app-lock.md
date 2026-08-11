@@ -33,8 +33,8 @@ BYOK keys and database URLs live in the browser only — but anyone with physica
 Storage keys:
 
 ```
-dashbuilder:vault:config     → AppLockConfig JSON (verifier, encryption salt, recovery records, hint)
-dashbuilder:vault:unlocked   → session flag ("1" when unlocked)
+rosettadash:vault:config     → AppLockConfig JSON (verifier, encryption salt, recovery records, hint)
+rosettadash:vault:unlocked   → session flag ("1" when unlocked)
 ```
 
 ---
@@ -45,9 +45,9 @@ dashbuilder:vault:unlocked   → session flag ("1" when unlocked)
 |------|--------|
 | **Recovery code** | Unlocks vault; code is consumed; user should set a new password by removing and re-enabling lock |
 | **Reset vault** | Removes app lock and deletes encrypted secrets from the browser; user re-enters keys from provider dashboards |
-| **Email recovery** | Not supported — no DashBuilder account or server-side escrow |
+| **Email recovery** | Not supported — no RosettaDash account or server-side escrow |
 
-DashBuilder **cannot** recover a forgotten password without a saved recovery code.
+RosettaDash **cannot** recover a forgotten password without a saved recovery code.
 
 ---
 

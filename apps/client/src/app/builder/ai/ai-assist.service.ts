@@ -11,7 +11,7 @@ import {
   type AiBuilderResponse,
   type AiNodeSummary,
   type AiProviderId,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { readActiveStackProfile } from '../../welcome/stack-profile-session';
 import { ByokTestConnectionService } from '../../environment/byok-test-connection.service';
 import { CredentialValidationService } from '../../environment/credential-validation.service';
@@ -274,7 +274,7 @@ export class AiAssistService {
       freeLocal: false,
       message: hasKey
         ? undefined
-        : `Add your ${provider.label} API key on the Settings page (BYOK — you pay the provider, not DashBuilder).`,
+        : `Add your ${provider.label} API key on the Settings page (BYOK — you pay the provider, not RosettaDash).`,
     };
   }
 }

@@ -1,6 +1,6 @@
-import type { IRComponent } from '@dashbuilder/core';
+import type { IRComponent } from '@rosettadash/core';
 
-/** Component types served by @dashbuilder/web-components runtime (package export mode). */
+/** Component types served by @rosettadash/web-components runtime (package export mode). */
 export const RUNTIME_PACKAGE_TYPES = new Set([
   'visual.media.video-source',
   'visual.media.equirect-viewport',
@@ -8,7 +8,7 @@ export const RUNTIME_PACKAGE_TYPES = new Set([
 ]);
 
 export interface RuntimePackageSpec {
-  subpath: '@dashbuilder/web-components/media' | '@dashbuilder/web-components/wasm';
+  subpath: '@rosettadash/web-components/media' | '@rosettadash/web-components/wasm';
   tagName: string;
   registerFn: string;
   registerImport: string;
@@ -16,22 +16,22 @@ export interface RuntimePackageSpec {
 
 const RUNTIME_SPECS: Record<string, RuntimePackageSpec> = {
   'visual.media.video-source': {
-    subpath: '@dashbuilder/web-components/media',
-    tagName: 'db-video-source',
-    registerFn: 'registerDbVideoSource',
-    registerImport: 'registerDashBuilderMediaElements',
+    subpath: '@rosettadash/web-components/media',
+    tagName: 'rd-video-source',
+    registerFn: 'registerRdVideoSource',
+    registerImport: 'registerRosettaDashMediaElements',
   },
   'visual.media.equirect-viewport': {
-    subpath: '@dashbuilder/web-components/media',
-    tagName: 'db-equirect-viewport',
-    registerFn: 'registerDbEquirectViewport',
-    registerImport: 'registerDashBuilderMediaElements',
+    subpath: '@rosettadash/web-components/media',
+    tagName: 'rd-equirect-viewport',
+    registerFn: 'registerRdEquirectViewport',
+    registerImport: 'registerRosettaDashMediaElements',
   },
   'visual.wasm.media': {
-    subpath: '@dashbuilder/web-components/wasm',
-    tagName: 'db-wasm-media',
-    registerFn: 'registerDbWasmMedia',
-    registerImport: 'registerDashBuilderWasmElements',
+    subpath: '@rosettadash/web-components/wasm',
+    tagName: 'rd-wasm-media',
+    registerFn: 'registerRdWasmMedia',
+    registerImport: 'registerRosettaDashWasmElements',
   },
 };
 

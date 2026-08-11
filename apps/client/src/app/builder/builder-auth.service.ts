@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-const API_KEY_STORAGE = 'dashbuilder:apiKey';
+const API_KEY_STORAGE = 'rosettadash:apiKey';
 
 @Injectable({ providedIn: 'root' })
 export class BuilderAuthService {

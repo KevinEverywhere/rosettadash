@@ -2,14 +2,14 @@ import {
   buildEquirectExtractFilter,
   DEFAULT_EQUIRECT_FLAT_CROP,
   DEFAULT_EQUIRECT_SOURCE,
-} from '@dashbuilder/core';
-import { BASE_STYLES, defineDashElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+} from '@rosettadash/core';
+import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
 
-export const DB_EQUIRECT_VIEWPORT_TAG = 'db-equirect-viewport';
+export const DB_EQUIRECT_VIEWPORT_TAG = 'rd-equirect-viewport';
 
 export type EquirectPreviewMode = 'flat-crop' | 'rectilinear';
 
-export class DbEquirectViewportElement extends HTMLElement {
+export class RdEquirectViewportElement extends HTMLElement {
   static readonly tagName = DB_EQUIRECT_VIEWPORT_TAG;
 
   static get observedAttributes(): string[] {
@@ -254,6 +254,6 @@ export class DbEquirectViewportElement extends HTMLElement {
   }
 }
 
-export function registerDbEquirectViewport(): void {
-  defineDashElement(DbEquirectViewportElement.tagName, DbEquirectViewportElement);
+export function registerRdEquirectViewport(): void {
+  defineRosettaElement(RdEquirectViewportElement.tagName, RdEquirectViewportElement);
 }

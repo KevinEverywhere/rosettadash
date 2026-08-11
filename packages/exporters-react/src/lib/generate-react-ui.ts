@@ -1,5 +1,5 @@
-import type { ExportIR } from '@dashbuilder/core';
-import { collectExportRoleIds, irHasRoleGates } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
+import { collectExportRoleIds, irHasRoleGates } from '@rosettadash/core';
 import { buildDashboardContext } from './binding-resolver';
 import { generateComponentFile } from './component-templates';
 import { generateEquirectFilterHelperFile } from './media-component-templates';
@@ -170,11 +170,11 @@ function generateUseCurrentRoleFile(roleIds: string[]): string {
     `export function useCurrentRole(): string {`,
     `  return useMemo(() => {`,
     `    if (typeof window === 'undefined') {`,
-    `      return process.env.NEXT_PUBLIC_DASHBUILDER_ROLE ?? FALLBACK_ROLE;`,
+    `      return process.env.NEXT_PUBLIC_ROSETTADASH_ROLE ?? FALLBACK_ROLE;`,
     `    }`,
     `    return (`,
-    `      window.localStorage.getItem('dashbuilder.role') ??`,
-    `      process.env.NEXT_PUBLIC_DASHBUILDER_ROLE ??`,
+    `      window.localStorage.getItem('rosettadash.role') ??`,
+    `      process.env.NEXT_PUBLIC_ROSETTADASH_ROLE ??`,
     `      FALLBACK_ROLE`,
     `    );`,
     `  }, []);`,

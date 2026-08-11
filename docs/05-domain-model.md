@@ -1,6 +1,6 @@
 # Domain Model
 
-DashBuilder models the **business context** dashboards operate in—not just UI widgets. This domain layer informs filters, defaults, role visibility, and exported data scoping.
+RosettaDash models the **business context** dashboards operate in—not just UI widgets. This domain layer informs filters, defaults, role visibility, and exported data scoping.
 
 ## Core entities
 

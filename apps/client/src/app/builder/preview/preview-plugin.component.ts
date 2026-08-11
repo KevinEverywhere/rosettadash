@@ -1,6 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { buildEquirectExtractFilter, type ComponentNode } from '@dashbuilder/core';
+import { buildEquirectExtractFilter, type ComponentNode } from '@rosettadash/core';
 import type { ComponentPreviewTemplateId } from './component-preview-adapter.registry';
 import { PreviewThreeVisualComponent } from './preview-three-visual.component';
 import { NgStyle } from '@angular/common';

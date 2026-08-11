@@ -1,7 +1,7 @@
 import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
-import { getGroupingGuide } from '@dashbuilder/core';
+import { getGroupingGuide } from '@rosettadash/core';
 import { AdminPageComponent } from './admin-page.component';
 import { ContentLibraryService } from './content-library.service';
 import { AdminFeatureFlagsService } from './admin-feature-flags.service';

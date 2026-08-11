@@ -10,7 +10,7 @@ import {
   resolvePaletteGroups,
   type InstructionStep,
   type ResolvedPaletteGroup,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { BuilderStateService } from '../builder-state.service';
 
 type GuidePanelMode = 'info' | 'link';

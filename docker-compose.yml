@@ -1,4 +1,4 @@
-# DashBuilder local containers
+# RosettaDash local containers
 #
 # Dev (hot reload, mount source):
 #   docker compose --profile dev up --build
@@ -9,7 +9,7 @@
 #   → http://localhost:8080 (UI + /api proxy)
 
 services:
-  dashbuilder-dev:
+  rosettadash-dev:
     profiles: [dev]
     build:
       context: .
@@ -19,7 +19,7 @@ services:
       - '3000:3000'
     volumes:
       - .:/workspace
-      - dashbuilder_node_modules:/workspace/node_modules
+      - rosettadash_node_modules:/workspace/node_modules
     environment:
       CHOKIDAR_USEPOLLING: 'true'
       WATCHPACK_POLLING: 'true'
@@ -28,7 +28,7 @@ services:
       BUILDER_AUTH_ENABLED: 'false'
       # BUILDER_API_KEY: 'change-me'
 
-  dashbuilder:
+  rosettadash:
     profiles: [app]
     build:
       context: .
@@ -43,4 +43,4 @@ services:
       # BUILDER_API_KEY: 'change-me'
 
 volumes:
-  dashbuilder_node_modules:
+  rosettadash_node_modules:

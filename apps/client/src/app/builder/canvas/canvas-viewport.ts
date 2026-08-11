@@ -1,5 +1,5 @@
-import type { ComponentNode, NodeLayout } from '@dashbuilder/core';
-import { readNodeDisplayDataSource, readNodeDisplaySubtitle } from '@dashbuilder/core';
+import type { ComponentNode, NodeLayout } from '@rosettadash/core';
+import { readNodeDisplayDataSource, readNodeDisplaySubtitle } from '@rosettadash/core';
 import { CANVAS_MIN_NODE_HEIGHT } from './canvas-layout';
 
 export const CANVAS_VIEWPORT_CULL_THRESHOLD = 50;

@@ -3,7 +3,7 @@ import {
   ADMIN_FEATURE_FLAGS_KEY,
   DEFAULT_ADMIN_FEATURE_FLAGS,
   type AdminFeatureFlags,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 @Injectable({ providedIn: 'root' })
 export class AdminFeatureFlagsService {

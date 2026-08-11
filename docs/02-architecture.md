@@ -2,7 +2,7 @@
 
 ## High-level overview
 
-DashBuilder splits into two runtime contexts:
+RosettaDash splits into two runtime contexts:
 
 | Context | Purpose | Stack |
 |---------|---------|-------|
@@ -44,7 +44,7 @@ DashBuilder splits into two runtime contexts:
 ## Monorepo layout
 
 ```
-dashbuilder/
+rosettadash/
 ├── apps/
 │   ├── client/                 # Angular standalone builder app
 │   │   └── src/app/
@@ -160,7 +160,7 @@ See [04-export-pipeline.md](./04-export-pipeline.md) for detail.
 ### Adding a UI framework
 
 1. Create `packages/exporters-<framework>/` implementing `generate*Files(ir) → GeneratedFile[]`
-2. Add descriptor to `builtInExporterManifest` in `@dashbuilder/core`
+2. Add descriptor to `builtInExporterManifest` in `@rosettadash/core`
 3. Wire dispatch in `apps/server/src/app/export/export.service.ts`
 4. Palette and property schemas stay framework-agnostic
 

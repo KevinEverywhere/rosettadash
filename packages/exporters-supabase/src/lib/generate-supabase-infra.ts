@@ -1,10 +1,10 @@
-import type { ExportIR } from '@dashbuilder/core';
+import type { ExportIR } from '@rosettadash/core';
 import {
   generateScopeModuleSource,
   hasQueryScope,
   resolveExportQueryScope,
   scopedSupabaseListRowsLines,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import type { GeneratedFile, SupabaseExportOptions, TableResource } from './types';
 import { SupabaseExportError } from './types';
 import {

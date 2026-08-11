@@ -1,4 +1,4 @@
-import type { IRComponent } from '@dashbuilder/core';
+import type { IRComponent } from '@rosettadash/core';
 import { WebComponentsExportError } from './types';
 import {
   generateEquirectViewportStandalone,
@@ -125,7 +125,7 @@ function generateClassShell(
   const tag = customElementTag(exportName);
   return joinLines([
     `import type { DateRange, Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()}\`;`,
     ``,
@@ -155,7 +155,7 @@ function generateClassShell(
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -164,7 +164,7 @@ function generateClassShell(
 function generateTextInput(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()}\`;`,
     ``,
@@ -198,7 +198,7 @@ function generateTextInput(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -207,7 +207,7 @@ function generateTextInput(exportName: string): string {
 function generateSelectInput(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()}\`;`,
     ``,
@@ -250,7 +250,7 @@ function generateSelectInput(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -259,7 +259,7 @@ function generateSelectInput(exportName: string): string {
 function generateDateRangeFilter(exportName: string): string {
   return joinLines([
     `import type { DateRange } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .date-range { display: grid; gap: 0.5rem; padding: 0.75rem; }\`;`,
     ``,
@@ -298,7 +298,7 @@ function generateDateRangeFilter(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -311,7 +311,7 @@ function generateTimePreset(exportName: string): string {
 function generateDataTable(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()}\`;`,
     ``,
@@ -356,7 +356,7 @@ function generateDataTable(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -365,7 +365,7 @@ function generateDataTable(exportName: string): string {
 function generateDetailPanel(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .detail-panel__empty { color: var(--db-muted, #6b7280); }\`;`,
     ``,
@@ -398,7 +398,7 @@ function generateDetailPanel(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -411,7 +411,7 @@ function generateSkeleton(exportName: string): string {
 function generateKpiCard(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .kpi-card__value { font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0 0; }\`;`,
     ``,
@@ -439,7 +439,7 @@ function generateKpiCard(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -448,7 +448,7 @@ function generateKpiCard(exportName: string): string {
 function generateLineChart(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .chart-card svg { width: 100%; height: 8rem; }\`;`,
     ``,
@@ -479,7 +479,7 @@ function generateLineChart(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -492,7 +492,7 @@ function generateBarChart(exportName: string): string {
 function generatePieChart(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .pie-chart { width: 8rem; height: 8rem; border-radius: 999px; border: 1px solid var(--db-border, #d9dee7); margin: 0 auto; }\`;`,
     ``,
@@ -521,7 +521,7 @@ function generatePieChart(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -534,7 +534,7 @@ function generateTimer(exportName: string): string {
 function generateSvgInline(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .svg-inline { display: inline-flex; align-items: center; justify-content: center; } .svg-inline :is(svg, img) { width: 100%; height: 100%; } .svg-inline__placeholder { margin: 0; font-size: 0.75rem; color: var(--db-muted, #6b7280); }\`;`,
     ``,
@@ -581,7 +581,7 @@ function generateSvgInline(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -590,7 +590,7 @@ function generateSvgInline(exportName: string): string {
 function generateSvgIcon(exportName: string): string {
   return joinLines([
     `import type { Row } from '../types';`,
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .svg-icon { display: inline-flex; align-items: center; justify-content: center; } .svg-icon :is(svg) { width: 100%; height: 100%; }\`;`,
     ``,
@@ -627,7 +627,7 @@ function generateSvgIcon(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -635,7 +635,7 @@ function generateSvgIcon(exportName: string): string {
 
 function generateWasmAsset(exportName: string): string {
   return joinLines([
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .wasm-asset__badge { display: inline-block; margin-right: 0.5rem; padding: 0.125rem 0.5rem; border-radius: 999px; background: rgb(99 102 241 / 15%); color: #4338ca; font-size: 0.6875rem; font-weight: 700; }\`;`,
     ``,
@@ -656,7 +656,7 @@ function generateWasmAsset(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -672,7 +672,7 @@ function generateWasmModule(exportName: string): string {
 
 function generateWasmMedia(exportName: string): string {
   return joinLines([
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`${shellStyles()} .wasm-media__progress { height: 0.375rem; border-radius: 999px; background: rgb(148 163 184 / 25%); overflow: hidden; } .wasm-media__progress span { display: block; height: 100%; background: #6366f1; }\`;`,
     ``,
@@ -699,7 +699,7 @@ function generateWasmMedia(exportName: string): string {
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -707,7 +707,7 @@ function generateWasmMedia(exportName: string): string {
 
 function generatePlaceholder(exportName: string, label: string, type: string): string {
   return joinLines([
-    `import { defineDashElement } from '../define-element';`,
+    `import { defineRosettaElement } from '../define-element';`,
     ``,
     `const STYLES = \`:host { display: block; padding: 1rem; border: 1px dashed var(--db-border, #d9dee7); border-radius: 0.5rem; color: var(--db-muted, #6b7280); font: 0.875rem system-ui, sans-serif; }\`;`,
     ``,
@@ -725,7 +725,7 @@ function generatePlaceholder(exportName: string, label: string, type: string): s
     `}`,
     ``,
     `export function register${exportName}(): void {`,
-    `  defineDashElement(${exportName}.tagName, ${exportName});`,
+    `  defineRosettaElement(${exportName}.tagName, ${exportName});`,
     `}`,
     ``,
   ]);
@@ -733,7 +733,7 @@ function generatePlaceholder(exportName: string, label: string, type: string): s
 
 export function generateDefineElementHelper(): string {
   return joinLines([
-    `export function defineDashElement(`,
+    `export function defineRosettaElement(`,
     `  tagName: string,`,
     `  ctor: CustomElementConstructor,`,
     `): void {`,
@@ -748,11 +748,11 @@ export function generateDefineElementHelper(): string {
 export function generateRegisterAllFile(componentNames: string[]): string {
   return joinLines([
     ...componentNames.map((name) => `import { register${name} } from './components/${name}';`),
-    `import { registerDbDashboard } from './dashboard';`,
+    `import { registerRdDashboard } from './dashboard';`,
     ``,
-    `export function registerDashBuilderElements(): void {`,
+    `export function registerRosettaDashElements(): void {`,
     ...componentNames.map((name) => `  register${name}();`),
-    `  registerDbDashboard();`,
+    `  registerRdDashboard();`,
     `}`,
     ``,
   ]);

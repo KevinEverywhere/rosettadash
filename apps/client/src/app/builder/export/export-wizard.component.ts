@@ -1,13 +1,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
-import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
+import type { Composite, ExportScope, ValidationIssue } from '@rosettadash/core';
 import {
   formatStylingProfileSummary,
   resolveEffectiveExportTargets,
   resolveEffectiveStylingProfile,
   resolveExportComposite,
   stylingFrameworkLabel,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 import { firstValueFrom } from 'rxjs';
 import { BuilderStateService } from '../builder-state.service';
 import {

@@ -12,7 +12,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import type { Composite } from '@dashbuilder/core';
+import type { Composite } from '@rosettadash/core';
 import {
   CompositeValidationError,
   CreateCompositeInput,

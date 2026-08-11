@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { Composite, ExportBundleRequest, ExportIR, StackProfile, ValidationIssue } from '@dashbuilder/core';
+import type { Composite, ExportBundleRequest, ExportIR, StackProfile, ValidationIssue } from '@rosettadash/core';
 import { Observable } from 'rxjs';
 
 export interface GeneratedFile {

@@ -10,7 +10,7 @@ import {
   unwrapPassphraseWithRecoveryCode,
   verifyPassphrase,
   verifyRecoveryCodeRecord,
-} from '@dashbuilder/core';
+} from '@rosettadash/core';
 
 export interface EnableAppLockResult {
   recoveryCodes: string[];

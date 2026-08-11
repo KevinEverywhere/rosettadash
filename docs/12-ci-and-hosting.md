@@ -2,7 +2,7 @@
 
 ## Primary target: local developer machines
 
-DashBuilder is built for **developers running the builder on their own machines**. That is the supported day-to-day workflow:
+RosettaDash is built for **developers running the builder on their own machines**. That is the supported day-to-day workflow:
 
 ```bash
 npm install

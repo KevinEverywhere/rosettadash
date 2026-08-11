@@ -1,5 +1,5 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { resolveWorkspaceLayout } from '@dashbuilder/core';
+import { resolveWorkspaceLayout } from '@rosettadash/core';
 import { BuilderStateService } from './builder-state.service';
 import { DisplayAvailabilityService } from './display-availability.service';
 

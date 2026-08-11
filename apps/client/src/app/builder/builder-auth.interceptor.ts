@@ -10,7 +10,7 @@ export const builderAuthInterceptor: HttpInterceptorFn = (req, next) => {
   let outgoing = req;
   if (key && req.url.startsWith('/api') && !req.url.startsWith('/api/auth/config')) {
     outgoing = req.clone({
-      setHeaders: { 'x-dashbuilder-api-key': key },
+      setHeaders: { 'x-rosettadash-api-key': key },
     });
   }
 

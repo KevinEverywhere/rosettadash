@@ -9,14 +9,14 @@ import {
   inject,
   input,
 } from '@angular/core';
-import type { ComponentNode } from '@dashbuilder/core';
-import { DEFAULT_GLTF_MODEL_URL, DEFAULT_GLOBE_TEXTURE_URL } from '@dashbuilder/core';
+import type { ComponentNode } from '@rosettadash/core';
+import { DEFAULT_GLTF_MODEL_URL, DEFAULT_GLOBE_TEXTURE_URL } from '@rosettadash/core';
 import {
   mapRowsToGlobeMarkers,
   mapRowsToScatterPoints,
   resolveGlobeFields,
   resolveScatterFields,
-} from '@dashbuilder/ui-primitives';
+} from '@rosettadash/ui-primitives';
 import { PreviewDataService } from './preview-data.service';
 import {
   ThreePreviewRuntime,

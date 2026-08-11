@@ -1,4 +1,4 @@
-import { buildExportIR, buildOnboardingComposite, defaultComponentRegistry } from '@dashbuilder/core';
+import { buildExportIR, buildOnboardingComposite, defaultComponentRegistry } from '@rosettadash/core';
 import { generateNestInfraFiles } from './generate-nest-infra';
 import { NestExportError } from './types';
 
@@ -203,7 +203,7 @@ describe('generateNestInfraFiles', () => {
     expect(database?.content).toContain('created_at >=');
 
     const env = files.find((file) => file.path === '.env.example');
-    expect(env?.content).toContain('DASHBUILDER_CLIENT_ID=');
+    expect(env?.content).toContain('ROSETTADASH_CLIENT_ID=');
   });
 
   it('generates onboarding route stubs for onboarding composites', () => {

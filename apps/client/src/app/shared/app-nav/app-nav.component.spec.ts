@@ -17,7 +17,7 @@ describe('AppNavComponent', () => {
 
   it('renders app name and primary navigation links', () => {
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('[data-testid="app-nav-logo"]')?.textContent).toContain('DashBuilder');
+    expect(element.querySelector('[data-testid="app-nav-logo"]')?.textContent).toContain('RosettaDash');
     expect(element.querySelector('[data-testid="app-nav-settings"]')?.textContent?.trim()).toBe('Settings');
     expect(element.querySelector('[data-testid="app-nav-builder"]')?.textContent?.trim()).toBe('Builder');
     expect(element.querySelector('[data-testid="app-nav-home"]')).toBeFalsy();

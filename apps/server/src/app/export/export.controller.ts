@@ -1,18 +1,18 @@
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
-import type { Composite, ExportBundleRequest, StackProfile } from '@dashbuilder/core';
-import { ExportBuildError } from '@dashbuilder/core';
-import { AngularExportError } from '@dashbuilder/exporters-angular';
-import { ExpressExportError } from '@dashbuilder/exporters-express';
-import { MongoExportError } from '@dashbuilder/exporters-mongodb';
-import { MysqlExportError } from '@dashbuilder/exporters-mysql';
-import { SupabaseExportError } from '@dashbuilder/exporters-supabase';
-import { NestExportError } from '@dashbuilder/exporters-nest';
-import { NextExportError } from '@dashbuilder/exporters-next';
-import { NuxtExportError } from '@dashbuilder/exporters-nuxt';
-import { ReactExportError } from '@dashbuilder/exporters-react';
-import { WebComponentsExportError } from '@dashbuilder/exporters-web-components';
-import { SvelteExportError } from '@dashbuilder/exporters-svelte';
-import { VueExportError } from '@dashbuilder/exporters-vue';
+import type { Composite, ExportBundleRequest, StackProfile } from '@rosettadash/core';
+import { ExportBuildError } from '@rosettadash/core';
+import { AngularExportError } from '@rosettadash/exporters-angular';
+import { ExpressExportError } from '@rosettadash/exporters-express';
+import { MongoExportError } from '@rosettadash/exporters-mongodb';
+import { MysqlExportError } from '@rosettadash/exporters-mysql';
+import { SupabaseExportError } from '@rosettadash/exporters-supabase';
+import { NestExportError } from '@rosettadash/exporters-nest';
+import { NextExportError } from '@rosettadash/exporters-next';
+import { NuxtExportError } from '@rosettadash/exporters-nuxt';
+import { ReactExportError } from '@rosettadash/exporters-react';
+import { WebComponentsExportError } from '@rosettadash/exporters-web-components';
+import { SvelteExportError } from '@rosettadash/exporters-svelte';
+import { VueExportError } from '@rosettadash/exporters-vue';
 import { ExportService } from './export.service';
 
 @Controller('export')

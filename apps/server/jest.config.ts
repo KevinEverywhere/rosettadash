@@ -8,6 +8,6 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/server',
   moduleNameMapper: {
-    '^@dashbuilder/core$': '<rootDir>/../../packages/core/src/index.ts',
+    '^@rosettadash/core$': '<rootDir>/../../packages/core/src/index.ts',
   },
 };

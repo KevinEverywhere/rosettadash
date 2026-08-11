@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Binding, ComponentNode, Composite } from '@dashbuilder/core';
+import type { Binding, ComponentNode, Composite } from '@rosettadash/core';
 import {
   BuilderHistoryStack,
   cloneBuilderGraphSnapshot,

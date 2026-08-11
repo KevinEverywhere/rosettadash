@@ -1,9 +1,9 @@
-import type { Composite, StackProfile } from '@dashbuilder/core';
+import type { Composite, StackProfile } from '@rosettadash/core';
 
-export const BUILDER_SESSION_KEY = 'dashbuilder:session';
-export const PENDING_STACK_KEY = 'dashbuilder:pending-stack';
-export const ACTIVE_STACK_KEY = 'dashbuilder:active-stack';
-export const LIBRARY_RESTORE_KEY = 'dashbuilder:library-restore';
+export const BUILDER_SESSION_KEY = 'rosettadash:session';
+export const PENDING_STACK_KEY = 'rosettadash:pending-stack';
+export const ACTIVE_STACK_KEY = 'rosettadash:active-stack';
+export const LIBRARY_RESTORE_KEY = 'rosettadash:library-restore';
 
 export interface BuilderSession {
   projectId: string;

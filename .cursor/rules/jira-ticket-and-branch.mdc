@@ -1,11 +1,13 @@
 ---
-description: Mandatory Jira ticket and feature branch before any DashBuilder work
+description: Mandatory Jira ticket and feature branch before any RosettaDash work
 alwaysApply: true
 ---
 
 # Jira ticket + branch gate (mandatory)
 
 **No code, docs, or config changes until both exist and match.**
+
+Applies to the **RosettaDash** monorepo (npm scope `@rosettadash/*`). Jira project remains **DAS**.
 
 ## Required order (never skip or reorder)
 

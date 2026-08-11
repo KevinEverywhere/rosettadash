@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { getGroupingGuide } from '@dashbuilder/core';
+import { getGroupingGuide } from '@rosettadash/core';
 import { BuilderGuideCardComponent } from './builder-guide-card.component';
 
 describe('BuilderGuideCardComponent', () => {
