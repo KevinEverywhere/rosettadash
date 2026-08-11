@@ -1,8 +1,18 @@
 <aside class="inspector" data-testid="inspector">
   <header class="inspector__header">
-    <h2>Inspector</h2>
+    <button
+      type="button"
+      class="inspector__header-toggle"
+      data-testid="inspector-collapse-toggle"
+      [attr.aria-expanded]="showInspectorBody()"
+      [attr.aria-label]="showInspectorBody() ? 'Collapse inspector panel' : 'Expand inspector panel'"
+      (click)="onHeaderClick()"
+    >
+      <h2>Inspector</h2>
+    </button>
   </header>
 
+  @if (showInspectorBody()) {
   @if (!hasSelection()) {
     <div class="inspector__empty">
       <p>Select a palette component to preview, or click a canvas node to edit.</p>
@@ -389,5 +399,6 @@
         </footer>
       }
     </div>
+  }
   }
 </aside>

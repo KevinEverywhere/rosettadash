@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, HostBinding, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   ComponentDefinition,
   defaultComponentRegistry,
@@ -13,6 +13,7 @@ import {
   type ResolvedPaletteGroup,
 } from '@rosettadash/core';
 import { BuilderStateService } from '../builder-state.service';
+import { BuilderWorkspaceLayoutService } from '../builder-workspace-layout.service';
 import { CreationWizardService } from '../creation-wizard/creation-wizard.service';
 
 type GuidePanelMode = 'info' | 'link';
@@ -25,6 +26,12 @@ type GuidePanelMode = 'info' | 'link';
 export class PaletteComponent implements OnInit, OnDestroy {
   private readonly state = inject(BuilderStateService);
   private readonly creationWizard = inject(CreationWizardService);
+  protected readonly layout = inject(BuilderWorkspaceLayoutService);
+
+  @HostBinding('class.palette--collapsed')
+  protected get paletteCollapsed(): boolean {
+    return !this.layout.compact() && this.layout.paletteCollapsed();
+  }
 
   private readonly onExpandGroup = (event: Event): void => {
     const groupId = (event as CustomEvent<{ groupId: string }>).detail?.groupId;
@@ -183,5 +190,15 @@ export class PaletteComponent implements OnInit, OnDestroy {
       '--palette-group-soft': colors.soft,
       '--palette-group-border': colors.border,
     };
+  }
+
+  protected onHeaderClick(): void {
+    if (!this.layout.compact()) {
+      this.layout.togglePaletteCollapsed();
+    }
+  }
+
+  protected showPaletteBody(): boolean {
+    return this.layout.compact() || !this.layout.paletteCollapsed();
   }
 }

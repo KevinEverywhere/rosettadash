@@ -198,6 +198,11 @@ export class CanvasComponent implements AfterViewInit {
   protected onHeaderPointerDown(nodeId: string, event: PointerEvent): void {
     event.stopPropagation();
 
+    const target = event.target;
+    if (target instanceof Element && target.closest('.canvas__node-close')) {
+      return;
+    }
+
     const additive = event.shiftKey;
     if (additive) {
       this.state.selectNode(nodeId, { additive: true });

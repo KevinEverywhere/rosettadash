@@ -1,10 +1,27 @@
 :host {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 0;
   height: 100%;
   min-height: 0;
   background: var(--db-panel-bg);
   border-left: 1px solid var(--db-border);
+}
+
+:host(.inspector--collapsed) {
+  overflow: hidden;
+
+  .inspector__header {
+    padding: 0.75rem 0.25rem;
+    border-bottom: none;
+  }
+
+  .inspector__header-toggle h2 {
+    writing-mode: vertical-rl;
+    margin: 0 auto;
+    letter-spacing: 0.08em;
+  }
 }
 
 .inspector__header {
@@ -20,6 +37,21 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--db-text-muted);
+  }
+}
+
+.inspector__header-toggle {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover h2 {
+    color: var(--db-text);
   }
 }
 

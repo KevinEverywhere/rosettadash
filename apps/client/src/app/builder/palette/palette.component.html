@@ -1,9 +1,21 @@
 <aside class="palette" data-testid="palette">
   <header class="palette__header">
-    <h2>Components</h2>
-    <p>Click to inspect, + to add, <strong>i</strong> = how it works, <strong>⛓</strong> = what it goes with</p>
+    <button
+      type="button"
+      class="palette__header-toggle"
+      data-testid="palette-collapse-toggle"
+      [attr.aria-expanded]="showPaletteBody()"
+      [attr.aria-label]="showPaletteBody() ? 'Collapse components panel' : 'Expand components panel'"
+      (click)="onHeaderClick()"
+    >
+      <h2>Components</h2>
+    </button>
+    @if (showPaletteBody()) {
+      <p>Click to inspect, + to add, <strong>i</strong> = how it works, <strong>⛓</strong> = what it goes with</p>
+    }
   </header>
 
+  @if (showPaletteBody()) {
   @for (group of groups(); track group.id) {
     <section
       class="palette__group"
@@ -151,5 +163,6 @@
         </ul>
       }
     </section>
+  }
   }
 </aside>

@@ -155,6 +155,35 @@ export class BuilderShellComponent implements OnInit {
     this.state.redo();
   }
 
+  protected onPaletteSplitterPointerDown(event: PointerEvent): void {
+    if (this.layout.compact()) {
+      return;
+    }
+    event.preventDefault();
+    this.layout.beginPanelResize('palette', event.clientX);
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  protected onInspectorSplitterPointerDown(event: PointerEvent): void {
+    if (this.layout.compact()) {
+      return;
+    }
+    event.preventDefault();
+    this.layout.beginPanelResize('inspector', event.clientX);
+    (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+  }
+
+  protected onSplitterPointerMove(event: PointerEvent): void {
+    if (!this.layout.resizing()) {
+      return;
+    }
+    this.layout.updatePanelResize(event.clientX);
+  }
+
+  protected onSplitterPointerUp(): void {
+    this.layout.endPanelResize();
+  }
+
   @HostListener('document:keydown', ['$event'])
   protected onDocumentKeydown(event: KeyboardEvent): void {
     if (

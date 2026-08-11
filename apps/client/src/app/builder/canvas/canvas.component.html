@@ -148,6 +148,7 @@
                   class="canvas__node-close"
                   [attr.data-testid]="'canvas-node-remove-' + node.id"
                   [attr.aria-label]="'Remove ' + node.label + ' from canvas'"
+                  (pointerdown)="stopHeaderEvent($event)"
                   (click)="removeNode(node.id, $event)"
                 >
                   ×

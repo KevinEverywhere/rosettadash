@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, HostBinding, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   Binding,
@@ -14,6 +14,7 @@ import {
   AppSelectOption,
 } from '../../shared/app-select/app-select.component';
 import { BuilderStateService } from '../builder-state.service';
+import { BuilderWorkspaceLayoutService } from '../builder-workspace-layout.service';
 import { DomainContextPanelComponent } from './domain-context-panel.component';
 import { VersionHistoryPanelComponent } from './version-history-panel.component';
 
@@ -25,6 +26,12 @@ import { VersionHistoryPanelComponent } from './version-history-panel.component'
 })
 export class InspectorComponent {
   protected readonly state = inject(BuilderStateService);
+  protected readonly layout = inject(BuilderWorkspaceLayoutService);
+
+  @HostBinding('class.inspector--collapsed')
+  protected get inspectorCollapsed(): boolean {
+    return !this.layout.compact() && this.layout.inspectorCollapsed();
+  }
 
   private readonly expandedSectionIds = signal<ReadonlySet<string>>(new Set());
   private selectionKey = '';
@@ -218,5 +225,15 @@ export class InspectorComponent {
     }
 
     return next;
+  }
+
+  protected onHeaderClick(): void {
+    if (!this.layout.compact()) {
+      this.layout.toggleInspectorCollapsed();
+    }
+  }
+
+  protected showInspectorBody(): boolean {
+    return this.layout.compact() || !this.layout.inspectorCollapsed();
   }
 }

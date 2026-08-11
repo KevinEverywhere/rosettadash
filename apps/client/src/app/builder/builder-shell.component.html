@@ -182,6 +182,8 @@
     <div
       class="builder__workspace"
       [class.builder__workspace--compact]="layout.compact()"
+      [class.builder__workspace--resizing]="layout.resizing()"
+      [style.grid-template-columns]="layout.workspaceGridTemplate()"
     >
       @if (layout.compact() && (layout.paletteOpen() || layout.inspectorOpen())) {
         <button
@@ -195,15 +197,43 @@
       <app-palette
         class="builder__palette"
         [class.builder__palette--open]="layout.compact() && layout.paletteOpen()"
+        [class.builder__palette--collapsed]="!layout.compact() && layout.paletteCollapsed()"
       />
+      @if (!layout.compact()) {
+        <div
+          class="builder__splitter"
+          data-testid="palette-splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize components panel"
+          (pointerdown)="onPaletteSplitterPointerDown($event)"
+          (pointermove)="onSplitterPointerMove($event)"
+          (pointerup)="onSplitterPointerUp()"
+          (pointercancel)="onSplitterPointerUp()"
+        ></div>
+      }
       @if (state.workspaceMode() === 'design') {
         <app-canvas class="builder__canvas" data-testid="design-workspace" />
       } @else {
         <app-preview-panel class="builder__canvas" data-testid="preview-workspace" />
       }
+      @if (!layout.compact()) {
+        <div
+          class="builder__splitter"
+          data-testid="inspector-splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize inspector panel"
+          (pointerdown)="onInspectorSplitterPointerDown($event)"
+          (pointermove)="onSplitterPointerMove($event)"
+          (pointerup)="onSplitterPointerUp()"
+          (pointercancel)="onSplitterPointerUp()"
+        ></div>
+      }
       <app-inspector
         class="builder__inspector"
         [class.builder__inspector--open]="layout.compact() && layout.inspectorOpen()"
+        [class.builder__inspector--collapsed]="!layout.compact() && layout.inspectorCollapsed()"
       />
     </div>
   }

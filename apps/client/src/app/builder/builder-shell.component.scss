@@ -239,14 +239,46 @@
 .builder__workspace {
   display: grid;
   flex: 1;
-  grid-template-columns: 16rem 1fr 22rem;
   min-height: 0;
   position: relative;
+}
+
+.builder__workspace--resizing {
+  cursor: col-resize;
+  user-select: none;
 }
 
 .builder__palette,
 .builder__inspector {
   min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.builder__palette--collapsed,
+.builder__inspector--collapsed {
+  overflow: hidden;
+}
+
+.builder__splitter {
+  position: relative;
+  z-index: 2;
+  touch-action: none;
+  cursor: col-resize;
+  background: transparent;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 -1px;
+    background: var(--db-border);
+    transition: background-color 0.15s ease;
+  }
+
+  &:hover::after,
+  .builder__workspace--resizing &::after {
+    background: var(--db-accent);
+  }
 }
 
 .builder__canvas {

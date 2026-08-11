@@ -276,8 +276,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-88](https://planetkevin.atlassian.net/browse/DAS-88)** — Creation choice (guided vs explore), dismiss hint on Create, extend-dashboard help  
-Branch: `feature/DAS-88-creation-choice-and-contextual-help`
+**[DAS-89](https://planetkevin.atlassian.net/browse/DAS-89)** — Resizable and collapsible Components/Inspector panels with centered canvas  
+Branch: `feature/DAS-89-resizable-collapsible-builder-panels`
 
 ## License
 
