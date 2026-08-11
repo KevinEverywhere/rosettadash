@@ -1,21 +1,19 @@
 import { DatePipe, NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   APP_NAME,
   defaultComponentRegistry,
   getAiProvider,
   getGroupingGuide,
-  getInstructionSteps,
-  groupingAnimationLabel,
-  hasInstructionGuide,
-  resolveGroupingAnimationBlocks,
   resolvePaletteGroups,
   type ComponentGroupingGuide,
 } from '@dashbuilder/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';
+import { AppCollapsibleComponent } from '../shared/app-collapsible/app-collapsible.component';
+import { BuilderGuideCardComponent } from '../builder/grouping/builder-guide-card.component';
 import { AiAssistService } from '../builder/ai/ai-assist.service';
 import { BuilderStateService } from '../builder/builder-state.service';
 import { SpeechInputService } from '../builder/ai/speech-input.service';
@@ -29,21 +27,20 @@ import {
 import { AdminFeatureFlagsService } from './admin-feature-flags.service';
 import { ContentLibraryService } from './content-library.service';
 
-export type AdminSectionId = 'content' | 'integrations' | 'features' | 'guides' | 'catalog';
+export type AdminSectionId = 'content' | 'integrations' | 'guides' | 'catalog';
 
-const SECTION_ORDER: AdminSectionId[] = ['content', 'integrations', 'features', 'guides', 'catalog'];
+const SECTION_ORDER: AdminSectionId[] = ['content', 'integrations', 'guides', 'catalog'];
 
 const SECTION_LABELS: Record<AdminSectionId, string> = {
   content: 'Saved content',
   integrations: 'AI, voice & environment',
-  features: 'Feature toggles',
   guides: 'Builder guides',
   catalog: 'Component catalog',
 };
 
 @Component({
   selector: 'app-admin-page',
-  imports: [FormsModule, RouterLink, NgClass, DatePipe, AppNavComponent],
+  imports: [FormsModule, NgClass, DatePipe, AppNavComponent, AppCollapsibleComponent, BuilderGuideCardComponent],
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.scss',
 })
@@ -98,8 +95,14 @@ export class AdminPageComponent implements OnInit {
     await this.environment.initialize();
     await this.aiAssist.refreshReadiness();
     const section = this.route.snapshot.queryParamMap.get('section');
-    if (section === 'guides' || section === 'content' || section === 'integrations' || section === 'features' || section === 'catalog') {
-      this.openSection.set(section);
+    if (
+      section === 'guides' ||
+      section === 'content' ||
+      section === 'integrations' ||
+      section === 'catalog' ||
+      section === 'features'
+    ) {
+      this.openSection.set(section === 'features' ? 'integrations' : section);
     }
     this.loaded.set(true);
   }
@@ -110,22 +113,6 @@ export class AdminPageComponent implements OnInit {
 
   toggleGuide(type: string): void {
     this.openGuideType.update((current) => (current === type ? null : type));
-  }
-
-  guideAnimationBlocks(guide: ComponentGroupingGuide): string[] {
-    return resolveGroupingAnimationBlocks(guide);
-  }
-
-  guideAnimationLabel(guide: ComponentGroupingGuide): string {
-    return groupingAnimationLabel(guide.animationKey);
-  }
-
-  guideSteps(type: string) {
-    return getInstructionSteps(type);
-  }
-
-  guideHasSteps(type: string): boolean {
-    return hasInstructionGuide(type);
   }
 
   isSectionOpen(section: AdminSectionId): boolean {
@@ -142,11 +129,10 @@ export class AdminPageComponent implements OnInit {
         return this.library.entries().length
           ? `${this.library.entries().length} saved`
           : 'Empty';
-      case 'integrations':
-        return this.aiAssist.readiness()?.ready ? 'AI ready' : 'Setup needed';
-      case 'features': {
+      case 'integrations': {
         const current = this.flags.flags();
-        return `AI ${current.aiDrawerEnabled ? 'on' : 'off'} · Voice ${current.voiceInputEnabled ? 'on' : 'off'}`;
+        const readiness = this.aiAssist.readiness()?.ready ? 'AI ready' : 'Setup needed';
+        return `${readiness} · AI ${current.aiDrawerEnabled ? 'on' : 'off'} · Voice ${current.voiceInputEnabled ? 'on' : 'off'}`;
       }
       case 'guides':
         return `${this.builderGuides().length} components`;

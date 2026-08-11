@@ -74,62 +74,14 @@
   color: var(--db-accent, #2563eb);
 }
 
-.welcome__accordion {
-  border: 1px solid var(--db-border, #e2e8f0);
-  border-radius: 0.75rem;
-  background: #fff;
-  overflow: hidden;
-
-  & + & {
+.welcome__stack-sections {
+  .app-collapsible + .app-collapsible {
     margin-top: 0.625rem;
   }
 
-  & + .welcome__scratch-note {
+  .app-collapsible + .welcome__scratch-note {
     margin-top: 0.625rem;
   }
-}
-
-.welcome__accordion-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.875rem 1rem;
-  border: none;
-  background: #f8fafc;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-
-  &--open {
-    border-bottom: 1px solid var(--db-border, #e2e8f0);
-    background: #eff6ff;
-  }
-}
-
-.welcome__accordion-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--db-text-muted, #64748b);
-}
-
-.welcome__accordion-summary {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--db-text, #0f172a);
-  text-align: right;
-
-  &--placeholder {
-    color: var(--db-text-muted, #94a3b8);
-    font-weight: 500;
-  }
-}
-
-.welcome__accordion-panel {
-  padding: 0.875rem 1rem 1rem;
 }
 
 .welcome__styling-group {

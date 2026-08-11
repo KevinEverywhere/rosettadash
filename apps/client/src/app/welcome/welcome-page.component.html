@@ -37,127 +37,98 @@
         </p>
       </header>
 
-      <div class="welcome__accordion">
-        <button
-          type="button"
-          class="welcome__accordion-toggle"
-          [class.welcome__accordion-toggle--open]="isSectionOpen('ui')"
-          [attr.aria-expanded]="isSectionOpen('ui')"
-          data-testid="stack-section-toggle-ui"
-          (click)="toggleSection('ui')"
-        >
-          <span class="welcome__accordion-title">UI framework</span>
-          <span
-            class="welcome__accordion-summary"
-            [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(uiSectionSummary())"
-          >
-            {{ uiSectionSummary() }}
-          </span>
-        </button>
-        @if (isSectionOpen('ui')) {
-          <div class="welcome__accordion-panel" data-testid="stack-section-panel-ui">
-            <ul class="welcome__options">
-              @for (option of uiOptions; track option.id) {
-                <li>
-                  <button
-                    type="button"
-                    class="welcome__option"
-                    [class.welcome__option--selected]="uiChoice() === option.id"
-                    [attr.data-testid]="'stack-ui-' + option.id"
-                    (click)="selectUi(option.id)"
-                  >
-                    <span class="welcome__option-label">{{ option.label }}</span>
-                    <span class="welcome__option-desc">{{ option.description }}</span>
-                  </button>
-                </li>
-              }
-            </ul>
-          </div>
-        }
-      </div>
+      <div class="welcome__stack-sections">
+      <app-collapsible
+        appearance="stack"
+        [expanded]="isSectionOpen('ui')"
+        [summaryPlaceholder]="isPlaceholderSummary(uiSectionSummary())"
+        toggleTestId="stack-section-toggle-ui"
+        panelTestId="stack-section-panel-ui"
+        (toggled)="toggleSection('ui')"
+      >
+        <span appCollapsibleTitle>UI framework</span>
+        <span appCollapsibleSummary>{{ uiSectionSummary() }}</span>
+
+        <ul class="welcome__options">
+          @for (option of uiOptions; track option.id) {
+            <li>
+              <button
+                type="button"
+                class="welcome__option"
+                [class.welcome__option--selected]="uiChoice() === option.id"
+                [attr.data-testid]="'stack-ui-' + option.id"
+                (click)="selectUi(option.id)"
+              >
+                <span class="welcome__option-label">{{ option.label }}</span>
+                <span class="welcome__option-desc">{{ option.description }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      </app-collapsible>
 
       @if (!isScratchPad()) {
-        <div class="welcome__accordion">
-          <button
-            type="button"
-            class="welcome__accordion-toggle"
-            [class.welcome__accordion-toggle--open]="isSectionOpen('server')"
-            [attr.aria-expanded]="isSectionOpen('server')"
-            data-testid="stack-section-toggle-server"
-            (click)="toggleSection('server')"
-          >
-            <span class="welcome__accordion-title">Server (Node.js)</span>
-            <span
-              class="welcome__accordion-summary"
-              [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(serverSectionSummary())"
-            >
-              {{ serverSectionSummary() }}
-            </span>
-          </button>
-          @if (isSectionOpen('server')) {
-            <div class="welcome__accordion-panel" data-testid="stack-section-panel-server">
-              <p class="welcome__section-lead">{{ serverEcosystemNote }}</p>
-              <ul class="welcome__chip-row">
-                @for (option of serverOptions; track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip"
-                      [class.welcome__chip--selected]="serverChoice() === option.id"
-                      [disabled]="!hasUiChoice()"
-                      [attr.data-testid]="'stack-server-' + option.id"
-                      (click)="selectServer(option.id)"
-                    >
-                      {{ option.label }}
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
-        </div>
+        <app-collapsible
+          appearance="stack"
+          [expanded]="isSectionOpen('server')"
+          [summaryPlaceholder]="isPlaceholderSummary(serverSectionSummary())"
+          toggleTestId="stack-section-toggle-server"
+          panelTestId="stack-section-panel-server"
+          (toggled)="toggleSection('server')"
+        >
+          <span appCollapsibleTitle>Server (Node.js)</span>
+          <span appCollapsibleSummary>{{ serverSectionSummary() }}</span>
 
-        <div class="welcome__accordion">
-          <button
-            type="button"
-            class="welcome__accordion-toggle"
-            [class.welcome__accordion-toggle--open]="isSectionOpen('database')"
-            [attr.aria-expanded]="isSectionOpen('database')"
-            data-testid="stack-section-toggle-database"
-            (click)="toggleSection('database')"
-          >
-            <span class="welcome__accordion-title">Database</span>
-            <span
-              class="welcome__accordion-summary"
-              [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(databaseSectionSummary())"
-            >
-              {{ databaseSectionSummary() }}
-            </span>
-          </button>
-          @if (isSectionOpen('database')) {
-            <div class="welcome__accordion-panel" data-testid="stack-section-panel-database">
-              <p class="welcome__section-lead">
-                Optional — choose <strong>None</strong> if you are exporting UI components only.
-              </p>
-              <ul class="welcome__chip-row">
-                @for (option of databaseOptions; track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip"
-                      [class.welcome__chip--selected]="databaseChoice() === option.id"
-                      [disabled]="!hasUiChoice()"
-                      [attr.data-testid]="'stack-database-' + option.id"
-                      (click)="selectDatabase(option.id)"
-                    >
-                      {{ option.label }}
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-          }
-        </div>
+          <p class="welcome__section-lead">{{ serverEcosystemNote }}</p>
+          <ul class="welcome__chip-row">
+            @for (option of serverOptions; track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip"
+                  [class.welcome__chip--selected]="serverChoice() === option.id"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-server-' + option.id"
+                  (click)="selectServer(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </app-collapsible>
+
+        <app-collapsible
+          appearance="stack"
+          [expanded]="isSectionOpen('database')"
+          [summaryPlaceholder]="isPlaceholderSummary(databaseSectionSummary())"
+          toggleTestId="stack-section-toggle-database"
+          panelTestId="stack-section-panel-database"
+          (toggled)="toggleSection('database')"
+        >
+          <span appCollapsibleTitle>Database</span>
+          <span appCollapsibleSummary>{{ databaseSectionSummary() }}</span>
+
+          <p class="welcome__section-lead">
+            Optional — choose <strong>None</strong> if you are exporting UI components only.
+          </p>
+          <ul class="welcome__chip-row">
+            @for (option of databaseOptions; track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip"
+                  [class.welcome__chip--selected]="databaseChoice() === option.id"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-database-' + option.id"
+                  (click)="selectDatabase(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </app-collapsible>
       } @else {
         <p class="welcome__scratch-note" data-testid="stack-scratch-note">
           Scratch-pad mode keeps all export targets available in the builder. You can export to any
@@ -165,107 +136,98 @@
         </p>
       }
 
-      <div class="welcome__accordion">
-        <button
-          type="button"
-          class="welcome__accordion-toggle"
-          [class.welcome__accordion-toggle--open]="isSectionOpen('styling')"
-          [attr.aria-expanded]="isSectionOpen('styling')"
-          data-testid="stack-section-toggle-styling"
-          (click)="toggleSection('styling')"
-        >
-          <span class="welcome__accordion-title">{{ stylingSectionTitle() }}</span>
-          <span
-            class="welcome__accordion-summary"
-            [class.welcome__accordion-summary--placeholder]="isPlaceholderSummary(stylingSectionSummary())"
-          >
-            {{ stylingSectionSummary() }}
-          </span>
-        </button>
-        @if (isSectionOpen('styling')) {
-          <div class="welcome__accordion-panel" data-testid="stack-section-panel-styling">
-            <p class="welcome__section-lead">
-              Combine foundation layers, an optional component library, and authoring approaches.
-              Options match your UI framework.
-            </p>
+      <app-collapsible
+        appearance="stack"
+        [expanded]="isSectionOpen('styling')"
+        [summaryPlaceholder]="isPlaceholderSummary(stylingSectionSummary())"
+        toggleTestId="stack-section-toggle-styling"
+        panelTestId="stack-section-panel-styling"
+        (toggled)="toggleSection('styling')"
+      >
+        <span appCollapsibleTitle>{{ stylingSectionTitle() }}</span>
+        <span appCollapsibleSummary>{{ stylingSectionSummary() }}</span>
 
-            <div class="welcome__styling-group">
-              <h4 class="welcome__styling-group-title">Foundation</h4>
-              <ul class="welcome__chip-row">
-                @for (option of foundationOptions(); track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip welcome__chip--stacked"
-                      [class.welcome__chip--selected]="isFoundationSelected(option.id)"
-                      [disabled]="!hasUiChoice()"
-                      [attr.data-testid]="'stack-styling-foundation-' + option.id"
-                      (click)="selectFoundation(option.id)"
-                    >
-                      <span class="welcome__chip-label">{{ option.label }}</span>
-                      <span class="welcome__chip-desc">{{ option.description }}</span>
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
+        <p class="welcome__section-lead">
+          Combine foundation layers, an optional component library, and authoring approaches.
+          Options match your UI framework.
+        </p>
 
-            @if (showComponentLibrarySection()) {
-              <div class="welcome__styling-group">
-                <h4 class="welcome__styling-group-title">Component library</h4>
-                <ul class="welcome__chip-row">
-                  @for (option of componentLibraryOptions(); track option.id) {
-                    <li>
-                      <button
-                        type="button"
-                        class="welcome__chip welcome__chip--stacked"
-                        [class.welcome__chip--selected]="isComponentLibrarySelected(option.id)"
-                        [disabled]="!hasUiChoice()"
-                        [attr.data-testid]="'stack-styling-library-' + option.id"
-                        (click)="selectComponentLibrary(option.id)"
-                      >
-                        <span class="welcome__chip-label">{{ option.label }}</span>
-                        <span class="welcome__chip-desc">{{ option.description }}</span>
-                      </button>
-                    </li>
-                  }
-                </ul>
-              </div>
+        <div class="welcome__styling-group">
+          <h4 class="welcome__styling-group-title">Foundation</h4>
+          <ul class="welcome__chip-row">
+            @for (option of foundationOptions(); track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip welcome__chip--stacked"
+                  [class.welcome__chip--selected]="isFoundationSelected(option.id)"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-styling-foundation-' + option.id"
+                  (click)="selectFoundation(option.id)"
+                >
+                  <span class="welcome__chip-label">{{ option.label }}</span>
+                  <span class="welcome__chip-desc">{{ option.description }}</span>
+                </button>
+              </li>
             }
+          </ul>
+        </div>
 
-            <div class="welcome__styling-group">
-              <h4 class="welcome__styling-group-title">Authoring</h4>
-              <ul class="welcome__chip-row">
-                @for (option of authoringOptions(); track option.id) {
-                  <li>
-                    <button
-                      type="button"
-                      class="welcome__chip welcome__chip--stacked"
-                      [class.welcome__chip--selected]="isAuthoringSelected(option.id)"
-                      [disabled]="!hasUiChoice()"
-                      [attr.data-testid]="'stack-styling-authoring-' + option.id"
-                      (click)="selectAuthoring(option.id)"
-                    >
-                      <span class="welcome__chip-label">{{ option.label }}</span>
-                      <span class="welcome__chip-desc">{{ option.description }}</span>
-                    </button>
-                  </li>
-                }
-              </ul>
-            </div>
-
-            <label class="welcome__inline-toggle">
-              <input
-                type="checkbox"
-                data-testid="stack-styling-inline-styles"
-                [checked]="stylingProfile()?.inlineStyles ?? false"
-                [disabled]="!hasUiChoice()"
-                (change)="setInlineStyles($any($event.target).checked)"
-              />
-              Allow inline styles in exported components
-            </label>
+        @if (showComponentLibrarySection()) {
+          <div class="welcome__styling-group">
+            <h4 class="welcome__styling-group-title">Component library</h4>
+            <ul class="welcome__chip-row">
+              @for (option of componentLibraryOptions(); track option.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="welcome__chip welcome__chip--stacked"
+                    [class.welcome__chip--selected]="isComponentLibrarySelected(option.id)"
+                    [disabled]="!hasUiChoice()"
+                    [attr.data-testid]="'stack-styling-library-' + option.id"
+                    (click)="selectComponentLibrary(option.id)"
+                  >
+                    <span class="welcome__chip-label">{{ option.label }}</span>
+                    <span class="welcome__chip-desc">{{ option.description }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
           </div>
         }
+
+        <div class="welcome__styling-group">
+          <h4 class="welcome__styling-group-title">Authoring</h4>
+          <ul class="welcome__chip-row">
+            @for (option of authoringOptions(); track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip welcome__chip--stacked"
+                  [class.welcome__chip--selected]="isAuthoringSelected(option.id)"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-styling-authoring-' + option.id"
+                  (click)="selectAuthoring(option.id)"
+                >
+                  <span class="welcome__chip-label">{{ option.label }}</span>
+                  <span class="welcome__chip-desc">{{ option.description }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <label class="welcome__inline-toggle">
+          <input
+            type="checkbox"
+            data-testid="stack-styling-inline-styles"
+            [checked]="stylingProfile()?.inlineStyles ?? false"
+            [disabled]="!hasUiChoice()"
+            (change)="setInlineStyles($any($event.target).checked)"
+          />
+          Allow inline styles in exported components
+        </label>
+      </app-collapsible>
       </div>
 
       <footer class="welcome__footer">

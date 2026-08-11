@@ -1,0 +1,37 @@
+<section
+  class="app-collapsible"
+  [class.app-collapsible--open]="expanded()"
+  [class.app-collapsible--stack]="appearance() === 'stack'"
+  [class.app-collapsible--admin]="appearance() === 'admin'"
+  [class.app-collapsible--card]="appearance() === 'card'"
+>
+  <button
+    type="button"
+    class="app-collapsible__toggle"
+    [attr.aria-expanded]="expanded()"
+    [disabled]="disabled()"
+    [attr.data-testid]="toggleTestId()"
+    (click)="onToggle()"
+  >
+    <span class="app-collapsible__heading">
+      <span class="app-collapsible__title">
+        <ng-content select="[appCollapsibleTitle]" />
+      </span>
+      <span
+        class="app-collapsible__summary"
+        [class.app-collapsible__summary--placeholder]="summaryPlaceholder()"
+      >
+        <ng-content select="[appCollapsibleSummary]" />
+      </span>
+    </span>
+    @if (appearance() === 'card') {
+      <span class="app-collapsible__chevron" aria-hidden="true"></span>
+    }
+  </button>
+
+  @if (expanded()) {
+    <div class="app-collapsible__panel" [attr.data-testid]="panelTestId()">
+      <ng-content />
+    </div>
+  }
+</section>

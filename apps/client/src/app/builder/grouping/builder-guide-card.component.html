@@ -1,0 +1,45 @@
+<app-collapsible
+  class="app-builder-guide-card"
+  appearance="card"
+  [expanded]="expanded()"
+  [toggleTestId]="'builder-guide-toggle-' + type()"
+  [panelTestId]="'builder-guide-panel-' + type()"
+  [attr.data-testid]="'builder-guide-' + type()"
+  (toggled)="toggled.emit()"
+>
+  <span appCollapsibleTitle>{{ label() }}</span>
+  <span appCollapsibleSummary>{{ type() }}</span>
+
+  <p class="app-builder-guide-card__summary">{{ guide().summary }}</p>
+  @if (guide().placementMessage) {
+    <p class="grouping-instruction__outcome">{{ guide().placementMessage }}</p>
+  }
+  @if (guide().outcomeSummary) {
+    <p class="grouping-instruction__outcome">{{ guide().outcomeSummary }}</p>
+  }
+
+  <div
+    class="grouping-animation"
+    [class]="'grouping-animation grouping-animation--' + guide().animationKey"
+  >
+    @for (block of animationBlocks(); track block) {
+      <div class="grouping-animation__block">{{ block }}</div>
+    }
+  </div>
+  <p class="grouping-animation__label">{{ animationLabel() }}</p>
+
+  @if (hasSteps()) {
+    <p class="grouping-instruction__step-count">{{ steps().length }} steps</p>
+    <ol class="grouping-instruction__steps">
+      @for (step of steps(); track step.order) {
+        <li [class]="'grouping-instruction__step ' + instructionStepClass(step)">
+          <span class="grouping-instruction__step-order">{{ step.order }}</span>
+          <div class="grouping-instruction__step-body">
+            <p class="grouping-instruction__step-title">{{ step.title }}</p>
+            <p class="grouping-instruction__step-text">{{ step.body }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  }
+</app-collapsible>

@@ -25,6 +25,7 @@ import {
   UI_FRAMEWORK_OPTIONS,
 } from '@dashbuilder/core';
 import { AppNavComponent } from '../shared/app-nav/app-nav.component';
+import { AppCollapsibleComponent } from '../shared/app-collapsible/app-collapsible.component';
 import { ProjectsApiService } from '../builder/projects-api.service';
 import {
   clearBuilderSession,
@@ -42,7 +43,7 @@ type StackChangeTarget = 'current' | 'fresh';
 
 @Component({
   selector: 'app-welcome-page',
-  imports: [AppNavComponent],
+  imports: [AppNavComponent, AppCollapsibleComponent],
   templateUrl: './welcome-page.component.html',
   styleUrl: './welcome-page.component.scss',
 })

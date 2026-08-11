@@ -56,7 +56,7 @@ describe('WelcomePageComponent', () => {
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-server"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-section-toggle-styling"]')).toBeTruthy();
     expect(
-      fixture.nativeElement.querySelectorAll('.welcome__accordion-summary--placeholder').length,
+      fixture.nativeElement.querySelectorAll('.app-collapsible__summary--placeholder').length,
     ).toBeGreaterThan(0);
     expect((fixture.nativeElement.querySelector('[data-testid="welcome-continue"]') as HTMLButtonElement).disabled).toBe(true);
   });
@@ -344,7 +344,7 @@ describe('WelcomePageComponent', () => {
     fixture.detectChanges();
 
     const summaries = [
-      ...fixture.nativeElement.querySelectorAll('.welcome__accordion-summary'),
+      ...fixture.nativeElement.querySelectorAll('.app-collapsible__summary'),
     ].map((node: Element) => node.textContent?.trim());
     expect(summaries.every((text) => text === 'Select')).toBe(true);
     expect(fixture.nativeElement.querySelector('[data-testid="welcome-framework-prompt"]')).toBeTruthy();

@@ -1,0 +1,158 @@
+:host {
+  display: block;
+}
+
+.app-collapsible {
+  border: 1px solid var(--db-border, #e2e8f0);
+  border-radius: 0.75rem;
+  background: #fff;
+  overflow: hidden;
+}
+
+.app-collapsible__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: none;
+  background: #f8fafc;
+  color: var(--db-text, #0f172a);
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+.app-collapsible__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-collapsible__title,
+.app-collapsible__summary {
+  min-width: 0;
+}
+
+.app-collapsible__chevron {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+
+  .app-collapsible--open & {
+    transform: rotate(-135deg);
+  }
+}
+
+.app-collapsible__panel {
+  padding: 0.875rem 1rem 1rem;
+}
+
+/* Welcome stack picker sections */
+.app-collapsible--stack {
+  &.app-collapsible--open .app-collapsible__toggle {
+    border-bottom: 1px solid var(--db-border, #e2e8f0);
+    background: #eff6ff;
+  }
+
+  .app-collapsible__title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--db-text-muted, #64748b);
+  }
+
+  .app-collapsible__summary {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--db-text, #0f172a);
+    text-align: right;
+
+    &--placeholder {
+      color: var(--db-text-muted, #94a3b8);
+      font-weight: 500;
+    }
+  }
+}
+
+/* Admin accordion sections */
+.app-collapsible--admin {
+  border-radius: 0.75rem;
+
+  & + & {
+    margin-top: 0.75rem;
+  }
+
+  .app-collapsible__toggle {
+    padding: 0.875rem 1rem;
+    background: none;
+  }
+
+  .app-collapsible__title {
+    font-weight: 700;
+  }
+
+  .app-collapsible__summary {
+    color: #64748b;
+    font-size: 0.8125rem;
+    text-align: right;
+  }
+
+  .app-collapsible__panel {
+    padding: 0 1rem 1rem;
+  }
+}
+
+/* Nested guide cards (Admin builder guides, etc.) */
+.app-collapsible--card {
+  border-radius: 0.625rem;
+
+  &.app-collapsible--open {
+    border-color: rgb(22 163 74 / 28%);
+  }
+
+  .app-collapsible__toggle {
+    padding: 0.75rem 0.875rem;
+    background: #f8fafc;
+  }
+
+  .app-collapsible__heading {
+    display: grid;
+    gap: 0.125rem;
+    align-items: start;
+    justify-content: initial;
+  }
+
+  .app-collapsible__summary {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.3;
+    color: #64748b;
+    word-break: break-all;
+    text-align: left;
+  }
+
+  .app-collapsible__title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .app-collapsible__panel {
+    padding: 0.75rem 0.875rem 0.875rem;
+    border-top: 1px solid var(--db-border, #e2e8f0);
+  }
+}

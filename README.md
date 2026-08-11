@@ -71,6 +71,29 @@ npm start
 
 Then open **http://localhost:4200** in your browser.
 
+### Builder guides & AI assist
+
+Once the builder is running:
+
+| Feature | Where | What it does |
+|---------|-------|----------------|
+| **Builder guides** | Palette **i** icon, canvas placement prompt, **Admin → Builder guides** | Animated, step-by-step instructions for each palette component (bindings, companions, layout). Browse all 44 types under Admin before you build. |
+| **AI assist drawer** | Builder toolbar → **AI assist** | Chat with a local **Ollama** model (free) or a BYOK cloud provider. Ask in natural language; review structured actions, then **Apply to canvas**. |
+| **Voice input** | AI drawer microphone button | Dictate prompts (Chrome/Edge; enable **Voice** under Admin → AI, voice & environment). |
+| **Inspector suggestions** | Inspector → **Suggestions** (when a node is selected) | Rule-based patches from the defaults engine — e.g. bind PostgreSQL to a table. Apply or dismiss each suggestion. |
+| **Ask AI (palette)** | *Planned* — use the AI drawer for now | Quick “build this for me” from the palette will land in a follow-up; the drawer already accepts “add a date range filter above my table” style prompts. |
+
+**Enable AI**
+
+1. Open **Settings** (nav bar) or `/environment`.
+2. For free local inference: install [Ollama](https://ollama.com), pull a model (e.g. `llama3.2`), confirm **Test connection**.
+3. For cloud: enter your provider API key (OpenAI, Anthropic, Google, Azure OpenAI) and pick a model.
+4. Under **Admin → AI, voice & environment**, ensure **AI assist** (and optionally **Voice**) are enabled.
+
+Guides work offline with no API key. AI features require Ollama or BYOK — keys stay in your browser, never on the DashBuilder server.
+
+See [Builder creation assistance](docs/21-builder-creation-assistance.md) and [AI & BYOK integration](docs/20-ai-and-byok-integration.md).
+
 | Service | URL | Notes |
 |---------|-----|-------|
 | Angular client | http://localhost:4200 | Builder UI |
@@ -189,6 +212,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 - [Local development & component how-to](docs/13-local-development-and-components.md)
 - [CI and hosting](docs/12-ci-and-hosting.md)
 - [Docker containers (local)](docs/14-docker-containers.md)
+- [App component CSS convention](docs/28-app-component-css-convention.md)
+- [Builder guides & AI assist](docs/21-builder-creation-assistance.md)
 
 ## Workflow
 
@@ -202,10 +227,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-38](https://planetkevin.atlassian.net/browse/DAS-38)** — Docs refresh + component/page design planning  
-Branch: `feature/DAS-38-component-page-design-plan`
+**[DAS-77](https://planetkevin.atlassian.net/browse/DAS-77)** — Fix Admin builder guides UI and document guides + AI usage  
+Branch: `feature/DAS-77-builder-guides-readme`
 
-See [docs/15-component-and-page-design.md](docs/15-component-and-page-design.md) for single-component and page-composite design patterns.
+See [docs/28-app-component-css-convention.md](docs/28-app-component-css-convention.md) for shared `app-*` component class naming.
 
 ## License
 

@@ -54,6 +54,10 @@
   line-height: 1.55;
 }
 
+.admin-page__hint--spaced {
+  margin-top: 1rem;
+}
+
 .admin-page__highlights {
   padding-left: 1.125rem;
 }
@@ -77,40 +81,12 @@
   font-weight: 600;
 }
 
-.admin-page__accordion {
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  background: #fff;
-
-  & + & {
-    margin-top: 0.75rem;
-  }
-}
-
-.admin-page__accordion-toggle {
+.admin-page__guide-list {
   display: flex;
-  width: 100%;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border: none;
-  background: none;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.admin-page__accordion-title {
-  font-weight: 700;
-}
-
-.admin-page__accordion-summary {
-  color: #64748b;
-  font-size: 0.8125rem;
-}
-
-.admin-page__accordion-panel {
-  padding: 0 1rem 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 28rem;
+  overflow: auto;
 }
 
 .admin-page__grid {
@@ -236,70 +212,4 @@
     color: #475569;
     font-size: 0.8125rem;
   }
-}
-
-@import '../builder/grouping/grouping-animation.scss';
-@import '../builder/grouping/grouping-instruction.scss';
-
-.admin-page__guide-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-height: 28rem;
-  overflow: auto;
-}
-
-.admin-page__guide-card {
-  border: 1px solid var(--db-border, #e2e8f0);
-  border-radius: 0.625rem;
-  background: #fff;
-  overflow: hidden;
-
-  &--open {
-    border-color: rgb(22 163 74 / 28%);
-  }
-}
-
-.admin-page__guide-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.75rem 0.875rem;
-  border: none;
-  background: #f8fafc;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-
-  strong {
-    display: block;
-    font-size: 0.875rem;
-  }
-
-  code {
-    display: block;
-    margin-top: 0.125rem;
-    font-size: 0.6875rem;
-    color: #64748b;
-  }
-}
-
-.admin-page__guide-chevron {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid #64748b;
-  border-bottom: 2px solid #64748b;
-  transform: rotate(45deg);
-  flex-shrink: 0;
-
-  .admin-page__guide-card--open & {
-    transform: rotate(-135deg);
-  }
-}
-
-.admin-page__guide-body {
-  padding: 0.75rem 0.875rem 0.875rem;
-  border-top: 1px solid var(--db-border, #e2e8f0);
 }

@@ -14,13 +14,13 @@
       <section class="admin-page__hero" aria-labelledby="admin-hero-heading">
         <h2 id="admin-hero-heading" class="admin-page__hero-title">Build DashBuilder from DashBuilder</h2>
         <p class="admin-page__lead">
-          Manage saved dashboards, toggle experimental features, and jump to Settings or Builder
-          configuration. Everything stays in your browser — no DashBuilder-hosted admin server.
+          Manage saved dashboards, configure AI and voice, and browse builder guides. Everything
+          stays in your browser — no DashBuilder-hosted admin server.
         </p>
         <ul class="admin-page__highlights">
           <li>Save composites to your local content library and reopen them in the builder</li>
           <li>See AI, voice, and app-lock status at a glance</li>
-          <li>Toggle AI drawer and voice input without redeploying</li>
+          <li>Configure AI assist and voice input for this browser</li>
           <li>Browse animated builder guides for every palette component</li>
           <li>Browse the component catalog that powers the palette</li>
         </ul>
@@ -32,24 +32,19 @@
 
       <section class="admin-page__panel" aria-label="Admin sections">
         @for (section of sections; track section) {
-          <div class="admin-page__accordion">
-            <button
-              type="button"
-              class="admin-page__accordion-toggle"
-              [class.admin-page__accordion-toggle--open]="isSectionOpen(section)"
-              [attr.aria-expanded]="isSectionOpen(section)"
-              [attr.data-testid]="'admin-section-toggle-' + section"
-              (click)="toggleSection(section)"
-            >
-              <span class="admin-page__accordion-title">{{ sectionLabels[section] }}</span>
-              @if (sectionSummary(section); as summary) {
-                <span class="admin-page__accordion-summary">{{ summary }}</span>
-              }
-            </button>
+          <app-collapsible
+            appearance="admin"
+            [expanded]="isSectionOpen(section)"
+            [toggleTestId]="'admin-section-toggle-' + section"
+            [panelTestId]="'admin-section-panel-' + section"
+            (toggled)="toggleSection(section)"
+          >
+            <span appCollapsibleTitle>{{ sectionLabels[section] }}</span>
+            @if (sectionSummary(section); as summary) {
+              <span appCollapsibleSummary>{{ summary }}</span>
+            }
 
-            @if (isSectionOpen(section)) {
-              <div class="admin-page__accordion-panel" [attr.data-testid]="'admin-section-panel-' + section">
-                @switch (section) {
+            @switch (section) {
                   @case ('content') {
                     <p class="admin-page__hint">
                       Saves a snapshot of your current builder canvas to this browser. Open the builder
@@ -127,14 +122,8 @@
                         <dd>{{ appLock.isEnabled() ? 'Enabled' : 'Off' }}</dd>
                       </div>
                     </dl>
-                    <div class="admin-page__link-row">
-                      <a routerLink="/environment" class="admin-page__button admin-page__button--secondary">Settings &amp; BYOK</a>
-                      <a routerLink="/builder" class="admin-page__button admin-page__button--secondary">Builder &amp; AI drawer</a>
-                    </div>
-                  }
 
-                  @case ('features') {
-                    <p class="admin-page__hint">Local toggles stored in this browser only.</p>
+                    <p class="admin-page__hint admin-page__hint--spaced">Local toggles stored in this browser only.</p>
                     <label class="admin-page__checkbox">
                       <input
                         type="checkbox"
@@ -162,58 +151,13 @@
                     </p>
                     <div class="admin-page__guide-list">
                       @for (entry of builderGuides(); track entry.type) {
-                        <article
-                          class="admin-page__guide-card"
-                          [class.admin-page__guide-card--open]="isGuideOpen(entry.type)"
-                          [attr.data-testid]="'admin-guide-' + entry.type"
-                        >
-                          <button
-                            type="button"
-                            class="admin-page__guide-toggle"
-                            [attr.aria-expanded]="isGuideOpen(entry.type)"
-                            (click)="toggleGuide(entry.type)"
-                          >
-                            <span>
-                              <strong>{{ entry.label }}</strong>
-                              <code>{{ entry.type }}</code>
-                            </span>
-                            <span class="admin-page__guide-chevron" aria-hidden="true"></span>
-                          </button>
-
-                          @if (isGuideOpen(entry.type)) {
-                            <div class="admin-page__guide-body">
-                              <p class="admin-page__hint">{{ entry.guide.summary }}</p>
-                              @if (entry.guide.placementMessage) {
-                                <p class="grouping-instruction__outcome">{{ entry.guide.placementMessage }}</p>
-                              }
-
-                              <div
-                                class="grouping-animation"
-                                [class]="'grouping-animation grouping-animation--' + entry.guide.animationKey"
-                              >
-                                @for (block of guideAnimationBlocks(entry.guide); track block) {
-                                  <div class="grouping-animation__block">{{ block }}</div>
-                                }
-                              </div>
-                              <p class="grouping-animation__label">{{ guideAnimationLabel(entry.guide) }}</p>
-
-                              @if (guideHasSteps(entry.type)) {
-                                <p class="grouping-instruction__step-count">{{ guideSteps(entry.type).length }} steps</p>
-                                <ol class="grouping-instruction__steps">
-                                  @for (step of guideSteps(entry.type); track step.order) {
-                                    <li class="grouping-instruction__step">
-                                      <span class="grouping-instruction__step-order">{{ step.order }}</span>
-                                      <div class="grouping-instruction__step-body">
-                                        <p class="grouping-instruction__step-title">{{ step.title }}</p>
-                                        <p class="grouping-instruction__step-text">{{ step.body }}</p>
-                                      </div>
-                                    </li>
-                                  }
-                                </ol>
-                              }
-                            </div>
-                          }
-                        </article>
+                        <app-builder-guide-card
+                          [label]="entry.label"
+                          [type]="entry.type"
+                          [guide]="entry.guide"
+                          [expanded]="isGuideOpen(entry.type)"
+                          (toggled)="toggleGuide(entry.type)"
+                        />
                       }
                     </div>
                   }
@@ -232,9 +176,7 @@
                     }
                   }
                 }
-              </div>
-            }
-          </div>
+          </app-collapsible>
         }
       </section>
     </div>

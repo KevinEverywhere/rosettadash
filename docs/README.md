@@ -34,6 +34,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 22. [Content Library](./23-content-library.md) — user-controlled save/revisit (DAS-71, spec)
 23. [App Lock](./24-app-lock.md) — optional local password for env secrets (DAS-71)
 24. [Admin Control Panel](./25-admin-control-panel.md) — content library hub (DAS-74)
+25. [App component CSS convention](./28-app-component-css-convention.md) — `app-*` BEM classes and shared collapsible primitive
 
 ## Active work
 
