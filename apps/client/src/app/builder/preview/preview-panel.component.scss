@@ -71,6 +71,7 @@
   border: none;
   border-radius: 0;
   background: transparent;
+  pointer-events: none;
 
   &--selected .preview__node-frame {
     border-color: var(--db-accent);
@@ -87,6 +88,7 @@
   background: var(--db-panel-bg);
   box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
   overflow: hidden;
+  pointer-events: auto;
 }
 
 .preview__node-namebar {
@@ -96,6 +98,7 @@
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--db-text);
+  pointer-events: none;
 }
 
 .preview__node-body {

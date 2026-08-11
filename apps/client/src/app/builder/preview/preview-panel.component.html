@@ -32,7 +32,7 @@
       </div>
     } @else {
       <div class="preview__nodes">
-        @for (node of sortedPreviewNodes(); track node.id) {
+        @for (node of sortedPreviewNodes(); track node.id; let index = $index) {
           <div
             class="preview__node"
             data-testid="preview-node"
@@ -41,9 +41,10 @@
             [style.top.px]="node.layout?.y ?? 24"
             [style.width.px]="node.layout?.width ?? 220"
             [style.minHeight.px]="node.layout?.height ?? 72"
+            [style.zIndex]="sortedPreviewNodes().length - index"
           >
             <div class="preview__node-frame">
-              <header class="preview__node-namebar">{{ node.label }}</header>
+              <header class="preview__node-namebar" data-testid="preview-node-header">{{ node.label }}</header>
               <div class="preview__node-body">
                 <app-preview-node [node]="node" />
               </div>

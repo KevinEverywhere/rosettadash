@@ -65,7 +65,7 @@ export async function selectCanvasNodeHeader(
   options?: { shiftKey?: boolean },
 ): Promise<void> {
   await dismissCompactPanelsIfOpen(page);
-  const header = node.locator('.canvas__node-header');
+  const header = node.getByTestId('canvas-node-header');
   if (options?.shiftKey) {
     await page.keyboard.down('Shift');
     try {

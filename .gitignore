@@ -47,3 +47,9 @@ Thumbs.db
 .angular
 
 __screenshots__/
+
+# Playwright (local e2e artifacts — see dist/.playwright when outputDir is under dist)
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
