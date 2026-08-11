@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, ViewChild, computed, inject, signal } from '@angular/core';
 import { Binding, ComponentNode, PlacementPrompt, getGroupingGuide, getInstructionSteps, groupingAnimationLabel, hasInstructionGuide, readNodeDisplayDataSource, readNodeDisplaySubtitle, resolveGroupingAnimationBlocks, type InstructionStep } from '@rosettadash/core';
 import { BuilderStateService } from '../builder-state.service';
+import { CreationWizardService } from '../creation-wizard/creation-wizard.service';
 import {
   CANVAS_MIN_NODE_HEIGHT,
   clampCanvasNodeHeight,
@@ -48,6 +49,7 @@ interface ResizeState {
 })
 export class CanvasComponent implements AfterViewInit {
   protected readonly state = inject(BuilderStateService);
+  protected readonly creationWizard = inject(CreationWizardService);
 
   @ViewChild('surface') private surfaceRef?: ElementRef<HTMLElement>;
 

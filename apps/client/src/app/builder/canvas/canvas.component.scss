@@ -381,6 +381,115 @@
   font-size: 0.875rem;
 }
 
+.canvas__welcome-banner {
+  margin-top: 1.5rem;
+  max-width: 28rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid rgb(37 99 235 / 35%);
+  border-radius: 0.625rem;
+  background: rgb(37 99 235 / 8%);
+  text-align: left;
+}
+
+.canvas__welcome-lead {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--db-text, #0f172a);
+}
+
+.canvas__welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.canvas__welcome-primary,
+.canvas__welcome-secondary,
+.canvas__welcome-link {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  padding: 0.4375rem 0.75rem;
+  cursor: pointer;
+}
+
+.canvas__welcome-primary {
+  border: 0;
+  background: var(--db-accent, #2563eb);
+  color: #fff;
+}
+
+.canvas__welcome-secondary {
+  border: 1px solid var(--db-border, #e2e8f0);
+  background: var(--db-surface, #fff);
+  color: var(--db-text, #0f172a);
+}
+
+.canvas__welcome-link {
+  border: 0;
+  background: transparent;
+  color: var(--db-accent, #2563eb);
+  text-decoration: underline;
+  padding-inline: 0.25rem;
+}
+
+.canvas__welcome-dismiss {
+  margin-top: 0.75rem;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--db-text-muted, #64748b);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.canvas__explore-tips {
+  position: absolute;
+  z-index: 3;
+  right: 1rem;
+  bottom: 1rem;
+  width: min(20rem, calc(100% - 2rem));
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--db-border, #e2e8f0);
+  border-radius: 0.5rem;
+  background: var(--db-panel-bg, #fff);
+  box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
+}
+
+.canvas__explore-tips-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.canvas__explore-tips-close {
+  border: 0;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--db-text-muted, #64748b);
+}
+
+.canvas__explore-tips-list {
+  margin: 0.625rem 0 0;
+  padding-left: 1.125rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--db-text-muted, #64748b);
+
+  li + li {
+    margin-top: 0.375rem;
+  }
+}
+
 .canvas__placement-prompt {
   position: absolute;
   z-index: 2;

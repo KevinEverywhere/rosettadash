@@ -125,6 +125,7 @@
         type="button"
         class="builder__create"
         data-testid="creation-wizard-button"
+        [class.builder__create--return-hint]="creationWizard.highlightCreateButton()"
         [disabled]="state.loading()"
         (click)="openCreationWizard()"
       >

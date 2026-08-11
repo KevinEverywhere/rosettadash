@@ -19,12 +19,31 @@ export class CreationWizardComponent {
     return groupId ? paletteGroupColor(groupId) : null;
   });
 
+  protected readonly dialogTitle = computed(() => {
+    switch (this.wizard.phase()) {
+      case 'mode-choice':
+        return 'How would you like to start?';
+      case 'self-explore':
+        return 'Explore with built-in tips';
+      case 'intent':
+        return 'What are you building?';
+      case 'extend':
+        return 'Extend your dashboard';
+      case 'steps':
+        return this.wizard.activeGoal()?.label ?? 'Creation guide';
+      case 'ai-choice':
+        return 'Optional AI assist';
+      default:
+        return 'Creation guide';
+    }
+  });
+
   protected close(): void {
-    this.wizard.closeWizard();
+    this.wizard.closeWizardWithHint();
   }
 
   protected dismiss(): void {
-    this.wizard.closeWizard(true);
+    this.wizard.closeWizardWithHint(true);
   }
 
   protected enableAi(): void {

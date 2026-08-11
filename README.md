@@ -276,8 +276,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-87](https://planetkevin.atlassian.net/browse/DAS-87)** — Creation wizard with visual cues, optional AI assist, and extended design surface  
-Branch: `feature/DAS-87-creation-wizard-ai-assistance`
+**[DAS-88](https://planetkevin.atlassian.net/browse/DAS-88)** — Creation choice (guided vs explore), dismiss hint on Create, extend-dashboard help  
+Branch: `feature/DAS-88-creation-choice-and-contextual-help`
 
 ## License
 

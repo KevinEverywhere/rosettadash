@@ -2,33 +2,61 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import {
   CreationGoalId,
   CreationWizardStep,
+  DashboardExtensionTopic,
   defaultComponentRegistry,
   getCreationGoal,
   listCreationGoals,
+  listDashboardExtensionTopics,
   paletteGroupColor,
   type PaletteGroupColor,
 } from '@rosettadash/core';
 import { BuilderStateService } from '../builder-state.service';
 
 const SESSION_DISMISS_KEY = 'rosettadash:creation-wizard:dismissed';
+const CLOSE_ANIMATION_MS = 420;
+const CREATE_HINT_MS = 4500;
 
-export type CreationWizardPhase = 'closed' | 'intent' | 'ai-choice' | 'steps';
+export type CreationWizardPhase =
+  | 'closed'
+  | 'mode-choice'
+  | 'self-explore'
+  | 'intent'
+  | 'ai-choice'
+  | 'steps'
+  | 'extend';
 
 @Injectable({ providedIn: 'root' })
 export class CreationWizardService {
   private readonly state = inject(BuilderStateService);
 
   readonly open = signal(false);
+  readonly closing = signal(false);
+  readonly highlightCreateButton = signal(false);
+  readonly showWelcomeBanner = signal(false);
+  readonly showExploreTips = signal(false);
   readonly phase = signal<CreationWizardPhase>('closed');
   readonly selectedGoalId = signal<CreationGoalId | null>(null);
+  readonly selectedExtensionId = signal<string | null>(null);
   readonly stepIndex = signal(0);
   readonly wantsAi = signal(false);
 
-  readonly goals = listCreationGoals();
+  readonly guidedGoals = computed(() =>
+    listCreationGoals().filter((goal) => goal.id !== 'explore'),
+  );
+
+  readonly extensionTopics = listDashboardExtensionTopics();
 
   readonly activeGoal = computed(() => {
     const goalId = this.selectedGoalId();
     return goalId ? getCreationGoal(goalId) : null;
+  });
+
+  readonly activeExtension = computed((): DashboardExtensionTopic | null => {
+    const id = this.selectedExtensionId();
+    if (!id) {
+      return null;
+    }
+    return this.extensionTopics.find((topic) => topic.id === id) ?? null;
   });
 
   readonly activeStep = computed((): CreationWizardStep | null => {
@@ -65,29 +93,95 @@ export class CreationWizardService {
     return step.completeWhenTypes.some((type) => types.has(type));
   });
 
-  shouldAutoOpen(): boolean {
+  shouldAutoShowWelcomeBanner(): boolean {
     if (sessionStorage.getItem(SESSION_DISMISS_KEY) === '1') {
       return false;
     }
     return this.state.nodes().length === 0 && !this.state.loading();
   }
 
+  /** @deprecated use shouldAutoShowWelcomeBanner — kept for tests */
+  shouldAutoOpen(): boolean {
+    return this.shouldAutoShowWelcomeBanner();
+  }
+
   openWizard(): void {
+    this.showWelcomeBanner.set(false);
     this.open.set(true);
-    this.phase.set('intent');
+    this.closing.set(false);
     this.selectedGoalId.set(null);
+    this.selectedExtensionId.set(null);
     this.stepIndex.set(0);
     this.wantsAi.set(false);
+    this.phase.set(this.state.nodes().length > 0 ? 'extend' : 'mode-choice');
+  }
+
+  openGuidedWizard(): void {
+    this.showWelcomeBanner.set(false);
+    this.open.set(true);
+    this.closing.set(false);
+    this.selectedGoalId.set(null);
+    this.selectedExtensionId.set(null);
+    this.stepIndex.set(0);
+    this.wantsAi.set(false);
+    this.phase.set('intent');
+  }
+
+  startSelfExplorationFromBanner(): void {
+    this.showWelcomeBanner.set(false);
+    this.showExploreTips.set(true);
+  }
+
+  dismissWelcomeBanner(permanent = false): void {
+    if (permanent) {
+      sessionStorage.setItem(SESSION_DISMISS_KEY, '1');
+    }
+    this.showWelcomeBanner.set(false);
+  }
+
+  dismissExploreTips(): void {
+    this.showExploreTips.set(false);
+  }
+
+  startGuidedCreation(): void {
+    this.phase.set('intent');
+  }
+
+  startSelfExploration(): void {
+    this.phase.set('self-explore');
+  }
+
+  finishSelfExploration(): void {
+    this.showExploreTips.set(true);
+    this.closeWizardWithHint();
+  }
+
+  selectExtensionTopic(topicId: string): void {
+    this.selectedExtensionId.set(topicId);
+  }
+
+  closeWizardWithHint(permanentBannerDismiss = false): void {
+    if (!this.open()) {
+      return;
+    }
+    if (permanentBannerDismiss) {
+      sessionStorage.setItem(SESSION_DISMISS_KEY, '1');
+      this.showWelcomeBanner.set(false);
+    }
+    this.closing.set(true);
+    window.setTimeout(() => {
+      this.finalizeClose();
+      this.closing.set(false);
+      this.pulseCreateButton();
+    }, CLOSE_ANIMATION_MS);
   }
 
   closeWizard(dismiss = false): void {
     if (dismiss) {
       sessionStorage.setItem(SESSION_DISMISS_KEY, '1');
+      this.showWelcomeBanner.set(false);
     }
-    this.open.set(false);
-    this.phase.set('closed');
-    this.selectedGoalId.set(null);
-    this.stepIndex.set(0);
+    this.finalizeClose();
   }
 
   selectGoal(goalId: CreationGoalId): void {
@@ -110,12 +204,12 @@ export class CreationWizardService {
 
   chooseAiAssist(enabled: boolean): void {
     this.wantsAi.set(enabled);
-    this.closeWizard();
+    this.closeWizardWithHint();
   }
 
   skipAiChoice(): void {
     this.wantsAi.set(false);
-    this.closeWizard();
+    this.closeWizardWithHint();
   }
 
   advanceStep(): void {
@@ -147,6 +241,16 @@ export class CreationWizardService {
     this.expandPaletteGroup(goal?.steps[nextIndex]?.highlightGroupId);
   }
 
+  goBackFromIntent(): void {
+    this.phase.set('mode-choice');
+    this.selectedGoalId.set(null);
+  }
+
+  goBackFromExtend(): void {
+    this.phase.set('mode-choice');
+    this.selectedExtensionId.set(null);
+  }
+
   addSuggestedComponent(): void {
     const step = this.activeStep();
     if (!step?.suggestedType) {
@@ -164,6 +268,10 @@ export class CreationWizardService {
   }
 
   aiPromptForGoal(): string {
+    const extension = this.activeExtension();
+    if (extension?.aiPromptHint) {
+      return extension.aiPromptHint;
+    }
     return this.activeGoal()?.aiPromptHint ?? 'Help me build on this canvas.';
   }
 
@@ -173,6 +281,19 @@ export class CreationWizardService {
 
   isGroupHighlighted(groupId: string): boolean {
     return this.open() && this.phase() === 'steps' && this.highlightGroupId() === groupId;
+  }
+
+  private pulseCreateButton(): void {
+    this.highlightCreateButton.set(true);
+    window.setTimeout(() => this.highlightCreateButton.set(false), CREATE_HINT_MS);
+  }
+
+  private finalizeClose(): void {
+    this.open.set(false);
+    this.phase.set('closed');
+    this.selectedGoalId.set(null);
+    this.selectedExtensionId.set(null);
+    this.stepIndex.set(0);
   }
 
   private expandPaletteGroup(groupId?: string): void {

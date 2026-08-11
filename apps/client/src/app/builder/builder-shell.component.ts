@@ -79,8 +79,8 @@ export class BuilderShellComponent implements OnInit {
     this.contentLibrary.initialize();
     if (this.auth.authenticated()) {
       await this.projectService.initialize();
-      if (this.creationWizard.shouldAutoOpen()) {
-        this.creationWizard.openWizard();
+      if (this.creationWizard.shouldAutoShowWelcomeBanner()) {
+        this.creationWizard.showWelcomeBanner.set(true);
       }
     }
   }

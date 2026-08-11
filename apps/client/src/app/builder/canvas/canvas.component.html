@@ -38,6 +38,48 @@
         <p class="canvas__hint">
           Use the + button in the palette to add components here.
         </p>
+        @if (creationWizard.showWelcomeBanner()) {
+          <aside class="canvas__welcome-banner" data-testid="creation-welcome-banner">
+            <p class="canvas__welcome-lead">
+              New here? Choose guided steps or explore with the tips already in the palette and
+              inspector — no modal required.
+            </p>
+            <div class="canvas__welcome-actions">
+              <button
+                type="button"
+                class="canvas__welcome-primary"
+                data-testid="creation-welcome-guided"
+                (click)="creationWizard.openGuidedWizard()"
+              >
+                Guided creation
+              </button>
+              <button
+                type="button"
+                class="canvas__welcome-secondary"
+                data-testid="creation-welcome-explore"
+                (click)="creationWizard.startSelfExplorationFromBanner()"
+              >
+                Explore on my own
+              </button>
+              <button
+                type="button"
+                class="canvas__welcome-link"
+                data-testid="creation-welcome-open-guide"
+                (click)="creationWizard.openWizard()"
+              >
+                See both options
+              </button>
+            </div>
+            <button
+              type="button"
+              class="canvas__welcome-dismiss"
+              data-testid="creation-welcome-dismiss"
+              (click)="creationWizard.dismissWelcomeBanner(true)"
+            >
+              Don’t show again
+            </button>
+          </aside>
+        }
       </div>
     } @else {
       @if (dashboardBanner(); as dashboard) {
@@ -245,6 +287,29 @@
           </ul>
         </aside>
       }
+    }
+
+    @if (creationWizard.showExploreTips()) {
+      <aside class="canvas__explore-tips" data-testid="creation-explore-tips">
+        <header class="canvas__explore-tips-header">
+          <strong>Self-exploration tips</strong>
+          <button
+            type="button"
+            class="canvas__explore-tips-close"
+            aria-label="Dismiss tips"
+            data-testid="creation-explore-tips-close"
+            (click)="creationWizard.dismissExploreTips()"
+          >
+            ×
+          </button>
+        </header>
+        <ul class="canvas__explore-tips-list">
+          <li>Palette <strong>i</strong> — how a component works; <strong>⛓</strong> — typical companions.</li>
+          <li>Select a node to edit properties in the <strong>Inspector</strong> on the right.</li>
+          <li>Follow binding hints on the canvas when wiring filters, tables, and charts.</li>
+          <li>Reopen the creation guide anytime from toolbar <strong>Create</strong>.</li>
+        </ul>
+      </aside>
     }
   </div>
 </section>
