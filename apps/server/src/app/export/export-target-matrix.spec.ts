@@ -76,8 +76,8 @@ describe('Export target matrix', () => {
     const postgresqlCombinations = UI_TARGETS.length * SERVER_TARGETS.length;
     const databaseLayerCombinations = UI_TARGETS.length * DATABASE_LAYER_TARGETS.length;
 
-    expect(postgresqlCombinations).toBe(16);
-    expect(databaseLayerCombinations).toBe(12);
-    expect(postgresqlCombinations + databaseLayerCombinations).toBe(28);
+    expect(postgresqlCombinations).toBe(20);
+    expect(databaseLayerCombinations).toBe(15);
+    expect(postgresqlCombinations + databaseLayerCombinations).toBe(35);
   });
 });

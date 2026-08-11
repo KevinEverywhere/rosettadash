@@ -6,10 +6,10 @@ import {
 
 describe('exporter manifest', () => {
   it('registers all built-in UI, server, and database exporters', () => {
-    expect(listExporterPluginsByKind('ui')).toHaveLength(4);
+    expect(listExporterPluginsByKind('ui')).toHaveLength(5);
     expect(listExporterPluginsByKind('server')).toHaveLength(4);
     expect(listExporterPluginsByKind('database')).toHaveLength(3);
-    expect(builtInExporterManifest).toHaveLength(11);
+    expect(builtInExporterManifest).toHaveLength(12);
   });
 
   it('uses unique plugin ids and package names', () => {

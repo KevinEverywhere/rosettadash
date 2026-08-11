@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, effect, inject, input, output, signal, untracked } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal, untracked } from '@angular/core';
 import type { Composite, ExportScope, ValidationIssue } from '@dashbuilder/core';
 import {
   formatStylingProfileSummary,
@@ -18,7 +18,7 @@ import {
 } from './export-api.service';
 import { ExportZipService } from './export-zip.service';
 
-type UiTarget = 'react' | 'angular' | 'vue' | 'svelte';
+type UiTarget = 'react' | 'angular' | 'vue' | 'svelte' | 'web-components';
 type ServerTarget = 'nest' | 'express' | 'next' | 'nuxt';
 type DatabaseTarget = 'postgresql' | 'mongodb' | 'supabase' | 'mysql';
 
@@ -59,11 +59,27 @@ export class ExportWizardComponent {
   readonly open = input(false);
   readonly closed = output<void>();
 
-  protected readonly uiTargetOptions: UiTargetOption[] = [
+  protected readonly uiTargetOptions = computed(() => {
+    const stackUi = this.state.project()?.stackProfile?.ui;
+    if (stackUi === 'web-components') {
+      return this.allUiTargetOptions.filter((option) => option.id === 'web-components');
+    }
+    if (stackUi) {
+      return this.allUiTargetOptions.filter((option) => option.id !== 'web-components');
+    }
+    return this.allUiTargetOptions;
+  });
+
+  private readonly allUiTargetOptions: UiTargetOption[] = [
     { id: 'react', label: 'React', description: 'TSX + hooks' },
     { id: 'angular', label: 'Angular', description: 'Standalone components' },
     { id: 'vue', label: 'Vue', description: 'Composition API SFCs' },
     { id: 'svelte', label: 'Svelte', description: 'Svelte 5 runes + SFCs' },
+    {
+      id: 'web-components',
+      label: 'Web Components',
+      description: 'W3C Custom Elements + Shadow DOM',
+    },
   ];
 
   protected readonly serverTargetOptions: ServerTargetOption[] = [
@@ -247,8 +263,12 @@ export class ExportWizardComponent {
     const project = this.state.project();
     const composite = this.state.composite();
     const targets = resolveEffectiveExportTargets(composite?.exportTargets, project?.stackProfile);
+    const allowedUi = this.uiTargetOptions();
+    const ui = allowedUi.some((option) => option.id === targets.ui)
+      ? targets.ui
+      : (allowedUi[0]?.id ?? 'react');
 
-    this.uiTarget.set(targets.ui);
+    this.uiTarget.set(ui);
     this.serverTarget.set(targets.server);
     this.databaseTarget.set(targets.database);
   }

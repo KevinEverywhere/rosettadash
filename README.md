@@ -227,10 +227,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-78](https://planetkevin.atlassian.net/browse/DAS-78)** — Stack server and database compatibility validation  
-Branch: `feature/DAS-78-stack-server-database-validation`
-
-See [docs/29-stack-server-database-validation.md](docs/29-stack-server-database-validation.md) for compatibility rules and Welcome filtering behavior.
+**[DAS-79](https://planetkevin.atlassian.net/browse/DAS-79)** — Dedicated Web Components exporter package (W3C Custom Elements)  
+Branch: `feature/DAS-79-web-components-exporter`
 
 ## License
 

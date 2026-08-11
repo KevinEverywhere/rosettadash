@@ -10,6 +10,7 @@ import { NestExportError } from '@dashbuilder/exporters-nest';
 import { NextExportError } from '@dashbuilder/exporters-next';
 import { NuxtExportError } from '@dashbuilder/exporters-nuxt';
 import { ReactExportError } from '@dashbuilder/exporters-react';
+import { WebComponentsExportError } from '@dashbuilder/exporters-web-components';
 import { SvelteExportError } from '@dashbuilder/exporters-svelte';
 import { VueExportError } from '@dashbuilder/exporters-vue';
 import { ExportService } from './export.service';
@@ -36,7 +37,8 @@ export class ExportController {
       error instanceof SupabaseExportError ||
       error instanceof AngularExportError ||
       error instanceof VueExportError ||
-      error instanceof SvelteExportError
+      error instanceof SvelteExportError ||
+      error instanceof WebComponentsExportError
     ) {
       throw new BadRequestException({
         message: error.message,

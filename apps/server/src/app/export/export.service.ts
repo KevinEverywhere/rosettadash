@@ -16,6 +16,7 @@ import { generateNestInfraFiles } from '@dashbuilder/exporters-nest';
 import { generateNextInfraFiles } from '@dashbuilder/exporters-next';
 import { generateNuxtInfraFiles } from '@dashbuilder/exporters-nuxt';
 import { generateReactUiFiles } from '@dashbuilder/exporters-react';
+import { generateWebComponentsUiFiles } from '@dashbuilder/exporters-web-components';
 import { generateSvelteUiFiles } from '@dashbuilder/exporters-svelte';
 import { generateVueUiFiles } from '@dashbuilder/exporters-vue';
 
@@ -49,6 +50,12 @@ export class ExportService {
   buildSvelteExport(composite: Composite) {
     const ir = this.buildIr(composite);
     const files = generateSvelteUiFiles(ir);
+    return { ir, files };
+  }
+
+  buildWebComponentsExport(composite: Composite) {
+    const ir = this.buildIr(composite);
+    const files = generateWebComponentsUiFiles(ir);
     return { ir, files };
   }
 
@@ -141,6 +148,8 @@ export class ExportService {
         return generateVueUiFiles(ir);
       case 'svelte':
         return generateSvelteUiFiles(ir);
+      case 'web-components':
+        return generateWebComponentsUiFiles(ir);
       default:
         return generateReactUiFiles(ir);
     }

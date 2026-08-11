@@ -25,6 +25,7 @@
       "@dashbuilder/exporters-next": ["./packages/exporters-next/src/index.ts"],
       "@dashbuilder/exporters-nuxt": ["./packages/exporters-nuxt/src/index.ts"],
       "@dashbuilder/exporters-svelte": ["./packages/exporters-svelte/src/index.ts"],
+      "@dashbuilder/exporters-web-components": ["./packages/exporters-web-components/src/index.ts"],
       "@dashbuilder/exporters-mongodb": ["./packages/exporters-mongodb/src/index.ts"],
       "@dashbuilder/exporters-mysql": ["./packages/exporters-mysql/src/index.ts"],
       "@dashbuilder/exporters-supabase": ["./packages/exporters-supabase/src/index.ts"]

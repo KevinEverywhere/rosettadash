@@ -35,6 +35,14 @@ export const builtInExporterManifest: readonly ExporterPluginDescriptor[] = [
     entryExport: 'generateSvelteUiFiles',
   },
   {
+    id: 'ui.web-components',
+    label: 'Web Components UI',
+    targetKind: 'ui',
+    supportedTargets: ['web-components'],
+    packageName: '@dashbuilder/exporters-web-components',
+    entryExport: 'generateWebComponentsUiFiles',
+  },
+  {
     id: 'server.nest',
     label: 'NestJS server',
     targetKind: 'server',

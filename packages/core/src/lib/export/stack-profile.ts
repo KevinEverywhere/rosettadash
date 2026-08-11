@@ -668,7 +668,14 @@ export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile 
 
 export function stackProfileToExportTargets(profile: StackProfile): ExportTargetConfig | undefined {
   if (isWebComponentsUi(profile.ui)) {
-    return undefined;
+    const targets: ExportTargetConfig = { ui: 'web-components' };
+    if (isExportServerChoice(profile.server)) {
+      targets.server = profile.server;
+    }
+    if (isExportDatabaseChoice(profile.database)) {
+      targets.database = profile.database;
+    }
+    return targets;
   }
 
   const targets: ExportTargetConfig = { ui: profile.ui };
@@ -735,6 +742,18 @@ export function resolveEffectiveExportTargets(
       server: fromProfile.server ?? DEFAULT_EXPORT_TARGETS.server,
       database: fromProfile.database ?? DEFAULT_EXPORT_TARGETS.database,
     };
+  }
+
+  const normalized = normalizeStackProfile(projectProfile);
+  if (normalized && isWebComponentsUi(normalized.ui)) {
+    const fromWebComponents = stackProfileToExportTargets(normalized);
+    if (fromWebComponents) {
+      return {
+        ui: 'web-components',
+        server: fromWebComponents.server ?? DEFAULT_EXPORT_TARGETS.server,
+        database: fromWebComponents.database ?? DEFAULT_EXPORT_TARGETS.database,
+      };
+    }
   }
 
   return { ...DEFAULT_EXPORT_TARGETS };

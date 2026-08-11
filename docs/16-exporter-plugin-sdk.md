@@ -76,6 +76,7 @@ export const solidUiExporter: ExporterPlugin = {
 | `ui.angular` | ui | angular | `@dashbuilder/exporters-angular` |
 | `ui.vue` | ui | vue | `@dashbuilder/exporters-vue` |
 | `ui.svelte` | ui | svelte | `@dashbuilder/exporters-svelte` |
+| `ui.web-components` | ui | web-components | `@dashbuilder/exporters-web-components` |
 | `server.nest` | server | nest | `@dashbuilder/exporters-nest` |
 | `server.express` | server | express | `@dashbuilder/exporters-express` |
 | `server.next` | server | next | `@dashbuilder/exporters-next` |

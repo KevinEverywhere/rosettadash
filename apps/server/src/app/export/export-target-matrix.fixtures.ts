@@ -7,7 +7,7 @@ export type DatabaseTarget = NonNullable<ExportTargetConfig['database']>;
 
 export type DatabaseLayerTarget = 'mongodb' | 'supabase' | 'mysql';
 
-export const UI_TARGETS: UiTarget[] = ['react', 'angular', 'vue', 'svelte'];
+export const UI_TARGETS: UiTarget[] = ['react', 'angular', 'vue', 'svelte', 'web-components'];
 export const SERVER_TARGETS: ServerTarget[] = ['nest', 'express', 'next', 'nuxt'];
 export const DATABASE_LAYER_TARGETS: DatabaseLayerTarget[] = ['mongodb', 'supabase', 'mysql'];
 
@@ -16,13 +16,20 @@ export const UI_ENTRY_FILES: Record<UiTarget, string> = {
   angular: 'src/dashboard.component.ts',
   vue: 'src/Dashboard.vue',
   svelte: 'src/Dashboard.svelte',
+  'web-components': 'src/dashboard.ts',
 };
 
 export const UI_EXCLUDED_FILES: Record<UiTarget, string[]> = {
-  react: ['src/dashboard.component.ts', 'src/Dashboard.vue', 'src/Dashboard.svelte'],
-  angular: ['src/Dashboard.tsx', 'src/Dashboard.vue', 'src/Dashboard.svelte'],
-  vue: ['src/Dashboard.tsx', 'src/dashboard.component.ts', 'src/Dashboard.svelte'],
-  svelte: ['src/Dashboard.tsx', 'src/dashboard.component.ts', 'src/Dashboard.vue'],
+  react: ['src/dashboard.component.ts', 'src/Dashboard.vue', 'src/Dashboard.svelte', 'src/dashboard.ts'],
+  angular: ['src/Dashboard.tsx', 'src/Dashboard.vue', 'src/Dashboard.svelte', 'src/dashboard.ts'],
+  vue: ['src/Dashboard.tsx', 'src/dashboard.component.ts', 'src/Dashboard.svelte', 'src/dashboard.ts'],
+  svelte: ['src/Dashboard.tsx', 'src/dashboard.component.ts', 'src/Dashboard.vue', 'src/dashboard.ts'],
+  'web-components': [
+    'src/Dashboard.tsx',
+    'src/dashboard.component.ts',
+    'src/Dashboard.vue',
+    'src/Dashboard.svelte',
+  ],
 };
 
 export const SERVER_ENTRY_FILES: Record<ServerTarget, string> = {

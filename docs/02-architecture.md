@@ -67,6 +67,7 @@ dashbuilder/
 │   ├── exporters-angular/      # Angular UI code generator
 │   ├── exporters-vue/          # Vue UI code generator
 │   ├── exporters-svelte/       # Svelte UI code generator
+│   ├── exporters-web-components/  # W3C Custom Elements UI code generator
 │   ├── exporters-nest/         # NestJS + PostgreSQL server generator
 │   ├── exporters-express/      # Express server generator
 │   ├── exporters-next/         # Next.js server generator

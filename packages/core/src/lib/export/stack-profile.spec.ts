@@ -53,7 +53,9 @@ describe('stack profile', () => {
       database: 'none',
       styling: createEmptyStylingProfile(),
     });
-    expect(stackProfileToExportTargets({ ui: 'web-components', styling: 'tailwind' })).toBeUndefined();
+    expect(stackProfileToExportTargets({ ui: 'web-components', styling: 'tailwind' })).toEqual({
+      ui: 'web-components',
+    });
   });
 
   it('migrates legacy scratch-pad any to web-components', () => {
@@ -283,7 +285,11 @@ describe('stack profile', () => {
     ).toEqual({ ui: 'vue', server: 'nuxt', database: 'postgresql' });
 
     expect(resolveEffectiveExportTargets(undefined, { ui: 'web-components', styling: 'tailwind' })).toEqual(
-      DEFAULT_EXPORT_TARGETS,
+      {
+        ui: 'web-components',
+        server: DEFAULT_EXPORT_TARGETS.server,
+        database: DEFAULT_EXPORT_TARGETS.database,
+      },
     );
   });
 

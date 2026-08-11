@@ -74,7 +74,7 @@
             role="radiogroup"
             aria-label="UI framework"
           >
-            @for (option of uiTargetOptions; track option.id) {
+            @for (option of uiTargetOptions(); track option.id) {
               <button
                 type="button"
                 class="export-wizard__ui-target"
