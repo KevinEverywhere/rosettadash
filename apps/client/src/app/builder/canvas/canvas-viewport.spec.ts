@@ -1,5 +1,6 @@
 import type { ComponentNode } from '@rosettadash/core';
 import {
+  CANVAS_MIN_CONTENT_HEIGHT_PX,
   computeCanvasContentBounds,
   filterVisibleCanvasNodes,
   isNodeInViewport,
@@ -72,6 +73,13 @@ describe('canvas viewport helpers', () => {
     expect(visible.some((node) => node.id === 'far')).toBe(true);
   });
 
+  it('uses palette-aligned minimum height for an empty canvas', () => {
+    expect(computeCanvasContentBounds([])).toEqual({
+      width: 480,
+      height: CANVAS_MIN_CONTENT_HEIGHT_PX,
+    });
+  });
+
   it('computes content bounds from node positions and heights', () => {
     const nodes = [
       createNode({ id: 'a', layout: { x: 24, y: 24, width: 200, height: 100 } }),
@@ -79,8 +87,8 @@ describe('canvas viewport helpers', () => {
     ];
 
     expect(computeCanvasContentBounds(nodes)).toEqual({
-      width: 248,
-      height: 398,
+      width: 480,
+      height: CANVAS_MIN_CONTENT_HEIGHT_PX,
     });
   });
 });

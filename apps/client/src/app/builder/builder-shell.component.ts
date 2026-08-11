@@ -15,6 +15,9 @@ import { BuilderWorkspaceLayoutService } from './builder-workspace-layout.servic
 import { CanvasComponent } from './canvas/canvas.component';
 import { ExportWizardComponent } from './export/export-wizard.component';
 import { AiDrawerComponent } from './ai/ai-drawer.component';
+import { AiAssistService } from './ai/ai-assist.service';
+import { CreationWizardComponent } from './creation-wizard/creation-wizard.component';
+import { CreationWizardService } from './creation-wizard/creation-wizard.service';
 import { AdminFeatureFlagsService } from '../admin/admin-feature-flags.service';
 import { ContentLibraryService } from '../admin/content-library.service';
 import { InspectorComponent } from './inspector/inspector.component';
@@ -30,6 +33,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     InspectorComponent,
     ExportWizardComponent,
     AiDrawerComponent,
+    CreationWizardComponent,
     BuilderAuthGateComponent,
     BuilderViewportGateComponent,
     AppSelectComponent,
@@ -48,6 +52,8 @@ export class BuilderShellComponent implements OnInit {
   protected readonly layout = inject(BuilderWorkspaceLayoutService);
   protected readonly featureFlags = inject(AdminFeatureFlagsService);
   protected readonly contentLibrary = inject(ContentLibraryService);
+  protected readonly creationWizard = inject(CreationWizardService);
+  private readonly aiAssist = inject(AiAssistService);
 
   protected readonly exportWizardOpen = signal(false);
   protected readonly aiDrawerOpen = signal(false);
@@ -73,6 +79,9 @@ export class BuilderShellComponent implements OnInit {
     this.contentLibrary.initialize();
     if (this.auth.authenticated()) {
       await this.projectService.initialize();
+      if (this.creationWizard.shouldAutoOpen()) {
+        this.creationWizard.openWizard();
+      }
     }
   }
 
@@ -112,6 +121,16 @@ export class BuilderShellComponent implements OnInit {
     this.state.setWorkspaceMode(mode);
   }
 
+  protected openCreationWizard(): void {
+    this.creationWizard.openWizard();
+  }
+
+  protected async onCreationWizardAi(prompt: string): Promise<void> {
+    this.openAiDrawer();
+    await this.aiAssist.initialize();
+    await this.aiAssist.sendPrompt(prompt);
+  }
+
   protected openExportWizard(): void {
     this.exportWizardOpen.set(true);
   }
@@ -143,7 +162,8 @@ export class BuilderShellComponent implements OnInit {
       (this.auth.authEnabled() && !this.auth.authenticated()) ||
       this.state.loading() ||
       this.exportWizardOpen() ||
-      this.aiDrawerOpen()
+      this.aiDrawerOpen() ||
+      this.creationWizard.open()
     ) {
       return;
     }

@@ -276,8 +276,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-86](https://planetkevin.atlassian.net/browse/DAS-86)** — Dashboard example guide, home README panel, collapsible layout, and CE CSS files  
-Branch: `feature/DAS-86-dashboard-example-readme-collapsible-css`
+**[DAS-87](https://planetkevin.atlassian.net/browse/DAS-87)** — Creation wizard with visual cues, optional AI assist, and extended design surface  
+Branch: `feature/DAS-87-creation-wizard-ai-assistance`
 
 ## License
 

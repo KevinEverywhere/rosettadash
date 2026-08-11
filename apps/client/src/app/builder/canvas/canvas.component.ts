@@ -252,6 +252,25 @@ export class CanvasComponent implements AfterViewInit {
       });
     }
     this.state.updateNodesLayoutBatch(updates, { skipHistory: true });
+    this.autoScrollSurface(event.clientY);
+    this.syncViewport();
+  }
+
+  private autoScrollSurface(clientY: number): void {
+    const surface = this.surfaceRef?.nativeElement;
+    if (!surface) {
+      return;
+    }
+
+    const rect = surface.getBoundingClientRect();
+    const edge = 56;
+    const speed = 16;
+
+    if (clientY > rect.bottom - edge) {
+      surface.scrollTop += speed;
+    } else if (clientY < rect.top + edge) {
+      surface.scrollTop = Math.max(0, surface.scrollTop - speed);
+    }
   }
 
   protected onHeaderPointerUp(event: PointerEvent): void {

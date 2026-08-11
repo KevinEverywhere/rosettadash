@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   ComponentDefinition,
   defaultComponentRegistry,
@@ -6,12 +6,14 @@ import {
   getInstructionSteps,
   groupingAnimationLabel,
   hasInstructionGuide,
+  paletteGroupColor,
   resolveGroupingAnimationBlocks,
   resolvePaletteGroups,
   type InstructionStep,
   type ResolvedPaletteGroup,
 } from '@rosettadash/core';
 import { BuilderStateService } from '../builder-state.service';
+import { CreationWizardService } from '../creation-wizard/creation-wizard.service';
 
 type GuidePanelMode = 'info' | 'link';
 
@@ -20,8 +22,29 @@ type GuidePanelMode = 'info' | 'link';
   templateUrl: './palette.component.html',
   styleUrl: './palette.component.scss',
 })
-export class PaletteComponent {
+export class PaletteComponent implements OnInit, OnDestroy {
   private readonly state = inject(BuilderStateService);
+  private readonly creationWizard = inject(CreationWizardService);
+
+  private readonly onExpandGroup = (event: Event): void => {
+    const groupId = (event as CustomEvent<{ groupId: string }>).detail?.groupId;
+    if (!groupId) {
+      return;
+    }
+    this.expandedGroupIds.update((current) => {
+      const next = new Set(current);
+      next.add(groupId);
+      return next;
+    });
+  };
+
+  ngOnInit(): void {
+    window.addEventListener('rosettadash:palette-expand-group', this.onExpandGroup);
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('rosettadash:palette-expand-group', this.onExpandGroup);
+  }
 
   protected readonly openGuideType = signal<string | null>(null);
   protected readonly openGuideMode = signal<GuidePanelMode | null>(null);
@@ -143,5 +166,22 @@ export class PaletteComponent {
   protected animationBlocks(type: string): string[] {
     const guide = getGroupingGuide(type);
     return guide ? resolveGroupingAnimationBlocks(guide) : ['Component', 'Companion'];
+  }
+
+  protected isWizardGroupHighlight(groupId: string): boolean {
+    return this.creationWizard.isGroupHighlighted(groupId);
+  }
+
+  protected isWizardTypeHighlight(type: string): boolean {
+    return this.creationWizard.isTypeHighlighted(type);
+  }
+
+  protected groupAccentStyle(groupId: string): Record<string, string> {
+    const colors = paletteGroupColor(groupId);
+    return {
+      '--palette-group-accent': colors.accent,
+      '--palette-group-soft': colors.soft,
+      '--palette-group-border': colors.border,
+    };
   }
 }

@@ -1,9 +1,17 @@
 import type { ComponentNode, NodeLayout } from '@rosettadash/core';
+import { PALETTE_GROUP_DEFINITIONS } from '@rosettadash/core';
 import { readNodeDisplayDataSource, readNodeDisplaySubtitle } from '@rosettadash/core';
 import { CANVAS_MIN_NODE_HEIGHT } from './canvas-layout';
 
 export const CANVAS_VIEWPORT_CULL_THRESHOLD = 50;
 export const CANVAS_VIEWPORT_BUFFER_PX = 120;
+
+/** Vertical space per palette accordion row — canvas extends at least this far. */
+export const CANVAS_PALETTE_ROW_HEIGHT_PX = 168;
+
+/** Minimum scrollable canvas height aligned with full palette (through WASM Compute). */
+export const CANVAS_MIN_CONTENT_HEIGHT_PX =
+  PALETTE_GROUP_DEFINITIONS.length * CANVAS_PALETTE_ROW_HEIGHT_PX;
 
 const PORT_ROW_HEIGHT = 24;
 const NODE_NAME_BAR_HEIGHT = 36;
@@ -50,7 +58,7 @@ export function computeCanvasContentBounds(
   heightEstimator: (node: ComponentNode) => number = estimateCanvasNodeHeight,
 ): CanvasContentBounds {
   if (nodes.length === 0) {
-    return { width: 320, height: 320 };
+    return { width: 480, height: CANVAS_MIN_CONTENT_HEIGHT_PX };
   }
 
   let maxRight = 0;
@@ -66,8 +74,8 @@ export function computeCanvasContentBounds(
   }
 
   return {
-    width: maxRight + 24,
-    height: maxBottom + 48,
+    width: Math.max(maxRight + 24, 480),
+    height: Math.max(maxBottom + 48, CANVAS_MIN_CONTENT_HEIGHT_PX),
   };
 }
 

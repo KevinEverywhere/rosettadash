@@ -121,6 +121,15 @@
           Apply template
         </button>
       </div>
+      <button
+        type="button"
+        class="builder__create"
+        data-testid="creation-wizard-button"
+        [disabled]="state.loading()"
+        (click)="openCreationWizard()"
+      >
+        Create
+      </button>
       @if (featureFlags.isAiDrawerEnabled()) {
         <button
           type="button"
@@ -202,3 +211,4 @@
 
 <app-export-wizard [open]="exportWizardOpen()" (closed)="closeExportWizard()" />
 <app-ai-drawer [open]="aiDrawerOpen()" (closed)="closeAiDrawer()" />
+<app-creation-wizard (aiAssistRequested)="onCreationWizardAi($event)" />

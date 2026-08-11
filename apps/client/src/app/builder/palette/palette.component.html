@@ -8,6 +8,8 @@
     <section
       class="palette__group"
       [class.palette__group--expanded]="isGroupExpanded(group.id)"
+      [class.palette__group--wizard]="isWizardGroupHighlight(group.id)"
+      [style]="groupAccentStyle(group.id)"
       [attr.data-testid]="'palette-group-' + group.id"
     >
       <button
@@ -36,6 +38,7 @@
                 type="button"
                 class="palette__item"
                 [class.palette__item--selected]="selectedType() === item.type"
+                [class.palette__item--wizard]="isWizardTypeHighlight(item.type)"
                 (click)="select(item)"
               >
                 <span class="palette__item-label">{{ item.label }}</span>
