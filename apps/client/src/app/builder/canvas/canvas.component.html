@@ -65,7 +65,11 @@
         }
       </svg>
 
-      <div class="canvas__nodes">
+      <div
+        class="canvas__nodes"
+        [style.minWidth.px]="canvasContentBounds().width"
+        [style.minHeight.px]="canvasContentBounds().height"
+      >
         @for (node of visibleCanvasNodes(); track node.id) {
           <article
             class="canvas__node"

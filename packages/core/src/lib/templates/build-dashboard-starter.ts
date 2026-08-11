@@ -1,6 +1,7 @@
 import type { ComponentRegistry } from '../registry/component-registry';
 import { defaultComponentRegistry } from '../registry/component-registry';
 import type { Binding, ComponentNode, Composite } from '../model/types';
+import { readNodeDisplayDataSource, readNodeDisplaySubtitle } from '../registry/node-display-hints';
 import type { BuildCompositeTemplateOptions } from './template-types';
 
 type FilterType = 'visual.input.date-range' | 'domain.time-preset' | 'visual.input.select';
@@ -55,29 +56,36 @@ export interface DashboardStarterSpec {
 
 const CONTENT_WIDTH = 572;
 const MARGIN = 24;
-const FILTER_HEIGHT = 88;
-const KPI_HEIGHT = 96;
 const KPI_WIDTH = 176;
 const KPI_GAP = 12;
-const TABLE_HEIGHT = 176;
-const CHART_HEIGHT = 160;
-const DETAIL_HEIGHT = 144;
+const ROW_GAP = 24;
+const MIN_NODE_HEIGHT = 72;
+const PORT_ROW_HEIGHT = 24;
+const NODE_NAME_BAR_HEIGHT = 36;
+const NODE_TYPE_ROW_HEIGHT = 22;
 
-function kpiRowY(): number {
-  return MARGIN + FILTER_HEIGHT + 16;
+function canvasNodeHeaderHeight(properties: Record<string, unknown>): number {
+  let height = NODE_NAME_BAR_HEIGHT + NODE_TYPE_ROW_HEIGHT;
+  if (readNodeDisplaySubtitle(properties)) {
+    height += 16;
+  }
+  if (readNodeDisplayDataSource(properties)) {
+    height += 14;
+  }
+  return height;
 }
 
-function tableY(kpiCount: number): number {
-  return kpiRowY() + KPI_HEIGHT + 16;
-}
-
-function chartY(kpiCount: number, hasDetail: boolean): number {
-  const base = tableY(kpiCount) + TABLE_HEIGHT + 16;
-  return hasDetail ? base : base;
-}
-
-function detailY(kpiCount: number): number {
-  return chartY(kpiCount, true) + CHART_HEIGHT + 16;
+function layoutHeightForType(
+  registry: ComponentRegistry,
+  type: string,
+  properties: Record<string, unknown>,
+): number {
+  const definition = registry.get(type);
+  const portCount = Math.max(definition?.inputs.length ?? 0, definition?.outputs.length ?? 0, 1);
+  return Math.max(
+    MIN_NODE_HEIGHT,
+    canvasNodeHeaderHeight(properties) + portCount * PORT_ROW_HEIGHT + 12,
+  );
 }
 
 function bindsTimeFilter(filterType: FilterType): boolean {
@@ -107,14 +115,25 @@ export function buildDashboardStarterComposite(
 
   const dataSource = spec.dataSourceLabel ?? `PostgreSQL · ${spec.postgresTable}`;
 
+  const filterProperties = mergeNodeProperties(
+    spec.filter.properties,
+    spec.filter.subtitle,
+    dataSource,
+  );
+  const filterHeight = layoutHeightForType(registry, spec.filter.type, filterProperties);
+  let currentY = MARGIN;
+
   const filter = registry.createNode(spec.filter.type, {
     id: spec.filter.id,
     label: spec.filter.label,
-    layout: { x: MARGIN, y: MARGIN, width: CONTENT_WIDTH, height: FILTER_HEIGHT },
-    properties: mergeNodeProperties(spec.filter.properties, spec.filter.subtitle, dataSource),
+    layout: { x: MARGIN, y: currentY, width: CONTENT_WIDTH, height: filterHeight },
+    properties: filterProperties,
   });
   nodes.push(filter);
+  currentY += filterHeight + ROW_GAP;
 
+  const kpiHeight = layoutHeightForType(registry, 'visual.kpi', mergeNodeProperties({}, undefined, dataSource));
+  const kpiY = currentY;
   spec.kpis.forEach((kpiSpec, index) => {
     const kpiWidth =
       spec.kpis.length > 2
@@ -126,9 +145,9 @@ export function buildDashboardStarterComposite(
         label: kpiSpec.label,
         layout: {
           x: MARGIN + index * (kpiWidth + KPI_GAP),
-          y: kpiRowY(),
+          y: kpiY,
           width: kpiWidth,
-          height: KPI_HEIGHT,
+          height: kpiHeight,
         },
         properties: mergeNodeProperties(
           {
@@ -142,64 +161,73 @@ export function buildDashboardStarterComposite(
       }),
     );
   });
+  currentY += kpiHeight + ROW_GAP;
 
   const hasDetail = !!spec.detail;
+  const tableProperties = mergeNodeProperties(
+    { pageSize: spec.table.pageSize ?? 20, ...spec.table.properties },
+    spec.table.subtitle,
+    dataSource,
+  );
+  const tableHeight = layoutHeightForType(registry, 'visual.table', tableProperties);
   nodes.push(
     registry.createNode('visual.table', {
       id: spec.table.id,
       label: spec.table.label,
       layout: {
         x: MARGIN,
-        y: tableY(spec.kpis.length),
+        y: currentY,
         width: CONTENT_WIDTH,
-        height: TABLE_HEIGHT,
+        height: tableHeight,
       },
-      properties: mergeNodeProperties(
-        { pageSize: spec.table.pageSize ?? 20, ...spec.table.properties },
-        spec.table.subtitle,
-        dataSource,
-      ),
+      properties: tableProperties,
     }),
   );
+  currentY += tableHeight + ROW_GAP;
 
+  const chartProperties = mergeNodeProperties(
+    { title: spec.chart.title, xField: 'date', yField: 'value', ...spec.chart.properties },
+    spec.chart.subtitle,
+    dataSource,
+  );
+  const chartHeight = layoutHeightForType(registry, spec.chart.type, chartProperties);
   nodes.push(
     registry.createNode(spec.chart.type, {
       id: spec.chart.id,
       label: spec.chart.label,
       layout: {
         x: MARGIN,
-        y: chartY(spec.kpis.length, hasDetail),
+        y: currentY,
         width: CONTENT_WIDTH,
-        height: CHART_HEIGHT,
+        height: chartHeight,
       },
-      properties: mergeNodeProperties(
-        { title: spec.chart.title, xField: 'date', yField: 'value', ...spec.chart.properties },
-        spec.chart.subtitle,
-        dataSource,
-      ),
+      properties: chartProperties,
     }),
   );
+  currentY += chartHeight + ROW_GAP;
 
   if (spec.detail) {
+    const detailProperties = mergeNodeProperties(
+      {
+        title: spec.detail.title ?? spec.detail.label,
+        emptyMessage: 'Select a row to view details',
+        ...spec.detail.properties,
+      },
+      spec.detail.subtitle,
+      dataSource,
+    );
+    const detailHeight = layoutHeightForType(registry, 'visual.detail', detailProperties);
     nodes.push(
       registry.createNode('visual.detail', {
         id: spec.detail.id,
         label: spec.detail.label,
         layout: {
           x: MARGIN,
-          y: detailY(spec.kpis.length),
+          y: currentY,
           width: CONTENT_WIDTH,
-          height: DETAIL_HEIGHT,
+          height: detailHeight,
         },
-        properties: mergeNodeProperties(
-          {
-            title: spec.detail.title ?? spec.detail.label,
-            emptyMessage: 'Select a row to view details',
-            ...spec.detail.properties,
-          },
-          spec.detail.subtitle,
-          dataSource,
-        ),
+        properties: detailProperties,
       }),
     );
 
@@ -216,7 +244,23 @@ export function buildDashboardStarterComposite(
     registry.createNode('infra.postgresql', {
       id: pgId,
       label: `PostgreSQL · ${spec.postgresTable}`,
-      layout: { x: CONTENT_WIDTH + MARGIN + 16, y: MARGIN, width: 220, height: 96 },
+      layout: {
+        x: CONTENT_WIDTH + MARGIN + 16,
+        y: MARGIN,
+        width: 220,
+        height: layoutHeightForType(
+          registry,
+          'infra.postgresql',
+          mergeNodeProperties(
+            {
+              connectionEnvKey: 'DATABASE_URL',
+              table: spec.postgresTable,
+            },
+            'Rowset source for table and chart bindings',
+            dataSource,
+          ),
+        ),
+      },
       properties: mergeNodeProperties(
         {
           connectionEnvKey: 'DATABASE_URL',

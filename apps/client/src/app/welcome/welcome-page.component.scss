@@ -6,9 +6,15 @@
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
 }
 
+@import '../shared/page-shell.scss';
+
 .welcome {
   min-height: 100vh;
-  padding: 2.5rem 1.25rem;
+  padding: $page-shell-padding;
+}
+
+.welcome__nav-bar {
+  @extend .page-shell-nav;
 }
 
 .welcome__page-header {

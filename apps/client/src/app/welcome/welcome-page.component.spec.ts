@@ -80,6 +80,8 @@ describe('WelcomePageComponent', () => {
     selectReact(fixture);
     expandSection(fixture, 'styling');
 
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-foundation-none"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-none"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-css-modules"]')).toBeTruthy();
     expect(
       fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-styled-components"]'),
@@ -93,11 +95,13 @@ describe('WelcomePageComponent', () => {
       fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-styled-components"]'),
     ).toBeFalsy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-css-modules"]')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-plain-css"]')).toBeTruthy();
   });
 
   it('filters component libraries by UI framework', () => {
     selectReact(fixture);
     expandSection(fixture, 'styling');
+    expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-library-none"]')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('[data-testid="stack-styling-library-mui"]')).toBeTruthy();
 
     fixture.nativeElement.querySelector('[data-testid="stack-ui-angular"]').click();
@@ -108,6 +112,51 @@ describe('WelcomePageComponent', () => {
     expect(
       fixture.nativeElement.querySelector('[data-testid="stack-styling-library-angular-material"]'),
     ).toBeTruthy();
+  });
+
+  it('starts with empty styling when a UI framework is selected', () => {
+    selectReact(fixture);
+    expandSection(fixture, 'styling');
+
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-foundation-none"]')?.classList.contains(
+        'welcome__chip--selected',
+      ),
+    ).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-none"]')?.classList.contains(
+        'welcome__chip--selected',
+      ),
+    ).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-foundation-tailwind"]')?.classList.contains(
+        'welcome__chip--selected',
+      ),
+    ).toBe(false);
+  });
+
+  it('allows clearing foundation and authoring selections', () => {
+    selectReact(fixture);
+    expandSection(fixture, 'styling');
+
+    fixture.nativeElement.querySelector('[data-testid="stack-styling-foundation-tailwind"]').click();
+    fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-css-modules"]').click();
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('[data-testid="stack-styling-foundation-none"]').click();
+    fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-none"]').click();
+    fixture.detectChanges();
+
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-foundation-none"]')?.classList.contains(
+        'welcome__chip--selected',
+      ),
+    ).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="stack-styling-authoring-none"]')?.classList.contains(
+        'welcome__chip--selected',
+      ),
+    ).toBe(true);
   });
 
   it('offers None for server and database when sections are expanded', () => {
@@ -135,9 +184,9 @@ describe('WelcomePageComponent', () => {
       server: 'none',
       database: 'none',
       styling: {
-        foundation: ['tailwind'],
-        authoring: ['css-modules'],
-        inlineStyles: true,
+        foundation: [],
+        authoring: [],
+        inlineStyles: false,
       },
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
@@ -157,9 +206,9 @@ describe('WelcomePageComponent', () => {
       server: 'nest',
       database: 'postgresql',
       styling: {
-        foundation: ['tailwind'],
-        authoring: ['plain-css'],
-        inlineStyles: true,
+        foundation: [],
+        authoring: [],
+        inlineStyles: false,
       },
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);
@@ -257,9 +306,9 @@ describe('WelcomePageComponent', () => {
       server: 'nuxt',
       database: 'postgresql',
       styling: {
-        foundation: ['tailwind'],
-        authoring: ['css-modules'],
-        inlineStyles: true,
+        foundation: [],
+        authoring: [],
+        inlineStyles: false,
       },
     });
     expect(navigateSpy).toHaveBeenCalledWith(['/builder']);

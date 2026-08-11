@@ -31,7 +31,23 @@
         </p>
       </div>
     } @else {
-      <div class="preview__nodes">
+      @if (dashboardBanner(); as dashboard) {
+        <div class="preview__dashboard" data-testid="preview-dashboard-banner">
+          <div class="preview__dashboard-heading">
+            <span class="preview__dashboard-label">Dashboard</span>
+            <strong class="preview__dashboard-name">{{ dashboard.name }}</strong>
+          </div>
+          @if (dashboard.description) {
+            <p class="preview__dashboard-description">{{ dashboard.description }}</p>
+          }
+        </div>
+      }
+
+      <div
+        class="preview__nodes"
+        [style.minWidth.px]="previewContentBounds().width"
+        [style.minHeight.px]="previewContentBounds().height"
+      >
         @for (node of sortedPreviewNodes(); track node.id; let index = $index) {
           <div
             class="preview__node"

@@ -1,22 +1,13 @@
 <main class="welcome" data-testid="welcome-page">
+  <div class="welcome__nav-bar">
+    <app-nav />
+  </div>
+
   <header class="welcome__page-header">
     <p class="welcome__eyebrow">Welcome to {{ appName }}</p>
     <h1 id="welcome-heading" data-testid="welcome-heading">
       Build Components and Dashboards for your stack
     </h1>
-    <nav class="welcome__top-nav" aria-label="Quick links">
-      <a
-        routerLink="/environment"
-        [queryParams]="{ from: 'byok' }"
-        class="welcome__top-nav-link"
-        data-testid="welcome-env-link"
-      >
-        Environment &amp; API keys (BYOK)
-      </a>
-      <a routerLink="/admin" class="welcome__top-nav-link" data-testid="welcome-admin-link">
-        Admin control panel
-      </a>
-    </nav>
   </header>
 
   <div class="welcome__layout">
@@ -209,7 +200,7 @@
                       [class.welcome__chip--selected]="isFoundationSelected(option.id)"
                       [disabled]="!hasUiChoice()"
                       [attr.data-testid]="'stack-styling-foundation-' + option.id"
-                      (click)="toggleFoundation(option.id)"
+                      (click)="selectFoundation(option.id)"
                     >
                       <span class="welcome__chip-label">{{ option.label }}</span>
                       <span class="welcome__chip-desc">{{ option.description }}</span>
@@ -219,7 +210,7 @@
               </ul>
             </div>
 
-            @if (componentLibraryOptions().length > 0) {
+            @if (showComponentLibrarySection()) {
               <div class="welcome__styling-group">
                 <h4 class="welcome__styling-group-title">Component library</h4>
                 <ul class="welcome__chip-row">
@@ -253,7 +244,7 @@
                       [class.welcome__chip--selected]="isAuthoringSelected(option.id)"
                       [disabled]="!hasUiChoice()"
                       [attr.data-testid]="'stack-styling-authoring-' + option.id"
-                      (click)="toggleAuthoring(option.id)"
+                      (click)="selectAuthoring(option.id)"
                     >
                       <span class="welcome__chip-label">{{ option.label }}</span>
                       <span class="welcome__chip-desc">{{ option.description }}</span>

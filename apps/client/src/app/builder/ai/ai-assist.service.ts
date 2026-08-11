@@ -142,7 +142,7 @@ export class AiAssistService {
         { role: 'user', content: trimmed },
         {
           role: 'assistant',
-          content: readiness.message ?? 'Configure an AI provider on the Environment page.',
+          content: readiness.message ?? 'Configure an AI provider on the Settings page.',
           error: readiness.message,
         },
       ]);
@@ -274,7 +274,7 @@ export class AiAssistService {
       freeLocal: false,
       message: hasKey
         ? undefined
-        : `Add your ${provider.label} API key on the Environment page (BYOK — you pay the provider, not DashBuilder).`,
+        : `Add your ${provider.label} API key on the Settings page (BYOK — you pay the provider, not DashBuilder).`,
     };
   }
 }

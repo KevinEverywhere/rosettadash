@@ -47,6 +47,11 @@ describe('EnvironmentConfigPageComponent', () => {
     fixture.detectChanges();
     expect(element.querySelector('[data-testid="env-ai-provider"]')).toBeTruthy();
     expect(element.querySelector('[data-testid="env-provider-card-openai"]')).toBeTruthy();
+    expect(element.querySelector('[data-testid="env-provider-key-openai"]')).toBeNull();
+    element.querySelector<HTMLButtonElement>('[data-testid="env-provider-toggle-openai"]')?.click();
+    fixture.detectChanges();
+    expect(element.querySelector('[data-testid="env-provider-key-openai"]')).toBeTruthy();
+    expect(element.querySelector('[data-testid="env-provider-base-url-openai"]')).toBeNull();
   });
 
   it('opens AI section by default when arriving from welcome BYOK link', async () => {

@@ -1,5 +1,6 @@
 import type { ComponentNode } from '@dashbuilder/core';
 import {
+  computeCanvasContentBounds,
   filterVisibleCanvasNodes,
   isNodeInViewport,
 } from './canvas-viewport';
@@ -69,5 +70,17 @@ describe('canvas viewport helpers', () => {
     );
 
     expect(visible.some((node) => node.id === 'far')).toBe(true);
+  });
+
+  it('computes content bounds from node positions and heights', () => {
+    const nodes = [
+      createNode({ id: 'a', layout: { x: 24, y: 24, width: 200, height: 100 } }),
+      createNode({ id: 'b', layout: { x: 24, y: 200, width: 200, height: 150 } }),
+    ];
+
+    expect(computeCanvasContentBounds(nodes)).toEqual({
+      width: 248,
+      height: 398,
+    });
   });
 });

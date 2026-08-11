@@ -1,7 +1,11 @@
 <main class="env-page" data-testid="environment-config-page">
+  <div class="env-page__nav-bar">
+    <app-nav />
+  </div>
+
   <header class="env-page__page-header">
-    <p class="env-page__eyebrow">{{ appName }}</p>
-    <h1>Environment &amp; API keys</h1>
+    <h1>Settings</h1>
+    <p class="env-page__subtitle">Environment variables, API keys (BYOK), and app lock</p>
   </header>
 
   @if (!config.loaded()) {
@@ -20,19 +24,18 @@
         <ul class="env-page__highlights">
           <li>Store multiple AI keys — pick a default provider for AI assist</li>
           <li>Grey labels until validated; black when verified; red on failure</li>
-          <li>Database and server fields follow your stack on Welcome</li>
+          <li>Database and server fields follow your stack on Home</li>
           <li>Exported projects still use <code>.env.example</code> placeholders only</li>
         </ul>
 
-        <nav class="env-page__nav" aria-label="Page navigation">
-          <a routerLink="/" class="env-page__nav-link" data-testid="env-link-welcome">← Welcome / stack</a>
-          <a routerLink="/admin" class="env-page__nav-link" data-testid="env-link-admin">Admin</a>
-          @if (canOpenBuilder()) {
-            <a routerLink="/builder" class="env-page__nav-link" data-testid="env-link-builder">Open builder →</a>
-          } @else {
-            <span class="env-page__nav-note">Choose a stack on Welcome to open the builder.</span>
-          }
-        </nav>
+        <p class="env-page__secondary-link">
+          <a routerLink="/admin" data-testid="env-link-admin">Admin control panel</a>
+          — saved content, feature toggles, and component catalog
+        </p>
+
+        @if (!canOpenBuilder()) {
+          <p class="env-page__nav-note">Choose a stack on Home to open the builder.</p>
+        }
 
         <footer class="env-page__footer">
           @if (config.saveMessage(); as message) {
@@ -229,6 +232,12 @@
                     <p class="env-page__hint">
                       Bring keys for any providers you use — Anthropic, OpenAI, and others can all
                       stay saved. Choose which is the <strong>default for AI assist</strong>.
+                      Expand a provider to enter its key. Base URLs stay hidden unless you need a
+                      non-default endpoint.
+                      <a routerLink="/admin" [queryParams]="{ section: 'guides' }" data-testid="env-ai-guides-link">
+                        Builder guides
+                      </a>
+                      explain how components and AI assist work together.
                     </p>
 
                     <label class="env-page__field env-page__field--compact">
@@ -261,84 +270,125 @@
                       @for (provider of aiProviders; track provider.id) {
                         <article
                           class="env-page__provider-card"
+                          [class.env-page__provider-card--open]="isProviderOpen(provider.id)"
                           [attr.data-testid]="'env-provider-card-' + provider.id"
                         >
-                          <header class="env-page__provider-header">
-                            <div>
-                              <h3 class="env-page__provider-name" [class]="validationClassForProvider(provider.id)">
-                                {{ provider.label }}
-                              </h3>
-                              <p class="env-page__provider-status" [class]="validationClassForProvider(provider.id)">
-                                {{ providerStatusLabel(provider) }}
-                              </p>
+                          <button
+                            type="button"
+                            class="env-page__provider-toggle"
+                            [attr.data-testid]="'env-provider-toggle-' + provider.id"
+                            [attr.aria-expanded]="isProviderOpen(provider.id)"
+                            (click)="toggleProvider(provider.id)"
+                          >
+                            <span class="env-page__provider-header">
+                              <span class="env-page__provider-heading">
+                                <span class="env-page__provider-name" [class]="validationClassForProvider(provider.id)">
+                                  {{ provider.label }}
+                                </span>
+                                <span class="env-page__provider-status" [class]="validationClassForProvider(provider.id)">
+                                  {{ providerStatusLabel(provider) }}
+                                </span>
+                                <span class="env-page__provider-desc">{{ provider.description }}</span>
+                              </span>
+                              <span class="env-page__provider-meta">
+                                @if (config.settings().byok.activeProvider === provider.id) {
+                                  <span class="env-page__provider-badge">Default</span>
+                                }
+                                <span class="env-page__provider-chevron" aria-hidden="true"></span>
+                              </span>
+                            </span>
+                          </button>
+
+                          @if (isProviderOpen(provider.id)) {
+                            <div class="env-page__provider-body">
+                              @if (provider.requiresApiKey) {
+                                <label class="env-page__field">
+                                  <span [class]="validationClassForProvider(provider.id)">API key</span>
+                                  <input
+                                    type="password"
+                                    autocomplete="off"
+                                    [attr.data-testid]="'env-provider-key-' + provider.id"
+                                    [ngModel]="getProviderKeyValue(provider)"
+                                    (ngModelChange)="onProviderKeyChange(provider, $event)"
+                                  />
+                                  <code class="env-page__env-key">{{ provider.apiKeyEnvKey }}</code>
+                                </label>
+                              }
+
+                              @if (provider.id === 'azure-openai') {
+                                <div class="env-page__grid">
+                                  <label class="env-page__field">
+                                    <span [class]="validationClassForProvider(provider.id)">Resource name</span>
+                                    <input
+                                      type="text"
+                                      data-testid="env-azure-resource"
+                                      [ngModel]="config.settings().byok.azureResourceName ?? ''"
+                                      (ngModelChange)="onByokSettingChange('azureResourceName', $event)"
+                                    />
+                                  </label>
+                                  <label class="env-page__field">
+                                    <span [class]="validationClassForProvider(provider.id)">Deployment ID</span>
+                                    <input
+                                      type="text"
+                                      data-testid="env-azure-deployment"
+                                      [ngModel]="config.settings().byok.azureDeploymentId ?? ''"
+                                      (ngModelChange)="onByokSettingChange('azureDeploymentId', $event)"
+                                    />
+                                  </label>
+                                </div>
+                              }
+
+                              @if (provider.supportsCustomBaseUrl) {
+                                @if (isProviderBaseUrlOpen(provider.id) || providerUsesCustomBaseUrl(provider)) {
+                                  <label class="env-page__field">
+                                    <span [class]="validationClassForProvider(provider.id)">Base URL</span>
+                                    <input
+                                      type="url"
+                                      [attr.data-testid]="'env-provider-base-url-' + provider.id"
+                                      [placeholder]="provider.defaultBaseUrl ?? 'https://'"
+                                      [ngModel]="getProviderBaseUrl(provider)"
+                                      (ngModelChange)="onProviderBaseUrlChange(provider, $event)"
+                                    />
+                                  </label>
+                                  @if (provider.defaultBaseUrl) {
+                                    <p class="env-page__hint env-page__hint--inline">
+                                      Default: <code>{{ provider.defaultBaseUrl }}</code>
+                                    </p>
+                                  }
+                                  @if (!providerUsesCustomBaseUrl(provider)) {
+                                    <button
+                                      type="button"
+                                      class="env-page__link-button"
+                                      (click)="toggleProviderBaseUrl(provider.id)"
+                                    >
+                                      Use default base URL
+                                    </button>
+                                  }
+                                } @else {
+                                  <button
+                                    type="button"
+                                    class="env-page__link-button"
+                                    [attr.data-testid]="'env-provider-base-url-toggle-' + provider.id"
+                                    (click)="toggleProviderBaseUrl(provider.id)"
+                                  >
+                                    Change base URL…
+                                  </button>
+                                }
+                              }
+
+                              <div class="env-page__actions">
+                                <button
+                                  type="button"
+                                  class="env-page__button env-page__button--secondary"
+                                  [attr.data-testid]="'env-test-provider-' + provider.id"
+                                  [disabled]="isProviderTesting(provider.id)"
+                                  (click)="runProviderTest(provider.id)"
+                                >
+                                  {{ isProviderTesting(provider.id) ? 'Testing…' : 'Validate' }}
+                                </button>
+                              </div>
                             </div>
-                            @if (config.settings().byok.activeProvider === provider.id) {
-                              <span class="env-page__provider-badge">Default</span>
-                            }
-                          </header>
-
-                          <p class="env-page__provider-desc">{{ provider.description }}</p>
-
-                          @if (provider.requiresApiKey) {
-                            <label class="env-page__field">
-                              <span [class]="validationClassForProvider(provider.id)">API key</span>
-                              <input
-                                type="password"
-                                autocomplete="off"
-                                [attr.data-testid]="'env-provider-key-' + provider.id"
-                                [ngModel]="getProviderKeyValue(provider)"
-                                (ngModelChange)="onProviderKeyChange(provider, $event)"
-                              />
-                              <code class="env-page__env-key">{{ provider.apiKeyEnvKey }}</code>
-                            </label>
                           }
-
-                          @if (provider.supportsCustomBaseUrl) {
-                            <label class="env-page__field">
-                              <span [class]="validationClassForProvider(provider.id)">Base URL</span>
-                              <input
-                                type="url"
-                                [placeholder]="provider.defaultBaseUrl ?? 'https://'"
-                                [ngModel]="getProviderBaseUrl(provider)"
-                                (ngModelChange)="onProviderBaseUrlChange(provider, $event)"
-                              />
-                            </label>
-                          }
-
-                          @if (provider.id === 'azure-openai') {
-                            <div class="env-page__grid">
-                              <label class="env-page__field">
-                                <span [class]="validationClassForProvider(provider.id)">Resource name</span>
-                                <input
-                                  type="text"
-                                  data-testid="env-azure-resource"
-                                  [ngModel]="config.settings().byok.azureResourceName ?? ''"
-                                  (ngModelChange)="onByokSettingChange('azureResourceName', $event)"
-                                />
-                              </label>
-                              <label class="env-page__field">
-                                <span [class]="validationClassForProvider(provider.id)">Deployment ID</span>
-                                <input
-                                  type="text"
-                                  data-testid="env-azure-deployment"
-                                  [ngModel]="config.settings().byok.azureDeploymentId ?? ''"
-                                  (ngModelChange)="onByokSettingChange('azureDeploymentId', $event)"
-                                />
-                              </label>
-                            </div>
-                          }
-
-                          <div class="env-page__actions">
-                            <button
-                              type="button"
-                              class="env-page__button env-page__button--secondary"
-                              [attr.data-testid]="'env-test-provider-' + provider.id"
-                              [disabled]="isProviderTesting(provider.id)"
-                              (click)="runProviderTest(provider.id)"
-                            >
-                              {{ isProviderTesting(provider.id) ? 'Testing…' : 'Validate' }}
-                            </button>
-                          </div>
                         </article>
                       }
                     </div>
@@ -389,7 +439,7 @@
                     @if (section === 'database' || section === 'server') {
                       <p class="env-page__hint">
                         Fields match your current stack. Change stack on
-                        <a routerLink="/">Welcome</a>.
+                        <a routerLink="/">Home</a>.
                       </p>
                     }
 

@@ -9,12 +9,13 @@ import {
 } from './canvas-layout';
 import {
   type CanvasViewport,
+  canvasNodeHeaderHeight,
+  computeCanvasContentBounds,
+  estimateCanvasNodeHeight,
   filterVisibleCanvasNodes,
 } from './canvas-viewport';
 
 const PORT_ROW_HEIGHT = 24;
-const NODE_NAME_BAR_HEIGHT = 36;
-const NODE_TYPE_ROW_HEIGHT = 22;
 
 export interface BindingEdge {
   id: string;
@@ -66,6 +67,10 @@ export class CanvasComponent implements AfterViewInit {
       this.viewportScroll(),
       this.state.selectedNodeIdsSet(),
     ),
+  );
+
+  protected readonly canvasContentBounds = computed(() =>
+    computeCanvasContentBounds(this.state.nodes(), estimateCanvasNodeHeight),
   );
 
   protected readonly bindingEdges = computed(() => {
@@ -275,7 +280,7 @@ export class CanvasComponent implements AfterViewInit {
       pointerId: event.pointerId,
       nodeId,
       originWidth: node.layout.width,
-      originHeight: node.layout.height ?? this.minNodeHeight(node),
+      originHeight: node.layout.height ?? estimateCanvasNodeHeight(node),
       startClientX: event.clientX,
       startClientY: event.clientY,
     };
@@ -293,7 +298,7 @@ export class CanvasComponent implements AfterViewInit {
     const deltaX = event.clientX - resizeState.startClientX;
     const deltaY = event.clientY - resizeState.startClientY;
     const node = this.state.nodes().find((item) => item.id === resizeState.nodeId);
-    const minHeight = node ? this.minNodeHeight(node) : CANVAS_MIN_NODE_HEIGHT;
+    const minHeight = node ? estimateCanvasNodeHeight(node) : CANVAS_MIN_NODE_HEIGHT;
 
     this.state.updateNodeLayout(resizeState.nodeId, {
       width: clampCanvasNodeWidth(resizeState.originWidth + deltaX),
@@ -363,14 +368,7 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   protected nodeHeaderHeight(node: ComponentNode): number {
-    let height = NODE_NAME_BAR_HEIGHT + NODE_TYPE_ROW_HEIGHT;
-    if (this.nodeSubtitle(node)) {
-      height += 16;
-    }
-    if (this.nodeDataSource(node)) {
-      height += 14;
-    }
-    return height;
+    return canvasNodeHeaderHeight(node);
   }
 
   protected readonly dashboardBanner = computed(() => {
@@ -386,20 +384,7 @@ export class CanvasComponent implements AfterViewInit {
   });
 
   protected nodeHeight(node: ComponentNode): number {
-    const minHeight = this.minNodeHeight(node);
-    const layoutHeight = node.layout?.height;
-    if (layoutHeight !== undefined && layoutHeight >= minHeight) {
-      return layoutHeight;
-    }
-    return minHeight;
-  }
-
-  protected minNodeHeight(node: ComponentNode): number {
-    const portCount = Math.max(node.ports.inputs.length, node.ports.outputs.length, 1);
-    return Math.max(
-      CANVAS_MIN_NODE_HEIGHT,
-      this.nodeHeaderHeight(node) + portCount * PORT_ROW_HEIGHT + 12,
-    );
+    return estimateCanvasNodeHeight(node);
   }
 
   private edgeForBinding(

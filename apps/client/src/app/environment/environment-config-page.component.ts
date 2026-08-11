@@ -20,6 +20,7 @@ import {
   readActiveStackProfile,
   readPendingStackProfile,
 } from '../welcome/stack-profile-session';
+import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { AppLockGateComponent } from './app-lock-gate.component';
 import { AppLockService } from './app-lock.service';
 import { CredentialValidationService } from './credential-validation.service';
@@ -41,7 +42,7 @@ const SECTION_LABELS: Record<EnvSectionId, string> = {
 
 @Component({
   selector: 'app-environment-config-page',
-  imports: [FormsModule, RouterLink, NgTemplateOutlet, NgClass, AppLockGateComponent],
+  imports: [FormsModule, RouterLink, NgTemplateOutlet, NgClass, AppLockGateComponent, AppNavComponent],
   templateUrl: './environment-config-page.component.html',
   styleUrl: './environment-config-page.component.scss',
 })
@@ -61,6 +62,8 @@ export class EnvironmentConfigPageComponent implements OnInit {
   readonly customFields = signal<EnvFieldDefinition[]>([]);
   readonly testingProvider = signal<AiProviderId | null>(null);
   readonly validatingField = signal<string | null>(null);
+  readonly openProviderId = signal<AiProviderId | null>(null);
+  readonly showBaseUrlForProvider = signal<ReadonlySet<AiProviderId>>(new Set());
   readonly newLockPassword = signal('');
   readonly confirmLockPassword = signal('');
   readonly lockPasswordHint = signal('');
@@ -103,6 +106,39 @@ export class EnvironmentConfigPageComponent implements OnInit {
 
   toggleSection(section: EnvSectionId): void {
     this.openSection.update((current) => (current === section ? null : section));
+  }
+
+  isProviderOpen(providerId: AiProviderId): boolean {
+    return this.openProviderId() === providerId;
+  }
+
+  toggleProvider(providerId: AiProviderId): void {
+    this.openProviderId.update((current) => (current === providerId ? null : providerId));
+  }
+
+  isProviderBaseUrlOpen(providerId: AiProviderId): boolean {
+    return this.showBaseUrlForProvider().has(providerId);
+  }
+
+  toggleProviderBaseUrl(providerId: AiProviderId): void {
+    this.showBaseUrlForProvider.update((current) => {
+      const next = new Set(current);
+      if (next.has(providerId)) {
+        next.delete(providerId);
+      } else {
+        next.add(providerId);
+      }
+      return next;
+    });
+  }
+
+  providerUsesCustomBaseUrl(provider: AiProviderDefinition): boolean {
+    const value = this.getProviderBaseUrl(provider).trim();
+    if (!value) {
+      return false;
+    }
+    const defaultUrl = provider.defaultBaseUrl?.trim();
+    return !!defaultUrl && value !== defaultUrl;
   }
 
   validationTone(status: CredentialValidationStatus): string {

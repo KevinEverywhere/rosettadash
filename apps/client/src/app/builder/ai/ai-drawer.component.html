@@ -51,7 +51,7 @@
             </ol>
             <p>
               Optional: pick another model on
-              <a routerLink="/environment" [queryParams]="{ from: 'byok' }">Environment</a>.
+              <a routerLink="/environment" [queryParams]="{ from: 'byok' }">Settings</a>.
             </p>
             <button type="button" class="ai-drawer__secondary" data-testid="ai-refresh-setup" (click)="refreshSetup()">
               Refresh connection
@@ -59,9 +59,9 @@
           </section>
         } @else if (!readiness.ready) {
           <section class="ai-drawer__setup-panel">
-            <p>Add your provider API key on the Environment page — DashBuilder never stores keys on the server.</p>
+            <p>Add your provider API key on the Settings page — DashBuilder never stores keys on the server.</p>
             <a class="ai-drawer__secondary ai-drawer__link-button" routerLink="/environment" [queryParams]="{ from: 'byok' }">
-              Configure BYOK
+              Open Settings
             </a>
           </section>
         }

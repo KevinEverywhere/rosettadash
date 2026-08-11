@@ -1,5 +1,9 @@
 import { ProjectsService } from './projects.service';
-import { defaultComponentRegistry, getDefaultStylingProfile, normalizeStackStyling } from '@dashbuilder/core';
+import {
+  createEmptyStylingProfile,
+  defaultComponentRegistry,
+  normalizeStackStyling,
+} from '@dashbuilder/core';
 
 describe('ProjectsService', () => {
   let service: ProjectsService;
@@ -23,7 +27,7 @@ describe('ProjectsService', () => {
       ui: 'react',
       server: 'next',
       database: 'postgresql',
-      styling: getDefaultStylingProfile('react'),
+      styling: createEmptyStylingProfile(),
     });
 
     const scratch = service.createProject({

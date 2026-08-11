@@ -1,7 +1,13 @@
 import type { ComponentNode, NodeLayout } from '@dashbuilder/core';
+import { readNodeDisplayDataSource, readNodeDisplaySubtitle } from '@dashbuilder/core';
+import { CANVAS_MIN_NODE_HEIGHT } from './canvas-layout';
 
 export const CANVAS_VIEWPORT_CULL_THRESHOLD = 50;
 export const CANVAS_VIEWPORT_BUFFER_PX = 120;
+
+const PORT_ROW_HEIGHT = 24;
+const NODE_NAME_BAR_HEIGHT = 36;
+const NODE_TYPE_ROW_HEIGHT = 22;
 
 export interface CanvasViewport {
   left: number;
@@ -10,14 +16,59 @@ export interface CanvasViewport {
   height: number;
 }
 
+export interface CanvasContentBounds {
+  width: number;
+  height: number;
+}
+
+export function canvasNodeHeaderHeight(node: ComponentNode): number {
+  let height = NODE_NAME_BAR_HEIGHT + NODE_TYPE_ROW_HEIGHT;
+  if (readNodeDisplaySubtitle(node.properties)) {
+    height += 16;
+  }
+  if (readNodeDisplayDataSource(node.properties)) {
+    height += 14;
+  }
+  return height;
+}
+
 export function estimateCanvasNodeHeight(node: ComponentNode): number {
   const portCount = Math.max(node.ports.inputs.length, node.ports.outputs.length, 1);
-  const minHeight = Math.max(72, 44 + portCount * 24 + 12);
+  const minHeight = Math.max(
+    CANVAS_MIN_NODE_HEIGHT,
+    canvasNodeHeaderHeight(node) + portCount * PORT_ROW_HEIGHT + 12,
+  );
   const layoutHeight = node.layout?.height;
   if (layoutHeight !== undefined && layoutHeight >= minHeight) {
     return layoutHeight;
   }
   return minHeight;
+}
+
+export function computeCanvasContentBounds(
+  nodes: ComponentNode[],
+  heightEstimator: (node: ComponentNode) => number = estimateCanvasNodeHeight,
+): CanvasContentBounds {
+  if (nodes.length === 0) {
+    return { width: 320, height: 320 };
+  }
+
+  let maxRight = 0;
+  let maxBottom = 0;
+
+  for (const node of nodes) {
+    const x = node.layout?.x ?? 24;
+    const y = node.layout?.y ?? 24;
+    const width = node.layout?.width ?? 220;
+    const height = heightEstimator(node);
+    maxRight = Math.max(maxRight, x + width);
+    maxBottom = Math.max(maxBottom, y + height);
+  }
+
+  return {
+    width: maxRight + 24,
+    height: maxBottom + 48,
+  };
 }
 
 export function isNodeInViewport(

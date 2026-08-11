@@ -3,12 +3,19 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import {
-  AI_PROVIDER_MANIFEST,
   APP_NAME,
   defaultComponentRegistry,
   getAiProvider,
+  getGroupingGuide,
+  getInstructionSteps,
+  groupingAnimationLabel,
+  hasInstructionGuide,
+  resolveGroupingAnimationBlocks,
   resolvePaletteGroups,
+  type ComponentGroupingGuide,
 } from '@dashbuilder/core';
+import { ActivatedRoute } from '@angular/router';
+import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { AiAssistService } from '../builder/ai/ai-assist.service';
 import { BuilderStateService } from '../builder/builder-state.service';
 import { SpeechInputService } from '../builder/ai/speech-input.service';
@@ -22,20 +29,21 @@ import {
 import { AdminFeatureFlagsService } from './admin-feature-flags.service';
 import { ContentLibraryService } from './content-library.service';
 
-export type AdminSectionId = 'content' | 'integrations' | 'features' | 'catalog';
+export type AdminSectionId = 'content' | 'integrations' | 'features' | 'guides' | 'catalog';
 
-const SECTION_ORDER: AdminSectionId[] = ['content', 'integrations', 'features', 'catalog'];
+const SECTION_ORDER: AdminSectionId[] = ['content', 'integrations', 'features', 'guides', 'catalog'];
 
 const SECTION_LABELS: Record<AdminSectionId, string> = {
   content: 'Saved content',
   integrations: 'AI, voice & environment',
   features: 'Feature toggles',
+  guides: 'Builder guides',
   catalog: 'Component catalog',
 };
 
 @Component({
   selector: 'app-admin-page',
-  imports: [FormsModule, RouterLink, NgClass, DatePipe],
+  imports: [FormsModule, RouterLink, NgClass, DatePipe, AppNavComponent],
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.scss',
 })
@@ -51,9 +59,11 @@ export class AdminPageComponent implements OnInit {
   protected readonly aiAssist = inject(AiAssistService);
   protected readonly speech = inject(SpeechInputService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly builderState = inject(BuilderStateService);
 
   readonly openSection = signal<AdminSectionId | null>('content');
+  readonly openGuideType = signal<string | null>(null);
   readonly saveLabel = signal('');
   readonly loaded = signal(false);
 
@@ -64,6 +74,17 @@ export class AdminPageComponent implements OnInit {
 
   readonly paletteGroups = computed(() => resolvePaletteGroups(defaultComponentRegistry));
   readonly componentCount = computed(() => defaultComponentRegistry.list().length);
+
+  readonly builderGuides = computed(() =>
+    defaultComponentRegistry
+      .list()
+      .map((definition) => ({
+        type: definition.type,
+        label: definition.label,
+        guide: getGroupingGuide(definition.type),
+      }))
+      .filter((entry): entry is { type: string; label: string; guide: ComponentGroupingGuide } => !!entry.guide),
+  );
 
   readonly aiProviderLabel = computed(() => {
     const provider = getAiProvider(this.environment.settings().byok.activeProvider);
@@ -76,7 +97,35 @@ export class AdminPageComponent implements OnInit {
     this.appLock.initialize();
     await this.environment.initialize();
     await this.aiAssist.refreshReadiness();
+    const section = this.route.snapshot.queryParamMap.get('section');
+    if (section === 'guides' || section === 'content' || section === 'integrations' || section === 'features' || section === 'catalog') {
+      this.openSection.set(section);
+    }
     this.loaded.set(true);
+  }
+
+  isGuideOpen(type: string): boolean {
+    return this.openGuideType() === type;
+  }
+
+  toggleGuide(type: string): void {
+    this.openGuideType.update((current) => (current === type ? null : type));
+  }
+
+  guideAnimationBlocks(guide: ComponentGroupingGuide): string[] {
+    return resolveGroupingAnimationBlocks(guide);
+  }
+
+  guideAnimationLabel(guide: ComponentGroupingGuide): string {
+    return groupingAnimationLabel(guide.animationKey);
+  }
+
+  guideSteps(type: string) {
+    return getInstructionSteps(type);
+  }
+
+  guideHasSteps(type: string): boolean {
+    return hasInstructionGuide(type);
   }
 
   isSectionOpen(section: AdminSectionId): boolean {
@@ -99,6 +148,8 @@ export class AdminPageComponent implements OnInit {
         const current = this.flags.flags();
         return `AI ${current.aiDrawerEnabled ? 'on' : 'off'} · Voice ${current.voiceInputEnabled ? 'on' : 'off'}`;
       }
+      case 'guides':
+        return `${this.builderGuides().length} components`;
       case 'catalog':
         return `${this.componentCount()} types`;
       default:

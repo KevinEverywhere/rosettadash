@@ -1,15 +1,15 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import {
   APP_NAME,
+  createEmptyStylingProfile,
   DATABASE_STACK_OPTIONS,
   formatStylingProfileSummary,
   getCompatibleStackDefaults,
-  getCompatibleStylingAuthoring,
-  getCompatibleStylingComponentLibraries,
-  getCompatibleStylingFoundations,
-  getDefaultStylingProfile,
+  getStylingAuthoringStackOptions,
+  getStylingComponentLibraryStackOptions,
+  getStylingFoundationStackOptions,
   normalizeStackProfile,
   normalizeStackStyling,
   SERVER_STACK_ECOSYSTEM_NOTE,
@@ -18,12 +18,13 @@ import {
   type StackProfile,
   type StackServerChoice,
   type StackStylingProfile,
-  type StylingAuthoring,
-  type StylingComponentLibrary,
-  type StylingFoundation,
+  type StylingAuthoringStackChoice,
+  type StylingComponentLibraryStackChoice,
+  type StylingFoundationStackChoice,
   type UiFrameworkChoice,
   UI_FRAMEWORK_OPTIONS,
 } from '@dashbuilder/core';
+import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { ProjectsApiService } from '../builder/projects-api.service';
 import {
   clearBuilderSession,
@@ -41,7 +42,7 @@ type StackChangeTarget = 'current' | 'fresh';
 
 @Component({
   selector: 'app-welcome-page',
-  imports: [RouterLink],
+  imports: [AppNavComponent],
   templateUrl: './welcome-page.component.html',
   styleUrl: './welcome-page.component.scss',
 })
@@ -69,15 +70,22 @@ export class WelcomePageComponent implements OnInit {
 
   protected readonly foundationOptions = computed(() => {
     const ui = this.uiChoice();
-    return ui ? getCompatibleStylingFoundations(ui) : [];
+    return ui ? getStylingFoundationStackOptions(ui) : [];
   });
   protected readonly componentLibraryOptions = computed(() => {
     const ui = this.uiChoice();
-    return ui ? getCompatibleStylingComponentLibraries(ui) : [];
+    return ui ? getStylingComponentLibraryStackOptions(ui) : [];
   });
   protected readonly authoringOptions = computed(() => {
     const ui = this.uiChoice();
-    return ui ? getCompatibleStylingAuthoring(ui) : [];
+    return ui ? getStylingAuthoringStackOptions(ui) : [];
+  });
+  protected readonly showComponentLibrarySection = computed(() => {
+    const ui = this.uiChoice();
+    if (!ui) {
+      return false;
+    }
+    return getStylingComponentLibraryStackOptions(ui).length > 1;
   });
 
   protected readonly selectedUiLabel = computed(() => {
@@ -174,29 +182,34 @@ export class WelcomePageComponent implements OnInit {
     this.requestStackMutation(() => this.databaseChoice.set(database));
   }
 
-  protected isFoundationSelected(foundation: StylingFoundation): boolean {
-    return this.stylingProfile()?.foundation.includes(foundation) ?? false;
+  protected isFoundationSelected(foundation: StylingFoundationStackChoice): boolean {
+    const profile = this.stylingProfile();
+    if (foundation === 'none') {
+      return (profile?.foundation.length ?? 0) === 0;
+    }
+    return profile?.foundation.includes(foundation) ?? false;
   }
 
-  protected toggleFoundation(foundation: StylingFoundation): void {
+  protected selectFoundation(foundation: StylingFoundationStackChoice): void {
     this.requestStackMutation(() => {
       const ui = this.uiChoice();
       const current = this.stylingProfile();
       if (!ui || !current) {
         return;
       }
-      const next = current.foundation.includes(foundation)
-        ? current.foundation.filter((item) => item !== foundation)
-        : [...current.foundation, foundation];
+      const next = foundation === 'none' ? [] : [foundation];
       this.stylingProfile.set(normalizeStackStyling(ui, { ...current, foundation: next }));
     });
   }
 
-  protected isComponentLibrarySelected(library: StylingComponentLibrary): boolean {
+  protected isComponentLibrarySelected(library: StylingComponentLibraryStackChoice): boolean {
+    if (library === 'none') {
+      return !this.stylingProfile()?.componentLibrary;
+    }
     return this.stylingProfile()?.componentLibrary === library;
   }
 
-  protected selectComponentLibrary(library: StylingComponentLibrary): void {
+  protected selectComponentLibrary(library: StylingComponentLibraryStackChoice): void {
     this.requestStackMutation(() => {
       const ui = this.uiChoice();
       const current = this.stylingProfile();
@@ -206,26 +219,28 @@ export class WelcomePageComponent implements OnInit {
       this.stylingProfile.set(
         normalizeStackStyling(ui, {
           ...current,
-          componentLibrary: current.componentLibrary === library ? undefined : library,
+          componentLibrary: library === 'none' ? undefined : library,
         }),
       );
     });
   }
 
-  protected isAuthoringSelected(authoring: StylingAuthoring): boolean {
-    return this.stylingProfile()?.authoring.includes(authoring) ?? false;
+  protected isAuthoringSelected(authoring: StylingAuthoringStackChoice): boolean {
+    const profile = this.stylingProfile();
+    if (authoring === 'none') {
+      return (profile?.authoring.length ?? 0) === 0;
+    }
+    return profile?.authoring.includes(authoring) ?? false;
   }
 
-  protected toggleAuthoring(authoring: StylingAuthoring): void {
+  protected selectAuthoring(authoring: StylingAuthoringStackChoice): void {
     this.requestStackMutation(() => {
       const ui = this.uiChoice();
       const current = this.stylingProfile();
       if (!ui || !current) {
         return;
       }
-      const next = current.authoring.includes(authoring)
-        ? current.authoring.filter((item) => item !== authoring)
-        : [...current.authoring, authoring];
+      const next = authoring === 'none' ? [] : [authoring];
       this.stylingProfile.set(normalizeStackStyling(ui, { ...current, authoring: next }));
     });
   }
@@ -427,9 +442,7 @@ export class WelcomePageComponent implements OnInit {
     if (defaults.database) {
       this.databaseChoice.set(defaults.database);
     }
-    this.stylingProfile.set(
-      normalizeStackStyling(ui, defaults.styling ?? getDefaultStylingProfile(ui)),
-    );
+    this.stylingProfile.set(createEmptyStylingProfile());
   }
 
   private buildProfile(): StackProfile {
@@ -442,7 +455,7 @@ export class WelcomePageComponent implements OnInit {
             server: this.serverChoice() ?? 'none',
             database: this.databaseChoice() ?? 'none',
           }),
-      styling: this.stylingProfile() ?? getDefaultStylingProfile(ui),
+      styling: this.stylingProfile() ?? createEmptyStylingProfile(),
     };
   }
 
@@ -457,7 +470,7 @@ export class WelcomePageComponent implements OnInit {
       this.databaseChoice.set(profile.database ?? defaults.database ?? 'none');
     }
     this.stylingProfile.set(
-      normalizeStackStyling(profile.ui, profile.styling ?? getDefaultStylingProfile(profile.ui)),
+      normalizeStackStyling(profile.ui, profile.styling ?? createEmptyStylingProfile()),
     );
   }
 }

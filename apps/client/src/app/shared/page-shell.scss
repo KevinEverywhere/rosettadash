@@ -1,0 +1,8 @@
+$page-shell-max-width: 72rem;
+$page-shell-padding: 2.5rem 1.25rem;
+$page-shell-nav-gap: 1.25rem;
+
+.page-shell-nav {
+  width: min($page-shell-max-width, 100%);
+  margin: 0 auto $page-shell-nav-gap;
+}

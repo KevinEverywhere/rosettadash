@@ -292,6 +292,64 @@ export function getCompatibleStylingAuthoring(
   return STYLING_AUTHORING_OPTIONS.filter((option) => allowed.has(option.id));
 }
 
+const STYLING_NONE_CHIP = {
+  id: 'none' as const,
+  label: 'None',
+};
+
+export type StylingFoundationStackChoice = StylingFoundation | 'none';
+export type StylingAuthoringStackChoice = StylingAuthoring | 'none';
+export type StylingComponentLibraryStackChoice = StylingComponentLibrary | 'none';
+
+export function createEmptyStylingProfile(): StackStylingProfile {
+  return { foundation: [], authoring: [], inlineStyles: false };
+}
+
+export function isEmptyStylingProfile(profile: StackStylingProfile): boolean {
+  return (
+    profile.foundation.length === 0 &&
+    profile.authoring.length === 0 &&
+    !profile.componentLibrary &&
+    !profile.inlineStyles
+  );
+}
+
+export function getStylingFoundationStackOptions(
+  ui: UiFrameworkChoice,
+): Array<{ id: StylingFoundationStackChoice; label: string; description: string }> {
+  return [
+    {
+      ...STYLING_NONE_CHIP,
+      description: 'No foundation layer — choose at export',
+    },
+    ...getCompatibleStylingFoundations(ui),
+  ];
+}
+
+export function getStylingComponentLibraryStackOptions(
+  ui: UiFrameworkChoice,
+): Array<{ id: StylingComponentLibraryStackChoice; label: string; description: string }> {
+  return [
+    {
+      ...STYLING_NONE_CHIP,
+      description: 'No component library — use primitives or pick at export',
+    },
+    ...getCompatibleStylingComponentLibraries(ui),
+  ];
+}
+
+export function getStylingAuthoringStackOptions(
+  ui: UiFrameworkChoice,
+): Array<{ id: StylingAuthoringStackChoice; label: string; description: string }> {
+  return [
+    {
+      ...STYLING_NONE_CHIP,
+      description: 'No authoring preference — choose at export',
+    },
+    ...getCompatibleStylingAuthoring(ui),
+  ];
+}
+
 export function getDefaultStylingProfile(ui: UiFrameworkChoice): StackStylingProfile {
   return cloneStylingProfile(DEFAULT_STYLING_PROFILE_BY_UI[ui]);
 }
@@ -320,7 +378,7 @@ export function normalizeStackStyling(
 ): StackStylingProfile {
   const base =
     styling === undefined
-      ? getDefaultStylingProfile(ui)
+      ? createEmptyStylingProfile()
       : typeof styling === 'string'
         ? cloneStylingProfile(LEGACY_STYLING_TO_PROFILE[styling])
         : cloneStylingProfile(styling);
@@ -332,13 +390,11 @@ export function normalizeStackStyling(
       ? base.componentLibrary
       : undefined;
 
-  const defaults = getDefaultStylingProfile(ui);
-
   return {
-    foundation: foundation.length > 0 ? foundation : defaults.foundation,
-    authoring: authoring.length > 0 ? authoring : defaults.authoring,
+    foundation,
+    authoring,
     ...(componentLibrary ? { componentLibrary } : {}),
-    inlineStyles: base.inlineStyles,
+    inlineStyles: base.inlineStyles ?? false,
   };
 }
 
@@ -419,12 +475,13 @@ export function resolveEffectiveStylingProfile(
     return getDefaultStylingProfile(uiTarget);
   }
 
-  return normalizeStackStyling(uiTarget, normalized.styling);
+  const styling = normalizeStackStyling(uiTarget, normalized.styling);
+  return isEmptyStylingProfile(styling) ? getDefaultStylingProfile(uiTarget) : styling;
 }
 
 export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile {
   if (ui === 'any') {
-    return { ui: 'any', styling: getDefaultStylingProfile('any') };
+    return { ui: 'any', styling: createEmptyStylingProfile() };
   }
 
   const partners = UI_PARTNER_DEFAULTS[ui];
@@ -432,7 +489,7 @@ export function getCompatibleStackDefaults(ui: UiFrameworkChoice): StackProfile 
     ui,
     server: partners.server,
     database: partners.database,
-    styling: getDefaultStylingProfile(ui),
+    styling: createEmptyStylingProfile(),
   };
 }
 

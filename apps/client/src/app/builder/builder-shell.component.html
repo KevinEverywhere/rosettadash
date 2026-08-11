@@ -15,9 +15,7 @@
   } @else {
   <header class="builder__toolbar">
     <div class="builder__brand">
-      <a class="builder__logo" routerLink="/" data-testid="builder-home-link">{{ appName }}</a>
-      <a class="builder__env-link" routerLink="/environment" data-testid="builder-env-link">Environment</a>
-      <a class="builder__env-link" routerLink="/admin" data-testid="builder-admin-link">Admin</a>
+      <app-nav variant="toolbar" />
       <span class="builder__subtitle">{{ state.project()?.name ?? 'Builder' }}</span>
     </div>
 

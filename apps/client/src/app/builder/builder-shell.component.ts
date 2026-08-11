@@ -1,9 +1,10 @@
 import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { APP_NAME, listCompositeTemplates } from '@dashbuilder/core';
+import { listCompositeTemplates } from '@dashbuilder/core';
 import { canEnterBuilder } from '../welcome/stack-profile-session';
 import { AppSelectComponent } from '../shared/app-select/app-select.component';
+import { AppNavComponent } from '../shared/app-nav/app-nav.component';
 import { BuilderAuthGateComponent } from './builder-auth-gate.component';
 import { BuilderAuthService } from './builder-auth.service';
 import { BuilderProjectService } from './builder-project.service';
@@ -33,7 +34,7 @@ import { PreviewPanelComponent } from './preview/preview-panel.component';
     BuilderViewportGateComponent,
     AppSelectComponent,
     FormsModule,
-    RouterLink,
+    AppNavComponent,
   ],
   templateUrl: './builder-shell.component.html',
   styleUrl: './builder-shell.component.scss',
@@ -48,7 +49,6 @@ export class BuilderShellComponent implements OnInit {
   protected readonly featureFlags = inject(AdminFeatureFlagsService);
   protected readonly contentLibrary = inject(ContentLibraryService);
 
-  protected readonly appName = APP_NAME;
   protected readonly exportWizardOpen = signal(false);
   protected readonly aiDrawerOpen = signal(false);
   protected readonly compositeTemplates = listCompositeTemplates();

@@ -1,6 +1,9 @@
 <main class="admin-page" data-testid="admin-page">
+  <div class="admin-page__nav-bar">
+    <app-nav />
+  </div>
+
   <header class="admin-page__page-header">
-    <p class="admin-page__eyebrow">{{ appName }}</p>
     <h1>Admin control panel</h1>
   </header>
 
@@ -11,23 +14,16 @@
       <section class="admin-page__hero" aria-labelledby="admin-hero-heading">
         <h2 id="admin-hero-heading" class="admin-page__hero-title">Build DashBuilder from DashBuilder</h2>
         <p class="admin-page__lead">
-          Manage saved dashboards, toggle experimental features, and jump to Environment or Builder
+          Manage saved dashboards, toggle experimental features, and jump to Settings or Builder
           configuration. Everything stays in your browser — no DashBuilder-hosted admin server.
         </p>
         <ul class="admin-page__highlights">
           <li>Save composites to your local content library and reopen them in the builder</li>
           <li>See AI, voice, and app-lock status at a glance</li>
           <li>Toggle AI drawer and voice input without redeploying</li>
+          <li>Browse animated builder guides for every palette component</li>
           <li>Browse the component catalog that powers the palette</li>
         </ul>
-
-        <nav class="admin-page__nav" aria-label="Page navigation">
-          <a routerLink="/" class="admin-page__nav-link" data-testid="admin-link-welcome">← Welcome</a>
-          <a routerLink="/environment" class="admin-page__nav-link" data-testid="admin-link-environment">Environment</a>
-          @if (canOpenBuilder()) {
-            <a routerLink="/builder" class="admin-page__nav-link" data-testid="admin-link-builder">Open builder →</a>
-          }
-        </nav>
 
         @if (library.message(); as message) {
           <p class="admin-page__message" data-testid="admin-message">{{ message }}</p>
@@ -132,7 +128,7 @@
                       </div>
                     </dl>
                     <div class="admin-page__link-row">
-                      <a routerLink="/environment" class="admin-page__button admin-page__button--secondary">Environment &amp; BYOK</a>
+                      <a routerLink="/environment" class="admin-page__button admin-page__button--secondary">Settings &amp; BYOK</a>
                       <a routerLink="/builder" class="admin-page__button admin-page__button--secondary">Builder &amp; AI drawer</a>
                     </div>
                   }
@@ -157,6 +153,69 @@
                       />
                       Enable voice input in AI drawer
                     </label>
+                  }
+
+                  @case ('guides') {
+                    <p class="admin-page__hint">
+                      Same animated instructions shown when you add a component on the canvas. Expand a
+                      type to preview bindings, companions, and step-by-step help before building.
+                    </p>
+                    <div class="admin-page__guide-list">
+                      @for (entry of builderGuides(); track entry.type) {
+                        <article
+                          class="admin-page__guide-card"
+                          [class.admin-page__guide-card--open]="isGuideOpen(entry.type)"
+                          [attr.data-testid]="'admin-guide-' + entry.type"
+                        >
+                          <button
+                            type="button"
+                            class="admin-page__guide-toggle"
+                            [attr.aria-expanded]="isGuideOpen(entry.type)"
+                            (click)="toggleGuide(entry.type)"
+                          >
+                            <span>
+                              <strong>{{ entry.label }}</strong>
+                              <code>{{ entry.type }}</code>
+                            </span>
+                            <span class="admin-page__guide-chevron" aria-hidden="true"></span>
+                          </button>
+
+                          @if (isGuideOpen(entry.type)) {
+                            <div class="admin-page__guide-body">
+                              <p class="admin-page__hint">{{ entry.guide.summary }}</p>
+                              @if (entry.guide.placementMessage) {
+                                <p class="grouping-instruction__outcome">{{ entry.guide.placementMessage }}</p>
+                              }
+
+                              <div
+                                class="grouping-animation"
+                                [class]="'grouping-animation grouping-animation--' + entry.guide.animationKey"
+                              >
+                                @for (block of guideAnimationBlocks(entry.guide); track block) {
+                                  <div class="grouping-animation__block">{{ block }}</div>
+                                }
+                              </div>
+                              <p class="grouping-animation__label">{{ guideAnimationLabel(entry.guide) }}</p>
+
+                              @if (guideHasSteps(entry.type)) {
+                                <p class="grouping-instruction__step-count">{{ guideSteps(entry.type).length }} steps</p>
+                                <ol class="grouping-instruction__steps">
+                                  @for (step of guideSteps(entry.type); track step.order) {
+                                    <li class="grouping-instruction__step">
+                                      <span class="grouping-instruction__step-order">{{ step.order }}</span>
+                                      <div class="grouping-instruction__step-body">
+                                        <p class="grouping-instruction__step-title">{{ step.title }}</p>
+                                        <p class="grouping-instruction__step-text">{{ step.body }}</p>
+                                      </div>
+                                    </li>
+                                  }
+                                </ol>
+                              }
+                            </div>
+                          }
+                        </article>
+                      }
+                    </div>
                   }
 
                   @case ('catalog') {

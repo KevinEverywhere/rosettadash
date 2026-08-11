@@ -1,12 +1,31 @@
 import { Component, computed, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import type { Binding, DomainContext } from '@dashbuilder/core';
+import type { Binding, ComponentNode, DomainContext } from '@dashbuilder/core';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
+import { computeCanvasContentBounds } from '../canvas/canvas-viewport';
 import { BuilderStateService } from '../builder-state.service';
 import { PreviewDataService } from './preview-data.service';
 import { PreviewNodeComponent } from './preview-node.component';
 
 const PREVIEW_LOAD_DEBOUNCE_MS = 200;
+
+const PREVIEW_TYPE_MIN_HEIGHT: Record<string, number> = {
+  'visual.table': 220,
+  'visual.chart.line': 200,
+  'visual.chart.bar': 200,
+  'visual.chart.pie': 200,
+  'visual.kpi': 120,
+  'visual.detail': 160,
+  'visual.input.select': 120,
+  'visual.input.date-range': 120,
+  'domain.time-preset': 120,
+};
+
+function estimatePreviewNodeHeight(node: ComponentNode): number {
+  const layoutHeight = node.layout?.height ?? 72;
+  const typeMinimum = PREVIEW_TYPE_MIN_HEIGHT[node.type] ?? layoutHeight;
+  return Math.max(layoutHeight, typeMinimum) + 36;
+}
 
 interface PreviewNodePayload {
   id: string;
@@ -54,6 +73,22 @@ export class PreviewPanelComponent {
       return (left.layout?.x ?? 0) - (right.layout?.x ?? 0);
     }),
   );
+
+  protected readonly previewContentBounds = computed(() =>
+    computeCanvasContentBounds(this.state.previewNodes(), estimatePreviewNodeHeight),
+  );
+
+  protected readonly dashboardBanner = computed(() => {
+    const composite = this.state.composite();
+    if (!composite?.templateId) {
+      return null;
+    }
+    return {
+      name: composite.name,
+      description: composite.description,
+      templateId: composite.templateId,
+    };
+  });
 
   private readonly previewLoadFingerprint = computed(() => {
     const project = this.state.project();
