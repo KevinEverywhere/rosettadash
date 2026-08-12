@@ -33,9 +33,9 @@
       "default": "./src/visual/link-list/index.js"
     },
     "./media": {
-      "types": "./src/media/index.d.ts",
-      "import": "./src/media/index.js",
-      "default": "./src/media/index.js"
+      "types": "./src/visual/media/index.d.ts",
+      "import": "./src/visual/media/index.js",
+      "default": "./src/visual/media/index.js"
     },
     "./wasm": {
       "types": "./src/wasm/index.d.ts",
@@ -53,19 +53,19 @@
       "default": "./src/catalog/index.js"
     },
     "./catalog/component-spec": {
-      "types": "./src/catalog/component-spec.d.ts",
-      "import": "./src/catalog/component-spec.js",
-      "default": "./src/catalog/component-spec.js"
+      "types": "./src/catalog/component-spec/index.d.ts",
+      "import": "./src/catalog/component-spec/index.js",
+      "default": "./src/catalog/component-spec/index.js"
     },
     "./visual/media/video-source": {
-      "types": "./src/media/video-source.d.ts",
-      "import": "./src/media/video-source.js",
-      "default": "./src/media/video-source.js"
+      "types": "./src/visual/media/video-source/index.d.ts",
+      "import": "./src/visual/media/video-source/index.js",
+      "default": "./src/visual/media/video-source/index.js"
     },
     "./visual/media/equirect-viewport": {
-      "types": "./src/media/equirect-viewport.d.ts",
-      "import": "./src/media/equirect-viewport.js",
-      "default": "./src/media/equirect-viewport.js"
+      "types": "./src/visual/media/equirect-viewport/index.d.ts",
+      "import": "./src/visual/media/equirect-viewport/index.js",
+      "default": "./src/visual/media/equirect-viewport/index.js"
     },
     "./browser/media": {
       "import": "./browser/media.js",

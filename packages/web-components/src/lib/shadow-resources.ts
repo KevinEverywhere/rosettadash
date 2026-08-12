@@ -1,0 +1,52 @@
+const textCache = new Map<string, Promise<string>>();
+
+/** Load co-located `.html` / `.css` for shadow roots (browser fetch). */
+export function loadTextResource(relativePath: string, baseUrl: string): Promise<string> {
+  const url = new URL(relativePath, baseUrl);
+  const cacheKey = url.href;
+  const cached = textCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  const promise = (async () => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to load ${url.href}: ${response.status}`);
+    }
+    return response.text();
+  })();
+
+  textCache.set(cacheKey, promise);
+  return promise;
+}
+
+export interface ShadowMountOptions {
+  html: string;
+  css: string;
+}
+
+/** Apply stylesheet + markup to an open shadow root. */
+export function applyShadowMount(root: ShadowRoot, options: ShadowMountOptions): void {
+  root.innerHTML = '';
+  const style = document.createElement('style');
+  style.textContent = options.css;
+  root.appendChild(style);
+
+  const template = document.createElement('template');
+  template.innerHTML = options.html;
+  root.appendChild(template.content.cloneNode(true));
+}
+
+/** Load paired `.html` + `.css` next to the calling module. */
+export async function loadShadowPair(
+  baseUrl: string,
+  htmlFile: string,
+  cssFile: string,
+): Promise<ShadowMountOptions> {
+  const [html, css] = await Promise.all([
+    loadTextResource(htmlFile, baseUrl),
+    loadTextResource(cssFile, baseUrl),
+  ]);
+  return { html, css };
+}

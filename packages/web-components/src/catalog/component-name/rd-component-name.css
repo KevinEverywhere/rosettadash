@@ -1,0 +1,67 @@
+:host {
+  display: block;
+}
+
+.rd-component-name {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--rd-color-border, #d0d0d0);
+  border-radius: var(--rd-radius-md, 0.5rem);
+  background: #fff;
+  font-family: var(--rd-font-family, system-ui, sans-serif);
+}
+
+.rd-component-name__header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.rd-component-name__header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--rd-color-muted, #5c5c5c);
+  line-height: 1.45;
+}
+
+.rd-component-name__legend {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--rd-color-muted, #6b7280);
+}
+
+.rd-component-name__legend strong {
+  color: var(--rd-color-text, #1a1a1a);
+}
+
+.rd-component-name__legend span.optional {
+  color: var(--rd-color-muted, #9ca3af);
+}
+
+.rd-component-name__demo ::slotted(*) {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+::slotted(.rd-catalog-item__footer) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rd-color-border, #d0d0d0);
+  font-size: 0.6875rem;
+  color: var(--rd-color-muted, #5c5c5c);
+}
+
+::slotted(.rd-catalog-item__type) {
+  font-family: ui-monospace, monospace;
+}
+
+.rd-component-name--compact {
+  padding: 0.625rem 0.75rem;
+}
+
+.rd-component-name--plain {
+  border-style: dashed;
+  background: transparent;
+}

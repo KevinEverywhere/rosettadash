@@ -1,0 +1,15 @@
+<section class="rd-accordion" data-ref="root" data-testid="rd-accordion">
+  <button
+    type="button"
+    class="rd-accordion__header"
+    data-ref="header"
+    aria-expanded="false"
+    aria-controls="rd-accordion-panel"
+  >
+    <span class="rd-accordion__title" data-ref="title"></span>
+    <span class="rd-accordion__chevron" aria-hidden="true">›</span>
+  </button>
+  <div class="rd-accordion__panel" id="rd-accordion-panel" role="region" data-ref="panel">
+    <slot></slot>
+  </div>
+</section>

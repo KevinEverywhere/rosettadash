@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.rd-link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--rd-color-text, #1a1a1a);
+  font-family: var(--rd-font-family, system-ui, sans-serif);
+  font-size: var(--rd-font-size, 0.875rem);
+  line-height: var(--rd-line-height, 1.4);
+}
+
+.rd-link-list__item + .rd-link-list__item {
+  margin-top: var(--rd-space-xs, 0.25rem);
+}
+
+.rd-link-list--dense .rd-link-list__item + .rd-link-list__item {
+  margin-top: 0;
+}
+
+.rd-link-list__link {
+  color: var(--rd-color-accent, #2563eb);
+  text-decoration: none;
+}
+
+.rd-link-list__link:hover,
+.rd-link-list__link:focus-visible {
+  text-decoration: underline;
+}

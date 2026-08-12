@@ -27,18 +27,23 @@
             "input": "packages/web-components/src",
             "glob": "**/*.css",
             "output": "."
+          },
+          {
+            "input": "packages/web-components/src",
+            "glob": "**/*.html",
+            "output": "."
           }
         ],
         "additionalEntryPoints": [
           "packages/web-components/src/layout/accordion/index.ts",
           "packages/web-components/src/layout/accordion-link-list/index.ts",
           "packages/web-components/src/visual/link-list/index.ts",
-          "packages/web-components/src/media/index.ts",
+          "packages/web-components/src/visual/media/index.ts",
+          "packages/web-components/src/visual/media/video-source/index.ts",
+          "packages/web-components/src/visual/media/equirect-viewport/index.ts",
           "packages/web-components/src/wasm/index.ts",
-          "packages/web-components/src/media/video-source.ts",
-          "packages/web-components/src/media/equirect-viewport.ts",
           "packages/web-components/src/catalog/index.ts",
-          "packages/web-components/src/catalog/component-spec.ts"
+          "packages/web-components/src/catalog/component-spec/index.ts"
         ],
         "generateExportsField": true
       }

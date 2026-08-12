@@ -3,8 +3,9 @@ module.exports = {
   preset: '../../jest.preset.js',
   testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+    '^.+\\.ts$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.cjs'],
   coverageDirectory: '../../coverage/packages/web-components',
 };

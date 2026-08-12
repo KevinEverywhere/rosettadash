@@ -2,7 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "declaration": true
+    "declaration": true,
+    "module": "esnext",
+    "target": "es2022"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]

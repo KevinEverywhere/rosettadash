@@ -1,8 +1,18 @@
+export interface DefineRosettaElementOptions {
+  extends?: keyof HTMLElementTagNameMap;
+}
+
 export function defineRosettaElement(
   tagName: string,
   ctor: CustomElementConstructor,
+  options?: DefineRosettaElementOptions,
 ): void {
-  if (!customElements.get(tagName)) {
+  if (customElements.get(tagName)) {
+    return;
+  }
+  if (options?.extends) {
+    customElements.define(tagName, ctor, { extends: options.extends });
+  } else {
     customElements.define(tagName, ctor);
   }
 }
