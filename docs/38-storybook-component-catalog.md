@@ -52,7 +52,9 @@ Atom-level stories under Layout / Visual / Wasm document npm custom elements in 
 
 Shared fixtures: `tools/storybook-shared/fixtures.ts` · catalog engine: `tools/storybook-shared/palette-catalog/`.
 
-**Catalog meta custom elements (DAS-102):** `@rosettadash/web-components/catalog` registers `rd-palette-catalog`, `rd-palette-group`, `rd-component-spec`, `rd-component-port`, `rd-component-requirement`, and `rd-component-option`. Use `variant="default|compact|plain"` for density/chrome; BEM classes match future React/Vue wrappers. Storybook palette pages mount these CEs; see **Catalog → Meta elements** for declarative XML-style examples.
+**Catalog meta compositions (DAS-105):** **Catalog → Meta compositions** — ~10 live dashboard/recipe layouts showing every palette component and npm `rd-*` atom **in action** together. Replaces markup-only **Meta elements** stories. See [Storybook meta compositions](./42-storybook-meta-compositions.md).
+
+**Catalog meta custom elements (DAS-102):** `@rosettadash/web-components/catalog` registers `rd-palette-catalog`, `rd-palette-group`, `rd-component-spec`, `rd-component-port`, `rd-component-requirement`, and `rd-component-option`. Use `variant="default|compact|plain"` for density/chrome; BEM classes match future React/Vue wrappers. Storybook palette pages mount these CEs for per-component spec cards.
 
 ## Styling
 

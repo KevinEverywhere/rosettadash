@@ -16,6 +16,7 @@ import {
   tableRows,
   timePresetOptions,
 } from './palette-demo-data.js';
+import { PREVIEW_TABLE_NUMERIC_CLASS } from '../preview-numeric.js';
 
 function esc(value: string): string {
   return value
@@ -36,7 +37,7 @@ function tableRowsHtml(rows: typeof tableRows, testId: string): string {
   return rows
     .map(
       (row) =>
-        `<tr class="preview-table__row" data-row-id="${esc(row.id)}" tabindex="0"><td>${esc(row.name)}</td><td>${esc(row.status)}</td><td>$${row.amount.toLocaleString()}</td><td>${esc(row.date)}</td></tr>`,
+        `<tr class="preview-table__row" data-row-id="${esc(row.id)}" tabindex="0"><td>${esc(row.name)}</td><td>${esc(row.status)}</td><td class="${PREVIEW_TABLE_NUMERIC_CLASS}">$${row.amount.toLocaleString()}</td><td>${esc(row.date)}</td></tr>`,
     )
     .join('');
 }
@@ -94,7 +95,7 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
         .join('')}</div></div>`;
 
     case 'visual.table':
-      return `<div class="preview-table" data-catalog-table><div class="preview-table__header"><span>${label}</span><span class="preview-chip">Filterable</span></div><table><thead><tr><th>Name</th><th>Status</th><th>Amount</th><th>Date</th></tr></thead><tbody>${tableRowsHtml(tableRows, 'demo-table')}</tbody></table></div>`;
+      return `<div class="preview-table" data-catalog-table><div class="preview-table__header"><span>${label}</span><span class="preview-chip">Filterable</span></div><table><thead><tr><th>Name</th><th>Status</th><th class="${PREVIEW_TABLE_NUMERIC_CLASS}">Amount</th><th>Date</th></tr></thead><tbody>${tableRowsHtml(tableRows, 'demo-table')}</tbody></table></div>`;
 
     case 'visual.detail':
       return `<div class="preview-detail" data-catalog-detail><div class="preview-detail__header"><span class="preview-detail__title">Details</span><span class="preview-chip">Table row selection</span></div><p class="preview-detail__empty">Select a row in the Data Table demo</p></div>`;

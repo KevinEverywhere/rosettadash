@@ -333,4 +333,10 @@ export class PreviewNodeComponent {
     }
     return new Intl.NumberFormat('en-US').format(value);
   }
+
+  protected isNumericDetailKey(key: string): boolean {
+    return /^(amount|count|total|qty|quantity|price|revenue|value|delta|percent|progress|ticks?)$/i.test(
+      key,
+    );
+  }
 }

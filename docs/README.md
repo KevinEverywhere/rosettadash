@@ -43,11 +43,12 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 31. [npm library build](./37-npm-library-build.md) — runtime packages + exports + pack (DAS-91)
 32. [React runtime integration](./40-react-runtime-integration.md) — native React + CE hosts, refs (DAS-104)
 33. [Stack styling guides](./41-stack-styling-guides.md) — Tailwind, CSS Modules, MUI, plain CSS (DAS-104)
-34. [npm consumer install](./39-npm-consumer-install.md) — scoped packages for ffmp3Console & siblings (DAS-99)
+34. [Storybook meta compositions](./42-storybook-meta-compositions.md) — live dashboard demos for all components (DAS-105)
+35. [npm consumer install](./39-npm-consumer-install.md) — scoped packages for ffmp3Console & siblings (DAS-99)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-104** — React runtime integration + stack styling guides — on `feature/DAS-104-react-runtime-stack-styling`.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-105** — Storybook meta compositions — on `feature/DAS-105-storybook-meta-compositions`.
 
 ## Current capabilities (at a glance)
 

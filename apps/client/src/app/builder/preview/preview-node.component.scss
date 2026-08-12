@@ -44,6 +44,11 @@
   font-size: 0.875rem;
 }
 
+.preview-input[type='number'] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .preview-date-range {
   display: flex;
   flex-direction: column;
@@ -122,6 +127,12 @@
   text-align: left;
 }
 
+.preview-table th.preview-table__cell--numeric,
+.preview-table td.preview-table__cell--numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .preview-table th {
   color: var(--db-text-muted);
   font-weight: 600;
@@ -179,6 +190,11 @@
 
 .preview-detail__field dd {
   margin: 0;
+}
+
+.preview-detail__field dd.preview-detail__value--numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .preview-detail__empty {
@@ -292,6 +308,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 .preview-kpi {
@@ -312,11 +329,15 @@
 .preview-kpi__value {
   font-size: 1.5rem;
   font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .preview-kpi__delta {
   font-size: 0.75rem;
   color: #2f9e44;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .preview-chart {

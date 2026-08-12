@@ -37,6 +37,9 @@
 
 .preview-plugin__chip-value {
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+  text-align: right;
 }
 
 .preview-svg {

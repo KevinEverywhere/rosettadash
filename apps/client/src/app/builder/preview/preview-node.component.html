@@ -109,7 +109,7 @@
           <tr>
             <th>Name</th>
             <th>Status</th>
-            <th>Amount</th>
+            <th class="preview-table__cell--numeric">Amount</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -122,7 +122,7 @@
             >
               <td>{{ row.name }}</td>
               <td>{{ row.status }}</td>
-              <td>{{ row.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
+              <td class="preview-table__cell--numeric">{{ row.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
               <td>{{ row.date }}</td>
             </tr>
           }
@@ -143,7 +143,7 @@
           @for (field of detailFields(); track field.key) {
             <div class="preview-detail__field">
               <dt>{{ field.key }}</dt>
-              <dd>{{ field.value }}</dd>
+              <dd [class.preview-detail__value--numeric]="isNumericDetailKey(field.key)">{{ field.value }}</dd>
             </div>
           }
         </dl>
@@ -469,7 +469,7 @@
           @for (field of newsArticleFields(); track field.key) {
             <div class="preview-detail__field">
               <dt>{{ field.key }}</dt>
-              <dd>{{ field.value }}</dd>
+              <dd [class.preview-detail__value--numeric]="isNumericDetailKey(field.key)">{{ field.value }}</dd>
             </div>
           }
         </dl>

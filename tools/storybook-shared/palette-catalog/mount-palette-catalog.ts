@@ -11,6 +11,7 @@ import {
   externalResourceItemsJson,
   navigationLinkItemsJson,
 } from '../fixtures.js';
+import { isNumericDetailKey } from '../preview-numeric.js';
 import { chartPoints, newsRows, tableRows } from './palette-demo-data.js';
 import { buildCatalogGroupElement, ensureCatalogElementsRegistered } from './build-palette-catalog-ce.js';
 import {
@@ -111,7 +112,7 @@ function detailFieldsHtml(row: Record<string, string | number>): string {
   return Object.entries(row)
     .map(
       ([key, value]) =>
-        `<div class="preview-detail__field"><dt>${key}</dt><dd>${String(value)}</dd></div>`,
+        `<div class="preview-detail__field"><dt>${key}</dt><dd${isNumericDetailKey(key) ? ' class="preview-detail__value--numeric"' : ''}>${String(value)}</dd></div>`,
     )
     .join('');
 }
@@ -267,7 +268,7 @@ function wireThreeDemos(root: HTMLElement): void {
   });
 }
 
-function wireCatalogInteractivity(root: HTMLElement): void {
+export function wireCatalogInteractivity(root: HTMLElement): void {
   wireTableDetail(root);
   wireNewsDetail(root);
   wireTimePresets(root);
