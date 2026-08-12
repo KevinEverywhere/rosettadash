@@ -14,14 +14,32 @@ export const SHADOW_ELEMENT_DIRS: Record<string, string> = {
 const tagToBaseUrl = new Map<string, string>();
 let packageSrcRoot: string | null = null;
 
+/** Ensure a module/file URL resolves to a directory URL (trailing `/`). */
+export function normalizeDirectoryUrl(urlString: string): string {
+  const url = new URL(urlString);
+  const lastSegment = url.pathname.split('/').pop() ?? '';
+  if (/\.[a-z0-9]+$/i.test(lastSegment)) {
+    url.pathname = url.pathname.replace(/\/[^/]+$/, '/');
+  } else if (!url.pathname.endsWith('/')) {
+    url.pathname = `${url.pathname}/`;
+  }
+  return url.href.endsWith('/') ? url.href : `${url.href}/`;
+}
+
 /** Register co-located asset directory for a custom element tag. */
 export function registerShadowBase(tag: string, baseUrl: string): void {
-  tagToBaseUrl.set(tag, baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
+  tagToBaseUrl.set(tag, normalizeDirectoryUrl(baseUrl));
 }
 
 /** Set package `src/` root (`file:` or `https:` URL ending in `/`). */
 export function setShadowPackageSrcRoot(rootUrl: string): void {
-  packageSrcRoot = rootUrl.endsWith('/') ? rootUrl : `${rootUrl}/`;
+  packageSrcRoot = normalizeDirectoryUrl(rootUrl);
+}
+
+/** Resolve `packages/web-components/src/` from a module URL (Vite-safe). */
+export function resolvePackageSrcRootFromModule(moduleUrl: string): string {
+  const marker = new URL('./register-shadow-bases.browser.js', moduleUrl);
+  return normalizeDirectoryUrl(new URL('./', marker).href);
 }
 
 /** Register all known shadow bases from {@link setShadowPackageSrcRoot}. */

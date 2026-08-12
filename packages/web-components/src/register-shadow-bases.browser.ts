@@ -1,5 +1,9 @@
-import { registerAllShadowBases, setShadowPackageSrcRoot } from './lib/shadow-base.js';
+import {
+  registerAllShadowBases,
+  resolvePackageSrcRootFromModule,
+  setShadowPackageSrcRoot,
+} from './lib/shadow-base.js';
 
 /** Browser-only: register co-located shadow asset bases (not loaded in Jest). */
-setShadowPackageSrcRoot(new URL('./', import.meta.url).href);
+setShadowPackageSrcRoot(resolvePackageSrcRootFromModule(import.meta.url));
 registerAllShadowBases();
