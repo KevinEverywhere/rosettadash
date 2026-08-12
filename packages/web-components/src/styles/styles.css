@@ -45,3 +45,31 @@
 .rd-accordion--open .rd-accordion__chevron {
   transform: rotate(90deg);
 }
+
+.rd-link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--rd-color-text);
+  font-family: var(--rd-font-family);
+  font-size: var(--rd-font-size);
+  line-height: var(--rd-line-height);
+}
+
+.rd-link-list__item + .rd-link-list__item {
+  margin-top: var(--rd-space-xs);
+}
+
+.rd-link-list--dense .rd-link-list__item + .rd-link-list__item {
+  margin-top: 0;
+}
+
+.rd-link-list__link {
+  color: var(--rd-color-accent);
+  text-decoration: none;
+}
+
+.rd-link-list__link:hover,
+.rd-link-list__link:focus-visible {
+  text-decoration: underline;
+}

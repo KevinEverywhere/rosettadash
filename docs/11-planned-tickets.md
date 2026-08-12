@@ -92,9 +92,9 @@ Forward-looking Jira ticket plan for RosettaDash.
 | Ticket | Summary |
 |--------|---------|
 | [DAS-91](https://planetkevin.atlassian.net/browse/DAS-91) | Build + identical `exports` for runtime packages — **done** |
-| [DAS-92](https://planetkevin.atlassian.net/browse/DAS-92) | Public `--rd-*` / `rd-*` stylesheet contract — **ready to merge** (`feature/DAS-92-rd-tokens-styles`) |
+| [DAS-92](https://planetkevin.atlassian.net/browse/DAS-92) | Public `--rd-*` / `rd-*` stylesheet contract — **done** |
 | [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) | Full taxonomy on all runtime packages for `0.1.0` |
-| [DAS-94](https://planetkevin.atlassian.net/browse/DAS-94) | Hand-maintained recipe helpers (`LinkList`, `AccordionLinkList`) |
+| [DAS-94](https://planetkevin.atlassian.net/browse/DAS-94) | Hand-maintained recipe helpers (`LinkList`, `AccordionLinkList`) — **in progress** (`feature/DAS-94-npm-recipe-helpers`) |
 | [DAS-95](https://planetkevin.atlassian.net/browse/DAS-95) | E2E: compact layout `openBuilder` palette-ready race |
 
 **Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`).

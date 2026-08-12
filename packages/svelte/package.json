@@ -17,6 +17,16 @@
       "types": "./src/layout/accordion/index.d.ts",
       "import": "./src/layout/accordion/index.js",
       "default": "./src/layout/accordion/index.js"
+    },
+    "./layout/accordion-link-list": {
+      "types": "./src/layout/accordion-link-list/index.d.ts",
+      "import": "./src/layout/accordion-link-list/index.js",
+      "default": "./src/layout/accordion-link-list/index.js"
+    },
+    "./visual/link-list": {
+      "types": "./src/visual/link-list/index.d.ts",
+      "import": "./src/visual/link-list/index.js",
+      "default": "./src/visual/link-list/index.js"
     }
   },
   "files": ["src", "README.md"],

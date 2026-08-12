@@ -11,10 +11,11 @@ describe('@rosettadash/web-components styles', () => {
     expect(tokens).not.toContain('--db-');
   });
 
-  it('opt-in styles.css imports tokens and styles rd-accordion', () => {
+  it('opt-in styles.css imports tokens and styles rd-accordion / rd-link-list', () => {
     const styles = readFileSync(join(stylesDir, 'styles.css'), 'utf8');
     expect(styles).toContain("@import './tokens.css'");
     expect(styles).toContain('.rd-accordion');
+    expect(styles).toContain('.rd-link-list');
     expect(styles).not.toContain('body {');
     expect(styles).not.toContain('--db-');
   });

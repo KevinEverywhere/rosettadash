@@ -20,7 +20,9 @@
           }
         ],
         "additionalEntryPoints": [
-          "packages/react/src/layout/accordion/index.ts"
+          "packages/react/src/layout/accordion/index.ts",
+          "packages/react/src/layout/accordion-link-list/index.ts",
+          "packages/react/src/visual/link-list/index.ts"
         ],
         "generateExportsField": true
       }

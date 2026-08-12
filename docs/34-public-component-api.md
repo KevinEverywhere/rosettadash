@@ -78,12 +78,12 @@ import {
 } from '@rosettadash/react/layout/accordion-link-list';
 ```
 
-### Initial recipe set
+### Initial recipe set (DAS-94)
 
-| Import (any runtime) | Intent |
-|----------------------|--------|
-| `…/visual/link-list` | List of `{ label, href }` |
-| `…/layout/accordion-link-list` | Collapsible nav / TOC |
+| Import (any runtime) | Intent | Status |
+|----------------------|--------|--------|
+| `…/visual/link-list` | List of `{ label, href }` | Shipped on all runtimes (`feature/DAS-94-npm-recipe-helpers`) |
+| `…/layout/accordion-link-list` | Collapsible nav / TOC | Shipped on all runtimes |
 
 ## Typing contract
 

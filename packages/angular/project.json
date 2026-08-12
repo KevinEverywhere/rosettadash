@@ -20,7 +20,9 @@
           }
         ],
         "additionalEntryPoints": [
-          "packages/angular/src/layout/accordion/index.ts"
+          "packages/angular/src/layout/accordion/index.ts",
+          "packages/angular/src/layout/accordion-link-list/index.ts",
+          "packages/angular/src/visual/link-list/index.ts"
         ],
         "generateExportsField": true
       }

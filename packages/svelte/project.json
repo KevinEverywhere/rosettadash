@@ -20,7 +20,9 @@
           }
         ],
         "additionalEntryPoints": [
-          "packages/svelte/src/layout/accordion/index.ts"
+          "packages/svelte/src/layout/accordion/index.ts",
+          "packages/svelte/src/layout/accordion-link-list/index.ts",
+          "packages/svelte/src/visual/link-list/index.ts"
         ],
         "generateExportsField": true
       }

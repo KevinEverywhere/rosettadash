@@ -21,12 +21,19 @@ import { … } from '@rosettadash/<runtime>/<group>/…/<component>';
 
 Unscoped root `rosettadash` remains the product/clone workspace (`private: true`) — not a component barrel.
 
-## Pilot export
+## Pilot + recipe exports
 
 `layout/accordion` is exported from every runtime package:
 
 - WC: `RdAccordionElement` / `<rd-accordion>` + `registerRdAccordion()`
 - Other runtimes: thin adapter stubs sharing `AccordionProps` (richer DOM adapters follow in later tickets)
+
+DAS-94 recipes (same subpaths on every runtime):
+
+| Import | WC | Other runtimes |
+|--------|----|----------------|
+| `visual/link-list` | `<rd-link-list>` | `LinkList` stub |
+| `layout/accordion-link-list` | `<rd-accordion-link-list>` + `AccordionLinkList()` | `AccordionLinkList` stub |
 
 Legacy media subpaths (`./media`, `./wasm`) remain on `@rosettadash/web-components` for FFMP3; taxonomy-aligned aliases also exist under `./visual/media/…`.
 
@@ -59,7 +66,7 @@ Public CSS contract is `--rd-*` / `rd-*` only (no `--db-*`).
 
 ## Follow-ons
 
-- DAS-92 — public `--rd-*` / `rd-*` stylesheet packaging (**ready to merge** on `feature/DAS-92-rd-tokens-styles`)
+- DAS-92 — public `--rd-*` / `rd-*` stylesheet packaging (**done**)
+- DAS-94 — recipe helpers (**in progress** on `feature/DAS-94-npm-recipe-helpers`)
 - DAS-93 — full taxonomy coverage for `0.1.0`
-- DAS-94 — recipe helpers
 - DAS-96 — shared kernel to remove adapter stub duplication

@@ -20,7 +20,9 @@
           }
         ],
         "additionalEntryPoints": [
-          "packages/vue/src/layout/accordion/index.ts"
+          "packages/vue/src/layout/accordion/index.ts",
+          "packages/vue/src/layout/accordion-link-list/index.ts",
+          "packages/vue/src/visual/link-list/index.ts"
         ],
         "generateExportsField": true
       }

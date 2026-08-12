@@ -26,6 +26,8 @@
         ],
         "additionalEntryPoints": [
           "packages/web-components/src/layout/accordion/index.ts",
+          "packages/web-components/src/layout/accordion-link-list/index.ts",
+          "packages/web-components/src/visual/link-list/index.ts",
           "packages/web-components/src/media/index.ts",
           "packages/web-components/src/wasm/index.ts",
           "packages/web-components/src/media/video-source.ts",
