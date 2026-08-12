@@ -108,12 +108,19 @@ export async function openBuilder(page: Page): Promise<void> {
 }
 
 async function expectBuilderPaletteReady(page: Page): Promise<void> {
+  // Wide: palette visible. Compact: palette stays in the DOM but hidden; the
+  // Components toggle is the ready signal. Do not one-shot-check the toggle
+  // then wait on a hidden palette (compact e2e 30s timeout).
+  const palette = page.getByTestId('palette');
   const compactToggle = page.getByTestId('toggle-palette');
-  if (await compactToggle.isVisible().catch(() => false)) {
-    return;
-  }
-
-  await expect(page.getByTestId('palette')).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(
+      async () =>
+        (await compactToggle.isVisible().catch(() => false)) ||
+        (await palette.isVisible().catch(() => false)),
+      { timeout: 30_000 },
+    )
+    .toBe(true);
 }
 
 async function ensurePaletteVisible(page: Page): Promise<void> {
