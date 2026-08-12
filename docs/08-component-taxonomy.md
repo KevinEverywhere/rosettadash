@@ -2,6 +2,8 @@
 
 Initial palette organization for RosettaDash. Components are grouped for palette navigation; each maps to a `type` string in the component model.
 
+**npm note (DAS-90):** Public imports are `@rosettadash/<runtime>/<group>/…/<component>` (one or more groups; same subpaths on every runtime). Multi-component patterns are **recipes over atoms**, not extra taxonomy rows — see [Public component API](./34-public-component-api.md).
+
 ## 1. Form & Input
 
 | Component | Type key | Notes |

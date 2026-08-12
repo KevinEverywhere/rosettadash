@@ -8,6 +8,25 @@ RosettaDash is a visual dashboard component builder for **developers working loc
 
 RosettaDash is intended to run on **your machine** during development. There is no required public deployment; GitHub Actions only validates PRs.
 
+## Two ways to use RosettaDash
+
+| Path | When | How |
+|------|------|-----|
+| **Product (`rosettadash`)** | Contribute, run the visual builder, extend the monorepo | `git clone` this repo → `npm install` → `npm start` |
+| **Components (scoped npm)** | Drop typed elements into an existing app | `npm install @rosettadash/<runtime>` → `@rosettadash/<runtime>/<group>/…/<component>` |
+
+Unscoped **rosettadash** is the product (same as clone) — not a component barrel. Library API: [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90); `0.1.0` waits on full taxonomy. Until then: clone/build or standalone export zips.
+
+```ts
+// Planned consumer API (see docs/33–36) — not published as 0.1.0 yet
+// Same <group>/…/<component> on every runtime (web-components default)
+import { Accordion } from '@rosettadash/web-components/layout/accordion';
+import { Accordion } from '@rosettadash/react/layout/accordion';
+import { VideoSource } from '@rosettadash/vue/visual/media/video-source';
+```
+
+Details: [npm prep](docs/33-npm-package-prep.md) · [Public API](docs/34-public-component-api.md) · [Styling](docs/35-styling-and-classnames.md) · [Post-90 plan](docs/36-npm-post-90-plan.md).
+
 ## Monorepo
 
 This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud required).

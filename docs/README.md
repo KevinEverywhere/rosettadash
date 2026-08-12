@@ -36,10 +36,14 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 24. [Admin Control Panel](./25-admin-control-panel.md) — content library hub (DAS-74)
 25. [App component CSS convention](./28-app-component-css-convention.md) — `app-*` BEM classes and shared collapsible primitive
 26. [Stack server & database validation](./29-stack-server-database-validation.md) — UI-filtered server/database options (DAS-78)
+27. [npm package prep](./33-npm-package-prep.md) — product vs scoped vendor imports, exports map (DAS-90)
+28. [Public component API](./34-public-component-api.md) — `@rosettadash/<vendor>/<group>/<component>`, recipes (DAS-90)
+29. [Styling and classnames](./35-styling-and-classnames.md) — `rd-*` / `--rd-*`, minimal opt-in styles (DAS-90)
+30. [Post–DAS-90 plan](./36-npm-post-90-plan.md) — delivery order after npm docs (DAS-90)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-74** — admin control panel — is in progress.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-90** — npm package prep docs — on `feature/DAS-90-npm-package-prep`.
 
 ## Current capabilities (at a glance)
 

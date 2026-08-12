@@ -85,6 +85,19 @@ Forward-looking Jira ticket plan for RosettaDash.
 | Ticket | Branch | Status |
 |--------|--------|--------|
 | [DAS-74](https://planetkevin.atlassian.net/browse/DAS-74) | `feature/DAS-74-admin-control-panel` | Admin control panel + content library |
+| [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90) | `feature/DAS-90-npm-package-prep` | npm prep docs (`rosettadash` public API) — docs only |
+
+## npm library follow-ups (after DAS-90 docs; see [Post–DAS-90 plan](./36-npm-post-90-plan.md))
+
+| Ticket | Summary |
+|--------|---------|
+| [DAS-91](https://planetkevin.atlassian.net/browse/DAS-91) | Build + identical `exports` for all `@rosettadash/<runtime>/<group>/…/<component>` packages |
+| [DAS-92](https://planetkevin.atlassian.net/browse/DAS-92) | Public `--rd-*` / `rd-*` stylesheet contract |
+| [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) | Full taxonomy on all runtime packages for `0.1.0` |
+| [DAS-94](https://planetkevin.atlassian.net/browse/DAS-94) | Hand-maintained recipe helpers (`LinkList`, `AccordionLinkList`) |
+| [DAS-95](https://planetkevin.atlassian.net/browse/DAS-95) | E2E: compact layout `openBuilder` palette-ready race |
+
+**Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`).
 
 ## Planned (not yet ticketed)
 
