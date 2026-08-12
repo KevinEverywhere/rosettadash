@@ -1,0 +1,45 @@
+{
+  "name": "client-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/client-e2e/src",
+  "implicitDependencies": ["client", "server"],
+  "tags": [],
+  "targets": {
+    "e2e": {
+      "cache": false,
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci": {
+      "cache": false,
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci--src/builder-bindings.spec.ts": {
+      "cache": false,
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci--src/builder-preview.spec.ts": {
+      "cache": false,
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    },
+    "e2e-ci--src/builder-smoke.spec.ts": {
+      "cache": false,
+      "dependsOn": [
+        { "projects": ["core"], "target": "build" },
+        { "projects": ["server"], "target": "build" }
+      ]
+    }
+  }
+}

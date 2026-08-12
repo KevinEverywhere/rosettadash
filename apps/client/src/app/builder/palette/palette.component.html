@@ -1,0 +1,168 @@
+<aside class="palette" data-testid="palette">
+  <header class="palette__header">
+    <button
+      type="button"
+      class="palette__header-toggle"
+      data-testid="palette-collapse-toggle"
+      [attr.aria-expanded]="showPaletteBody()"
+      [attr.aria-label]="showPaletteBody() ? 'Collapse components panel' : 'Expand components panel'"
+      (click)="onHeaderClick()"
+    >
+      <h2>Components</h2>
+    </button>
+    @if (showPaletteBody()) {
+      <p>Click to inspect, + to add, <strong>i</strong> = how it works, <strong>⛓</strong> = what it goes with</p>
+    }
+  </header>
+
+  @if (showPaletteBody()) {
+  @for (group of groups(); track group.id) {
+    <section
+      class="palette__group"
+      [class.palette__group--expanded]="isGroupExpanded(group.id)"
+      [class.palette__group--wizard]="isWizardGroupHighlight(group.id)"
+      [style]="groupAccentStyle(group.id)"
+      [attr.data-testid]="'palette-group-' + group.id"
+    >
+      <button
+        type="button"
+        class="palette__group-header"
+        [attr.data-testid]="'palette-group-toggle-' + group.id"
+        [attr.aria-expanded]="isGroupExpanded(group.id)"
+        [attr.aria-controls]="'palette-group-panel-' + group.id"
+        (click)="toggleGroup(group.id, $event)"
+        (keydown)="onGroupHeaderKeydown(group.id, $event)"
+      >
+        <span class="palette__group-chevron" aria-hidden="true"></span>
+        <span class="palette__group-label">{{ group.label }}</span>
+        <span class="palette__group-count">{{ group.items.length }}</span>
+      </button>
+
+      @if (isGroupExpanded(group.id)) {
+        <ul
+          class="palette__list"
+          [id]="'palette-group-panel-' + group.id"
+          [attr.data-testid]="'palette-group-panel-' + group.id"
+        >
+          @for (item of group.items; track item.type) {
+            <li class="palette__row">
+              <button
+                type="button"
+                class="palette__item"
+                [class.palette__item--selected]="selectedType() === item.type"
+                [class.palette__item--wizard]="isWizardTypeHighlight(item.type)"
+                (click)="select(item)"
+              >
+                <span class="palette__item-label">{{ item.label }}</span>
+                <span class="palette__actions">
+                  @if (hasGuide(item.type)) {
+                    <button
+                      type="button"
+                      class="palette__guide palette__guide--info"
+                      [class.palette__guide--active]="isGuideOpen(item.type, 'info')"
+                      [attr.data-testid]="'palette-info-' + item.type"
+                      title="Grouping info"
+                      aria-label="Show grouping info for {{ item.label }}"
+                      (click)="toggleGuide(item.type, 'info', $event)"
+                    >
+                      i
+                    </button>
+                    <button
+                      type="button"
+                      class="palette__guide palette__guide--link"
+                      [class.palette__guide--active]="isGuideOpen(item.type, 'link')"
+                      [attr.data-testid]="'palette-link-' + item.type"
+                      title="Typical companions"
+                      aria-label="Show typical companions for {{ item.label }}"
+                      (click)="toggleGuide(item.type, 'link', $event)"
+                    >
+                      ⛓
+                    </button>
+                  }
+                  @if (!item.isVisual) {
+                    <span class="palette__badge">infra</span>
+                  }
+                  <span
+                    class="palette__add"
+                    role="button"
+                    tabindex="0"
+                    title="Add to canvas"
+                    [attr.data-testid]="'palette-add-' + item.type"
+                    (click)="add(item, $event)"
+                    (keydown.enter)="add(item, $event)"
+                    (keydown.space)="add(item, $event)"
+                  >+</span>
+                </span>
+              </button>
+
+              @if (isGuideOpen(item.type, 'info')) {
+                <div
+                  class="palette__guide-panel"
+                  [attr.data-testid]="'palette-guide-info-' + item.type"
+                >
+                  <p class="grouping-instruction__section-label">How it works</p>
+                  <p class="palette__guide-summary">{{ guideSummary(item.type) }}</p>
+                  @if (hasInstructionSteps(item.type)) {
+                    <p class="grouping-instruction__outcome">{{ guideOutcome(item.type) }}</p>
+                  }
+                  <div
+                    class="grouping-animation"
+                    [class]="'grouping-animation grouping-animation--' + guideAnimationKey(item.type)"
+                  >
+                    @for (block of animationBlocks(item.type); track block) {
+                      <div class="grouping-animation__block">{{ block }}</div>
+                    }
+                  </div>
+                  <p class="grouping-animation__label">{{ guideAnimationLabel(item.type) }}</p>
+                  @if (hasInstructionSteps(item.type)) {
+                    <p class="grouping-instruction__step-count">
+                      {{ guideSteps(item.type).length }} steps
+                    </p>
+                    <ol class="grouping-instruction__steps">
+                      @for (step of guideSteps(item.type); track step.order) {
+                        <li
+                          [class]="'grouping-instruction__step ' + instructionStepClass(step)"
+                          [attr.data-testid]="'palette-instruction-step-' + item.type + '-' + step.order"
+                        >
+                          <span class="grouping-instruction__step-order">{{ step.order }}</span>
+                          <div class="grouping-instruction__step-body">
+                            <p class="grouping-instruction__step-title">{{ step.title }}</p>
+                            <p class="grouping-instruction__step-text">{{ step.body }}</p>
+                          </div>
+                        </li>
+                      }
+                    </ol>
+                  }
+                </div>
+              }
+
+              @if (isGuideOpen(item.type, 'link')) {
+                <div
+                  class="palette__guide-panel"
+                  [attr.data-testid]="'palette-guide-link-' + item.type"
+                >
+                  <p class="palette__guide-summary">What it goes with:</p>
+                  <ul class="palette__companions">
+                    @for (companion of guideCompanions(item.type); track companion.type) {
+                      <li>
+                        <button
+                          type="button"
+                          class="palette__companion"
+                          [attr.data-testid]="'palette-companion-add-' + item.type + '-' + companion.type"
+                          (click)="addCompanion(companion, $event)"
+                        >
+                          + {{ companion.label }}
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+  }
+</aside>

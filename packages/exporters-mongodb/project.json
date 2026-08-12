@@ -1,0 +1,15 @@
+{
+  "name": "exporters-mongodb",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/exporters-mongodb/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/exporters-mongodb/tsconfig.lib.json"
+      }
+    }
+  }
+}

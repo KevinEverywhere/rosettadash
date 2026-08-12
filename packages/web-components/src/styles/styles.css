@@ -1,0 +1,75 @@
+/**
+ * RosettaDash opt-in light theme.
+ * Import after tokens (or alone — this file includes token defaults).
+ *
+ * import '@rosettadash/web-components/styles.css'
+ *
+ * Does NOT reset body/html globally. Hosts keep full layout control.
+ */
+@import './tokens.css';
+
+.rd-accordion {
+  border: 1px solid var(--rd-color-border);
+  border-radius: var(--rd-radius-md);
+  background: var(--rd-color-surface);
+  color: var(--rd-color-text);
+  font-family: var(--rd-font-family);
+  font-size: var(--rd-font-size);
+  line-height: var(--rd-line-height);
+}
+
+.rd-accordion__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rd-space-sm);
+  padding: var(--rd-space-sm) var(--rd-space-md);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rd-accordion__header:focus-visible {
+  outline: 2px solid var(--rd-color-accent);
+  outline-offset: -2px;
+}
+
+.rd-accordion__panel {
+  padding: 0 var(--rd-space-md) var(--rd-space-md);
+}
+
+.rd-accordion--open .rd-accordion__chevron {
+  transform: rotate(90deg);
+}
+
+.rd-link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--rd-color-text);
+  font-family: var(--rd-font-family);
+  font-size: var(--rd-font-size);
+  line-height: var(--rd-line-height);
+}
+
+.rd-link-list__item + .rd-link-list__item {
+  margin-top: var(--rd-space-xs);
+}
+
+.rd-link-list--dense .rd-link-list__item + .rd-link-list__item {
+  margin-top: 0;
+}
+
+.rd-link-list__link {
+  color: var(--rd-color-accent);
+  text-decoration: none;
+}
+
+.rd-link-list__link:hover,
+.rd-link-list__link:focus-visible {
+  text-decoration: underline;
+}

@@ -1,0 +1,73 @@
+<section class="preview" data-testid="preview-panel">
+  <header class="preview__header">
+    <div class="preview__header-main">
+      <h2>Preview</h2>
+      <span class="preview__count">{{ state.previewNodes().length }} visual component(s)</span>
+    </div>
+    @if (previewData.loading()) {
+      <span class="preview__status" data-testid="preview-loading">Loading mock data…</span>
+    }     @else {
+      <span class="preview__status" data-testid="preview-data-source">
+        Data source: {{ previewData.source() === 'api' ? 'API' : 'Fallback' }}
+      </span>
+    }
+    <div class="preview__role-switch">
+      <span>Preview as</span>
+      <app-select
+        testId="preview-role-select"
+        [options]="previewRoleSelectOptions()"
+        [ngModel]="state.previewRoleId()"
+        (ngModelChange)="updatePreviewRole($event)"
+      />
+    </div>
+  </header>
+
+  <div class="preview__surface">
+    @if (state.previewNodes().length === 0) {
+      <div class="preview__empty">
+        <p class="preview__title">Live preview</p>
+        <p class="preview__hint">
+          Add visual components in Design mode to see them rendered here.
+        </p>
+      </div>
+    } @else {
+      @if (dashboardBanner(); as dashboard) {
+        <div class="preview__dashboard" data-testid="preview-dashboard-banner">
+          <div class="preview__dashboard-heading">
+            <span class="preview__dashboard-label">Dashboard</span>
+            <strong class="preview__dashboard-name">{{ dashboard.name }}</strong>
+          </div>
+          @if (dashboard.description) {
+            <p class="preview__dashboard-description">{{ dashboard.description }}</p>
+          }
+        </div>
+      }
+
+      <div
+        class="preview__nodes"
+        [style.minWidth.px]="previewContentBounds().width"
+        [style.minHeight.px]="previewContentBounds().height"
+      >
+        @for (node of sortedPreviewNodes(); track node.id; let index = $index) {
+          <div
+            class="preview__node"
+            data-testid="preview-node"
+            [class.preview__node--selected]="state.isNodeSelected(node.id)"
+            [style.left.px]="node.layout?.x ?? 24"
+            [style.top.px]="node.layout?.y ?? 24"
+            [style.width.px]="node.layout?.width ?? 220"
+            [style.minHeight.px]="node.layout?.height ?? 72"
+            [style.zIndex]="sortedPreviewNodes().length - index"
+          >
+            <div class="preview__node-frame">
+              <header class="preview__node-namebar" data-testid="preview-node-header">{{ node.label }}</header>
+              <div class="preview__node-body">
+                <app-preview-node [node]="node" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

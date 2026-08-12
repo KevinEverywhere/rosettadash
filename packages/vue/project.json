@@ -1,0 +1,40 @@
+{
+  "name": "runtime-vue",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/vue/src",
+  "projectType": "library",
+  "tags": ["scope:runtime", "type:ui"],
+  "implicitDependencies": ["web-components"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/vue",
+        "main": "packages/vue/src/index.ts",
+        "tsConfig": "packages/vue/tsconfig.lib.json",
+        "assets": [
+          {
+            "input": "packages/vue",
+            "glob": "README.md",
+            "output": "."
+          }
+        ],
+        "additionalEntryPoints": [
+          "packages/vue/src/layout/accordion/index.ts",
+          "packages/vue/src/layout/accordion-link-list/index.ts",
+          "packages/vue/src/visual/link-list/index.ts",
+          "packages/vue/src/visual/media/video-source/index.ts",
+          "packages/vue/src/visual/media/equirect-viewport/index.ts"
+        ],
+        "generateExportsField": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/vue/tsconfig.lib.json"
+      }
+    }
+  }
+}

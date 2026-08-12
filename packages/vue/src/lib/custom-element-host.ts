@@ -1,0 +1,121 @@
+import {
+  defineComponent,
+  h,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+  type PropType,
+} from 'vue';
+
+type AttrValue = string | number | boolean | undefined | null;
+
+export interface CustomElementHostOptions {
+  name: string;
+  tagName: string;
+  register: () => void;
+  /** Prop name → attribute name (omit for same kebab conversion). */
+  attrs?: Record<string, string>;
+  /** DOM event name → Vue emit name. */
+  events?: Record<string, string>;
+}
+
+function toKebab(name: string): string {
+  return name.replace(/[A-Z]/g, (ch) => `-${ch.toLowerCase()}`);
+}
+
+function syncAttributes(
+  el: HTMLElement,
+  props: Record<string, AttrValue>,
+  propKeys: string[],
+  attrMap: Record<string, string>,
+): void {
+  for (const key of propKeys) {
+    const attr = attrMap[key] ?? toKebab(key);
+    const value = props[key];
+    if (value === undefined || value === null || value === false) {
+      el.removeAttribute(attr);
+    } else if (value === true) {
+      el.setAttribute(attr, '');
+    } else {
+      el.setAttribute(attr, String(value));
+    }
+  }
+}
+
+/**
+ * Thin Vue wrapper factory around a registered custom element.
+ * Attributes are applied with setAttribute only (WC hosts often expose
+ * getters without setters, so Vue must not assign DOM properties).
+ */
+export function defineCustomElementHost(
+  options: CustomElementHostOptions,
+  propDefs: Record<string, unknown>,
+) {
+  const attrMap = options.attrs ?? {};
+  const eventMap = options.events ?? {};
+  const propKeys = Object.keys(propDefs);
+
+  return defineComponent({
+    name: options.name,
+    props: {
+      className: {
+        type: String as PropType<string | undefined>,
+        default: undefined,
+      },
+      ...propDefs,
+    },
+    emits: Object.values(eventMap),
+    setup(props, { emit, attrs }) {
+      options.register();
+      const host = ref<HTMLElement | null>(null);
+      const listeners: Array<[string, EventListener]> = [];
+
+      function applyAttrs(): void {
+        if (host.value) {
+          syncAttributes(
+            host.value,
+            props as Record<string, AttrValue>,
+            propKeys,
+            attrMap,
+          );
+        }
+      }
+
+      onMounted(() => {
+        const el = host.value;
+        if (!el) {
+          return;
+        }
+        applyAttrs();
+        for (const [domEvent, vueEvent] of Object.entries(eventMap)) {
+          const handler: EventListener = (event) => {
+            emit(vueEvent, (event as CustomEvent).detail);
+          };
+          el.addEventListener(domEvent, handler);
+          listeners.push([domEvent, handler]);
+        }
+      });
+
+      onBeforeUnmount(() => {
+        const el = host.value;
+        for (const [domEvent, handler] of listeners) {
+          el?.removeEventListener(domEvent, handler);
+        }
+      });
+
+      watch(
+        () => propKeys.map((key) => (props as Record<string, AttrValue>)[key]),
+        () => applyAttrs(),
+      );
+
+      return () =>
+        h(options.tagName, {
+          ref: host,
+          class:
+            [props.className, attrs.class].filter(Boolean).join(' ') ||
+            undefined,
+        });
+    },
+  });
+}

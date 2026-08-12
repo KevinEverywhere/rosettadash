@@ -1,0 +1,120 @@
+@switch (templateId()) {
+  @case ('status-badge') {
+    <div
+      class="preview-plugin preview-plugin--badge"
+      [class.preview-plugin--success]="readString('tone', 'info') === 'success'"
+      [class.preview-plugin--warning]="readString('tone', 'info') === 'warning'"
+      data-testid="preview-plugin-status-badge"
+    >
+      {{ readString('label', 'Active') }}
+    </div>
+  }
+  @case ('metric-chip') {
+    <div class="preview-plugin preview-plugin--chip" data-testid="preview-plugin-metric-chip">
+      <span class="preview-plugin__chip-label">{{ readString('label', 'Metric') }}</span>
+      <span class="preview-plugin__chip-value">
+        {{ readNumber('value', 0) }}{{ readString('suffix') }}
+      </span>
+    </div>
+  }
+  @case ('svg-inline') {
+    <div
+      class="preview-svg preview-svg--inline"
+      [style.width.px]="readNumber('width', 120)"
+      [style.height.px]="readNumber('height', 120)"
+      [innerHTML]="svgInlineMarkup()"
+      data-testid="preview-plugin-svg-inline"
+    ></div>
+  }
+  @case ('svg-icon') {
+    <div
+      class="preview-svg preview-svg--icon"
+      [style.width.px]="readNumber('size', 24)"
+      [style.height.px]="readNumber('size', 24)"
+      [style.color]="readString('color', 'currentColor')"
+      [attr.title]="readString('title', 'Icon')"
+      [innerHTML]="svgIconMarkup()"
+      data-testid="preview-plugin-svg-icon"
+    ></div>
+  }
+  @case ('wasm-asset') {
+    <div class="preview-wasm preview-wasm--asset" data-testid="preview-plugin-wasm-asset">
+      <span class="preview-wasm__badge">WASM</span>
+      <code>{{ readString('modulePath', 'wasm/modules/example.wasm') }}</code>
+      @if (readString('gluePath')) {
+        <span class="preview-wasm__glue">+ {{ readString('gluePath') }}</span>
+      }
+    </div>
+  }
+  @case ('wasm-worker-host') {
+    <div class="preview-wasm preview-wasm--worker" data-testid="preview-plugin-wasm-worker">
+      <span class="preview-wasm__label">{{ readString('moduleName', 'dash-wasm-worker') }}</span>
+      <span class="preview-wasm__status">Worker idle</span>
+    </div>
+  }
+  @case ('wasm-module') {
+    <div class="preview-wasm preview-wasm--module" data-testid="preview-plugin-wasm-module">
+      <span class="preview-wasm__label">{{ readString('label', 'WASM Module') }}</span>
+      <code>{{ readString('entryExport', 'run') }}()</code>
+    </div>
+  }
+  @case ('wasm-media') {
+    <div class="preview-wasm preview-wasm--media" data-testid="preview-plugin-wasm-media">
+      <span class="preview-wasm__label">{{ readString('label', 'Media transcode') }}</span>
+      <span class="preview-wasm__meta">{{ readString('operation', 'transcode') }} → {{ readString('outputFormat', 'mp4') }}</span>
+      @if (readString('operation', 'transcode') === 'equirect-extract' && wasmMediaFilter()) {
+        <code class="preview-wasm__filter">{{ wasmMediaFilter() }}</code>
+      }
+      @if (readBoolean('showProgress', true)) {
+        <div class="preview-wasm__progress" aria-hidden="true"><span style="width: 35%"></span></div>
+      }
+    </div>
+  }
+  @case ('media-video-source') {
+    <div class="preview-media preview-media--source" data-testid="preview-plugin-media-video-source">
+      <span class="preview-media__label">{{ readString('label', 'Video source') }}</span>
+      <span class="preview-media__meta">
+        {{ readNumber('sourceWidth', 4096) }}×{{ readNumber('sourceHeight', 2048) }}
+      </span>
+      <label class="preview-media__upload">
+        <span>Choose video file</span>
+        <input type="file" accept="video/*" disabled />
+      </label>
+    </div>
+  }
+  @case ('media-equirect-viewport') {
+    <div class="preview-media preview-media--viewport" data-testid="preview-plugin-media-equirect-viewport">
+      <div class="preview-media__equirect-frame">
+        <div class="preview-media__crop-rect" [ngStyle]="equirectCropStyle()"></div>
+      </div>
+      <p class="preview-media__meta">
+        Crop → {{ readNumber('cropWidth', 1080) }}×{{ readNumber('cropHeight', 720) }}
+        · Output {{ equirectOutputLabel() }}
+      </p>
+    </div>
+  }
+  @case ('media-live-capture') {
+    <div class="preview-media preview-media--capture" data-testid="preview-plugin-media-live-capture">
+      <span class="preview-media__label">{{ readString('label', 'Live capture') }}</span>
+      <button type="button" class="preview-media__capture-btn" disabled>Start camera</button>
+      <span class="preview-media__meta">
+        {{ readBoolean('includeInExport', false) ? 'Included in export' : 'Authoring only' }}
+      </span>
+    </div>
+  }
+  @case ('3d-bar-chart') {
+    <app-preview-three-visual [node]="node()" mode="bar-chart" />
+  }
+  @case ('3d-scatter') {
+    <app-preview-three-visual [node]="node()" mode="scatter" />
+  }
+  @case ('3d-scene') {
+    <app-preview-three-visual [node]="node()" mode="scene" />
+  }
+  @case ('3d-gltf-model') {
+    <app-preview-three-visual [node]="node()" mode="gltf-model" />
+  }
+  @case ('3d-geo-globe') {
+    <app-preview-three-visual [node]="node()" mode="geo-globe" />
+  }
+}

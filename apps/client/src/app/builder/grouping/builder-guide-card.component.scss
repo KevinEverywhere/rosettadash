@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+@import './grouping-animation.scss';
+@import './grouping-instruction.scss';
+
+.app-builder-guide-card__summary {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #475569;
+}

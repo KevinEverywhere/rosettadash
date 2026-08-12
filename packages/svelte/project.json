@@ -1,0 +1,45 @@
+{
+  "name": "runtime-svelte",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/svelte/src",
+  "projectType": "library",
+  "tags": ["scope:runtime", "type:ui"],
+  "implicitDependencies": ["web-components"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/svelte",
+        "main": "packages/svelte/src/index.ts",
+        "tsConfig": "packages/svelte/tsconfig.lib.json",
+        "assets": [
+          {
+            "input": "packages/svelte",
+            "glob": "README.md",
+            "output": "."
+          },
+          {
+            "input": "packages/svelte/src",
+            "glob": "**/*.svelte",
+            "output": "./src"
+          }
+        ],
+        "additionalEntryPoints": [
+          "packages/svelte/src/layout/accordion/types.ts",
+          "packages/svelte/src/layout/accordion-link-list/types.ts",
+          "packages/svelte/src/visual/link-list/types.ts",
+          "packages/svelte/src/visual/media/video-source/types.ts",
+          "packages/svelte/src/visual/media/equirect-viewport/types.ts"
+        ],
+        "generateExportsField": false
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/svelte/tsconfig.lib.json"
+      }
+    }
+  }
+}

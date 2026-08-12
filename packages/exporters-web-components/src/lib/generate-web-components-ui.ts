@@ -1,0 +1,378 @@
+import type { ExportIR, IRComponent } from '@rosettadash/core';
+import { buildDashboardContext } from './binding-resolver';
+import {
+  generateComponentFile,
+  generateComponentCssFile,
+  generateDefineElementHelper,
+  generateLayoutCollapsibleCss,
+  generateLayoutCollapsibleFile,
+  generateRegisterAllFile,
+} from './component-templates';
+import { runtimePackageImports, usesRuntimePackage } from './package-runtime';
+import type { GeneratedFile, WebComponentsExportOptions } from './types';
+import { WebComponentsExportError } from './types';
+import { componentExportName, customElementTag, joinLines, pascalFromId } from './utils';
+
+export function generateWebComponentsUiFiles(
+  ir: ExportIR,
+  options: WebComponentsExportOptions = {},
+): GeneratedFile[] {
+  if (ir.targets.ui !== 'web-components') {
+    throw new WebComponentsExportError(
+      `Web Components exporter cannot generate UI target "${ir.targets.ui}"`,
+    );
+  }
+
+  const exportMode = options.exportMode ?? 'standalone';
+  const root = options.rootDir ?? 'src';
+  const usedNames = new Set<string>();
+  const exportNames = new Map<string, string>();
+
+  for (const component of ir.components) {
+    exportNames.set(component.id, componentExportName(component, usedNames));
+  }
+
+  for (const source of ir.dataSources) {
+    exportNames.set(source.id, pascalFromId(source.id));
+  }
+
+  const files: GeneratedFile[] = [];
+  const componentNames: string[] = [];
+
+  for (const component of ir.components) {
+    const exportName = exportNames.get(component.id);
+    if (!exportName) {
+      continue;
+    }
+
+    const usePackage = exportMode === 'package' && usesRuntimePackage(component.type, component);
+    if (!usePackage) {
+      componentNames.push(exportName);
+      files.push({
+        path: `${root}/components/${exportName}.ts`,
+        content: generateComponentFile(component, exportName),
+        encoding: 'utf-8',
+        description: `Custom Element for ${component.label}`,
+      });
+      files.push({
+        path: `${root}/components/${exportName}.css`,
+        content: generateComponentCssFile(component, exportName),
+        encoding: 'utf-8',
+        description: `Styles for ${component.label}`,
+      });
+    }
+  }
+
+  for (const layout of ir.layouts) {
+    if (layout.type !== 'layout.collapsible') {
+      continue;
+    }
+    const layoutAsComponent: IRComponent = {
+      id: layout.id,
+      type: layout.type,
+      label: layout.label,
+      category: 'layout',
+      properties: { ...layout.properties },
+      inputs: [],
+      outputs: [{ id: 'slot', name: 'slot', dataType: 'any' }],
+    };
+    const exportName = componentExportName(layoutAsComponent, usedNames);
+    componentNames.push(exportName);
+    files.push({
+      path: `${root}/components/${exportName}.ts`,
+      content: generateLayoutCollapsibleFile(exportName),
+      encoding: 'utf-8',
+      description: `Collapsible layout for ${layout.label}`,
+    });
+    files.push({
+      path: `${root}/components/${exportName}.css`,
+      content: generateLayoutCollapsibleCss(exportName),
+      encoding: 'utf-8',
+      description: `Styles for ${layout.label}`,
+    });
+  }
+
+  files.push({
+    path: `${root}/define-element.ts`,
+    content: generateDefineElementHelper(),
+    encoding: 'utf-8',
+    description: 'Safe customElements.define helper',
+  });
+
+  files.push({
+    path: `${root}/types.ts`,
+    content: generateTypesFile(),
+    encoding: 'utf-8',
+    description: 'Shared dashboard types',
+  });
+
+  files.push({
+    path: `${root}/styles/tokens.css`,
+    content: generateTokensCss(ir),
+    encoding: 'utf-8',
+    description: 'Neutral style tokens for exported dashboard',
+  });
+
+  for (const source of ir.dataSources.filter((entry) => entry.type === 'infra.postgresql')) {
+    const fnName = `fetch${exportNames.get(source.id) ?? pascalFromId(source.id)}Data`;
+    const route = ir.routes.find((entry) => entry.method === 'GET')?.path ?? '/api/records';
+    files.push({
+      path: `${root}/lib/data/${fnName}.ts`,
+      content: generateDataModule(fnName, route),
+      encoding: 'utf-8',
+      description: `Data fetcher for ${source.label}`,
+    });
+  }
+
+  files.push({
+    path: `${root}/dashboard.ts`,
+    content: generateDashboardFile(ir, exportNames, exportMode),
+    encoding: 'utf-8',
+    description: 'Composed dashboard Custom Element wired from ExportIR bindings',
+  });
+
+  files.push({
+    path: `${root}/register.ts`,
+    content:
+      exportMode === 'package'
+        ? generatePackageRegisterFile(ir.components, componentNames)
+        : generateRegisterAllFile(componentNames),
+    encoding: 'utf-8',
+    description: 'Registers all generated Custom Elements',
+  });
+
+  if (exportMode === 'package' && runtimePackageImports(ir.components).length > 0) {
+    files.push({
+      path: 'package.json.fragment.json',
+      content: generatePackageJsonFragment(),
+      encoding: 'utf-8',
+      description: 'Merge into consumer package.json dependencies',
+    });
+  }
+
+  files.push({
+    path: 'README.export.md',
+    content: generateReadme(ir, exportMode),
+    encoding: 'utf-8',
+    description: 'Setup notes for exported Web Components bundle',
+  });
+
+  return files;
+}
+
+function generateTypesFile(): string {
+  return joinLines([
+    `export interface DateRange {`,
+    `  start: string;`,
+    `  end: string;`,
+    `}`,
+    ``,
+    `export type Row = Record<string, string | number | boolean | null | undefined>;`,
+    ``,
+  ]);
+}
+
+function generateTokensCss(ir: ExportIR): string {
+  return joinLines([
+    `:root {`,
+    `  --db-surface: #ffffff;`,
+    `  --db-border: #d9dee7;`,
+    `  --db-text: #1f2937;`,
+    `  --db-accent: #2563eb;`,
+    `  --db-muted: #6b7280;`,
+    `}`,
+    ``,
+    `.dashboard {`,
+    `  display: grid;`,
+    `  gap: 1rem;`,
+    `  padding: 1.5rem;`,
+    `  color: var(--db-text);`,
+    `  background: var(--db-surface);`,
+    `  font-family: system-ui, sans-serif;`,
+    `}`,
+    ``,
+    `/* styling: ${ir.styles.framework} · generated for ${ir.meta.compositeName} */`,
+    ``,
+  ]);
+}
+
+function generateDataModule(fnName: string, route: string): string {
+  return joinLines([
+    `import type { Row } from '../../types';`,
+    ``,
+    `export async function ${fnName}(): Promise<Row[]> {`,
+    `  const response = await fetch('${route}');`,
+    `  if (!response.ok) {`,
+    `    throw new Error(\`Request failed: \${response.status}\`);`,
+    `  }`,
+    `  return (await response.json()) as Row[];`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateDashboardFile(
+  ir: ExportIR,
+  exportNames: Map<string, string>,
+  exportMode: 'standalone' | 'package',
+): string {
+  const context = buildDashboardContext(ir, exportNames, exportMode);
+  const componentImportLines = context.componentImports.map(
+    (name) => `import { ${name} } from './components/${name}';`,
+  );
+  const dataImportLines = context.dataModuleImports.map(
+    (name) => `import { ${name} } from './lib/data/${name}';`,
+  );
+  const dataSourceFields = ir.dataSources
+    .filter((entry) => entry.type === 'infra.postgresql')
+    .map((source) => `  private ${source.id}Data: Row[] = [];`);
+  const fieldRefs = context.components.map(
+    (component) => `  private ${component.nodeId}El!: ${component.exportName};`,
+  );
+  const mountLines = context.components.flatMap((component) => component.mountLines);
+  const syncLines = context.components.flatMap((component) =>
+    component.mountLines
+      .filter(
+        (line) =>
+          line.includes('setProperty') ||
+          line.includes('.data =') ||
+          line.includes('selectedRow'),
+      )
+      .map((line) => line.replace(/shell\.appendChild\(this\.[^)]+\);?\s*$/, '').trim())
+      .filter(Boolean),
+  );
+
+  return joinLines([
+    `import type { DateRange, Row } from './types';`,
+    `import { defineRosettaElement } from './define-element';`,
+    ...componentImportLines,
+    ...dataImportLines,
+    ``,
+    `export class RdDashboard extends HTMLElement {`,
+    `  static readonly tagName = '${customElementTag('Dashboard')}';`,
+    ...context.fieldDeclarations,
+    ...fieldRefs,
+    ...dataSourceFields,
+    ``,
+    `  connectedCallback(): void {`,
+    `    void this.mount();`,
+    `  }`,
+    ``,
+    `  private async mount(): Promise<void> {`,
+    `    if (this.shadowRoot) {`,
+    `      return;`,
+    `    }`,
+    `    const root = this.attachShadow({ mode: 'open' });`,
+    `    root.innerHTML = \`<link rel="stylesheet" href="./styles/tokens.css" /><main class="dashboard"><header><h1>${ir.meta.compositeName}</h1></header><section class="dashboard__content"></section></main>\`;`,
+    `    const shell = root.querySelector('.dashboard__content') as HTMLElement;`,
+    ...context.dataModuleCalls,
+    ...mountLines,
+    `  }`,
+    ``,
+    `  private syncBindings(): void {`,
+    ...syncLines,
+    `  }`,
+    `}`,
+    ``,
+    `export function registerRdDashboard(): void {`,
+    `  defineRosettaElement(RdDashboard.tagName, RdDashboard);`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generateReadme(ir: ExportIR, exportMode: 'standalone' | 'package' = 'standalone'): string {
+  const envLines =
+    ir.envVars.length === 0
+      ? ['No environment variables required for the UI fragment.']
+      : ir.envVars.map((env) => `- \`${env.key}\`${env.required ? ' (required)' : ''}`);
+
+  const packageNotes =
+    exportMode === 'package'
+      ? [
+          '',
+          '## Runtime package mode (opt-in)',
+          '',
+          'This export imports `@rosettadash/web-components` for media/WASM elements.',
+          '**Default RosettaDash exports are standalone** — see docs/32-standalone-first-export.md.',
+          '',
+          '```bash',
+          'npm install @rosettadash/web-components @rosettadash/core',
+          'npm install @ffmpeg/ffmpeg @ffmpeg/util   # equirect extract only',
+          '```',
+          '',
+        ]
+      : [
+          '',
+          '## Standalone export',
+          '',
+          'All component source is included in this zip. No `@rosettadash/*` runtime packages are required.',
+          'Install only the third-party deps noted below (e.g. `@ffmpeg/ffmpeg` for equirect extract).',
+          '',
+        ];
+
+  return joinLines([
+    `# ${ir.meta.compositeName} — Web Components Export`,
+    ``,
+    `Generated at ${ir.meta.generatedAt} from composite \`${ir.meta.compositeId}\` v${ir.meta.version}.`,
+    ``,
+    `Export mode: **${exportMode}**`,
+    ...packageNotes,
+    `## Files`,
+    ``,
+    `- \`src/dashboard.ts\` — root \`<rd-dashboard>\` Custom Element composed from builder bindings`,
+    `- \`src/components/*.ts\` — W3C Custom Elements (native \`HTMLElement\` + Shadow DOM)`,
+    `- \`src/components/*.css\` — per-component stylesheets (root class matches component export name)`,
+    `- \`src/register.ts\` — calls \`customElements.define\` for all generated tags`,
+    `- \`src/lib/data/*.ts\` — fetch helpers targeting exported API routes`,
+    `- \`src/styles/tokens.css\` — neutral dashboard styling tokens`,
+    ``,
+    `## Environment`,
+    ``,
+    ...envLines,
+    ``,
+    `## Next steps`,
+    ``,
+    `1. Import \`registerRosettaDashElements()\` from \`src/register.ts\` in your app entry.`,
+    `2. Add \`<rd-dashboard></rd-dashboard>\` to your page (or embed in React/Vue/Angular via the tag).`,
+    `3. Ensure server routes referenced by data modules are available.`,
+    ``,
+  ]);
+}
+
+function generatePackageRegisterFile(components: IRComponent[], standaloneNames: string[]): string {
+  const runtimeImports = runtimePackageImports(components);
+  const runtimeImportLines = runtimeImports.map(
+    (name) => `import { ${name} } from '@rosettadash/web-components';`,
+  );
+  const standaloneImportLines = standaloneNames.map(
+    (name) => `import { register${name} } from './components/${name}';`,
+  );
+
+  return joinLines([
+    ...runtimeImportLines,
+    ...standaloneImportLines,
+    `import { registerRdDashboard } from './dashboard';`,
+    ``,
+    `export function registerRosettaDashElements(): void {`,
+    ...runtimeImports.map((name) => `  ${name}();`),
+    ...standaloneNames.map((name) => `  register${name}();`),
+    `  registerRdDashboard();`,
+    `}`,
+    ``,
+  ]);
+}
+
+function generatePackageJsonFragment(): string {
+  return joinLines([
+    `{`,
+    `  "dependencies": {`,
+    `    "@rosettadash/core": "^0.0.1",`,
+    `    "@rosettadash/web-components": "^0.0.1",`,
+    `    "@ffmpeg/ffmpeg": "^0.12.10",`,
+    `    "@ffmpeg/util": "^0.12.1"`,
+    `  }`,
+    `}`,
+    ``,
+  ]);
+}

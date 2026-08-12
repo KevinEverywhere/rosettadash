@@ -1,0 +1,281 @@
+@if (wizard.open()) {
+  <div
+    class="creation-wizard__backdrop"
+    [class.creation-wizard__backdrop--closing]="wizard.closing()"
+    data-testid="creation-wizard-backdrop"
+    role="presentation"
+    (click)="close()"
+  ></div>
+
+  <section
+    class="creation-wizard"
+    [class.creation-wizard--closing]="wizard.closing()"
+    data-testid="creation-wizard"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="creation-wizard-title"
+    [style.--wizard-accent]="stepColor()?.accent ?? '#2563eb'"
+    [style.--wizard-soft]="stepColor()?.soft ?? 'rgb(37 99 235 / 12%)'"
+    [style.--wizard-border]="stepColor()?.border ?? 'rgb(37 99 235 / 35%)'"
+  >
+    <header class="creation-wizard__header">
+      <div>
+        <p class="creation-wizard__eyebrow">Creation guide</p>
+        <h2 id="creation-wizard-title">{{ dialogTitle() }}</h2>
+      </div>
+      <button
+        type="button"
+        class="creation-wizard__close"
+        data-testid="creation-wizard-close"
+        aria-label="Close creation guide"
+        (click)="close()"
+      >
+        ×
+      </button>
+    </header>
+
+    @if (wizard.phase() === 'mode-choice') {
+      <div class="creation-wizard__body" data-testid="creation-wizard-mode-choice">
+        <p class="creation-wizard__lead">
+          Choose guided steps with palette highlights, or explore on your own using the tips already
+          built into RosettaDash. AI assist in the toolbar is separate — use it when you want
+          natural-language help.
+        </p>
+        <ul class="creation-wizard__goals">
+          <li>
+            <button
+              type="button"
+              class="creation-wizard__goal creation-wizard__goal--primary"
+              data-testid="creation-mode-guided"
+              (click)="wizard.startGuidedCreation()"
+            >
+              <span class="creation-wizard__goal-label">Guided creation</span>
+              <span class="creation-wizard__goal-desc">
+                Pick a starter goal — we color-code palette groups and walk you through each step.
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              class="creation-wizard__goal"
+              data-testid="creation-mode-explore"
+              (click)="wizard.startSelfExploration()"
+            >
+              <span class="creation-wizard__goal-label">Self-exploration</span>
+              <span class="creation-wizard__goal-desc">
+                Use palette <strong>i</strong> and <strong>⛓</strong> tips, canvas placement prompts,
+                and Admin builder guides — no step-by-step overlay.
+              </span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    }
+
+    @if (wizard.phase() === 'self-explore') {
+      <div class="creation-wizard__body" data-testid="creation-wizard-self-explore">
+        <p class="creation-wizard__lead">
+          RosettaDash already surfaces help as you work. You do not need this dialog open to build.
+        </p>
+        <ul class="creation-wizard__tips">
+          <li>
+            <strong>Palette</strong> — click <strong>i</strong> on any component for how it works;
+            <strong>⛓</strong> for typical companions; <strong>+</strong> to add to the canvas.
+          </li>
+          <li>
+            <strong>Inspector</strong> — select a canvas node or palette item to preview properties
+            on the right.
+          </li>
+          <li>
+            <strong>Canvas</strong> — after adding components, follow placement prompts and binding
+            hints on the design surface.
+          </li>
+          <li>
+            <strong>Admin → Builder guides</strong> — deeper documentation when you need it.
+          </li>
+          <li>
+            <strong>Create</strong> (toolbar) — reopen this guide anytime, including extend-dashboard
+            topics once you have components on the canvas.
+          </li>
+        </ul>
+        <div class="creation-wizard__actions">
+          <button
+            type="button"
+            class="creation-wizard__primary"
+            data-testid="creation-self-explore-done"
+            (click)="wizard.finishSelfExploration()"
+          >
+            Got it — start exploring
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (wizard.phase() === 'intent') {
+      <div class="creation-wizard__body" data-testid="creation-wizard-intent">
+        <p class="creation-wizard__lead">
+          Pick a starting point. We will color-code palette groups and walk you through each step —
+          no AI required.
+        </p>
+        <ul class="creation-wizard__goals">
+          @for (goal of wizard.guidedGoals(); track goal.id) {
+            <li>
+              <button
+                type="button"
+                class="creation-wizard__goal"
+                [attr.data-testid]="'creation-goal-' + goal.id"
+                (click)="wizard.selectGoal(goal.id)"
+              >
+                <span class="creation-wizard__goal-label">{{ goal.label }}</span>
+                <span class="creation-wizard__goal-desc">{{ goal.description }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+        <button
+          type="button"
+          class="creation-wizard__back-link"
+          data-testid="creation-wizard-back-mode"
+          (click)="wizard.goBackFromIntent()"
+        >
+          ← Back to guided vs explore
+        </button>
+      </div>
+    }
+
+    @if (wizard.phase() === 'extend') {
+      <div class="creation-wizard__body" data-testid="creation-wizard-extend">
+        <p class="creation-wizard__lead">
+          Your canvas already has components. These are common next steps — adding tables, cross-referencing
+          data, and where to find add-ons in the palette.
+        </p>
+        <ul class="creation-wizard__goals">
+          @for (topic of wizard.extensionTopics; track topic.id) {
+            <li>
+              <button
+                type="button"
+                class="creation-wizard__goal"
+                [class.creation-wizard__goal--active]="wizard.selectedExtensionId() === topic.id"
+                [attr.data-testid]="'creation-extend-' + topic.id"
+                (click)="wizard.selectExtensionTopic(topic.id)"
+              >
+                <span class="creation-wizard__goal-label">{{ topic.title }}</span>
+                <span class="creation-wizard__goal-desc">{{ topic.summary }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+        @if (wizard.activeExtension(); as topic) {
+          <div class="creation-wizard__step-card">
+            <h3>{{ topic.title }}</h3>
+            <ol class="creation-wizard__steps">
+              @for (step of topic.steps; track step) {
+                <li>{{ step }}</li>
+              }
+            </ol>
+            @if (topic.aiPromptHint) {
+              <button
+                type="button"
+                class="creation-wizard__secondary"
+                data-testid="creation-extend-ai"
+                (click)="aiAssistRequested.emit(topic.aiPromptHint)"
+              >
+                Ask AI assist about this
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (wizard.phase() === 'steps') {
+      @if (wizard.activeStep(); as step) {
+        <div class="creation-wizard__body" data-testid="creation-wizard-steps">
+          <p class="creation-wizard__progress">{{ wizard.progressLabel() }}</p>
+          <div class="creation-wizard__step-card">
+            <span class="creation-wizard__step-badge">Palette highlight active</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+            @if (step.suggestedType) {
+              <button
+                type="button"
+                class="creation-wizard__primary"
+                data-testid="creation-wizard-add-suggested"
+                (click)="wizard.addSuggestedComponent()"
+              >
+                Add suggested component
+              </button>
+            }
+          </div>
+          <div class="creation-wizard__actions">
+            <button type="button" class="creation-wizard__secondary" (click)="wizard.goBackStep()">
+              Back
+            </button>
+            <button
+              type="button"
+              class="creation-wizard__primary"
+              data-testid="creation-wizard-next"
+              [disabled]="!wizard.stepComplete()"
+              (click)="wizard.advanceStep()"
+            >
+              {{ wizard.stepIndex() + 1 >= (wizard.activeGoal()?.steps?.length ?? 0) ? 'Finish steps' : 'Next step' }}
+            </button>
+          </div>
+          @if (!wizard.stepComplete()) {
+            <p class="creation-wizard__hint">
+              Add a highlighted component from the palette (+) or use the button above to continue.
+            </p>
+          }
+        </div>
+      }
+    }
+
+    @if (wizard.phase() === 'ai-choice') {
+      <div class="creation-wizard__body" data-testid="creation-wizard-ai-choice">
+        <h3>Want AI to help you build?</h3>
+        <p class="creation-wizard__lead">
+          Optional — connect Ollama (free, local) or add a cloud API key in Settings. AI assist is
+          separate from this creation guide and lives in the toolbar.
+        </p>
+        <div class="creation-wizard__actions creation-wizard__actions--stack">
+          <button
+            type="button"
+            class="creation-wizard__primary"
+            data-testid="creation-wizard-enable-ai"
+            (click)="enableAi()"
+          >
+            Yes — open AI assist
+          </button>
+          <a
+            class="creation-wizard__link"
+            routerLink="/environment"
+            [queryParams]="{ from: 'byok' }"
+            data-testid="creation-wizard-settings-link"
+          >
+            Open Settings (BYOK credentials)
+          </a>
+          <button
+            type="button"
+            class="creation-wizard__secondary"
+            data-testid="creation-wizard-skip-ai"
+            (click)="wizard.skipAiChoice()"
+          >
+            Continue without AI
+          </button>
+        </div>
+      </div>
+    }
+
+    <footer class="creation-wizard__footer">
+      <button
+        type="button"
+        class="creation-wizard__dismiss"
+        data-testid="creation-wizard-dismiss"
+        (click)="dismiss()"
+      >
+        Don’t show welcome banner on empty canvas
+      </button>
+    </footer>
+  </section>
+}

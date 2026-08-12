@@ -1,0 +1,98 @@
+{
+  "name": "@rosettadash/web-components",
+  "version": "0.0.1",
+  "description": "RosettaDash Web Components runtime - default public UI package",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./layout/accordion": {
+      "types": "./src/layout/accordion/index.d.ts",
+      "import": "./src/layout/accordion/index.js",
+      "default": "./src/layout/accordion/index.js"
+    },
+    "./layout/accordion-link-list": {
+      "types": "./src/layout/accordion-link-list/index.d.ts",
+      "import": "./src/layout/accordion-link-list/index.js",
+      "default": "./src/layout/accordion-link-list/index.js"
+    },
+    "./visual/link-list": {
+      "types": "./src/visual/link-list/index.d.ts",
+      "import": "./src/visual/link-list/index.js",
+      "default": "./src/visual/link-list/index.js"
+    },
+    "./media": {
+      "types": "./src/media/index.d.ts",
+      "import": "./src/media/index.js",
+      "default": "./src/media/index.js"
+    },
+    "./wasm": {
+      "types": "./src/wasm/index.d.ts",
+      "import": "./src/wasm/index.js",
+      "default": "./src/wasm/index.js"
+    },
+    "./visual/media/video-source": {
+      "types": "./src/media/video-source.d.ts",
+      "import": "./src/media/video-source.js",
+      "default": "./src/media/video-source.js"
+    },
+    "./visual/media/equirect-viewport": {
+      "types": "./src/media/equirect-viewport.d.ts",
+      "import": "./src/media/equirect-viewport.js",
+      "default": "./src/media/equirect-viewport.js"
+    },
+    "./browser/media": {
+      "import": "./browser/media.js",
+      "default": "./browser/media.js"
+    },
+    "./tokens.css": "./styles/tokens.css",
+    "./styles.css": "./styles/styles.css"
+  },
+  "files": [
+    "src",
+    "styles",
+    "media",
+    "browser",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "@ffmpeg/ffmpeg": ">=0.12.0",
+    "@ffmpeg/util": ">=0.12.0"
+  },
+  "peerDependenciesMeta": {
+    "@ffmpeg/ffmpeg": {
+      "optional": true
+    },
+    "@ffmpeg/util": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@rosettadash/core": "0.0.1",
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinEverywhere/rosettadash.git",
+    "directory": "packages/web-components"
+  },
+  "homepage": "https://github.com/KevinEverywhere/rosettadash#readme",
+  "bugs": {
+    "url": "https://github.com/KevinEverywhere/rosettadash/issues"
+  }
+}

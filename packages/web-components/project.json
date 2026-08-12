@@ -1,0 +1,51 @@
+{
+  "name": "web-components",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/web-components/src",
+  "projectType": "library",
+  "tags": ["scope:runtime", "type:ui"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/web-components",
+        "main": "packages/web-components/src/index.ts",
+        "tsConfig": "packages/web-components/tsconfig.lib.json",
+        "assets": [
+          {
+            "input": "packages/web-components",
+            "glob": "README.md",
+            "output": "."
+          },
+          {
+            "input": "packages/web-components",
+            "glob": "LICENSE",
+            "output": "."
+          },
+          {
+            "input": "packages/web-components/src",
+            "glob": "**/*.css",
+            "output": "."
+          }
+        ],
+        "additionalEntryPoints": [
+          "packages/web-components/src/layout/accordion/index.ts",
+          "packages/web-components/src/layout/accordion-link-list/index.ts",
+          "packages/web-components/src/visual/link-list/index.ts",
+          "packages/web-components/src/media/index.ts",
+          "packages/web-components/src/wasm/index.ts",
+          "packages/web-components/src/media/video-source.ts",
+          "packages/web-components/src/media/equirect-viewport.ts"
+        ],
+        "generateExportsField": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/web-components/tsconfig.lib.json"
+      }
+    }
+  }
+}

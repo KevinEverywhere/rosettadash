@@ -1,0 +1,404 @@
+<aside class="inspector" data-testid="inspector">
+  <header class="inspector__header">
+    <button
+      type="button"
+      class="inspector__header-toggle"
+      data-testid="inspector-collapse-toggle"
+      [attr.aria-expanded]="showInspectorBody()"
+      [attr.aria-label]="showInspectorBody() ? 'Collapse inspector panel' : 'Expand inspector panel'"
+      (click)="onHeaderClick()"
+    >
+      <h2>Inspector</h2>
+    </button>
+  </header>
+
+  @if (showInspectorBody()) {
+  @if (!hasSelection()) {
+    <div class="inspector__empty">
+      <p>Select a palette component to preview, or click a canvas node to edit.</p>
+    </div>
+  } @else if (definition(); as def) {
+    <div class="inspector__workspace">
+      <div class="inspector__scroll">
+        @if (hasComposite()) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('domain')"
+            data-testid="inspector-group-domain"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-domain"
+              [attr.aria-expanded]="isSectionExpanded('domain')"
+              (click)="toggleSection('domain')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Domain context</span>
+            </button>
+            @if (isSectionExpanded('domain')) {
+              <div class="inspector__group-panel" data-testid="inspector-group-panel-domain">
+                <app-domain-context-panel />
+              </div>
+            }
+          </section>
+
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('versions')"
+            data-testid="inspector-group-versions"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-versions"
+              [attr.aria-expanded]="isSectionExpanded('versions')"
+              (click)="toggleSection('versions')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Version history</span>
+            </button>
+            @if (isSectionExpanded('versions')) {
+              <div class="inspector__group-panel" data-testid="inspector-group-panel-versions">
+                <app-version-history-panel />
+              </div>
+            }
+          </section>
+        }
+
+        <section
+          class="inspector__group"
+          [class.inspector__group--expanded]="isSectionExpanded('overview')"
+          data-testid="inspector-group-overview"
+        >
+          <button
+            type="button"
+            class="inspector__group-header"
+            data-testid="inspector-group-toggle-overview"
+            [attr.aria-expanded]="isSectionExpanded('overview')"
+            (click)="toggleSection('overview')"
+          >
+            <span class="inspector__group-chevron" aria-hidden="true"></span>
+            <span class="inspector__group-label">Overview</span>
+          </button>
+          @if (isSectionExpanded('overview')) {
+            <div class="inspector__group-panel" data-testid="inspector-group-panel-overview">
+              <h3 class="inspector__title">{{ def.label }}</h3>
+              <p class="inspector__type">{{ def.type }}</p>
+              @if (def.description) {
+                <p class="inspector__description">{{ def.description }}</p>
+              }
+            </div>
+          }
+        </section>
+
+        @if (isEditingNode() && nodeSuggestions().length) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('suggestions')"
+            data-testid="inspector-suggestions"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-suggestions"
+              [attr.aria-expanded]="isSectionExpanded('suggestions')"
+              (click)="toggleSection('suggestions')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Suggestions</span>
+              <span class="inspector__group-count">{{ nodeSuggestions().length }}</span>
+            </button>
+            @if (isSectionExpanded('suggestions')) {
+              <div class="inspector__group-panel">
+                <ul class="inspector__suggestions">
+                  @for (suggestion of nodeSuggestions(); track suggestion.id) {
+                    <li
+                      class="inspector__suggestion"
+                      [attr.data-testid]="'inspector-suggestion-' + suggestion.id"
+                    >
+                      <div class="inspector__suggestion-copy">
+                        <strong>{{ suggestion.title }}</strong>
+                        <p>{{ suggestion.message }}</p>
+                      </div>
+                      <div class="inspector__suggestion-actions">
+                        @if (suggestion.kind === 'patch' && suggestion.patches?.length) {
+                          <button
+                            type="button"
+                            class="inspector__btn inspector__btn--apply"
+                            [attr.data-testid]="'apply-suggestion-' + suggestion.id"
+                            (click)="applySuggestion(suggestion.id)"
+                          >
+                            Apply
+                          </button>
+                        }
+                        <button
+                          type="button"
+                          class="inspector__btn inspector__btn--ghost"
+                          [attr.data-testid]="'dismiss-suggestion-' + suggestion.id"
+                          (click)="dismissSuggestion(suggestion.id)"
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </section>
+        }
+
+        @if (isEditingNode() && isRoleGateNode()) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('roles')"
+            data-testid="inspector-role-gate"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-roles"
+              [attr.aria-expanded]="isSectionExpanded('roles')"
+              (click)="toggleSection('roles')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Allowed roles</span>
+            </button>
+            @if (isSectionExpanded('roles')) {
+              <div class="inspector__group-panel">
+                <ul class="inspector__role-options">
+                  @for (role of roleGateOptions(); track role.id) {
+                    <li>
+                      <label>
+                        <input
+                          type="checkbox"
+                          [attr.data-testid]="'role-gate-option-' + role.id"
+                          [checked]="isRoleAllowed(role.id)"
+                          (change)="toggleRoleGateRole(role.id, $any($event.target).checked)"
+                        />
+                        {{ role.name }}
+                        <span class="inspector__chip">{{ role.id }}</span>
+                      </label>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </section>
+        }
+
+        @if (isEditingNode() && editableProperties().length) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('properties')"
+            data-testid="inspector-group-properties"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-properties"
+              [attr.aria-expanded]="isSectionExpanded('properties')"
+              (click)="toggleSection('properties')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Properties</span>
+              <span class="inspector__group-count">{{ editableProperties().length }}</span>
+            </button>
+            @if (isSectionExpanded('properties')) {
+              <div class="inspector__group-panel">
+                @for (prop of editableProperties(); track prop.key) {
+                  <div class="inspector__field">
+                    <label [for]="prop.key">{{ prop.label }}</label>
+                    @switch (prop.type) {
+                      @case ('boolean') {
+                        <input
+                          [id]="prop.key"
+                          type="checkbox"
+                          [checked]="readProperty(prop.key) === true"
+                          (change)="updateProperty(prop, $any($event.target).checked)"
+                        />
+                      }
+                      @case ('number') {
+                        <input
+                          [id]="prop.key"
+                          type="number"
+                          [ngModel]="readProperty(prop.key)"
+                          (ngModelChange)="updateProperty(prop, $event)"
+                        />
+                      }
+                      @case ('select') {
+                        <app-select
+                          [testId]="'inspector-prop-' + prop.key"
+                          [options]="selectOptions(prop)"
+                          [ngModel]="readSelectProperty(prop.key)"
+                          (ngModelChange)="updateSelectProperty(prop, $event)"
+                        />
+                      }
+                      @default {
+                        <input
+                          [id]="prop.key"
+                          type="text"
+                          [attr.data-testid]="'inspector-prop-' + prop.key"
+                          [ngModel]="readProperty(prop.key)"
+                          (ngModelChange)="updateProperty(prop, $event)"
+                        />
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </section>
+        }
+
+        @if (isEditingNode() && nodeBindings().length) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('bindings')"
+            data-testid="inspector-bindings"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-bindings"
+              [attr.aria-expanded]="isSectionExpanded('bindings')"
+              (click)="toggleSection('bindings')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Bindings</span>
+              <span class="inspector__group-count">{{ nodeBindings().length }}</span>
+            </button>
+            @if (isSectionExpanded('bindings')) {
+              <div class="inspector__group-panel" data-testid="inspector-group-panel-bindings">
+                <ul class="inspector__bindings">
+                  @for (binding of nodeBindings(); track binding.id) {
+                    <li class="inspector__binding">
+                      <span class="inspector__binding-label">{{ describeBinding(binding) }}</span>
+                      <button
+                        type="button"
+                        class="inspector__binding-remove"
+                        [attr.data-testid]="'remove-binding-' + binding.id"
+                        (click)="removeBinding(binding.id)"
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </section>
+        }
+
+        @if (!isEditingNode() && def.properties.length) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('schema-properties')"
+            data-testid="inspector-group-schema-properties"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-schema-properties"
+              [attr.aria-expanded]="isSectionExpanded('schema-properties')"
+              (click)="toggleSection('schema-properties')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Property schema</span>
+              <span class="inspector__group-count">{{ def.properties.length }}</span>
+            </button>
+            @if (isSectionExpanded('schema-properties')) {
+              <div class="inspector__group-panel">
+                <dl class="inspector__dl">
+                  @for (prop of def.properties; track prop.key) {
+                    <dt>{{ prop.label }}</dt>
+                    <dd>
+                      <span class="inspector__chip">{{ prop.type }}</span>
+                      @if (prop.default !== undefined) {
+                        <code>{{ prop.default | json }}</code>
+                      }
+                    </dd>
+                  }
+                </dl>
+              </div>
+            }
+          </section>
+        }
+
+        @if (!isEditingNode() && (def.inputs.length || def.outputs.length)) {
+          <section
+            class="inspector__group"
+            [class.inspector__group--expanded]="isSectionExpanded('ports')"
+            data-testid="inspector-group-ports"
+          >
+            <button
+              type="button"
+              class="inspector__group-header"
+              data-testid="inspector-group-toggle-ports"
+              [attr.aria-expanded]="isSectionExpanded('ports')"
+              (click)="toggleSection('ports')"
+            >
+              <span class="inspector__group-chevron" aria-hidden="true"></span>
+              <span class="inspector__group-label">Ports</span>
+            </button>
+            @if (isSectionExpanded('ports')) {
+              <div class="inspector__group-panel">
+                @if (def.inputs.length) {
+                  <p class="inspector__port-heading">Inputs</p>
+                  <ul>
+                    @for (port of def.inputs; track port.id) {
+                      <li>
+                        {{ port.name }}
+                        <span class="inspector__chip">{{ port.dataType }}</span>
+                        @if (port.required) {
+                          <span class="inspector__required">required</span>
+                        }
+                      </li>
+                    }
+                  </ul>
+                }
+                @if (def.outputs.length) {
+                  <p class="inspector__port-heading">Outputs</p>
+                  <ul>
+                    @for (port of def.outputs; track port.id) {
+                      <li>
+                        {{ port.name }}
+                        <span class="inspector__chip">{{ port.dataType }}</span>
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          </section>
+        }
+      </div>
+
+      @if (isEditingNode()) {
+        <footer class="inspector__footer">
+          <button
+            type="button"
+            class="inspector__footer-btn inspector__footer-btn--danger"
+            data-testid="inspector-remove-node"
+            (click)="removeNode()"
+          >
+            Remove from canvas
+          </button>
+        </footer>
+      } @else {
+        <footer class="inspector__footer">
+          <button
+            type="button"
+            class="inspector__footer-btn"
+            data-testid="inspector-add-node"
+            (click)="addToCanvas()"
+          >
+            Add to canvas
+          </button>
+        </footer>
+      }
+    </div>
+  }
+  }
+</aside>

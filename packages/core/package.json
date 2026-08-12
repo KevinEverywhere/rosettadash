@@ -1,0 +1,40 @@
+{
+  "name": "@rosettadash/core",
+  "version": "0.0.1",
+  "description": "RosettaDash shared types, defaults, and media filter helpers (used by runtime packages)",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
+  "license": "MIT",
+  "private": false,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "require": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinEverywhere/rosettadash.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/KevinEverywhere/rosettadash#readme",
+  "bugs": {
+    "url": "https://github.com/KevinEverywhere/rosettadash/issues"
+  }
+}

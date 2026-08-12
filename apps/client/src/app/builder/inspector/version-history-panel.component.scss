@@ -1,0 +1,125 @@
+.version-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.version-history__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.version-history__header h3 {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.version-history__current {
+  color: var(--db-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.version-history__status,
+.version-history__error {
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.version-history__error {
+  color: var(--db-danger, #c0392b);
+}
+
+.version-history__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.version-history__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--db-border);
+  border-radius: 0.5rem;
+  background: var(--db-surface);
+}
+
+.version-history__label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.version-history__meta {
+  color: var(--db-text-muted);
+  font-size: 0.75rem;
+}
+
+.version-history__compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.version-history__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--db-text-muted);
+}
+
+.version-history__field select {
+  padding: 0.375rem 0.5rem;
+  border: 1px solid var(--db-border);
+  border-radius: 0.375rem;
+  background: var(--db-surface);
+  color: var(--db-text);
+  font: inherit;
+}
+
+.version-history__compare-btn {
+  padding: 0.4375rem 0.75rem;
+  border: 1px solid var(--db-border);
+  border-radius: 0.375rem;
+  background: var(--db-panel-bg);
+  color: var(--db-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.version-history__diff {
+  padding: 0.625rem;
+  border: 1px solid var(--db-border);
+  border-radius: 0.5rem;
+  background: var(--db-bg);
+}
+
+.version-history__summary {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.version-history__changes {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.75rem;
+  color: var(--db-text-muted);
+}

@@ -1,0 +1,40 @@
+{
+  "name": "runtime-angular",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/angular/src",
+  "projectType": "library",
+  "tags": ["scope:runtime", "type:ui"],
+  "implicitDependencies": ["web-components"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/angular",
+        "main": "packages/angular/src/index.ts",
+        "tsConfig": "packages/angular/tsconfig.lib.json",
+        "assets": [
+          {
+            "input": "packages/angular",
+            "glob": "README.md",
+            "output": "."
+          }
+        ],
+        "additionalEntryPoints": [
+          "packages/angular/src/layout/accordion/index.ts",
+          "packages/angular/src/layout/accordion-link-list/index.ts",
+          "packages/angular/src/visual/link-list/index.ts",
+          "packages/angular/src/visual/media/video-source/index.ts",
+          "packages/angular/src/visual/media/equirect-viewport/index.ts"
+        ],
+        "generateExportsField": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/angular/tsconfig.lib.json"
+      }
+    }
+  }
+}

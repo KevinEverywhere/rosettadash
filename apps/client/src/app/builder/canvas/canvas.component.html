@@ -1,0 +1,316 @@
+<section class="canvas" data-testid="canvas">
+  <header class="canvas__header">
+    <div class="canvas__header-main">
+      <h2>Canvas</h2>
+      <span class="canvas__count">{{ state.nodes().length }} component(s)</span>
+    </div>
+    @if (state.selectedNodeIds().length > 1) {
+      <p class="canvas__selection-hint" data-testid="canvas-multi-select-hint">
+        {{ state.selectedNodeIds().length }} nodes selected — Shift+click to add or remove.
+      </p>
+    }
+    @if (state.pendingBindingSource()) {
+      <p class="canvas__binding-hint" data-testid="binding-hint">
+        Select an input port to complete the binding.
+      </p>
+    } @else if (state.bindingMessage()) {
+      <p class="canvas__binding-error" data-testid="binding-error">
+        {{ state.bindingMessage() }}
+      </p>
+    }
+  </header>
+
+  <div
+    #surface
+    class="canvas__surface canvas__surface--grid"
+    [class.canvas__surface--dashboard]="!!dashboardBanner()"
+    tabindex="0"
+    role="region"
+    aria-label="Canvas design surface"
+    (click)="clearCanvasSelection($event)"
+    (scroll)="onSurfaceScroll()"
+    (keydown.enter)="clearCanvasSelection($event)"
+    (keydown.space)="clearCanvasSelection($event)"
+  >
+    @if (state.nodes().length === 0) {
+      <div class="canvas__empty">
+        <p class="canvas__title">Design surface</p>
+        <p class="canvas__hint">
+          Use the + button in the palette to add components here.
+        </p>
+        @if (creationWizard.showWelcomeBanner()) {
+          <aside class="canvas__welcome-banner" data-testid="creation-welcome-banner">
+            <p class="canvas__welcome-lead">
+              New here? Choose guided steps or explore with the tips already in the palette and
+              inspector — no modal required.
+            </p>
+            <div class="canvas__welcome-actions">
+              <button
+                type="button"
+                class="canvas__welcome-primary"
+                data-testid="creation-welcome-guided"
+                (click)="creationWizard.openGuidedWizard()"
+              >
+                Guided creation
+              </button>
+              <button
+                type="button"
+                class="canvas__welcome-secondary"
+                data-testid="creation-welcome-explore"
+                (click)="creationWizard.startSelfExplorationFromBanner()"
+              >
+                Explore on my own
+              </button>
+              <button
+                type="button"
+                class="canvas__welcome-link"
+                data-testid="creation-welcome-open-guide"
+                (click)="creationWizard.openWizard()"
+              >
+                See both options
+              </button>
+            </div>
+            <button
+              type="button"
+              class="canvas__welcome-dismiss"
+              data-testid="creation-welcome-dismiss"
+              (click)="creationWizard.dismissWelcomeBanner(true)"
+            >
+              Don’t show again
+            </button>
+          </aside>
+        }
+      </div>
+    } @else {
+      @if (dashboardBanner(); as dashboard) {
+        <div class="canvas__dashboard" data-testid="canvas-dashboard-banner">
+          <div class="canvas__dashboard-heading">
+            <span class="canvas__dashboard-label">Dashboard</span>
+            <strong class="canvas__dashboard-name">{{ dashboard.name }}</strong>
+          </div>
+          @if (dashboard.description) {
+            <p class="canvas__dashboard-description">{{ dashboard.description }}</p>
+          }
+          <code class="canvas__dashboard-id">{{ dashboard.templateId }}</code>
+        </div>
+      }
+
+      <svg class="canvas__edges" aria-hidden="true">
+        @for (edge of bindingEdges(); track edge.id) {
+          <line
+            class="canvas__edge"
+            [attr.x1]="edge.x1"
+            [attr.y1]="edge.y1"
+            [attr.x2]="edge.x2"
+            [attr.y2]="edge.y2"
+          />
+        }
+      </svg>
+
+      <div
+        class="canvas__nodes"
+        [style.minWidth.px]="canvasContentBounds().width"
+        [style.minHeight.px]="canvasContentBounds().height"
+      >
+        @for (node of visibleCanvasNodes(); track node.id) {
+          <article
+            class="canvas__node"
+            data-testid="canvas-node"
+            role="button"
+            tabindex="0"
+            [class.canvas__node--selected]="state.selectedNodeIdsSet().has(node.id)"
+            [attr.data-selected]="state.selectedNodeIdsSet().has(node.id) ? 'true' : 'false'"
+            [style.left.px]="node.layout?.x ?? 24"
+            [style.top.px]="node.layout?.y ?? 24"
+            [style.width.px]="node.layout?.width ?? 220"
+            [style.height.px]="nodeHeight(node)"
+            (click)="selectNode(node.id, $event)"
+            (keydown.enter)="selectNode(node.id, $event)"
+            (keydown.space)="selectNode(node.id, $event)"
+          >
+            <div class="canvas__node-frame">
+              <header
+                class="canvas__node-namebar"
+                data-testid="canvas-node-header"
+                role="group"
+                tabindex="0"
+                [attr.aria-label]="node.label + ' component'"
+                (click)="stopHeaderEvent($event)"
+                (keydown.enter)="stopHeaderEvent($event)"
+                (keydown.space)="stopHeaderEvent($event)"
+                (pointerdown)="onHeaderPointerDown(node.id, $event)"
+                (pointermove)="onHeaderPointerMove($event)"
+                (pointerup)="onHeaderPointerUp($event)"
+              >
+                <span class="canvas__node-name">{{ node.label }}</span>
+                <button
+                  type="button"
+                  class="canvas__node-close"
+                  [attr.data-testid]="'canvas-node-remove-' + node.id"
+                  [attr.aria-label]="'Remove ' + node.label + ' from canvas'"
+                  (pointerdown)="stopHeaderEvent($event)"
+                  (click)="removeNode(node.id, $event)"
+                >
+                  ×
+                </button>
+              </header>
+
+              <div class="canvas__node-body">
+                <div class="canvas__node-meta">
+                  <code class="canvas__node-type">{{ node.type }}</code>
+                  @if (nodeSubtitle(node); as subtitle) {
+                    <p class="canvas__node-subtitle">{{ subtitle }}</p>
+                  }
+                  @if (nodeDataSource(node); as dataSource) {
+                    <p class="canvas__node-datasource">{{ dataSource }}</p>
+                  }
+                </div>
+
+                <div class="canvas__node-ports">
+              <ul class="canvas__ports canvas__ports--inputs">
+                @for (port of node.ports.inputs; track port.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="canvas__port canvas__port--input"
+                      [class.canvas__port--bound]="state.boundInputPortKeys().has(node.id + ':' + port.id)"
+                      [class.canvas__port--pending-target]="isPendingTarget(node.id, port.id)"
+                      [attr.data-testid]="'port-input-' + node.id + '-' + port.id"
+                      (click)="onInputPortClick(node.id, port.id, $event)"
+                    >
+                      <span class="canvas__port-dot" aria-hidden="true"></span>
+                      <span class="canvas__port-name">{{ port.name }}</span>
+                      <span class="canvas__port-type">{{ port.dataType }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+
+              <ul class="canvas__ports canvas__ports--outputs">
+                @for (port of node.ports.outputs; track port.id) {
+                  <li>
+                    <button
+                      type="button"
+                      class="canvas__port canvas__port--output"
+                      [class.canvas__port--pending]="isPendingOutput(node.id, port.id)"
+                      [attr.data-testid]="'port-output-' + node.id + '-' + port.id"
+                      (click)="onOutputPortClick(node.id, port.id, $event)"
+                    >
+                      <span class="canvas__port-name">{{ port.name }}</span>
+                      <span class="canvas__port-type">{{ port.dataType }}</span>
+                      <span class="canvas__port-dot" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            </div>
+              </div>
+            </div>
+
+            @if (state.selectedNodeIdsSet().has(node.id)) {
+              <button
+                type="button"
+                class="canvas__resize-handle"
+                aria-label="Resize component"
+                data-testid="canvas-resize-handle"
+                (pointerdown)="onResizePointerDown(node.id, $event)"
+                (pointermove)="onResizePointerMove($event)"
+                (pointerup)="onResizePointerUp($event)"
+              ></button>
+            }
+          </article>
+        }
+      </div>
+
+      @if (state.placementPrompt(); as prompt) {
+        <aside
+          class="canvas__placement-prompt"
+          data-testid="canvas-placement-prompt"
+          [style.left.px]="promptLeft(prompt)"
+          [style.top.px]="promptTop(prompt)"
+          (mousedown)="$event.stopPropagation()"
+        >
+          <header class="canvas__placement-header">
+            <strong>How it works</strong>
+            <button
+              type="button"
+              class="canvas__placement-dismiss"
+              data-testid="canvas-placement-dismiss"
+              aria-label="Dismiss grouping guide"
+              (click)="dismissPlacementPrompt($event)"
+            >
+              ×
+            </button>
+          </header>
+          <p class="canvas__placement-message">{{ prompt.message }}</p>
+          @if (promptHasInstructionSteps(prompt)) {
+            <p class="grouping-instruction__outcome">{{ promptOutcome(prompt) }}</p>
+          }
+          <div
+            class="grouping-animation"
+            [class]="'grouping-animation grouping-animation--' + prompt.animationKey"
+          >
+            @for (block of promptAnimationBlocks(prompt); track block) {
+              <div class="grouping-animation__block">{{ block }}</div>
+            }
+          </div>
+          <p class="grouping-animation__label">{{ promptAnimationLabel(prompt) }}</p>
+          @if (promptHasInstructionSteps(prompt)) {
+            <p class="grouping-instruction__step-count">{{ promptSteps(prompt).length }} steps</p>
+            <ol class="grouping-instruction__steps">
+              @for (step of promptSteps(prompt); track step.order) {
+                <li
+                  [class]="'grouping-instruction__step ' + instructionStepClass(step)"
+                  [attr.data-testid]="'canvas-instruction-step-' + prompt.sourceType + '-' + step.order"
+                >
+                  <span class="grouping-instruction__step-order">{{ step.order }}</span>
+                  <div class="grouping-instruction__step-body">
+                    <p class="grouping-instruction__step-title">{{ step.title }}</p>
+                    <p class="grouping-instruction__step-text">{{ step.body }}</p>
+                  </div>
+                </li>
+              }
+            </ol>
+          }
+          <ul class="canvas__placement-actions">
+            @for (companion of prompt.companions; track companion.type) {
+              <li>
+                <button
+                  type="button"
+                  class="canvas__placement-add"
+                  [attr.data-testid]="'canvas-placement-add-' + companion.type"
+                  (click)="addCompanionFromPrompt(companion.type, $event)"
+                >
+                  + Add {{ companion.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </aside>
+      }
+    }
+
+    @if (creationWizard.showExploreTips()) {
+      <aside class="canvas__explore-tips" data-testid="creation-explore-tips">
+        <header class="canvas__explore-tips-header">
+          <strong>Self-exploration tips</strong>
+          <button
+            type="button"
+            class="canvas__explore-tips-close"
+            aria-label="Dismiss tips"
+            data-testid="creation-explore-tips-close"
+            (click)="creationWizard.dismissExploreTips()"
+          >
+            ×
+          </button>
+        </header>
+        <ul class="canvas__explore-tips-list">
+          <li>Palette <strong>i</strong> — how a component works; <strong>⛓</strong> — typical companions.</li>
+          <li>Select a node to edit properties in the <strong>Inspector</strong> on the right.</li>
+          <li>Follow binding hints on the canvas when wiring filters, tables, and charts.</li>
+          <li>Reopen the creation guide anytime from toolbar <strong>Create</strong>.</li>
+        </ul>
+      </aside>
+    }
+  </div>
+</section>

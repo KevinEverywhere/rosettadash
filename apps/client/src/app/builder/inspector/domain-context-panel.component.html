@@ -1,0 +1,102 @@
+<section class="domain-context" data-testid="domain-context-panel">
+  <h4>Domain context</h4>
+  <p class="domain-context__hint">
+    Scoped client and project metadata for preview mock data and export IR.
+  </p>
+
+  <div class="domain-context__field">
+    <label for="domain-client-name">Client name</label>
+    <input
+      id="domain-client-name"
+      type="text"
+      data-testid="domain-client-name"
+      [ngModel]="clientName()"
+      (ngModelChange)="updateClientName($event)"
+      placeholder="Acme Corp"
+    />
+  </div>
+
+  <div class="domain-context__field">
+    <label for="domain-client-id">Client ID</label>
+    <input
+      id="domain-client-id"
+      type="text"
+      data-testid="domain-client-id"
+      [ngModel]="clientId()"
+      (ngModelChange)="updateClientId($event)"
+      placeholder="acme-corp"
+    />
+  </div>
+
+  <div class="domain-context__field">
+    <label for="domain-project-name">Scoped project name</label>
+    <input
+      id="domain-project-name"
+      type="text"
+      data-testid="domain-project-name"
+      [ngModel]="projectName()"
+      (ngModelChange)="updateProjectName($event)"
+      placeholder="Revenue Ops"
+    />
+  </div>
+
+  <div class="domain-context__field">
+    <label for="domain-project-id">Scoped project ID</label>
+    <input
+      id="domain-project-id"
+      type="text"
+      data-testid="domain-project-id"
+      [ngModel]="projectId()"
+      (ngModelChange)="updateProjectId($event)"
+      placeholder="revenue-ops"
+    />
+  </div>
+
+  <div class="domain-context__field">
+    <label for="domain-default-time-range">Default time range</label>
+    <app-select
+      testId="domain-default-time-range"
+      emptyOptionLabel="None"
+      placeholder="None"
+      [options]="timeRangeOptions"
+      [ngModel]="defaultTimeRange()"
+      (ngModelChange)="updateDefaultTimeRange($event)"
+    />
+  </div>
+
+  <div class="domain-context__roles" data-testid="domain-roles-section">
+    <div class="domain-context__roles-header">
+      <label for="domain-role-preset">Roles</label>
+      @if (availablePresets().length) {
+        <app-select
+          testId="domain-role-preset"
+          placeholder="Add preset…"
+          [options]="availablePresetOptions()"
+          [resetAfterSelect]="true"
+          (valueChange)="addPresetRole($event)"
+        />
+      }
+    </div>
+
+    @if (roles().length) {
+      <ul class="domain-context__role-list">
+        @for (role of roles(); track role.id) {
+          <li class="domain-context__role-item" [attr.data-testid]="'domain-role-' + role.id">
+            <span>{{ role.name }}</span>
+            <code>{{ role.id }}</code>
+            <button
+              type="button"
+              class="domain-context__role-remove"
+              [attr.data-testid]="'remove-domain-role-' + role.id"
+              (click)="removeRole(role.id)"
+            >
+              Remove
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="domain-context__hint">Add roles to configure role gates and export stubs.</p>
+    }
+  </div>
+</section>

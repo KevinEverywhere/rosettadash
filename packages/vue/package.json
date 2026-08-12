@@ -1,0 +1,54 @@
+{
+  "name": "@rosettadash/vue",
+  "version": "0.0.1",
+  "description": "RosettaDash vue runtime - same group/component paths as web-components",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./layout/accordion": {
+      "types": "./src/layout/accordion/index.d.ts",
+      "import": "./src/layout/accordion/index.js",
+      "default": "./src/layout/accordion/index.js"
+    },
+    "./layout/accordion-link-list": {
+      "types": "./src/layout/accordion-link-list/index.d.ts",
+      "import": "./src/layout/accordion-link-list/index.js",
+      "default": "./src/layout/accordion-link-list/index.js"
+    },
+    "./visual/link-list": {
+      "types": "./src/visual/link-list/index.d.ts",
+      "import": "./src/visual/link-list/index.js",
+      "default": "./src/visual/link-list/index.js"
+    },
+    "./visual/media/video-source": {
+      "types": "./src/visual/media/video-source/index.d.ts",
+      "import": "./src/visual/media/video-source/index.js",
+      "default": "./src/visual/media/video-source/index.js"
+    },
+    "./visual/media/equirect-viewport": {
+      "types": "./src/visual/media/equirect-viewport/index.d.ts",
+      "import": "./src/visual/media/equirect-viewport/index.js",
+      "default": "./src/visual/media/equirect-viewport/index.js"
+    }
+  },
+  "files": ["src", "README.md", "LICENSE"],
+  "dependencies": {
+    "@rosettadash/web-components": "*",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

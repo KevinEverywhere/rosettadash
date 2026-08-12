@@ -1,0 +1,491 @@
+@switch (node().type) {
+  @case ('visual.input.text') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <input
+        type="text"
+        class="preview-input"
+        data-testid="preview-text-input"
+        [placeholder]="readString('placeholder')"
+        [attr.required]="readBoolean('required') ? true : null"
+        readonly
+      />
+    </label>
+  }
+  @case ('visual.input.select') {
+    <div class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <app-select
+        class="preview-input"
+        testId="preview-select"
+        [placeholder]="readString('placeholder', 'Select…')"
+        [options]="selectOptions()"
+      />
+    </div>
+  }
+  @case ('visual.input.number') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <input
+        type="number"
+        class="preview-input"
+        data-testid="preview-number-input"
+        [placeholder]="readString('placeholder')"
+        [attr.min]="readNumber('min', 0)"
+        [attr.max]="readNumber('max', 100)"
+        [attr.step]="readNumber('step', 1)"
+        [attr.required]="readBoolean('required') ? true : null"
+        readonly
+      />
+    </label>
+  }
+  @case ('visual.input.checkbox') {
+    <label class="preview-field preview-field--checkbox">
+      <input
+        type="checkbox"
+        class="preview-checkbox"
+        data-testid="preview-checkbox"
+        [checked]="readBoolean('defaultChecked')"
+        disabled
+      />
+      <span class="preview-field__label">{{
+        readString('label') || node().label
+      }}</span>
+    </label>
+  }
+  @case ('visual.input.textarea') {
+    <label class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <textarea
+        class="preview-input preview-textarea"
+        data-testid="preview-textarea"
+        [placeholder]="readString('placeholder')"
+        [attr.rows]="readNumber('rows', 4)"
+        [attr.required]="readBoolean('required') ? true : null"
+        readonly
+      ></textarea>
+    </label>
+  }
+  @case ('visual.input.date-range') {
+    <div class="preview-date-range" data-testid="preview-date-range">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <div class="preview-date-range__controls">
+        <input type="date" class="preview-input" value="2026-08-01" readonly />
+        <span class="preview-date-range__sep">to</span>
+        <input type="date" class="preview-input" value="2026-08-08" readonly />
+      </div>
+      <span class="preview-date-range__preset">{{ dateRangeLabel() }}</span>
+    </div>
+  }
+  @case ('domain.time-preset') {
+    <div class="preview-time-preset" data-testid="preview-time-preset">
+      <span class="preview-field__label">{{ readString('label', 'Period') }}</span>
+      <div class="preview-time-preset__buttons">
+        @for (option of timePresetOptions; track option.id) {
+          <button
+            type="button"
+            class="preview-time-preset__button"
+            [class.preview-time-preset__button--active]="isActiveTimePreset(option.id)"
+            (click)="selectTimePreset(option.id)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+  @case ('visual.table') {
+    <div class="preview-table" data-testid="preview-table">
+      <div class="preview-table__header">
+        <span>{{ node().label }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        } @else if (readBoolean('filterable')) {
+          <span class="preview-chip">Filterable</span>
+        }
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of tableRows().slice(0, readNumber('pageSize', 25)); track row.id) {
+            <tr
+              class="preview-table__row"
+              [class.preview-table__row--selected]="isSelectedTableRow(row)"
+              (click)="selectTableRow(row)"
+            >
+              <td>{{ row.name }}</td>
+              <td>{{ row.status }}</td>
+              <td>{{ row.amount | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
+              <td>{{ row.date }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @case ('visual.detail') {
+    <div class="preview-detail" data-testid="preview-detail">
+      <div class="preview-detail__header">
+        <span class="preview-detail__title">{{ readString('title', 'Details') }}</span>
+        @if (linkedToTable()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">Table row selection</span>
+        }
+      </div>
+      @if (detailRow(); as row) {
+        <dl class="preview-detail__fields">
+          @for (field of detailFields(); track field.key) {
+            <div class="preview-detail__field">
+              <dt>{{ field.key }}</dt>
+              <dd>{{ field.value }}</dd>
+            </div>
+          }
+        </dl>
+      } @else {
+        <p class="preview-detail__empty">{{ readString('emptyMessage', 'Select a row to view details') }}</p>
+      }
+    </div>
+  }
+  @case ('visual.skeleton') {
+    @if (skeletonVisible()) {
+      <div
+        class="preview-skeleton"
+        [class.preview-skeleton--chart]="skeletonVariant() === 'chart'"
+        [class.preview-skeleton--kpi]="skeletonVariant() === 'kpi'"
+        [class.preview-skeleton--card]="skeletonVariant() === 'card'"
+        data-testid="preview-skeleton"
+        aria-busy="true"
+      >
+        @if (skeletonVariant() === 'chart') {
+          <div class="preview-skeleton__chart-block"></div>
+          <div class="preview-skeleton__legend">
+            @for (line of skeletonLines(); track line) {
+              <span class="preview-skeleton__line preview-skeleton__line--short"></span>
+            }
+          </div>
+        } @else if (skeletonVariant() === 'kpi') {
+          <span class="preview-skeleton__line preview-skeleton__line--title"></span>
+          <span class="preview-skeleton__line preview-skeleton__line--value"></span>
+        } @else {
+          @for (line of skeletonLines(); track line) {
+            <span class="preview-skeleton__line"></span>
+          }
+        }
+      </div>
+    } @else {
+      <div class="preview-skeleton__loaded" data-testid="preview-skeleton-loaded">Content loaded</div>
+    }
+  }
+  @case ('logic.timer') {
+    <div class="preview-timer" data-testid="preview-timer">
+      <div class="preview-timer__header">
+        <span class="preview-field__label">{{ readString('label', 'Timer') }}</span>
+        <span class="preview-chip">{{ readString('mode', 'interval') }}</span>
+      </div>
+      @if (readString('mode', 'interval') === 'countdown') {
+        <span class="preview-timer__value" data-testid="preview-timer-remaining">
+          {{ timerRemaining() }}s remaining
+        </span>
+      } @else {
+        <span class="preview-timer__value" data-testid="preview-timer-elapsed">
+          {{ timerElapsed() }} ticks
+        </span>
+      }
+    </div>
+  }
+  @case ('visual.kpi') {
+    <div class="preview-kpi" data-testid="preview-kpi">
+      <span class="preview-kpi__title">{{ readString('title', 'Metric') }}</span>
+      <span class="preview-kpi__value">{{ formatKpi(kpiValue()) }}</span>
+      <span class="preview-kpi__delta">+{{ kpiDelta() }}%</span>
+    </div>
+  }
+  @case ('visual.chart.line') {
+    <div class="preview-chart" data-testid="preview-line-chart">
+      <div class="preview-chart__header">
+        <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        }
+      </div>
+      <svg viewBox="0 0 240 96" class="preview-chart__svg" aria-hidden="true">
+        <polyline class="preview-chart__line" [attr.points]="lineChartPoints()" />
+      </svg>
+    </div>
+  }
+  @case ('visual.chart.bar') {
+    <div class="preview-chart" data-testid="preview-bar-chart">
+      <div class="preview-chart__header">
+        <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        }
+      </div>
+      <div class="preview-chart__bars">
+        @for (point of chartPoints(); track point.label) {
+          <div class="preview-chart__bar-wrap">
+            <div
+              class="preview-chart__bar"
+              [style.height.%]="(point.value / chartMax()) * 100"
+            ></div>
+            <span>{{ point.label }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+  @case ('visual.chart.pie') {
+    <div class="preview-chart" data-testid="preview-pie-chart">
+      <div class="preview-chart__header">
+        <span class="preview-chart__title">{{ readString('title', 'Chart') }}</span>
+        @if (bindingHint()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">{{ bindingHint() }}</span>
+        }
+      </div>
+      <div
+        class="preview-chart__pie"
+        [class.preview-chart__pie--donut]="readBoolean('donut')"
+        [style.background]="pieConicGradient()"
+      ></div>
+      <ul class="preview-chart__pie-legend">
+        @for (slice of pieSlices(); track slice.label) {
+          <li>
+            <span class="preview-chart__pie-swatch" [style.background]="slice.color"></span>
+            {{ slice.label }}
+          </li>
+        }
+      </ul>
+    </div>
+  }
+  @case ('layout.grid') {
+    <div class="preview-layout" data-testid="preview-grid">
+      <span class="preview-layout__title">{{ node().label }}</span>
+      <div
+        class="preview-layout__grid"
+        [style.gridTemplateColumns]="'repeat(' + readNumber('columns', 12) + ', 1fr)'"
+        [style.gap.px]="readNumber('gap', 16)"
+      >
+        @for (slot of [1, 2, 3]; track slot) {
+          <div class="preview-layout__slot">Slot {{ slot }}</div>
+        }
+      </div>
+    </div>
+  }
+  @case ('layout.flex') {
+    <div class="preview-layout" data-testid="preview-flex">
+      <span class="preview-layout__title">{{ node().label }}</span>
+      <div
+        class="preview-layout__flex"
+        [class.preview-layout__flex--column]="readString('direction', 'row') === 'column'"
+        [style.gap.px]="readNumber('gap', 16)"
+        [style.alignItems]="readString('align', 'stretch')"
+      >
+        @for (slot of [1, 2, 3]; track slot) {
+          <div class="preview-layout__slot">Item {{ slot }}</div>
+        }
+      </div>
+    </div>
+  }
+  @case ('layout.tabs') {
+    <div class="preview-layout" data-testid="preview-tabs">
+      <span class="preview-layout__title">{{ node().label }}</span>
+      <div class="preview-tabs">
+        <span class="preview-tabs__tab preview-tabs__tab--active">Tab 1</span>
+        <span class="preview-tabs__tab">Tab 2</span>
+        <span class="preview-tabs__tab">Tab 3</span>
+      </div>
+      <div class="preview-layout__slot">Tab panel content</div>
+    </div>
+  }
+  @case ('layout.modal') {
+    <div class="preview-modal" data-testid="preview-modal">
+      <div class="preview-modal__dialog">
+        <span class="preview-modal__title">{{ readString('title', 'Dialog') }}</span>
+        <p class="preview-modal__body">Modal content preview</p>
+      </div>
+    </div>
+  }
+  @case ('layout.collapsible') {
+    <app-collapsible
+      appearance="card"
+      [expanded]="readBoolean('expanded', false)"
+      toggleTestId="preview-collapsible-toggle"
+      panelTestId="preview-collapsible-panel"
+    >
+      <span appCollapsibleTitle>{{ readString('title', 'Section') }}</span>
+      <span appCollapsibleSummary>{{ readString('summary', 'Collapsible panel') }}</span>
+      <div class="preview-layout__slot">Slot content</div>
+    </app-collapsible>
+  }
+  @case ('domain.role-gate') {
+    <div
+      class="preview-role-gate"
+      data-testid="preview-role-gate"
+      [class.preview-role-gate--hidden]="!roleGateVisible()"
+    >
+      <span class="preview-field__label">{{ node().label }}</span>
+      @if (roleGateVisible()) {
+        <p class="preview-role-gate__status" data-testid="preview-role-gate-visible">Visible</p>
+        <p class="preview-role-gate__hint">Allowed roles:</p>
+        <code>{{ roleGateAllowedRoles() | json }}</code>
+      } @else {
+        <p class="preview-role-gate__status preview-role-gate__status--hidden" data-testid="preview-role-gate-hidden">
+          Hidden for current preview role
+        </p>
+      }
+    </div>
+  }
+  @case ('domain.person-invite') {
+    <div class="preview-onboarding" data-testid="preview-person-invite">
+      <span class="preview-field__label">{{ readString('title', 'Invite team member') }}</span>
+      <input
+        type="email"
+        class="preview-input"
+        data-testid="preview-person-invite-email"
+        [placeholder]="readString('emailPlaceholder', 'name@company.com')"
+        readonly
+      />
+      <button type="button" class="preview-onboarding__button" data-testid="preview-person-invite-submit">
+        {{ readString('submitLabel', 'Send invite') }}
+      </button>
+    </div>
+  }
+  @case ('domain.role-assign') {
+    <div class="preview-onboarding" data-testid="preview-role-assign">
+      <span class="preview-field__label">{{ readString('title', 'Assign role') }}</span>
+      <p class="preview-onboarding__summary">{{ readString('summaryLabel', 'Review access before confirming') }}</p>
+      <app-select
+        class="preview-input"
+        testId="preview-role-assign-select"
+        [options]="roleAssignSelectOptions()"
+      />
+      <button type="button" class="preview-onboarding__button" data-testid="preview-role-assign-confirm">
+        {{ readString('confirmLabel', 'Confirm access') }}
+      </button>
+    </div>
+  }
+  @case ('visual.news.language-select') {
+    <div class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <app-select
+        class="preview-input"
+        testId="preview-news-language-select"
+        [placeholder]="readString('placeholder', 'Language')"
+        [options]="newsSelectOptions()"
+      />
+    </div>
+  }
+  @case ('visual.news.region-select') {
+    <div class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <app-select
+        class="preview-input"
+        testId="preview-news-region-select"
+        [placeholder]="readString('placeholder', 'Region')"
+        [options]="newsSelectOptions()"
+      />
+    </div>
+  }
+  @case ('visual.news.type-select') {
+    <div class="preview-field">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <app-select
+        class="preview-input"
+        testId="preview-news-type-select"
+        [placeholder]="readString('placeholder', 'News type')"
+        [options]="newsSelectOptions()"
+      />
+    </div>
+  }
+  @case ('visual.news.search-box') {
+    <div class="preview-field preview-search">
+      <span class="preview-field__label">{{ node().label }}</span>
+      <div class="preview-search__row">
+        <input
+          type="search"
+          class="preview-input preview-search__input"
+          data-testid="preview-news-search-input"
+          [placeholder]="readString('placeholder', 'Search news…')"
+          readonly
+        />
+        <button type="button" class="preview-search__button" data-testid="preview-news-search-button">
+          {{ readString('buttonLabel', 'Search') }}
+        </button>
+      </div>
+    </div>
+  }
+  @case ('visual.news.results-table') {
+    <div class="preview-table" data-testid="preview-news-results-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Headline</th>
+            @if (readBoolean('showSource', true)) {
+              <th>Source</th>
+            }
+            <th>Region</th>
+            @if (readBoolean('showPublishedAt', true)) {
+              <th>Published</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of newsRows().slice(0, readNumber('pageSize', 20)); track row.id) {
+            <tr
+              class="preview-table__row"
+              [class.preview-table__row--selected]="isSelectedNewsRow(row)"
+              (click)="selectNewsRow(row)"
+            >
+              <td>{{ row.headline }}</td>
+              @if (readBoolean('showSource', true)) {
+                <td>{{ row.source }}</td>
+              }
+              <td>{{ row.region }}</td>
+              @if (readBoolean('showPublishedAt', true)) {
+                <td>{{ row.publishedAt }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @case ('visual.news.article-detail') {
+    <div class="preview-detail" data-testid="preview-news-article-detail">
+      <div class="preview-detail__header">
+        <span class="preview-detail__title">Article</span>
+        @if (linkedToTable()) {
+          <span class="preview-chip" data-testid="preview-binding-hint">Results row selection</span>
+        }
+      </div>
+      @if (newsArticleRow(); as row) {
+        <dl class="preview-detail__fields">
+          @for (field of newsArticleFields(); track field.key) {
+            <div class="preview-detail__field">
+              <dt>{{ field.key }}</dt>
+              <dd>{{ field.value }}</dd>
+            </div>
+          }
+        </dl>
+      } @else {
+        <p class="preview-detail__empty">Select a headline to read the article</p>
+      }
+    </div>
+  }
+  @default {
+    @if (pluginTemplateId(); as templateId) {
+      <app-preview-plugin [node]="node()" [templateId]="templateId" />
+    } @else {
+    <div class="preview-fallback" data-testid="preview-fallback">
+      <span>{{ node().label }}</span>
+      <code>{{ node().type }}</code>
+    </div>
+    }
+  }
+}

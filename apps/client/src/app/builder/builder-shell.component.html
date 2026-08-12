@@ -1,0 +1,245 @@
+<div
+  class="builder"
+  data-testid="builder-shell"
+  [class.builder--compact]="layout.compact()"
+>
+  @if (viewport.blocked()) {
+    <app-builder-viewport-gate [availability]="viewport.availability()" />
+  } @else if (auth.checking()) {
+    <div class="builder__loading" data-testid="auth-checking">Checking access…</div>
+  } @else if (auth.authEnabled() && !auth.authenticated()) {
+    <app-builder-auth-gate
+      [error]="auth.loginError()"
+      (login)="onLogin($event)"
+    />
+  } @else {
+  <header class="builder__toolbar">
+    <div class="builder__brand">
+      <app-nav variant="toolbar" />
+      <span class="builder__subtitle">{{ state.project()?.name ?? 'Builder' }}</span>
+    </div>
+
+    <div class="builder__actions">
+      @if (layout.compact()) {
+        <div class="builder__panel-toggles">
+          <button
+            type="button"
+            class="builder__panel-toggle"
+            data-testid="toggle-palette"
+            [class.builder__panel-toggle--active]="layout.paletteOpen()"
+            [attr.aria-pressed]="layout.paletteOpen()"
+            (click)="layout.togglePalette()"
+          >
+            Components
+          </button>
+          <button
+            type="button"
+            class="builder__panel-toggle"
+            data-testid="toggle-inspector"
+            [class.builder__panel-toggle--active]="layout.inspectorOpen()"
+            [attr.aria-pressed]="layout.inspectorOpen()"
+            (click)="layout.toggleInspector()"
+          >
+            Inspector
+          </button>
+        </div>
+      }
+      <div class="builder__modes" role="tablist" aria-label="Workspace mode">
+        <button
+          type="button"
+          class="builder__mode"
+          data-testid="mode-design"
+          role="tab"
+          [attr.aria-selected]="state.workspaceMode() === 'design'"
+          [class.builder__mode--active]="state.workspaceMode() === 'design'"
+          (click)="setWorkspaceMode('design')"
+        >
+          Design
+        </button>
+        <button
+          type="button"
+          class="builder__mode"
+          data-testid="mode-preview"
+          role="tab"
+          [attr.aria-selected]="state.workspaceMode() === 'preview'"
+          [class.builder__mode--active]="state.workspaceMode() === 'preview'"
+          (click)="setWorkspaceMode('preview')"
+        >
+          Preview
+        </button>
+      </div>
+      <div class="builder__history">
+        <button
+          type="button"
+          class="builder__history-btn"
+          data-testid="undo-button"
+          title="Undo (Ctrl/Cmd+Z)"
+          [disabled]="state.loading() || !state.canUndo()"
+          (click)="undo()"
+        >
+          Undo
+        </button>
+        <button
+          type="button"
+          class="builder__history-btn"
+          data-testid="redo-button"
+          title="Redo (Ctrl/Cmd+Shift+Z)"
+          [disabled]="state.loading() || !state.canRedo()"
+          (click)="redo()"
+        >
+          Redo
+        </button>
+      </div>
+      @if (state.errorMessage()) {
+        <span class="builder__error">{{ state.errorMessage() }}</span>
+      }
+      <span
+        class="builder__status"
+        data-testid="save-status"
+        [class.builder__status--dirty]="state.dirty()"
+      >
+        {{ statusLabel() }}
+      </span>
+      <div class="builder__templates">
+        <div class="builder__templates-label">
+          <span class="visually-hidden">Page template</span>
+        <app-select
+          testId="template-picker"
+          placeholder="Select template…"
+          [options]="templateSelectOptions"
+          [disabled]="state.loading()"
+          [(ngModel)]="selectedTemplateId"
+        />
+        </div>
+        <button
+          type="button"
+          class="builder__template"
+          data-testid="apply-template"
+          [disabled]="state.loading() || !selectedTemplateId"
+          (click)="applySelectedTemplate()"
+        >
+          Apply template
+        </button>
+      </div>
+      <button
+        type="button"
+        class="builder__create"
+        data-testid="creation-wizard-button"
+        [class.builder__create--return-hint]="creationWizard.highlightCreateButton()"
+        [disabled]="state.loading()"
+        (click)="openCreationWizard()"
+      >
+        Create
+      </button>
+      @if (featureFlags.isAiDrawerEnabled()) {
+        <button
+          type="button"
+          class="builder__ai"
+          data-testid="ai-assist-button"
+          [disabled]="state.loading()"
+          (click)="openAiDrawer()"
+        >
+          AI assist
+        </button>
+      }
+      <button
+        type="button"
+        class="builder__export"
+        data-testid="export-button"
+        [disabled]="state.loading()"
+        (click)="openExportWizard()"
+      >
+        Export
+      </button>
+      @if (contentLibrary.message(); as libraryMessage) {
+        <span class="builder__library-notice" data-testid="library-save-notice">{{ libraryMessage }}</span>
+      }
+      <button
+        type="button"
+        class="builder__library-save"
+        data-testid="save-to-library-button"
+        title="Save current layout to Admin → Saved content"
+        [disabled]="state.loading() || state.nodes().length === 0"
+        (click)="saveToLibrary()"
+      >
+        Save to library
+      </button>
+      <button
+        type="button"
+        class="builder__save"
+        data-testid="save-button"
+        [disabled]="state.loading() || state.saveStatus() === 'saving' || !state.dirty()"
+        (click)="save()"
+      >
+        Save
+      </button>
+    </div>
+  </header>
+
+  @if (state.loading()) {
+    <div class="builder__loading" data-testid="builder-loading">Loading project…</div>
+  } @else {
+    <div
+      class="builder__workspace"
+      [class.builder__workspace--compact]="layout.compact()"
+      [class.builder__workspace--resizing]="layout.resizing()"
+      [style.grid-template-columns]="layout.workspaceGridTemplate()"
+    >
+      @if (layout.compact() && (layout.paletteOpen() || layout.inspectorOpen())) {
+        <button
+          type="button"
+          class="builder__backdrop"
+          data-testid="builder-panel-backdrop"
+          aria-label="Close panels"
+          (click)="layout.closePanels()"
+        ></button>
+      }
+      <app-palette
+        class="builder__palette"
+        [class.builder__palette--open]="layout.compact() && layout.paletteOpen()"
+        [class.builder__palette--collapsed]="!layout.compact() && layout.paletteCollapsed()"
+      />
+      @if (!layout.compact()) {
+        <div
+          class="builder__splitter"
+          data-testid="palette-splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize components panel"
+          (pointerdown)="onPaletteSplitterPointerDown($event)"
+          (pointermove)="onSplitterPointerMove($event)"
+          (pointerup)="onSplitterPointerUp()"
+          (pointercancel)="onSplitterPointerUp()"
+        ></div>
+      }
+      @if (state.workspaceMode() === 'design') {
+        <app-canvas class="builder__canvas" data-testid="design-workspace" />
+      } @else {
+        <app-preview-panel class="builder__canvas" data-testid="preview-workspace" />
+      }
+      @if (!layout.compact()) {
+        <div
+          class="builder__splitter"
+          data-testid="inspector-splitter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize inspector panel"
+          (pointerdown)="onInspectorSplitterPointerDown($event)"
+          (pointermove)="onSplitterPointerMove($event)"
+          (pointerup)="onSplitterPointerUp()"
+          (pointercancel)="onSplitterPointerUp()"
+        ></div>
+      }
+      <app-inspector
+        class="builder__inspector"
+        [class.builder__inspector--open]="layout.compact() && layout.inspectorOpen()"
+        [class.builder__inspector--collapsed]="!layout.compact() && layout.inspectorCollapsed()"
+      />
+    </div>
+  }
+  }
+</div>
+
+<app-export-wizard [open]="exportWizardOpen()" (closed)="closeExportWizard()" />
+<app-ai-drawer [open]="aiDrawerOpen()" (closed)="closeAiDrawer()" />
+<app-creation-wizard (aiAssistRequested)="onCreationWizardAi($event)" />

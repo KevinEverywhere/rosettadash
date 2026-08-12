@@ -1,0 +1,184 @@
+<main class="admin-page" data-testid="admin-page">
+  <div class="admin-page__nav-bar">
+    <app-nav />
+  </div>
+
+  <header class="admin-page__page-header">
+    <h1>Admin control panel</h1>
+  </header>
+
+  @if (!loaded()) {
+    <p class="admin-page__loading" data-testid="admin-loading">Loading admin panel…</p>
+  } @else {
+    <div class="admin-page__layout">
+      <section class="admin-page__hero" aria-labelledby="admin-hero-heading">
+        <h2 id="admin-hero-heading" class="admin-page__hero-title">RosettaDash admin</h2>
+        <p class="admin-page__lead">
+          Manage saved dashboards, configure AI and voice, and browse builder guides. Everything
+          stays in your browser — no RosettaDash-hosted admin server.
+        </p>
+        <ul class="admin-page__highlights">
+          <li>Save composites to your local content library and reopen them in the builder</li>
+          <li>See AI, voice, and app-lock status at a glance</li>
+          <li>Configure AI assist and voice input for this browser</li>
+          <li>Browse animated builder guides for every palette component</li>
+          <li>Browse the component catalog that powers the palette</li>
+        </ul>
+
+        @if (library.message(); as message) {
+          <p class="admin-page__message" data-testid="admin-message">{{ message }}</p>
+        }
+      </section>
+
+      <section class="admin-page__panel" aria-label="Admin sections">
+        @for (section of sections; track section) {
+          <app-collapsible
+            appearance="admin"
+            [expanded]="isSectionOpen(section)"
+            [toggleTestId]="'admin-section-toggle-' + section"
+            [panelTestId]="'admin-section-panel-' + section"
+            (toggled)="toggleSection(section)"
+          >
+            <span appCollapsibleTitle>{{ sectionLabels[section] }}</span>
+            @if (sectionSummary(section); as summary) {
+              <span appCollapsibleSummary>{{ summary }}</span>
+            }
+
+            @switch (section) {
+                  @case ('content') {
+                    <p class="admin-page__hint">
+                      Saves a snapshot of your current builder canvas to this browser. Open the builder
+                      first, then return here to capture it.
+                    </p>
+                    <div class="admin-page__grid">
+                      <label class="admin-page__field">
+                        <span>Label</span>
+                        <input
+                          type="text"
+                          data-testid="admin-save-label"
+                          placeholder="Holiday greetings dashboard"
+                          [ngModel]="saveLabel()"
+                          (ngModelChange)="saveLabel.set($event)"
+                        />
+                      </label>
+                    </div>
+                    <button
+                      type="button"
+                      class="admin-page__button admin-page__button--secondary"
+                      data-testid="admin-save-workspace"
+                      [disabled]="!hasActiveWorkspace()"
+                      (click)="saveCurrentWorkspace()"
+                    >
+                      Save current canvas
+                    </button>
+                    @if (!hasActiveWorkspace()) {
+                      <p class="admin-page__hint">No active builder session — open the builder, then come back.</p>
+                    }
+
+                    @if (library.entries().length) {
+                      <ul class="admin-page__entry-list">
+                        @for (entry of library.entries(); track entry.id) {
+                          <li class="admin-page__entry" [attr.data-testid]="'admin-entry-' + entry.id">
+                            <div>
+                              <strong>{{ entry.label }}</strong>
+                              <p>{{ entry.composite.nodes.length }} nodes · updated {{ entry.updatedAt | date: 'mediumDate' }}</p>
+                            </div>
+                            <div class="admin-page__entry-actions">
+                              <button type="button" class="admin-page__button" (click)="openInBuilder(entry.id)">
+                                Open in builder
+                              </button>
+                              <button
+                                type="button"
+                                class="admin-page__button admin-page__button--danger"
+                                (click)="removeEntry(entry.id)"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </li>
+                        }
+                      </ul>
+                    } @else {
+                      <p class="admin-page__hint">No saved content yet.</p>
+                    }
+                  }
+
+                  @case ('integrations') {
+                    <dl class="admin-page__status-list">
+                      <div>
+                        <dt>AI provider</dt>
+                        <dd>{{ aiProviderLabel() }} · {{ environment.settings().byok.activeModel }}</dd>
+                      </div>
+                      <div>
+                        <dt>AI status</dt>
+                        <dd>{{ aiAssist.readiness()?.ready ? 'Ready' : aiAssist.readiness()?.message ?? 'Not configured' }}</dd>
+                      </div>
+                      <div>
+                        <dt>Voice input</dt>
+                        <dd>{{ speech.isSupported() ? 'Supported in this browser' : 'Not supported' }}</dd>
+                      </div>
+                      <div>
+                        <dt>App lock</dt>
+                        <dd>{{ appLock.isEnabled() ? 'Enabled' : 'Off' }}</dd>
+                      </div>
+                    </dl>
+
+                    <p class="admin-page__hint admin-page__hint--spaced">Local toggles stored in this browser only.</p>
+                    <label class="admin-page__checkbox">
+                      <input
+                        type="checkbox"
+                        data-testid="admin-flag-ai-drawer"
+                        [checked]="flags.flags().aiDrawerEnabled"
+                        (change)="onFeatureFlagChange('aiDrawerEnabled', $any($event.target).checked)"
+                      />
+                      Show AI assist in builder toolbar
+                    </label>
+                    <label class="admin-page__checkbox">
+                      <input
+                        type="checkbox"
+                        data-testid="admin-flag-voice"
+                        [checked]="flags.flags().voiceInputEnabled"
+                        (change)="onFeatureFlagChange('voiceInputEnabled', $any($event.target).checked)"
+                      />
+                      Enable voice input in AI drawer
+                    </label>
+                  }
+
+                  @case ('guides') {
+                    <p class="admin-page__hint">
+                      Same animated instructions shown when you add a component on the canvas. Expand a
+                      type to preview bindings, companions, and step-by-step help before building.
+                    </p>
+                    <div class="admin-page__guide-list">
+                      @for (entry of builderGuides(); track entry.type) {
+                        <app-builder-guide-card
+                          [label]="entry.label"
+                          [type]="entry.type"
+                          [guide]="entry.guide"
+                          [expanded]="isGuideOpen(entry.type)"
+                          (toggled)="toggleGuide(entry.type)"
+                        />
+                      }
+                    </div>
+                  }
+
+                  @case ('catalog') {
+                    <p class="admin-page__hint">Read-only view of palette component types from the core registry.</p>
+                    @for (group of paletteGroups(); track group.id) {
+                      <div class="admin-page__catalog-group">
+                        <h3>{{ group.label }}</h3>
+                        <ul>
+                          @for (item of group.items; track item.type) {
+                            <li><code>{{ item.type }}</code> — {{ item.label }}</li>
+                          }
+                        </ul>
+                      </div>
+                    }
+                  }
+                }
+          </app-collapsible>
+        }
+      </section>
+    </div>
+  }
+</main>

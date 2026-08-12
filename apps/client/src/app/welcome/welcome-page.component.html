@@ -1,0 +1,382 @@
+<main class="welcome" data-testid="welcome-page">
+  <div class="welcome__nav-bar">
+    <app-nav />
+  </div>
+
+  <header class="welcome__page-header">
+    <p class="welcome__eyebrow">Welcome to {{ appName }}</p>
+    <h1 id="welcome-heading" data-testid="welcome-heading">
+      Build Components and Dashboards for your stack
+    </h1>
+  </header>
+
+  <div class="welcome__layout">
+    <section class="welcome__hero" aria-labelledby="welcome-heading">
+      <p class="welcome__lead">
+        Design composite dashboards visually, preview with mock data, and export production-ready
+        code — either framework-native (React, Angular, Vue, Svelte) or as W3C Web Components.
+      </p>
+      <ul class="welcome__highlights">
+        <li>Drag-and-drop canvas with bindings and live preview</li>
+        <li>Framework-based export or standards-based Custom Elements</li>
+        <li>Pair your UI target with server, database, and styling on day one</li>
+      </ul>
+      @if (showFrameworkPrompt()) {
+        <p class="welcome__framework-prompt" data-testid="welcome-framework-prompt">
+          Choose a component model to begin →
+        </p>
+      }
+
+      <div class="welcome__docs" data-testid="welcome-docs">
+        <app-collapsible
+          appearance="stack"
+          [expanded]="isSectionOpen('docs')"
+          toggleTestId="welcome-docs-toggle"
+          panelTestId="welcome-docs-panel"
+          (toggled)="toggleSection('docs')"
+        >
+          <span appCollapsibleTitle>Documentation</span>
+          <span appCollapsibleSummary>README</span>
+          <app-markdown-viewer src="/readme.md" />
+        </app-collapsible>
+      </div>
+    </section>
+
+    <section class="welcome__stack-panel" data-testid="welcome-stack">
+      <header class="welcome__stack-header">
+        <h2>Choose your tech stack</h2>
+        <p>
+          Pick a <strong>framework-based</strong> UI target or <strong>W3C Web Components</strong>, then
+          expand server, database, and styling. Styling options adapt to your component model.
+        </p>
+      </header>
+
+      <div class="welcome__stack-sections">
+      <app-collapsible
+        appearance="stack"
+        [expanded]="isSectionOpen('ui')"
+        [summaryPlaceholder]="isPlaceholderSummary(uiSectionSummary())"
+        toggleTestId="stack-section-toggle-ui"
+        panelTestId="stack-section-panel-ui"
+        (toggled)="toggleSection('ui')"
+      >
+        <span appCollapsibleTitle>Component model</span>
+        <span appCollapsibleSummary>{{ uiSectionSummary() }}</span>
+
+        @for (group of uiTargetGroups; track group.id) {
+          <div class="welcome__option-group">
+            <h3 class="welcome__option-group-title">{{ group.label }}</h3>
+            <p class="welcome__option-group-lead">{{ group.description }}</p>
+            <ul class="welcome__options">
+              @for (option of group.options; track option.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="welcome__option"
+                    [class.welcome__option--selected]="uiChoice() === option.id"
+                    [attr.data-testid]="'stack-ui-' + option.id"
+                    (click)="selectUi(option.id)"
+                  >
+                    <span class="welcome__option-label">{{ option.label }}</span>
+                    <span class="welcome__option-desc">{{ option.description }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </app-collapsible>
+
+      <app-collapsible
+        appearance="stack"
+        [expanded]="isSectionOpen('server')"
+          [summaryPlaceholder]="isPlaceholderSummary(serverSectionSummary())"
+          toggleTestId="stack-section-toggle-server"
+          panelTestId="stack-section-panel-server"
+          (toggled)="toggleSection('server')"
+        >
+          <span appCollapsibleTitle>Server (Node.js)</span>
+          <span appCollapsibleSummary>{{ serverSectionSummary() }}</span>
+
+          <p class="welcome__section-lead">{{ serverEcosystemNote }}</p>
+          <ul class="welcome__chip-row">
+            @for (option of serverOptions(); track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip"
+                  [class.welcome__chip--selected]="serverChoice() === option.id"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-server-' + option.id"
+                  (click)="selectServer(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </app-collapsible>
+
+        <app-collapsible
+          appearance="stack"
+          [expanded]="isSectionOpen('database')"
+          [summaryPlaceholder]="isPlaceholderSummary(databaseSectionSummary())"
+          toggleTestId="stack-section-toggle-database"
+          panelTestId="stack-section-panel-database"
+          (toggled)="toggleSection('database')"
+        >
+          <span appCollapsibleTitle>Database</span>
+          <span appCollapsibleSummary>{{ databaseSectionSummary() }}</span>
+
+          <p class="welcome__section-lead">
+            Optional — choose <strong>None</strong> if you are exporting UI components only.
+          </p>
+          <ul class="welcome__chip-row">
+            @for (option of databaseOptions(); track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip"
+                  [class.welcome__chip--selected]="databaseChoice() === option.id"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-database-' + option.id"
+                  (click)="selectDatabase(option.id)"
+                >
+                  {{ option.label }}
+                </button>
+              </li>
+            }
+          </ul>
+        </app-collapsible>
+
+      <app-collapsible
+        appearance="stack"
+        [expanded]="isSectionOpen('styling')"
+        [summaryPlaceholder]="isPlaceholderSummary(stylingSectionSummary())"
+        toggleTestId="stack-section-toggle-styling"
+        panelTestId="stack-section-panel-styling"
+        (toggled)="toggleSection('styling')"
+      >
+        <span appCollapsibleTitle>{{ stylingSectionTitle() }}</span>
+        <span appCollapsibleSummary>{{ stylingSectionSummary() }}</span>
+
+        <p class="welcome__section-lead">
+          Combine foundation layers, an optional component library, and authoring approaches.
+          Options match your UI framework.
+        </p>
+
+        <div class="welcome__styling-group">
+          <h4 class="welcome__styling-group-title">Foundation</h4>
+          <ul class="welcome__chip-row">
+            @for (option of foundationOptions(); track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip welcome__chip--stacked"
+                  [class.welcome__chip--selected]="isFoundationSelected(option.id)"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-styling-foundation-' + option.id"
+                  (click)="selectFoundation(option.id)"
+                >
+                  <span class="welcome__chip-label">{{ option.label }}</span>
+                  <span class="welcome__chip-desc">{{ option.description }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+
+        @if (showComponentLibrarySection()) {
+          <div class="welcome__styling-group">
+            <h4 class="welcome__styling-group-title">Component library</h4>
+            <ul class="welcome__chip-row">
+              @for (option of componentLibraryOptions(); track option.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="welcome__chip welcome__chip--stacked"
+                    [class.welcome__chip--selected]="isComponentLibrarySelected(option.id)"
+                    [disabled]="!hasUiChoice()"
+                    [attr.data-testid]="'stack-styling-library-' + option.id"
+                    (click)="selectComponentLibrary(option.id)"
+                  >
+                    <span class="welcome__chip-label">{{ option.label }}</span>
+                    <span class="welcome__chip-desc">{{ option.description }}</span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="welcome__styling-group">
+          <h4 class="welcome__styling-group-title">Authoring</h4>
+          <ul class="welcome__chip-row">
+            @for (option of authoringOptions(); track option.id) {
+              <li>
+                <button
+                  type="button"
+                  class="welcome__chip welcome__chip--stacked"
+                  [class.welcome__chip--selected]="isAuthoringSelected(option.id)"
+                  [disabled]="!hasUiChoice()"
+                  [attr.data-testid]="'stack-styling-authoring-' + option.id"
+                  (click)="selectAuthoring(option.id)"
+                >
+                  <span class="welcome__chip-label">{{ option.label }}</span>
+                  <span class="welcome__chip-desc">{{ option.description }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <label class="welcome__inline-toggle">
+          <input
+            type="checkbox"
+            data-testid="stack-styling-inline-styles"
+            [checked]="stylingProfile()?.inlineStyles ?? false"
+            [disabled]="!hasUiChoice()"
+            (change)="setInlineStyles($any($event.target).checked)"
+          />
+          Allow inline styles in exported components
+        </label>
+      </app-collapsible>
+      </div>
+
+      <footer class="welcome__footer">
+        @if (hasExistingSession()) {
+          <p class="welcome__resume-note" data-testid="welcome-resume-note">
+            You have a builder session in this tab. Continue where you left off, or start a new
+            project with the stack above.
+          </p>
+          <div class="welcome__footer-actions">
+            <button
+              type="button"
+              class="welcome__continue"
+              data-testid="welcome-continue"
+              [disabled]="!canContinue()"
+              (click)="requestContinue()"
+            >
+              Continue to builder
+            </button>
+            <button
+              type="button"
+              class="welcome__continue welcome__continue--secondary"
+              data-testid="welcome-start-fresh"
+              [disabled]="!canContinue()"
+              (click)="requestStartFresh()"
+            >
+              Start new project
+            </button>
+          </div>
+        } @else {
+          <button
+            type="button"
+            class="welcome__continue"
+            data-testid="welcome-continue"
+            [disabled]="!canContinue()"
+            (click)="requestContinue()"
+          >
+            Continue to builder
+          </button>
+        }
+      </footer>
+    </section>
+  </div>
+
+  @if (confirmDialog() === 'stack-change-target') {
+    <div
+      class="welcome__dialog-backdrop"
+      data-testid="welcome-stack-change-dialog"
+      role="button"
+      tabindex="0"
+      aria-label="Close dialog"
+      (click)="cancelConfirmDialog()"
+      (keydown.enter)="cancelConfirmDialog()"
+      (keydown.space)="cancelConfirmDialog()"
+    >
+      <div
+        class="welcome__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="welcome-stack-change-title"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+      >
+        <h3 id="welcome-stack-change-title">Apply stack change</h3>
+        <p>Should this stack change apply to your current dashboard or only a new project?</p>
+        <div class="welcome__dialog-actions">
+          <button
+            type="button"
+            class="welcome__continue"
+            data-testid="welcome-stack-change-current"
+            (click)="confirmStackChangeTarget('current')"
+          >
+            Current dashboard
+          </button>
+          <button
+            type="button"
+            class="welcome__continue welcome__continue--secondary"
+            data-testid="welcome-stack-change-new-project"
+            (click)="confirmStackChangeTarget('fresh')"
+          >
+            New project only
+          </button>
+          <button
+            type="button"
+            class="welcome__dialog-cancel"
+            data-testid="welcome-stack-change-cancel"
+            (click)="cancelConfirmDialog()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (confirmDialog() === 'start-fresh-unchanged') {
+    <div
+      class="welcome__dialog-backdrop"
+      data-testid="welcome-start-fresh-dialog"
+      role="button"
+      tabindex="0"
+      aria-label="Close dialog"
+      (click)="dismissStartFreshDialog()"
+      (keydown.enter)="dismissStartFreshDialog()"
+      (keydown.space)="dismissStartFreshDialog()"
+    >
+      <div
+        class="welcome__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="welcome-start-fresh-title"
+        tabindex="-1"
+        (click)="$event.stopPropagation()"
+        (keydown)="$event.stopPropagation()"
+      >
+        <h3 id="welcome-start-fresh-title">Start a new project</h3>
+        <p>Begin with your existing tech stack, or change the stack above before continuing.</p>
+        <div class="welcome__dialog-actions">
+          <button
+            type="button"
+            class="welcome__continue"
+            data-testid="welcome-start-fresh-existing-stack"
+            (click)="startFreshWithExistingStack()"
+          >
+            Use existing stack
+          </button>
+          <button
+            type="button"
+            class="welcome__continue welcome__continue--secondary"
+            data-testid="welcome-start-fresh-change-first"
+            (click)="dismissStartFreshDialog()"
+          >
+            Change stack first
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</main>

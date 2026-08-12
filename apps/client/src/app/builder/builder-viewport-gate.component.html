@@ -1,0 +1,28 @@
+<main class="viewport-gate" data-testid="builder-viewport-gate">
+  <div class="viewport-gate__card">
+    <p class="viewport-gate__eyebrow">{{ appName }}</p>
+    <h1>{{ copy()?.title }}</h1>
+    <p class="viewport-gate__lead">{{ copy()?.lead }}</p>
+    <p class="viewport-gate__hint">{{ copy()?.hint }}</p>
+
+    <dl class="viewport-gate__metrics" data-testid="viewport-gate-metrics">
+      <div>
+        <dt>Viewport</dt>
+        <dd>{{ availability().width }} × {{ availability().height }}</dd>
+      </div>
+      <div>
+        <dt>Detected tier</dt>
+        <dd data-testid="viewport-gate-tier">{{ availability().tier }}</dd>
+      </div>
+    </dl>
+
+    <div class="viewport-gate__actions">
+      @if (!availability().allowed) {
+        <button type="button" class="viewport-gate__primary" data-testid="viewport-gate-retry" (click)="retry()">
+          Try again
+        </button>
+      }
+      <a class="viewport-gate__secondary" routerLink="/" data-testid="viewport-gate-home">Back to stack setup</a>
+    </div>
+  </div>
+</main>

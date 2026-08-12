@@ -1,0 +1,36 @@
+<nav
+  class="app-nav"
+  [class.app-nav--toolbar]="variant() === 'toolbar'"
+  aria-label="Main navigation"
+  data-testid="app-nav"
+>
+  <a
+    class="app-nav__logo"
+    routerLink="/"
+    routerLinkActive="app-nav__logo--active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    data-testid="app-nav-logo"
+    [attr.aria-label]="appName + ' home'"
+  >
+    {{ appName }}
+  </a>
+
+  <div class="app-nav__links">
+    <a
+      class="app-nav__link"
+      routerLink="/environment"
+      routerLinkActive="app-nav__link--active"
+      data-testid="app-nav-settings"
+    >
+      Settings
+    </a>
+    <a
+      class="app-nav__link"
+      routerLink="/builder"
+      routerLinkActive="app-nav__link--active"
+      data-testid="app-nav-builder"
+    >
+      Builder
+    </a>
+  </div>
+</nav>

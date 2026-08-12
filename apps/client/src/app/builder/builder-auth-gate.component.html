@@ -1,0 +1,33 @@
+<div class="auth-gate" data-testid="builder-auth-gate">
+  <div class="auth-gate__panel">
+    <h1 class="auth-gate__title">{{ appName }}</h1>
+    <p class="auth-gate__subtitle">Enter your builder API key to continue.</p>
+
+    <form class="auth-gate__form" (ngSubmit)="submit()">
+      <label class="auth-gate__label">
+        <span class="auth-gate__label-text">API key</span>
+        <input
+          class="auth-gate__input"
+          type="password"
+          name="apiKey"
+          autocomplete="current-password"
+          data-testid="builder-auth-key"
+          [(ngModel)]="apiKey"
+        />
+      </label>
+
+      @if (error()) {
+        <p class="auth-gate__error" data-testid="builder-auth-error">{{ error() }}</p>
+      }
+
+      <button
+        type="submit"
+        class="auth-gate__submit"
+        data-testid="builder-auth-submit"
+        [disabled]="!apiKey.trim()"
+      >
+        Continue
+      </button>
+    </form>
+  </div>
+</div>
