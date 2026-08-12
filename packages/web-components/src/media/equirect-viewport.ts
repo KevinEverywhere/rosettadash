@@ -216,7 +216,7 @@ export class RdEquirectViewportElement extends HTMLElement {
         }
         .rectilinear-preview__meta dt {
           margin: 0;
-          color: var(--db-muted, #6b7280);
+          color: var(--rd-color-muted, #6b7280);
         }
         .rectilinear-preview__meta dd {
           margin: 0;

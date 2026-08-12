@@ -40,10 +40,14 @@
       "types": "./src/media/equirect-viewport.d.ts",
       "import": "./src/media/equirect-viewport.js",
       "default": "./src/media/equirect-viewport.js"
-    }
+    },
+    "./tokens.css": "./styles/tokens.css",
+    "./styles.css": "./styles/styles.css"
   },
   "files": [
     "src",
+    "styles",
+    "media",
     "README.md"
   ],
   "peerDependencies": {

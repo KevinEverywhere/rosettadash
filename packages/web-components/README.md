@@ -25,6 +25,15 @@ registerRdAccordion();
 
 Same `<group>/…/<component>` paths are used on `@rosettadash/react`, `@rosettadash/angular`, `@rosettadash/vue`, and `@rosettadash/svelte`.
 
+## Styles (opt-in)
+
+```ts
+import '@rosettadash/web-components/tokens.css';
+import '@rosettadash/web-components/styles.css';
+```
+
+Tokens use the `--rd-*` prefix. Components work without these imports (minimal defaults in shadow CSS).
+
 ## Build / pack
 
 ```bash

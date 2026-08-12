@@ -187,7 +187,7 @@ export class RdWasmMediaElement extends HTMLElement {
         }
         button:disabled { opacity: 0.55; cursor: not-allowed; }
         .wasm-media__error { color: #b91c1c; font-size: 0.8125rem; }
-        .wasm-media__hint { color: var(--db-muted, #6b7280); font-size: 0.8125rem; }
+        .wasm-media__hint { color: var(--rd-color-muted, #6b7280); font-size: 0.8125rem; }
       </style>
       <section class="panel wasm-media">
         <header class="panel__header">

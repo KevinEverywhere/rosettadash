@@ -41,8 +41,25 @@ nx run-many -t build -p web-components,runtime-react,runtime-angular,runtime-vue
 
 Built artifacts land in `dist/packages/<name>` with `.js` + `.d.ts`. Pack **from** `dist/packages/…`, not from `packages/…` source trees.
 
+## Styles (DAS-92)
+
+Packaged from `@rosettadash/web-components` (see [doc 35](./35-styling-and-classnames.md)):
+
+```ts
+import '@rosettadash/web-components/tokens.css';
+import '@rosettadash/web-components/styles.css';
+```
+
+Dist layout after `nx build web-components`:
+
+- `styles/tokens.css` → export `./tokens.css`
+- `styles/styles.css` → export `./styles.css`
+
+Public CSS contract is `--rd-*` / `rd-*` only (no `--db-*`).
+
 ## Follow-ons
 
-- DAS-92 — public `--rd-*` / `rd-*` stylesheet packaging
-- DAS-96 — shared kernel to remove adapter stub duplication
+- DAS-92 — public `--rd-*` / `rd-*` stylesheet packaging (**ready to merge** on `feature/DAS-92-rd-tokens-styles`)
 - DAS-93 — full taxonomy coverage for `0.1.0`
+- DAS-94 — recipe helpers
+- DAS-96 — shared kernel to remove adapter stub duplication

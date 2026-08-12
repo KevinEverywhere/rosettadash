@@ -100,8 +100,8 @@ See [npm library build](./37-npm-library-build.md) for build/pack commands.
       "types": "./dist/visual/media/video-source/index.d.ts",
       "import": "./dist/visual/media/video-source/index.js"
     },
-    "./styles.css": "./dist/styles.css",
-    "./tokens.css": "./dist/tokens.css"
+    "./styles.css": "./styles/styles.css",
+    "./tokens.css": "./styles/tokens.css"
   }
 }
 ```
