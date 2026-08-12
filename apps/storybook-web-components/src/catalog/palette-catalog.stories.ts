@@ -1,12 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import {
-  documentationTocItemsJson,
-  externalResourceItemsJson,
-  navigationLinkItemsJson,
-} from '../../../../tools/storybook-shared/fixtures';
-import {
   disposePaletteCatalog,
   mountFullPaletteCatalog,
+  mountNpmLayoutAtoms,
   mountPaletteCatalog,
 } from '../../../../tools/storybook-shared/palette-catalog/mount-palette-catalog';
 import '../../../../tools/storybook-shared/palette-catalog/palette-demo-styles.css';
@@ -72,22 +68,7 @@ export const WasmCompute = catalogStory('wasm-compute', 'WASM Compute');
 
 export const NpmLayoutAtoms: Story = {
   name: 'NPM layout atoms (rd-*)',
-  render: () => {
-    const root = document.createElement('div');
-    root.className = 'rd-catalog';
-    root.innerHTML = `
-      <p class="rd-catalog__intro">Shipped npm custom elements not duplicated in palette rows — compose these with catalog atoms above.</p>
-      <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Accordion</h3><p>layout/accordion — <code>&lt;rd-accordion&gt;</code></p></header>
-        <div class="rd-catalog-item__demo"><rd-accordion heading="Resources" default-open><p>Slot content for filters, copy, or nested lists.</p></rd-accordion></div></article>
-      <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Link List</h3><p>visual/link-list — JSON <code>items</code> array</p></header>
-        <div class="rd-catalog-item__demo"><rd-link-list items='${navigationLinkItemsJson}'></rd-link-list></div></article>
-      <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Accordion Link List</h3><p>Recipe — collapsible TOC</p></header>
-        <div class="rd-catalog-item__demo"><rd-accordion-link-list heading="On this page" default-open items='${documentationTocItemsJson}'></rd-accordion-link-list></div></article>
-      <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>External links (dense)</h3></header>
-        <div class="rd-catalog-item__demo"><rd-link-list dense items='${externalResourceItemsJson}'></rd-link-list></div></article>
-    `;
-    return root;
-  },
+  render: () => mountNpmLayoutAtoms(),
 };
 
 // Storybook does not call unmount hooks — dispose on navigation via global listener is overkill for dev.

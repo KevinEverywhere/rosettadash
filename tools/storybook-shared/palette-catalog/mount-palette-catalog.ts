@@ -6,6 +6,11 @@ import {
 } from '@rosettadash/core';
 import { linkTo } from '@storybook/addon-links';
 import { ThreePreviewRuntime, type ThreeVisualMode } from '../../../apps/client/src/app/builder/preview/three-preview-runtime.js';
+import {
+  documentationTocItemsJson,
+  externalResourceItemsJson,
+  navigationLinkItemsJson,
+} from '../fixtures.js';
 import { chartPoints, newsRows, tableRows } from './palette-demo-data.js';
 import { buildCatalogGroupElement, ensureCatalogElementsRegistered } from './build-palette-catalog-ce.js';
 import {
@@ -273,6 +278,24 @@ function wireCatalogInteractivity(root: HTMLElement): void {
   wireGroupNavigation(root);
 }
 
+/** Shipped npm custom elements not duplicated in builder palette rows. */
+export function mountNpmLayoutAtoms(): HTMLElement {
+  const root = document.createElement('div');
+  root.className = 'rd-catalog';
+  root.innerHTML = `
+    <p class="rd-catalog__intro">Shipped npm custom elements — compose with catalog atoms above.</p>
+    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Accordion</h3><p>layout/accordion — <code>&lt;rd-accordion&gt;</code></p></header>
+      <div class="rd-catalog-item__demo"><rd-accordion heading="Resources" default-open><p>Slot content for filters, copy, or nested lists.</p></rd-accordion></div></article>
+    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Link List</h3><p>visual/link-list — JSON <code>items</code> array</p></header>
+      <div class="rd-catalog-item__demo"><rd-link-list items='${navigationLinkItemsJson}'></rd-link-list></div></article>
+    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Accordion Link List</h3><p>Recipe — collapsible TOC</p></header>
+      <div class="rd-catalog-item__demo"><rd-accordion-link-list heading="On this page" default-open items='${documentationTocItemsJson}'></rd-accordion-link-list></div></article>
+    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>External links (dense)</h3></header>
+      <div class="rd-catalog-item__demo"><rd-link-list dense items='${externalResourceItemsJson}'></rd-link-list></div></article>
+  `;
+  return root;
+}
+
 /** Mount a full palette group catalog page. */
 export function mountPaletteCatalog(groupId: string): HTMLElement {
   ensureCatalogElementsRegistered();
@@ -317,6 +340,15 @@ export function mountFullPaletteCatalog(): HTMLElement {
     wireCatalogInteractivity(section);
     root.appendChild(section);
   }
+
+  const npmSection = document.createElement('section');
+  npmSection.id = 'catalog-npm-layout-atoms';
+  const npmHeading = document.createElement('h2');
+  npmHeading.className = 'rd-catalog-section-title';
+  npmHeading.textContent = 'NPM layout atoms (rd-*)';
+  npmSection.appendChild(npmHeading);
+  npmSection.appendChild(mountNpmLayoutAtoms());
+  root.appendChild(npmSection);
 
   wireGroupNavigation(root);
   return root;
