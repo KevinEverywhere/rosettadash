@@ -5,3 +5,46 @@
   background: var(--rd-color-surface, #fff);
   color: var(--rd-color-text, #111);
 }
+
+.rd-story-mount,
+.rd-story-workbench {
+  display: grid;
+  gap: var(--rd-space-md, 1rem);
+  max-width: 40rem;
+}
+
+.rd-story-event-log {
+  margin: 0;
+  padding: var(--rd-space-sm, 0.5rem) var(--rd-space-md, 1rem);
+  border: 1px solid var(--rd-color-border, #d0d0d0);
+  border-radius: var(--rd-radius-md, 0.5rem);
+  background: rgb(15 23 42 / 4%);
+  font: 0.75rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 12rem;
+  overflow: auto;
+}
+
+.rd-story-controls {
+  display: grid;
+  gap: var(--rd-space-sm, 0.5rem);
+  margin: 0;
+  padding: var(--rd-space-md, 1rem);
+  border: 1px solid var(--rd-color-border, #d0d0d0);
+  border-radius: var(--rd-radius-md, 0.5rem);
+  font-size: var(--rd-font-size, 0.875rem);
+}
+
+.rd-story-controls label {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto;
+  align-items: center;
+  gap: var(--rd-space-sm, 0.5rem);
+}
+
+.rd-story-stack {
+  display: grid;
+  gap: var(--rd-space-sm, 0.5rem);
+  max-width: 28rem;
+}

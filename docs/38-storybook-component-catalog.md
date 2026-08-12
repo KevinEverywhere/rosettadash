@@ -30,12 +30,27 @@ Output: `dist/storybook/<project>/`.
 
 Each catalog uses the same sidebar ordering:
 
-1. **Getting Started** — runtime intro
+1. **Getting Started** — runtime intro + shipped element index
 2. **Layout** — e.g. Accordion
 3. **Visual** — Link List; **Visual/Media** — Video Source, Equirect Viewport
 4. **Recipes** — Accordion Link List
+5. **Wasm** — Wasm Media (browser extract)
 
 Stories grow as components ship (DAS-93 full taxonomy).
+
+## Story quality bar (DAS-101)
+
+**Primary entry:** `Catalog → Palette` — one story per builder palette group (~50 component types) plus **All components (full scroll)**.
+
+Each palette page shows every component in that group with:
+
+- Builder-parity preview markup (same visual language as the dashboard preview panel)
+- Interactive wiring where it matters (table → detail, news results → article, tabs, timers, Three.js VR/3D hosts)
+- Shipped npm `<rd-*>` elements embedded for media + wasm rows
+
+Atom-level stories under Layout / Visual / Wasm document npm custom elements in depth.
+
+Shared fixtures: `tools/storybook-shared/fixtures.ts` · catalog engine: `tools/storybook-shared/palette-catalog/`.
 
 ## Styling
 

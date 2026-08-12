@@ -1,0 +1,217 @@
+import type { ComponentDefinition, PortDefinition } from '@rosettadash/core';
+
+export interface ComponentCatalogExtras {
+  dependencies?: string[];
+  assumptions?: string[];
+}
+
+/** Optional dependencies and assumptions beyond registry port definitions. */
+export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogExtras>> = {
+  'visual.input.select': {
+    assumptions: ['Options can come from a bound rowset or static inspector configuration.'],
+  },
+  'visual.table': {
+    assumptions: ['Rowset columns should match table field bindings; filter input is optional.'],
+  },
+  'visual.detail': {
+    dependencies: ['Upstream row source — typically Data Table selectedRow output.'],
+    assumptions: ['Shows empty state until a row is bound or selected.'],
+  },
+  'visual.skeleton': {
+    dependencies: ['Boolean loading signal from a data-fetch or query node.'],
+  },
+  'logic.timer': {
+    assumptions: ['Downstream nodes listen to tick events or elapsed values for polling UX.'],
+  },
+  'visual.chart.line': {
+    assumptions: ['Rowset must include xField (time) and yField (numeric) columns per inspector.'],
+  },
+  'visual.chart.bar': {
+    assumptions: ['Rowset rows map to categorical bars; optional date-range filter narrows data.'],
+  },
+  'visual.chart.pie': {
+    assumptions: ['Rowset uses labelField and valueField for slice labels and sizes.'],
+  },
+  'layout.grid': {
+    assumptions: ['Child visuals are placed in grid slots in the builder canvas.'],
+  },
+  'layout.flex': {
+    assumptions: ['Child visuals flow in the configured row or column direction.'],
+  },
+  'layout.tabs': {
+    assumptions: ['Each tab panel hosts separate child components on the canvas.'],
+  },
+  'layout.modal': {
+    assumptions: ['Open input triggers visibility; body hosts child slot content.'],
+  },
+  'domain.role-gate': {
+    dependencies: ['Authenticated user context with role claims in exported apps.'],
+    assumptions: ['Children render only when the viewer role matches allowed roles.'],
+  },
+  'domain.person-invite': {
+    assumptions: ['Typically first step in admin onboarding before Role Assign.'],
+  },
+  'domain.role-assign': {
+    dependencies: ['Role options rowset — often from domain context or static JSON.'],
+    assumptions: ['Confirms access after Person Invite; pairs with Role Gate on sensitive pages.'],
+  },
+  'infra.env': {
+    dependencies: ['Referenced by database and server infra nodes during export.'],
+  },
+  'infra.postgresql': {
+    dependencies: ['Environment Config (connection env key)', 'pg driver in generated export'],
+  },
+  'infra.mongodb': {
+    dependencies: ['Environment Config (connection env key)', 'mongodb driver in generated export'],
+  },
+  'infra.supabase': {
+    dependencies: ['Environment Config (URL + anon key env keys)', '@supabase/supabase-js in export'],
+  },
+  'infra.mysql': {
+    dependencies: ['Environment Config (connection env key)', 'mysql2 driver in generated export'],
+  },
+  'infra.server.nest': {
+    dependencies: ['Database infra node', 'NestJS scaffold in export wizard'],
+  },
+  'infra.server.express': {
+    dependencies: ['Database infra node', 'Express scaffold in export wizard'],
+  },
+  'infra.server.next': {
+    dependencies: ['Database infra node', 'Next.js API routes in export wizard'],
+  },
+  'infra.server.nuxt': {
+    dependencies: ['Database infra node', 'Nuxt server routes in export wizard'],
+  },
+  'visual.news.results-table': {
+    dependencies: ['News query/API rowset upstream of the table.'],
+    assumptions: ['Headline row-select binds forward to Article Detail in the same composite.'],
+  },
+  'visual.news.article-detail': {
+    dependencies: ['News Results selectedRow output.'],
+  },
+  'visual.news.search-box': {
+    assumptions: ['Query and search event drive upstream news fetch in a full News Discovery composite.'],
+  },
+  'visual.display.3d-bar-chart': {
+    dependencies: ['Three.js runtime (builder preview + exported host).'],
+    assumptions: ['Rowset xField/yField map to bar positions and heights.'],
+  },
+  'visual.display.3d-scatter': {
+    dependencies: ['Three.js runtime (builder preview + exported host).'],
+    assumptions: ['Rowset provides x, y, and z numeric fields per inspector mapping.'],
+  },
+  'visual.display.3d-scene': {
+    dependencies: ['Three.js runtime (builder preview + exported host).'],
+  },
+  'visual.display.gltf-model': {
+    dependencies: ['Three.js runtime', 'Accessible GLTF/GLB URL for the model asset.'],
+  },
+  'visual.display.3d-gltf-model': {
+    dependencies: ['Three.js runtime', 'Accessible GLTF/GLB URL for the model asset.'],
+  },
+  'visual.display.geo-globe': {
+    dependencies: ['Three.js runtime', 'Globe texture URL (e.g. equirectangular earth map).'],
+    assumptions: ['Markers bind from rowset lat/lng fields.'],
+  },
+  'visual.display.3d-geo-globe': {
+    dependencies: ['Three.js runtime', 'Globe texture URL (e.g. equirectangular earth map).'],
+    assumptions: ['Markers bind from rowset lat/lng fields per latField/lngField inspector keys.'],
+  },
+  'visual.svg.inline': {
+    assumptions: ['Markup, remote URL, or asset path must resolve in the host app.'],
+  },
+  'visual.svg.icon': {
+    assumptions: ['Optional row binding can drive dynamic icon color via colorField.'],
+  },
+  'visual.media.video-source': {
+    dependencies: ['@rosettadash/web-components (`<rd-video-source>`) when shipped to npm consumers.'],
+    assumptions: ['Expects equirectangular (2:1) or flat video; emits metadata for downstream crop.'],
+  },
+  'visual.media.equirect-viewport': {
+    dependencies: ['@rosettadash/web-components (`<rd-equirect-viewport>`)', 'Video Source metadata input.'],
+    assumptions: ['Defines crop/framing on a 2:1 frame — not a 3D renderer; host app owns WebGL preview.'],
+  },
+  'visual.media.live-capture': {
+    dependencies: ['Browser getUserMedia APIs', 'HTTPS or localhost in production hosts.'],
+    assumptions: ['Authoring-only unless includeInExport is enabled.'],
+  },
+  'infra.wasm.asset': {
+    dependencies: ['.wasm binary + glue JavaScript paths in content library.'],
+    assumptions: ['Not rendered — declares module references for worker/module nodes.'],
+  },
+  'visual.wasm.worker-host': {
+    dependencies: ['WASM Asset assetRef input', 'Dedicated worker script URL.'],
+  },
+  'visual.wasm.module': {
+    dependencies: ['WASM Asset assetRef input'],
+    assumptions: ['Invokes named WASM export (default run) with optional payload binding.'],
+  },
+  'visual.wasm.media': {
+    dependencies: [
+      '@rosettadash/web-components (`<rd-wasm-media>`)',
+      'Optional peer packages @ffmpeg/ffmpeg and @ffmpeg/util for browser transcode',
+      'Video Source or crop-region from Equirect Viewport for equirect-extract',
+    ],
+    assumptions: ['ffmpeg.wasm runs client-side; large files may need worker tuning.'],
+  },
+};
+
+function inferInfraAssumption(definition: ComponentDefinition): string | undefined {
+  if (definition.category === 'infra' && !definition.isVisual) {
+    return 'Not rendered in operator UI — configures export and stack generation only.';
+  }
+  return undefined;
+}
+
+function formatPort(port: PortDefinition): string {
+  const required = port.required ? ' <span class="rd-spec-required">required</span>' : '';
+  const desc = port.description ? `<span class="rd-spec-desc">${port.description}</span>` : '';
+  return `<li><code>${port.name}</code> <span class="rd-spec-type">${port.dataType}</span>${required}${desc}</li>`;
+}
+
+function listSection(label: string, items: string[]): string {
+  if (items.length === 0) {
+    return '';
+  }
+  return `<div class="rd-spec-section"><span class="rd-spec-label">${label}</span><ul class="rd-spec-list">${items.map((item) => `<li>${item}</li>`).join('')}</ul></div>`;
+}
+
+/** Render inputs, outputs, dependencies, and assumptions for a palette component card. */
+export function renderComponentSpecHtml(definition: ComponentDefinition): string {
+  const extras = COMPONENT_CATALOG_EXTRAS[definition.type] ?? {};
+  const assumptions = [...(extras.assumptions ?? [])];
+  const infraAssumption = inferInfraAssumption(definition);
+  if (infraAssumption && !assumptions.includes(infraAssumption)) {
+    assumptions.unshift(infraAssumption);
+  }
+
+  const sections: string[] = [];
+
+  if (definition.inputs.length > 0) {
+    sections.push(
+      `<div class="rd-spec-section"><span class="rd-spec-label">Inputs</span><ul class="rd-spec-list rd-spec-list--ports">${definition.inputs.map(formatPort).join('')}</ul></div>`,
+    );
+  }
+
+  if (definition.outputs.length > 0) {
+    sections.push(
+      `<div class="rd-spec-section"><span class="rd-spec-label">Outputs</span><ul class="rd-spec-list rd-spec-list--ports">${definition.outputs.map(formatPort).join('')}</ul></div>`,
+    );
+  }
+
+  const depsSection = listSection('Dependencies', extras.dependencies ?? []);
+  if (depsSection) {
+    sections.push(depsSection);
+  }
+
+  const assumSection = listSection('Assumptions', assumptions);
+  if (assumSection) {
+    sections.push(assumSection);
+  }
+
+  if (sections.length === 0) {
+    return '';
+  }
+
+  return `<div class="rd-catalog-item__spec">${sections.join('')}</div>`;
+}
