@@ -91,7 +91,7 @@ Forward-looking Jira ticket plan for RosettaDash.
 
 | Ticket | Summary |
 |--------|---------|
-| [DAS-91](https://planetkevin.atlassian.net/browse/DAS-91) | Build + identical `exports` for all `@rosettadash/<runtime>/<group>/…/<component>` packages |
+| [DAS-91](https://planetkevin.atlassian.net/browse/DAS-91) | Build + identical `exports` for all `@rosettadash/<runtime>/<group>/…/<component>` packages — **in progress** (`feature/DAS-91-npm-library-build-exports`) |
 | [DAS-92](https://planetkevin.atlassian.net/browse/DAS-92) | Public `--rd-*` / `rd-*` stylesheet contract |
 | [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) | Full taxonomy on all runtime packages for `0.1.0` |
 | [DAS-94](https://planetkevin.atlassian.net/browse/DAS-94) | Hand-maintained recipe helpers (`LinkList`, `AccordionLinkList`) |

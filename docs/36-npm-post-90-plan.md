@@ -57,8 +57,8 @@ flowchart TD
 
 | Phase | Tickets | Work |
 |-------|---------|------|
-| A | DAS-90 | Docs merge (this) |
-| B | DAS-91, DAS-92 | Runtime packages + identical `exports` maps; `--rd-*` CSS (`0.0.x`) |
+| A | DAS-90 | Docs merge (done) |
+| B | DAS-91 (in progress), DAS-92 | Runtime packages + identical `exports` maps; `--rd-*` CSS (`0.0.x`) |
 | C | product | Finish taxonomy atoms in builder/exporters |
 | D | DAS-94, DAS-93 | Recipes + full surface on **all** runtimes → **`0.1.0`** |
 | E | publish | Scoped runtime packages only; product stays clone |

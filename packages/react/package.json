@@ -1,0 +1,32 @@
+{
+  "name": "@rosettadash/react",
+  "version": "0.0.1",
+  "description": "RosettaDash react runtime - same group/component paths as web-components",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./layout/accordion": {
+      "types": "./src/layout/accordion/index.d.ts",
+      "import": "./src/layout/accordion/index.js",
+      "default": "./src/layout/accordion/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  }
+}

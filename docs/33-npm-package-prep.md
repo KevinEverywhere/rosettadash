@@ -1,8 +1,8 @@
 # npm package prep (`rosettadash`)
 
-**Ticket:** [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90)  
-**Status:** Docs / decisions only — no publish pipeline in this ticket.  
-**Branch:** `feature/DAS-90-npm-package-prep`  
+**Ticket:** [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90) (decisions) · [DAS-91](https://planetkevin.atlassian.net/browse/DAS-91) (packaging)  
+**Status:** Decisions locked (DAS-90). Packaging scaffold in progress on DAS-91.  
+**Branch (DAS-91):** `feature/DAS-91-npm-library-build-exports`  
 **Post-90 plan:** [Post–DAS-90 plan](./36-npm-post-90-plan.md)
 
 **Agents never commit.**
@@ -73,12 +73,14 @@ import '@rosettadash/web-components/styles.css';
 | Artifact | Role |
 |----------|------|
 | Git product `rosettadash` | Clone / build builder |
-| `@rosettadash/web-components` | Default CE package; `exports` `./<group>/…/<component>` |
-| `@rosettadash/react` | React — **same** group/component subpaths |
-| `@rosettadash/angular` | Angular — **same** subpaths |
-| `@rosettadash/vue` | Vue — **same** subpaths |
-| `@rosettadash/svelte` | Svelte — **same** subpaths |
+| `@rosettadash/web-components` | Default CE package; `exports` `./<group>/…/<component>` (DAS-91 scaffold) |
+| `@rosettadash/react` | React — **same** group/component subpaths (DAS-91 scaffold) |
+| `@rosettadash/angular` | Angular — **same** subpaths (DAS-91 scaffold) |
+| `@rosettadash/vue` | Vue — **same** subpaths (DAS-91 scaffold) |
+| `@rosettadash/svelte` | Svelte — **same** subpaths (DAS-91 scaffold) |
 | `@rosettadash/core`, `exporters-*`, `apps/*` | Internal / private |
+
+See [npm library build](./37-npm-library-build.md) for build/pack commands.
 
 ## Planned `exports` (same map per runtime package)
 

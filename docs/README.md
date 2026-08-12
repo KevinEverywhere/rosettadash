@@ -40,6 +40,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 28. [Public component API](./34-public-component-api.md) — `@rosettadash/<vendor>/<group>/<component>`, recipes (DAS-90)
 29. [Styling and classnames](./35-styling-and-classnames.md) — `rd-*` / `--rd-*`, minimal opt-in styles (DAS-90)
 30. [Post–DAS-90 plan](./36-npm-post-90-plan.md) — delivery order after npm docs (DAS-90)
+31. [npm library build](./37-npm-library-build.md) — runtime packages + exports + pack (DAS-91)
 
 ## Active work
 

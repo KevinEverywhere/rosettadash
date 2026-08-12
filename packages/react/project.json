@@ -1,0 +1,35 @@
+{
+  "name": "runtime-react",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/react/src",
+  "projectType": "library",
+  "tags": ["scope:runtime", "type:ui"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/react",
+        "main": "packages/react/src/index.ts",
+        "tsConfig": "packages/react/tsconfig.lib.json",
+        "assets": [
+          {
+            "input": "packages/react",
+            "glob": "README.md",
+            "output": "."
+          }
+        ],
+        "additionalEntryPoints": [
+          "packages/react/src/layout/accordion/index.ts"
+        ],
+        "generateExportsField": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/react/tsconfig.lib.json"
+      }
+    }
+  }
+}

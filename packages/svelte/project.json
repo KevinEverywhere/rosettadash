@@ -1,0 +1,35 @@
+{
+  "name": "runtime-svelte",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/svelte/src",
+  "projectType": "library",
+  "tags": ["scope:runtime", "type:ui"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/svelte",
+        "main": "packages/svelte/src/index.ts",
+        "tsConfig": "packages/svelte/tsconfig.lib.json",
+        "assets": [
+          {
+            "input": "packages/svelte",
+            "glob": "README.md",
+            "output": "."
+          }
+        ],
+        "additionalEntryPoints": [
+          "packages/svelte/src/layout/accordion/index.ts"
+        ],
+        "generateExportsField": true
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p packages/svelte/tsconfig.lib.json"
+      }
+    }
+  }
+}

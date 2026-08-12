@@ -27,8 +27,25 @@
       "@rosettadash/exporters-svelte": ["./packages/exporters-svelte/src/index.ts"],
       "@rosettadash/exporters-web-components": ["./packages/exporters-web-components/src/index.ts"],
       "@rosettadash/web-components": ["./packages/web-components/src/index.ts"],
+      "@rosettadash/web-components/layout/accordion": [
+        "./packages/web-components/src/layout/accordion/index.ts"
+      ],
       "@rosettadash/web-components/media": ["./packages/web-components/src/media/index.ts"],
       "@rosettadash/web-components/wasm": ["./packages/web-components/src/wasm/index.ts"],
+      "@rosettadash/react": ["./packages/react/src/index.ts"],
+      "@rosettadash/react/layout/accordion": [
+        "./packages/react/src/layout/accordion/index.ts"
+      ],
+      "@rosettadash/angular": ["./packages/angular/src/index.ts"],
+      "@rosettadash/angular/layout/accordion": [
+        "./packages/angular/src/layout/accordion/index.ts"
+      ],
+      "@rosettadash/vue": ["./packages/vue/src/index.ts"],
+      "@rosettadash/vue/layout/accordion": ["./packages/vue/src/layout/accordion/index.ts"],
+      "@rosettadash/svelte": ["./packages/svelte/src/index.ts"],
+      "@rosettadash/svelte/layout/accordion": [
+        "./packages/svelte/src/layout/accordion/index.ts"
+      ],
       "@rosettadash/exporters-mongodb": ["./packages/exporters-mongodb/src/index.ts"],
       "@rosettadash/exporters-mysql": ["./packages/exporters-mysql/src/index.ts"],
       "@rosettadash/exporters-supabase": ["./packages/exporters-supabase/src/index.ts"]
