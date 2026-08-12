@@ -44,6 +44,13 @@
         "./packages/web-components/src/media/equirect-viewport.ts"
       ],
       "@rosettadash/web-components/wasm": ["./packages/web-components/src/wasm/index.ts"],
+      "@rosettadash/web-components/catalog": ["./packages/web-components/src/catalog/index.ts"],
+      "@rosettadash/web-components/catalog/palette-catalog": [
+        "./packages/web-components/src/catalog/index.ts"
+      ],
+      "@rosettadash/web-components/catalog/component-spec": [
+        "./packages/web-components/src/catalog/component-spec.ts"
+      ],
       "@rosettadash/react": ["./packages/react/src/index.ts"],
       "@rosettadash/react/layout/accordion": [
         "./packages/react/src/layout/accordion/index.ts"

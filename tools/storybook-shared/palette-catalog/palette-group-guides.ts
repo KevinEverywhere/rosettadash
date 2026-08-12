@@ -206,17 +206,24 @@ export function getGroupGuide(groupId: string): PaletteGroupGuide | undefined {
   return PALETTE_GROUP_GUIDES[groupId];
 }
 
-export function renderRelatedGroupsHtml(relatedGroupIds: string[]): string {
+export function renderRelatedGroupButtonsHtml(relatedGroupIds: string[]): string {
   if (relatedGroupIds.length === 0) {
     return '';
   }
-  const links = relatedGroupIds
+  return relatedGroupIds
     .map((id) => {
       const guide = PALETTE_GROUP_GUIDES[id];
       const label = guide ? PALETTE_GROUP_STORY_NAMES[id] ?? id : id;
       return `<button type="button" class="rd-catalog-guide__link" data-nav-group="${id}">${label}</button>`;
     })
     .join('');
+}
+
+export function renderRelatedGroupsHtml(relatedGroupIds: string[]): string {
+  const links = renderRelatedGroupButtonsHtml(relatedGroupIds);
+  if (!links) {
+    return '';
+  }
   return `<p class="rd-catalog-guide__related"><span>Related groups:</span> ${links}</p>`;
 }
 

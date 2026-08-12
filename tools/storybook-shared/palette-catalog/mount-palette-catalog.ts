@@ -7,14 +7,11 @@ import {
 import { linkTo } from '@storybook/addon-links';
 import { ThreePreviewRuntime, type ThreeVisualMode } from '../../../apps/client/src/app/builder/preview/three-preview-runtime.js';
 import { chartPoints, newsRows, tableRows } from './palette-demo-data.js';
-import { catalogItemFooter, renderPaletteDemo } from './palette-demos.js';
+import { buildCatalogGroupElement, ensureCatalogElementsRegistered } from './build-palette-catalog-ce.js';
 import {
   getGroupGuide,
   PALETTE_GROUP_STORY_NAMES,
-  renderComponentLearnMore,
-  renderGroupGuideHtml,
 } from './palette-group-guides.js';
-import { renderComponentSpecHtml } from './component-catalog-spec.js';
 
 const STORY_TITLE = 'Catalog/Palette';
 
@@ -30,7 +27,7 @@ function navigateToGroup(groupId: string): void {
 
 function wireGroupNavigation(root: HTMLElement): void {
   root.querySelectorAll<HTMLElement>('[data-nav-group]').forEach((el) => {
-    if (el.classList.contains('rd-catalog-item')) {
+    if (el.tagName.toLowerCase() === 'rd-component-spec') {
       return;
     }
     el.addEventListener('click', (event) => {
@@ -42,18 +39,66 @@ function wireGroupNavigation(root: HTMLElement): void {
     });
   });
 
-  root.querySelectorAll<HTMLElement>('.rd-catalog-item[data-nav-group]').forEach((item) => {
-    const header = item.querySelector('.rd-catalog-item__header');
-    const jump = item.querySelector('.rd-catalog-item__jump');
+  root.querySelectorAll<HTMLElement>('rd-component-name[nav-group-id]').forEach((spec) => {
+    const groupId = spec.getAttribute('nav-group-id');
+    if (!groupId) {
+      return;
+    }
+    spec.setAttribute('data-nav-group', groupId);
+
     const handler = (event: Event) => {
-      event.preventDefault();
-      const groupId = item.getAttribute('data-nav-group');
-      if (groupId) {
-        navigateToGroup(groupId);
+      const path = event.composedPath();
+      const inDemo = path.some(
+        (node) =>
+          node instanceof HTMLElement &&
+          (node.classList.contains('rd-catalog-item__demo') || node.slot === 'demo'),
+      );
+      if (inDemo) {
+        return;
       }
+      event.preventDefault();
+      navigateToGroup(groupId);
     };
-    header?.addEventListener('click', handler);
-    jump?.addEventListener('click', handler);
+
+    spec.addEventListener('click', handler);
+  });
+
+  root.querySelectorAll<HTMLElement>('rd-component-spec[nav-group-id]').forEach((spec) => {
+    const groupId = spec.getAttribute('nav-group-id');
+    if (!groupId) {
+      return;
+    }
+    spec.setAttribute('data-nav-group', groupId);
+
+    const handler = (event: Event) => {
+      const path = event.composedPath();
+      const inDemo = path.some(
+        (node) =>
+          node instanceof HTMLElement &&
+          (node.classList.contains('rd-catalog-item__demo') ||
+            node.slot === 'demo' ||
+            node.closest?.('.rd-catalog-item__demo') !== null),
+      );
+      if (inDemo) {
+        return;
+      }
+      const onJump = path.some(
+        (node) =>
+          node instanceof HTMLElement &&
+          (node.classList.contains('rd-catalog-item__jump') ||
+            node.classList.contains('rd-component-spec__header') ||
+            node.classList.contains('rd-component-spec__header--linkable')),
+      );
+      if (!onJump && event.target !== spec) {
+        return;
+      }
+      event.preventDefault();
+      navigateToGroup(groupId);
+    };
+
+    spec.addEventListener('click', handler);
+    spec.shadowRoot?.querySelector('.rd-component-spec__header')?.addEventListener('click', handler);
+    spec.querySelector('[slot="jump"]')?.addEventListener('click', handler);
   });
 }
 
@@ -228,75 +273,9 @@ function wireCatalogInteractivity(root: HTMLElement): void {
   wireGroupNavigation(root);
 }
 
-interface RenderCatalogOptions {
-  /** In All components view — clicking a card opens the group story */
-  linkItemsToGroup?: boolean;
-  /** Show group name as h2 in guide (group story pages) */
-  showGuideTitle?: boolean;
-  /** Two-column layout: guide left, components right */
-  columnLayout?: boolean;
-}
-
-function renderCatalogItem(
-  definition: ResolvedPaletteGroup['items'][number],
-  group: ResolvedPaletteGroup,
-  options: RenderCatalogOptions,
-): string {
-  const linkAttrs = options.linkItemsToGroup ? ` data-nav-group="${group.id}"` : '';
-  const jumpBtn = options.linkItemsToGroup
-    ? `<button type="button" class="rd-catalog-item__jump" data-nav-group="${group.id}">Open ${group.label} →</button>`
-    : '';
-  const headerClass = options.linkItemsToGroup ? ' rd-catalog-item__header--linkable' : '';
-  const specHtml = renderComponentSpecHtml(definition);
-
-  return `<article class="rd-catalog-item${options.linkItemsToGroup ? ' rd-catalog-item--linkable' : ''}" data-component-type="${definition.type}"${linkAttrs}>
-    <header class="rd-catalog-item__header${headerClass}">
-      <h3>${definition.label}</h3>
-      <p>${definition.description ?? ''}</p>
-      ${jumpBtn}
-    </header>
-    ${specHtml}
-    <div class="rd-catalog-item__demo">${renderPaletteDemo(definition.type, definition)}</div>
-    ${renderComponentLearnMore(definition.type)}
-    ${catalogItemFooter(definition)}
-  </article>`;
-}
-
-function renderCatalogGroup(group: ResolvedPaletteGroup, options: RenderCatalogOptions = {}): string {
-  const useColumns = options.columnLayout ?? true;
-  const guide = getGroupGuide(group.id);
-  const guideHtml = guide
-    ? renderGroupGuideHtml(guide, { showTitle: options.showGuideTitle ?? true })
-    : `<p class="rd-catalog__intro">${group.items.length} components in <strong>${group.label}</strong>.</p>`;
-
-  const items = group.items.map((definition) => renderCatalogItem(definition, group, options)).join('');
-
-  const sectionTitle =
-    options.linkItemsToGroup && options.showGuideTitle === false
-      ? `<h2 class="rd-catalog-section-title">${group.label}</h2>`
-      : '';
-
-  const itemsBlock = `<div class="rd-catalog__items">${items}</div>`;
-
-  if (useColumns) {
-    return `<div class="rd-catalog rd-catalog--columns" data-catalog-group="${group.id}">
-      ${sectionTitle}
-      <div class="rd-catalog-layout">
-        <aside class="rd-catalog-layout__guide">${guideHtml}</aside>
-        <div class="rd-catalog-layout__panel">${itemsBlock}</div>
-      </div>
-    </div>`;
-  }
-
-  return `<div class="rd-catalog" data-catalog-group="${group.id}">
-    ${sectionTitle}
-    ${guideHtml}
-    ${itemsBlock}
-  </div>`;
-}
-
 /** Mount a full palette group catalog page. */
 export function mountPaletteCatalog(groupId: string): HTMLElement {
+  ensureCatalogElementsRegistered();
   const group = resolvePaletteGroups().find((entry) => entry.id === groupId);
   if (!group) {
     const fallback = document.createElement('p');
@@ -304,8 +283,7 @@ export function mountPaletteCatalog(groupId: string): HTMLElement {
     return fallback;
   }
 
-  const root = document.createElement('div');
-  root.innerHTML = renderCatalogGroup(group, {
+  const root = buildCatalogGroupElement(group, {
     showGuideTitle: true,
     linkItemsToGroup: false,
     columnLayout: true,
@@ -316,22 +294,26 @@ export function mountPaletteCatalog(groupId: string): HTMLElement {
 
 /** Master index — every group on one page; click any component to open its group story. */
 export function mountFullPaletteCatalog(): HTMLElement {
+  ensureCatalogElementsRegistered();
   const groups = resolvePaletteGroups();
   const root = document.createElement('div');
   root.className = 'rd-catalog-master';
-  root.innerHTML = `<div class="rd-catalog-guide rd-catalog-guide--master">
-    <h2 class="rd-catalog-guide__title">All palette components</h2>
-    <p class="rd-catalog-guide__summary">Every component from the builder sidebar, grouped below. <strong>Click any component card</strong> (or “Open … →”) to jump to that group’s dedicated page with full section guidance.</p>
-  </div>`;
+
+  const intro = document.createElement('div');
+  intro.className = 'rd-catalog-guide rd-catalog-guide--master';
+  intro.innerHTML = `<h2 class="rd-catalog-guide__title">All palette components</h2>
+    <p class="rd-catalog-guide__summary">Every component from the builder sidebar, grouped below. <strong>Click any component header</strong> (or “Open … →”) to jump to that group’s dedicated page with full section guidance.</p>`;
+  root.appendChild(intro);
 
   for (const group of groups) {
     const section = document.createElement('section');
     section.id = `catalog-${group.id}`;
-    section.innerHTML = renderCatalogGroup(group, {
+    const catalog = buildCatalogGroupElement(group, {
       showGuideTitle: false,
       linkItemsToGroup: true,
       columnLayout: true,
     });
+    section.appendChild(catalog);
     wireCatalogInteractivity(section);
     root.appendChild(section);
   }
@@ -355,3 +337,4 @@ export function disposePaletteCatalog(root: HTMLElement): void {
 }
 
 export { resolvePaletteGroups };
+export type { ResolvedPaletteGroup };

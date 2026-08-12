@@ -42,6 +42,21 @@
       "import": "./src/wasm/index.js",
       "default": "./src/wasm/index.js"
     },
+    "./catalog": {
+      "types": "./src/catalog/index.d.ts",
+      "import": "./src/catalog/index.js",
+      "default": "./src/catalog/index.js"
+    },
+    "./catalog/palette-catalog": {
+      "types": "./src/catalog/index.d.ts",
+      "import": "./src/catalog/index.js",
+      "default": "./src/catalog/index.js"
+    },
+    "./catalog/component-spec": {
+      "types": "./src/catalog/component-spec.d.ts",
+      "import": "./src/catalog/component-spec.js",
+      "default": "./src/catalog/component-spec.js"
+    },
     "./visual/media/video-source": {
       "types": "./src/media/video-source.d.ts",
       "import": "./src/media/video-source.js",

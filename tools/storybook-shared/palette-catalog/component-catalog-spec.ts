@@ -1,8 +1,16 @@
 import type { ComponentDefinition, PortDefinition } from '@rosettadash/core';
 
+export interface ComponentCatalogSubcomponent {
+  tag: string;
+  bind?: string;
+  required?: boolean;
+  attributes?: Array<{ name: string; value?: string; required?: boolean }>;
+}
+
 export interface ComponentCatalogExtras {
   dependencies?: string[];
   assumptions?: string[];
+  subcomponents?: ComponentCatalogSubcomponent[];
 }
 
 /** Optional dependencies and assumptions beyond registry port definitions. */
@@ -12,10 +20,18 @@ export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogEx
   },
   'visual.table': {
     assumptions: ['Rowset columns should match table field bindings; filter input is optional.'],
+    subcomponents: [
+      {
+        tag: 'detail-panel',
+        bind: 'selectedRow',
+        attributes: [{ name: 'row', required: true }],
+      },
+    ],
   },
   'visual.detail': {
     dependencies: ['Upstream row source — typically Data Table selectedRow output.'],
     assumptions: ['Shows empty state until a row is bound or selected.'],
+    subcomponents: [{ tag: 'data-table', bind: 'selectedRow', required: true }],
   },
   'visual.skeleton': {
     dependencies: ['Boolean loading signal from a data-fetch or query node.'],
@@ -214,4 +230,23 @@ export function renderComponentSpecHtml(definition: ComponentDefinition): string
   }
 
   return `<div class="rd-catalog-item__spec">${sections.join('')}</div>`;
+}
+
+export function getComponentCatalogExtras(type: string): ComponentCatalogExtras {
+  return COMPONENT_CATALOG_EXTRAS[type] ?? {};
+}
+
+export function getComponentCatalogAssumptions(
+  type: string,
+  definition: { category: string; isVisual: boolean },
+): string[] {
+  const extras = getComponentCatalogExtras(type);
+  const assumptions = [...(extras.assumptions ?? [])];
+  if (definition.category === 'infra' && !definition.isVisual) {
+    const line = 'Not rendered in operator UI — configures export and stack generation only.';
+    if (!assumptions.includes(line)) {
+      assumptions.unshift(line);
+    }
+  }
+  return assumptions;
 }

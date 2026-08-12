@@ -36,7 +36,9 @@
           "packages/web-components/src/media/index.ts",
           "packages/web-components/src/wasm/index.ts",
           "packages/web-components/src/media/video-source.ts",
-          "packages/web-components/src/media/equirect-viewport.ts"
+          "packages/web-components/src/media/equirect-viewport.ts",
+          "packages/web-components/src/catalog/index.ts",
+          "packages/web-components/src/catalog/component-spec.ts"
         ],
         "generateExportsField": true
       }

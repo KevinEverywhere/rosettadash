@@ -1,0 +1,69 @@
+/**
+ * Opt-in light styles for catalog meta custom elements.
+ * Matches BEM blocks used inside CE shadow roots — framework wrappers reuse these class names.
+ */
+@import './tokens.css';
+
+.rd-palette-catalog,
+.rd-palette-group,
+.rd-component-spec,
+.rd-component-port,
+.rd-component-requirement,
+.rd-component-option {
+  font-family: var(--rd-font-family);
+  color: var(--rd-color-text);
+}
+
+.rd-catalog-item__jump {
+  align-self: flex-start;
+  margin-top: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--rd-color-border);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--rd-color-accent);
+  cursor: pointer;
+}
+
+.rd-catalog-guide__link {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--rd-color-border);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.75rem;
+  color: var(--rd-color-accent);
+  cursor: pointer;
+}
+
+.rd-catalog-master {
+  display: grid;
+  gap: 2.5rem;
+  max-width: 80rem;
+}
+
+.rd-catalog-section-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+.rd-catalog-guide--master {
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--rd-color-border);
+  border-radius: var(--rd-radius-md);
+}
+
+.rd-catalog-guide__title {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.rd-catalog-guide__summary {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--rd-color-muted);
+}

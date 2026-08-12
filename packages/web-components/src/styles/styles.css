@@ -7,6 +7,7 @@
  * Does NOT reset body/html globally. Hosts keep full layout control.
  */
 @import './tokens.css';
+@import './catalog.css';
 
 .rd-accordion {
   border: 1px solid var(--rd-color-border);

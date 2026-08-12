@@ -52,6 +52,8 @@ Atom-level stories under Layout / Visual / Wasm document npm custom elements in 
 
 Shared fixtures: `tools/storybook-shared/fixtures.ts` · catalog engine: `tools/storybook-shared/palette-catalog/`.
 
+**Catalog meta custom elements (DAS-102):** `@rosettadash/web-components/catalog` registers `rd-palette-catalog`, `rd-palette-group`, `rd-component-spec`, `rd-component-port`, `rd-component-requirement`, and `rd-component-option`. Use `variant="default|compact|plain"` for density/chrome; BEM classes match future React/Vue wrappers. Storybook palette pages mount these CEs; see **Catalog → Meta elements** for declarative XML-style examples.
+
 ## Styling
 
 Preview loads opt-in RosettaDash chrome globally:

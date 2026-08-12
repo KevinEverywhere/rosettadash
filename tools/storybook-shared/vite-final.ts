@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mergeConfig, type UserConfig } from 'vite';
+import { mergeConfig, type AliasOptions, type UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 const workspaceRoot = path.resolve(
@@ -9,34 +9,55 @@ const workspaceRoot = path.resolve(
   '../..',
 );
 
-function rosettadashAliases(): Record<string, string> {
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/** Vite alias list — longest subpaths first; package roots use exact `$` match when they have children. */
+export function rosettadashAliasEntries(): AliasOptions {
   const base = JSON.parse(
     fs.readFileSync(path.join(workspaceRoot, 'tsconfig.base.json'), 'utf8'),
   ) as {
     compilerOptions?: { paths?: Record<string, string[]> };
   };
   const paths = base.compilerOptions?.paths ?? {};
-  const alias: Record<string, string> = {
-    '@rosettadash/web-components/tokens.css': path.join(
-      workspaceRoot,
-      'packages/web-components/src/styles/tokens.css',
-    ),
-    '@rosettadash/web-components/styles.css': path.join(
-      workspaceRoot,
-      'packages/web-components/src/styles/styles.css',
-    ),
-  };
+
+  const rosettaKeys = Object.keys(paths).filter((key) => key.startsWith('@rosettadash/'));
+  const rootsWithSubpaths = new Set<string>();
+  for (const key of rosettaKeys) {
+    for (const other of rosettaKeys) {
+      if (other !== key && other.startsWith(`${key}/`)) {
+        rootsWithSubpaths.add(key);
+      }
+    }
+  }
+
+  const entries: Array<{ find: string | RegExp; replacement: string }> = [
+    {
+      find: '@rosettadash/web-components/tokens.css',
+      replacement: path.join(workspaceRoot, 'packages/web-components/src/styles/tokens.css'),
+    },
+    {
+      find: '@rosettadash/web-components/styles.css',
+      replacement: path.join(workspaceRoot, 'packages/web-components/src/styles/styles.css'),
+    },
+  ];
 
   for (const [key, targets] of Object.entries(paths)) {
     if (!key.startsWith('@rosettadash/') || !targets?.[0]) {
       continue;
     }
-    alias[key] = path.join(workspaceRoot, targets[0]);
+    const find = rootsWithSubpaths.has(key)
+      ? new RegExp(`^${escapeRegExp(key)}$`)
+      : key;
+    entries.push({
+      find,
+      replacement: path.join(workspaceRoot, targets[0]),
+    });
   }
 
-  return Object.fromEntries(
-    Object.entries(alias).sort(([a], [b]) => b.length - a.length),
-  );
+  entries.sort((a, b) => String(b.find).length - String(a.find).length);
+  return entries;
 }
 
 /** Resolve @rosettadash CSS subpaths and workspace packages for Storybook Vite. */
@@ -51,7 +72,7 @@ export async function rosettadashViteFinal(
       }),
     ],
     resolve: {
-      alias: rosettadashAliases(),
+      alias: rosettadashAliasEntries(),
     },
   });
 }
