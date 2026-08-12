@@ -1,6 +1,7 @@
 import {
   DEFAULT_GLTF_MODEL_URL,
   DEFAULT_GLOBE_TEXTURE_URL,
+  findPaletteGroupIdForType,
   resolvePaletteGroups,
   type ResolvedPaletteGroup,
 } from '@rosettadash/core';
@@ -20,9 +21,78 @@ import {
 } from './palette-group-guides.js';
 
 const STORY_TITLE = 'Catalog/Palette';
+const NPM_LAYOUT_ATOMS_STORY = 'NPM layout atoms (rd-*)';
+const CATALOG_SCROLL_KEY = 'rosettadash:catalog-scroll-target';
 
 const threeRuntimes = new WeakMap<HTMLElement, ThreePreviewRuntime>();
 const timerHandles = new WeakMap<HTMLElement, number>();
+
+function setCatalogScrollTarget(componentType: string): void {
+  try {
+    sessionStorage.setItem(CATALOG_SCROLL_KEY, componentType);
+  } catch {
+    // sessionStorage unavailable in some embed contexts
+  }
+}
+
+function consumeCatalogScrollTarget(): string | null {
+  try {
+    const value = sessionStorage.getItem(CATALOG_SCROLL_KEY);
+    if (value) {
+      sessionStorage.removeItem(CATALOG_SCROLL_KEY);
+    }
+    return value;
+  } catch {
+    return null;
+  }
+}
+
+function findCatalogComponentTarget(root: HTMLElement, componentType: string): HTMLElement | null {
+  const escaped = CSS.escape(componentType);
+  return (
+    root.querySelector<HTMLElement>(`[data-catalog-component="${escaped}"]`) ??
+    root.querySelector<HTMLElement>(`rd-component-name[component-type="${escaped}"]`)
+  );
+}
+
+function highlightCatalogTarget(target: HTMLElement): void {
+  target.classList.add('rd-catalog-item--deep-link-target');
+  window.setTimeout(() => target.classList.remove('rd-catalog-item--deep-link-target'), 2500);
+}
+
+function applyPendingCatalogScroll(root: HTMLElement): void {
+  const componentType = consumeCatalogScrollTarget();
+  if (!componentType) {
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const target = findCatalogComponentTarget(root, componentType);
+      if (!target) {
+        return;
+      }
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      highlightCatalogTarget(target);
+    });
+  });
+}
+
+/** Navigate from meta composition (or elsewhere) to a palette component detail page. */
+export function navigateToPaletteComponent(componentType: string): void {
+  setCatalogScrollTarget(componentType);
+
+  if (componentType.startsWith('npm.')) {
+    linkTo(STORY_TITLE, NPM_LAYOUT_ATOMS_STORY)();
+    return;
+  }
+
+  const groupId = findPaletteGroupIdForType(componentType);
+  const storyName = groupId ? PALETTE_GROUP_STORY_NAMES[groupId] : undefined;
+  if (storyName) {
+    linkTo(STORY_TITLE, storyName)();
+  }
+}
 
 function navigateToGroup(groupId: string): void {
   const storyName = PALETTE_GROUP_STORY_NAMES[groupId];
@@ -224,6 +294,10 @@ function wireTimers(root: HTMLElement): void {
 }
 
 function initThreeHost(host: HTMLElement): void {
+  if (threeRuntimes.has(host)) {
+    return;
+  }
+
   const mode = host.getAttribute('data-three-mode') as ThreeVisualMode | null;
   if (!mode) {
     return;
@@ -263,9 +337,14 @@ function initThreeHost(host: HTMLElement): void {
 }
 
 function wireThreeDemos(root: HTMLElement): void {
-  root.querySelectorAll<HTMLElement>('.preview-three-host').forEach((host) => {
-    initThreeHost(host);
-  });
+  const mountAll = () => {
+    root.querySelectorAll<HTMLElement>('.preview-three-host').forEach((host) => {
+      initThreeHost(host);
+    });
+  };
+
+  // Storybook attaches the mount root after render — wait for layout before sizing canvases.
+  requestAnimationFrame(() => requestAnimationFrame(mountAll));
 }
 
 export function wireCatalogInteractivity(root: HTMLElement): void {
@@ -285,15 +364,16 @@ export function mountNpmLayoutAtoms(): HTMLElement {
   root.className = 'rd-catalog';
   root.innerHTML = `
     <p class="rd-catalog__intro">Shipped npm custom elements — compose with catalog atoms above.</p>
-    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Accordion</h3><p>layout/accordion — <code>&lt;rd-accordion&gt;</code></p></header>
+    <article class="rd-catalog-item" data-catalog-component="npm.rd-accordion"><header class="rd-catalog-item__header"><h3>Accordion</h3><p>layout/accordion — <code>&lt;rd-accordion&gt;</code></p></header>
       <div class="rd-catalog-item__demo"><rd-accordion heading="Resources" default-open><p>Slot content for filters, copy, or nested lists.</p></rd-accordion></div></article>
-    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Link List</h3><p>visual/link-list — JSON <code>items</code> array</p></header>
+    <article class="rd-catalog-item" data-catalog-component="npm.rd-link-list"><header class="rd-catalog-item__header"><h3>Link List</h3><p>visual/link-list — JSON <code>items</code> array</p></header>
       <div class="rd-catalog-item__demo"><rd-link-list items='${navigationLinkItemsJson}'></rd-link-list></div></article>
-    <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>Accordion Link List</h3><p>Recipe — collapsible TOC</p></header>
+    <article class="rd-catalog-item" data-catalog-component="npm.rd-accordion-link-list"><header class="rd-catalog-item__header"><h3>Accordion Link List</h3><p>Recipe — collapsible TOC</p></header>
       <div class="rd-catalog-item__demo"><rd-accordion-link-list heading="On this page" default-open items='${documentationTocItemsJson}'></rd-accordion-link-list></div></article>
     <article class="rd-catalog-item"><header class="rd-catalog-item__header"><h3>External links (dense)</h3></header>
       <div class="rd-catalog-item__demo"><rd-link-list dense items='${externalResourceItemsJson}'></rd-link-list></div></article>
   `;
+  applyPendingCatalogScroll(root);
   return root;
 }
 
@@ -313,6 +393,7 @@ export function mountPaletteCatalog(groupId: string): HTMLElement {
     columnLayout: true,
   });
   wireCatalogInteractivity(root);
+  applyPendingCatalogScroll(root);
   return root;
 }
 

@@ -100,6 +100,7 @@ Forward-looking Jira ticket plan for RosettaDash.
 | [DAS-99](https://planetkevin.atlassian.net/browse/DAS-99) | npm consumer install path — **done**; scoped `@0.0.1` publish via `npm run publish:npm` |
 | [DAS-104](https://planetkevin.atlassian.net/browse/DAS-104) | React runtime integration — native accordion parity, CE hosts + WasmMedia, stack styling guides — **done** |
 | [DAS-105](https://planetkevin.atlassian.net/browse/DAS-105) | Storybook meta compositions — live dashboards covering all components — **in progress** (`feature/DAS-105-storybook-meta-compositions`) |
+| [DAS-106](https://planetkevin.atlassian.net/browse/DAS-106) | Storybook palette cleanup — meta composition deep links and VR/3D live previews — **in progress** (`feature/DAS-106-storybook-palette-vr-previews`) |
 
 **Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`). DAS-99 dogfoods scoped packs with [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3) before full DAS-93 gate.
 

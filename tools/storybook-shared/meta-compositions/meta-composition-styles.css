@@ -255,6 +255,14 @@
   margin: 0;
   font-size: 0.8125rem;
   font-weight: 600;
+  cursor: pointer;
+  color: var(--rd-color-accent, #2563eb);
+}
+
+.rd-meta-composition__item-label:hover,
+.rd-meta-composition__item-label:focus-visible {
+  text-decoration: underline;
+  outline: none;
 }
 
 .rd-meta-composition__item-demo {

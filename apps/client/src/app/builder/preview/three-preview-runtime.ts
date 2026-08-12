@@ -51,7 +51,11 @@ export class ThreePreviewRuntime {
   mount(host: HTMLElement): void {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    host.appendChild(this.renderer.domElement);
+    const canvas = this.renderer.domElement;
+    canvas.style.display = 'block';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    host.appendChild(canvas);
 
     this.scene.add(this.contentGroup);
     this.scene.add(new THREE.AmbientLight(0xffffff, 0.65));

@@ -437,3 +437,12 @@
 .preview-infra__badge { align-self: flex-start; padding: 0.125rem 0.5rem; border-radius: 999px; background: rgb(100 116 139 / 15%); color: #475569; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
 .preview-infra__meta { font-size: 0.75rem; color: var(--db-text-muted); }
 .preview-three-host { width: 100%; height: 14rem; border: 1px solid var(--db-border); border-radius: 0.5rem; overflow: hidden; background: #0f172a; }
+.preview-three-host canvas { display: block; width: 100% !important; height: 100% !important; }
+.rd-catalog-item__demo { min-width: 0; }
+rd-component-name.rd-catalog-item--deep-link-target,
+.rd-catalog-item.rd-catalog-item--deep-link-target {
+  scroll-margin-top: 1rem;
+  outline: 2px solid var(--rd-color-accent, #2563eb);
+  outline-offset: 2px;
+  border-radius: var(--rd-radius-md, 0.5rem);
+}

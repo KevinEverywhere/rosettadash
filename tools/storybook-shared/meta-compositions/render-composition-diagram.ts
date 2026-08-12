@@ -30,7 +30,7 @@ function renderDiagramSection(
   const layout = section.layout ?? 'stack';
 
   const blockHtml = (itemId: string, itemIndex: number) =>
-    `<div class="rd-meta-diagram__block" data-diagram-target="s${sectionIndex}-i${itemIndex}" title="${esc(itemId)}">
+    `<div class="rd-meta-diagram__block" data-diagram-target="s${sectionIndex}-i${itemIndex}" data-component-type="${esc(itemId)}" title="${esc(itemId)}">
           <span class="rd-meta-diagram__block-label">${esc(itemLabel(itemId))}</span>
           <span class="rd-meta-diagram__block-type">${esc(itemShortType(itemId))}</span>
         </div>`;
@@ -66,7 +66,7 @@ export function renderCompositionDiagram(definition: MetaCompositionDefinition):
     .join('');
 
   return `<div class="rd-meta-diagram" role="img" aria-label="Layout diagram for ${esc(definition.title)}">
-    <p class="rd-meta-diagram__hint">Hover any block to highlight the matching live preview (and vice versa). Narrow viewports stack diagram above preview.</p>
+    <p class="rd-meta-diagram__hint">Hover any block to highlight the matching live preview. <strong>Click a block or component label</strong> to open its palette detail page.</p>
     ${sections}
   </div>`;
 }

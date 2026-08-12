@@ -49,6 +49,8 @@ function buildComponentName(
     navGroupId: options.linkItemsToGroup ? group.id : undefined,
   });
 
+  component.setAttribute('data-catalog-component', definition.type);
+
   const demo = document.createElement('div');
   demo.slot = 'demo';
   demo.className = 'rd-catalog-item__demo';

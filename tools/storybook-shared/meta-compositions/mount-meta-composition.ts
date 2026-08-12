@@ -3,7 +3,7 @@ import {
   documentationTocItemsJson,
   navigationLinkItemsJson,
 } from '../fixtures.js';
-import { wireCatalogInteractivity } from '../palette-catalog/mount-palette-catalog.js';
+import { wireCatalogInteractivity, navigateToPaletteComponent } from '../palette-catalog/mount-palette-catalog.js';
 import { renderPaletteDemo } from '../palette-catalog/palette-demos.js';
 import {
   ALL_PALETTE_TYPES,
@@ -177,6 +177,47 @@ function wireDiagramHover(root: HTMLElement): void {
   }
 }
 
+function wireMetaCompositionNavigation(root: HTMLElement): void {
+  const split = root.querySelector<HTMLElement>('.rd-meta-composition__split');
+  if (!split) {
+    return;
+  }
+
+  split.querySelectorAll<HTMLElement>('.rd-meta-diagram__block[data-component-type]').forEach((block) => {
+    block.addEventListener('click', () => {
+      const componentType = block.dataset.componentType;
+      if (componentType) {
+        navigateToPaletteComponent(componentType);
+      }
+    });
+  });
+
+  split.querySelectorAll<HTMLElement>('.rd-meta-composition__item').forEach((item) => {
+    const label = item.querySelector<HTMLElement>('.rd-meta-composition__item-label');
+    const componentType = item.dataset.componentType;
+    if (!label || !componentType) {
+      return;
+    }
+
+    label.tabIndex = 0;
+    label.setAttribute('role', 'link');
+    label.setAttribute('title', `Open ${componentType} in palette`);
+
+    const openPalette = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      navigateToPaletteComponent(componentType);
+    };
+
+    label.addEventListener('click', openPalette);
+    label.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        openPalette(event);
+      }
+    });
+  });
+}
+
 /** Mount a live meta composition with diagram + preview split. */
 export function mountMetaComposition(definition: MetaCompositionDefinition): HTMLElement {
   const root = document.createElement('article');
@@ -204,6 +245,7 @@ export function mountMetaComposition(definition: MetaCompositionDefinition): HTM
 
   wireCatalogInteractivity(root);
   wireDiagramHover(root);
+  wireMetaCompositionNavigation(root);
   return root;
 }
 
