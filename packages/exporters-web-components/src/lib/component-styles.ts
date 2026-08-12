@@ -1,4 +1,5 @@
 import type { IRComponent } from '@rosettadash/core';
+import { numericPresentationCssLines } from '@rosettadash/core';
 import { componentClassName, customElementTag } from './utils';
 
 export function shellStyles(rootClass: string): string {
@@ -10,6 +11,7 @@ export function shellStyles(rootClass: string): string {
     `.${rootClass} .input, .${rootClass} .select { width: 100%; padding: 0.5rem 0.75rem; box-sizing: border-box; }`,
     `.${rootClass} .table { width: 100%; border-collapse: collapse; }`,
     `.${rootClass} .table th, .${rootClass} .table td { padding: 0.5rem 0.75rem; text-align: left; }`,
+    ...numericPresentationCssLines(`.${rootClass}`),
     `.${rootClass} .chart-card, .${rootClass} .detail-panel, .${rootClass} .timer, .${rootClass} .skeleton { padding: 1rem; }`,
     `.${rootClass} .table-row { cursor: pointer; }`,
     `.${rootClass} .table-row--selected { background: color-mix(in srgb, var(--db-accent, #2563eb) 12%, transparent); }`,
@@ -31,7 +33,7 @@ export function generateComponentCss(component: IRComponent, exportName: string)
     case 'visual.news.article-detail':
       return `${base}\n.${rootClass} .detail-panel__empty { color: var(--db-muted, #6b7280); }`;
     case 'visual.kpi':
-      return `${base}\n.${rootClass} .kpi-card__value { font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0 0; }`;
+      return `${base}\n.${rootClass} .kpi-card__value { font-size: 1.5rem; font-weight: 700; margin: 0.25rem 0 0; text-align: right; font-variant-numeric: tabular-nums; }`;
     case 'visual.chart.line':
     case 'visual.chart.bar':
       return `${base}\n.${rootClass} .chart-card svg { width: 100%; height: 8rem; }`;

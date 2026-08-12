@@ -29,3 +29,4 @@ export * from './lib/vault';
 export * from './lib/ai';
 export * from './lib/content-library';
 export * from './lib/creation-wizard';
+export * from './lib/presentation';

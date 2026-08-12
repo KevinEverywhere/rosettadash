@@ -1,4 +1,5 @@
 import type { ExportIR, IRComponent } from '@rosettadash/core';
+import { generateNumericFieldsRuntimeFile, irUsesNumericPresentation } from '@rosettadash/core';
 import { buildDashboardContext } from './binding-resolver';
 import {
   generateComponentFile,
@@ -105,6 +106,15 @@ export function generateWebComponentsUiFiles(
     encoding: 'utf-8',
     description: 'Shared dashboard types',
   });
+
+  if (irUsesNumericPresentation(ir.components)) {
+    files.push({
+      path: `${root}/presentation/numeric-fields.ts`,
+      content: generateNumericFieldsRuntimeFile(),
+      encoding: 'utf-8',
+      description: 'Numeric column and detail field alignment helpers',
+    });
+  }
 
   files.push({
     path: `${root}/styles/tokens.css`,

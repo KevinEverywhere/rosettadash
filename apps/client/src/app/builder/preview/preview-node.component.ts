@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { ComponentNode, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@rosettadash/core';
+import { ComponentNode, isNumericFieldKey, parseRoleGateAllowedRoles, resolveRoleOptions, roleGateAllowsRole } from '@rosettadash/core';
 import { PreviewNewsRow, PreviewRow, PRESET_LABELS } from '@rosettadash/ui-primitives';
 import { AppSelectComponent } from '../../shared/app-select/app-select.component';
 import { AppCollapsibleComponent } from '../../shared/app-collapsible/app-collapsible.component';
@@ -335,8 +335,6 @@ export class PreviewNodeComponent {
   }
 
   protected isNumericDetailKey(key: string): boolean {
-    return /^(amount|count|total|qty|quantity|price|revenue|value|delta|percent|progress|ticks?)$/i.test(
-      key,
-    );
+    return isNumericFieldKey(key);
   }
 }

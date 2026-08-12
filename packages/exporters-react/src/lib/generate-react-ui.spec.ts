@@ -247,6 +247,8 @@ describe('generateReactUiFiles', () => {
 
     expect(detailFile?.content).toContain('detail-panel__fields');
     expect(tableFile?.content).toContain('onSelectRow');
+    expect(tableFile?.content).toContain('TABLE_NUMERIC_CELL_CLASS');
+    expect(files.some((file) => file.path.endsWith('presentation/numeric-fields.ts'))).toBe(true);
     expect(dashboard?.content).toContain('t1_selected_row');
   });
 

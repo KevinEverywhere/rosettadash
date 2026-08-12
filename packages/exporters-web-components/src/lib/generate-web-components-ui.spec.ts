@@ -87,6 +87,8 @@ describe('generateWebComponentsUiFiles', () => {
 
     const tableComponent = files.find((file) => file.path.includes('DataTable'));
     expect(tableComponent?.content).toContain('row-select');
+    expect(tableComponent?.content).toContain('TABLE_NUMERIC_CELL_CLASS');
+    expect(files.some((file) => file.path.endsWith('presentation/numeric-fields.ts'))).toBe(true);
 
     const chartComponent = files.find((file) => file.path.includes('LineChart'));
     expect(chartComponent?.content).toContain('polyline');

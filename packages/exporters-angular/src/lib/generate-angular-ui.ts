@@ -1,4 +1,5 @@
 import type { ExportIR } from '@rosettadash/core';
+import { generateNumericFieldsRuntimeFile, irUsesNumericPresentation, numericPresentationCssLines } from '@rosettadash/core';
 import { buildDashboardContext } from './binding-resolver';
 import { generateComponentFile } from './component-templates';
 import type { AngularExportOptions, GeneratedFile } from './types';
@@ -47,6 +48,15 @@ export function generateAngularUiFiles(
     encoding: 'utf-8',
     description: 'Shared dashboard types',
   });
+
+  if (irUsesNumericPresentation(ir.components)) {
+    files.push({
+      path: `${root}/presentation/numeric-fields.ts`,
+      content: generateNumericFieldsRuntimeFile(),
+      encoding: 'utf-8',
+      description: 'Numeric column and detail field alignment helpers',
+    });
+  }
 
   files.push({
     path: `${root}/styles/tokens.scss`,
@@ -120,6 +130,7 @@ function generateTokensScss(ir: ExportIR): string {
     ``,
     `.table { width: 100%; border-collapse: collapse; }`,
     `.table th, .table td { padding: 0.5rem 0.75rem; text-align: left; }`,
+    ...numericPresentationCssLines(),
     `.kpi-card, .chart-card, .table-card { padding: 1rem; }`,
     `.bar-chart { display: flex; align-items: flex-end; gap: 0.25rem; height: 8rem; }`,
     `.bar { flex: 1; background: var(--db-accent); min-height: 0.25rem; }`,
