@@ -296,9 +296,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-99](https://planetkevin.atlassian.net/browse/DAS-99)** — Verify npm consumer install path for `@rosettadash/web-components` (ffmp3Console dogfood)  
-Branch: `feature/DAS-99-npm-consumer-web-components-ffmp3`  
-Related: [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3)
+**[DAS-93](https://planetkevin.atlassian.net/browse/DAS-93)** — Full taxonomy on all `@rosettadash/<runtime>` packages for `0.1.0`  
+Branch: `feature/DAS-93-npm-taxonomy-atoms-0-1-0` (when started)
+
+Recently closed: DAS-83, DAS-90–92, DAS-94, DAS-98, DAS-99. Scoped packages `@rosettadash/core@0.0.1` and `@rosettadash/web-components@0.0.1` — publish with `npm run publish:npm` (npm OTP required).
 
 ## License
 

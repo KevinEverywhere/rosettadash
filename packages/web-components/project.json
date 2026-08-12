@@ -19,6 +19,11 @@
             "output": "."
           },
           {
+            "input": "packages/web-components",
+            "glob": "LICENSE",
+            "output": "."
+          },
+          {
             "input": "packages/web-components/src",
             "glob": "**/*.css",
             "output": "."
