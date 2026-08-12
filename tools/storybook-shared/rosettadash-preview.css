@@ -1,0 +1,7 @@
+@import '../../packages/web-components/src/styles/tokens.css';
+@import '../../packages/web-components/src/styles/styles.css';
+
+.sb-show-main {
+  background: var(--rd-color-surface, #fff);
+  color: var(--rd-color-text, #111);
+}

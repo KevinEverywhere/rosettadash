@@ -90,19 +90,19 @@
       ],
       "@rosettadash/svelte": ["./packages/svelte/src/index.ts"],
       "@rosettadash/svelte/layout/accordion": [
-        "./packages/svelte/src/layout/accordion/index.ts"
+        "./packages/svelte/src/layout/accordion/Accordion.svelte"
       ],
       "@rosettadash/svelte/layout/accordion-link-list": [
-        "./packages/svelte/src/layout/accordion-link-list/index.ts"
+        "./packages/svelte/src/layout/accordion-link-list/AccordionLinkList.svelte"
       ],
       "@rosettadash/svelte/visual/link-list": [
-        "./packages/svelte/src/visual/link-list/index.ts"
+        "./packages/svelte/src/visual/link-list/LinkList.svelte"
       ],
       "@rosettadash/svelte/visual/media/video-source": [
-        "./packages/svelte/src/visual/media/video-source/index.ts"
+        "./packages/svelte/src/visual/media/video-source/VideoSource.svelte"
       ],
       "@rosettadash/svelte/visual/media/equirect-viewport": [
-        "./packages/svelte/src/visual/media/equirect-viewport/index.ts"
+        "./packages/svelte/src/visual/media/equirect-viewport/EquirectViewport.svelte"
       ],
       "@rosettadash/exporters-mongodb": ["./packages/exporters-mongodb/src/index.ts"],
       "@rosettadash/exporters-mysql": ["./packages/exporters-mysql/src/index.ts"],
