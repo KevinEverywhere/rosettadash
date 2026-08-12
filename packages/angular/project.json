@@ -4,6 +4,7 @@
   "sourceRoot": "packages/angular/src",
   "projectType": "library",
   "tags": ["scope:runtime", "type:ui"],
+  "implicitDependencies": ["web-components"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -22,7 +23,9 @@
         "additionalEntryPoints": [
           "packages/angular/src/layout/accordion/index.ts",
           "packages/angular/src/layout/accordion-link-list/index.ts",
-          "packages/angular/src/visual/link-list/index.ts"
+          "packages/angular/src/visual/link-list/index.ts",
+          "packages/angular/src/visual/media/video-source/index.ts",
+          "packages/angular/src/visual/media/equirect-viewport/index.ts"
         ],
         "generateExportsField": true
       }

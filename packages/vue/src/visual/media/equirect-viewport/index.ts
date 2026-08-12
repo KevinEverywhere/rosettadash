@@ -25,7 +25,7 @@ export interface EquirectViewportProps {
 }
 
 /**
- * Vue wrapper around `<rd-equirect-viewport>` for FFMP3 / media pipelines.
+ * Vue wrapper around `<rd-equirect-viewport>`.
  */
 export const EquirectViewport = defineCustomElementHost(
   {

@@ -41,4 +41,18 @@ Components ship as `.svelte` source (compiled by the consumer’s Vite / SvelteK
 <AccordionLinkList title="Resources" {items} />
 ```
 
+## Media wrappers
+
+```svelte
+<script lang="ts">
+  import VideoSource from '@rosettadash/svelte/visual/media/video-source';
+  import EquirectViewport from '@rosettadash/svelte/visual/media/equirect-viewport';
+</script>
+
+<VideoSource label="Clip" sourceWidth={3840} sourceHeight={1920} onVideoFile={console.log} />
+<EquirectViewport label="Viewport" previewMode="flat-crop" yaw={10} onCropRegion={console.log} />
+```
+
+Depends on `@rosettadash/web-components` for the underlying custom elements.
+
 Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome.

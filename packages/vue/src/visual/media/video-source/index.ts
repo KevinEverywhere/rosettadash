@@ -18,7 +18,7 @@ export interface VideoFileDetail {
 }
 
 /**
- * Vue wrapper around `<rd-video-source>` for FFMP3 / media pipelines.
+ * Vue wrapper around `<rd-video-source>`.
  */
 export const VideoSource = defineCustomElementHost(
   {

@@ -31,4 +31,18 @@ import { AccordionLinkList } from '@rosettadash/angular/layout/accordion-link-li
 <rd-accordion-link-list title="Resources" [items]="items" />
 ```
 
+## Media wrappers
+
+```ts
+import { VideoSource } from '@rosettadash/angular/visual/media/video-source';
+import { EquirectViewport } from '@rosettadash/angular/visual/media/equirect-viewport';
+```
+
+```html
+<rd-video-source label="Clip" [sourceWidth]="3840" [sourceHeight]="1920" (videoFile)="onVideoFile($event)" />
+<rd-equirect-viewport label="Viewport" previewMode="flat-crop" [yaw]="10" (cropRegion)="onCrop($event)" />
+```
+
+Depends on `@rosettadash/web-components` for the underlying custom elements.
+
 Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome.

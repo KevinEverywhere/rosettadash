@@ -4,6 +4,7 @@
   "sourceRoot": "packages/svelte/src",
   "projectType": "library",
   "tags": ["scope:runtime", "type:ui"],
+  "implicitDependencies": ["web-components"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -27,7 +28,9 @@
         "additionalEntryPoints": [
           "packages/svelte/src/layout/accordion/types.ts",
           "packages/svelte/src/layout/accordion-link-list/types.ts",
-          "packages/svelte/src/visual/link-list/types.ts"
+          "packages/svelte/src/visual/link-list/types.ts",
+          "packages/svelte/src/visual/media/video-source/types.ts",
+          "packages/svelte/src/visual/media/equirect-viewport/types.ts"
         ],
         "generateExportsField": false
       }

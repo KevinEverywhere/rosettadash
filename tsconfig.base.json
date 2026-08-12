@@ -70,6 +70,12 @@
       "@rosettadash/angular/visual/link-list": [
         "./packages/angular/src/visual/link-list/index.ts"
       ],
+      "@rosettadash/angular/visual/media/video-source": [
+        "./packages/angular/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/angular/visual/media/equirect-viewport": [
+        "./packages/angular/src/visual/media/equirect-viewport/index.ts"
+      ],
       "@rosettadash/vue": ["./packages/vue/src/index.ts"],
       "@rosettadash/vue/layout/accordion": ["./packages/vue/src/layout/accordion/index.ts"],
       "@rosettadash/vue/layout/accordion-link-list": [
@@ -91,6 +97,12 @@
       ],
       "@rosettadash/svelte/visual/link-list": [
         "./packages/svelte/src/visual/link-list/index.ts"
+      ],
+      "@rosettadash/svelte/visual/media/video-source": [
+        "./packages/svelte/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/svelte/visual/media/equirect-viewport": [
+        "./packages/svelte/src/visual/media/equirect-viewport/index.ts"
       ],
       "@rosettadash/exporters-mongodb": ["./packages/exporters-mongodb/src/index.ts"],
       "@rosettadash/exporters-mysql": ["./packages/exporters-mysql/src/index.ts"],

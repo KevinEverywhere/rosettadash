@@ -31,10 +31,23 @@
       "svelte": "./src/visual/link-list/LinkList.svelte",
       "import": "./src/visual/link-list/LinkList.svelte",
       "default": "./src/visual/link-list/LinkList.svelte"
+    },
+    "./visual/media/video-source": {
+      "types": "./src/visual/media/video-source/types.d.ts",
+      "svelte": "./src/visual/media/video-source/VideoSource.svelte",
+      "import": "./src/visual/media/video-source/VideoSource.svelte",
+      "default": "./src/visual/media/video-source/VideoSource.svelte"
+    },
+    "./visual/media/equirect-viewport": {
+      "types": "./src/visual/media/equirect-viewport/types.d.ts",
+      "svelte": "./src/visual/media/equirect-viewport/EquirectViewport.svelte",
+      "import": "./src/visual/media/equirect-viewport/EquirectViewport.svelte",
+      "default": "./src/visual/media/equirect-viewport/EquirectViewport.svelte"
     }
   },
   "files": ["src", "README.md"],
   "dependencies": {
+    "@rosettadash/web-components": "*",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {

@@ -26,7 +26,7 @@ Unscoped root `rosettadash` remains the product/clone workspace (`private: true`
 `layout/accordion` is exported from every runtime package:
 
 - WC: `RdAccordionElement` / `<rd-accordion>` + `registerRdAccordion()`
-- Other runtimes: thin adapter stubs sharing `AccordionProps` (richer DOM adapters follow in later tickets)
+- Other runtimes: real framework components (recipes + media WC hosts)
 
 DAS-94 recipes (same subpaths on every runtime):
 
@@ -35,8 +35,8 @@ DAS-94 recipes (same subpaths on every runtime):
 | `layout/accordion` | `<rd-accordion>` | Real components (`v-model:open` / controlled) | Standalone `rd-accordion` | `.svelte` + `bind:open` |
 | `visual/link-list` | `<rd-link-list>` | Real `LinkList` | Standalone `rd-link-list` | `.svelte` source |
 | `layout/accordion-link-list` | `<rd-accordion-link-list>` | Real recipe | Standalone recipe | `.svelte` recipe |
-| `visual/media/video-source` | `<rd-video-source>` | Vue + React WC wrappers | — (use WC) | — (use WC) |
-| `visual/media/equirect-viewport` | `<rd-equirect-viewport>` | Vue + React WC wrappers | — (use WC) | — (use WC) |
+| `visual/media/video-source` | `<rd-video-source>` | WC wrapper | WC wrapper | WC wrapper (selector) | `.svelte` WC wrapper |
+| `visual/media/equirect-viewport` | `<rd-equirect-viewport>` | WC wrapper | WC wrapper | WC wrapper (selector) | `.svelte` WC wrapper |
 
 Legacy media subpaths (`./media`, `./wasm`) remain on `@rosettadash/web-components` for FFMP3; taxonomy-aligned aliases also exist under `./visual/media/…`.
 
