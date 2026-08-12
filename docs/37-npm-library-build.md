@@ -30,10 +30,13 @@ Unscoped root `rosettadash` remains the product/clone workspace (`private: true`
 
 DAS-94 recipes (same subpaths on every runtime):
 
-| Import | WC | Other runtimes |
-|--------|----|----------------|
-| `visual/link-list` | `<rd-link-list>` | `LinkList` stub |
-| `layout/accordion-link-list` | `<rd-accordion-link-list>` + `AccordionLinkList()` | `AccordionLinkList` stub |
+| Import | WC | Vue / React | Angular | Svelte |
+|--------|----|-------------|---------|--------|
+| `layout/accordion` | `<rd-accordion>` | Real components (`v-model:open` / controlled) | Standalone `rd-accordion` | `.svelte` + `bind:open` |
+| `visual/link-list` | `<rd-link-list>` | Real `LinkList` | Standalone `rd-link-list` | `.svelte` source |
+| `layout/accordion-link-list` | `<rd-accordion-link-list>` | Real recipe | Standalone recipe | `.svelte` recipe |
+| `visual/media/video-source` | `<rd-video-source>` | Vue + React WC wrappers | — (use WC) | — (use WC) |
+| `visual/media/equirect-viewport` | `<rd-equirect-viewport>` | Vue + React WC wrappers | — (use WC) | — (use WC) |
 
 Legacy media subpaths (`./media`, `./wasm`) remain on `@rosettadash/web-components` for FFMP3; taxonomy-aligned aliases also exist under `./visual/media/…`.
 

@@ -37,6 +37,12 @@
         "./packages/web-components/src/visual/link-list/index.ts"
       ],
       "@rosettadash/web-components/media": ["./packages/web-components/src/media/index.ts"],
+      "@rosettadash/web-components/visual/media/video-source": [
+        "./packages/web-components/src/media/video-source.ts"
+      ],
+      "@rosettadash/web-components/visual/media/equirect-viewport": [
+        "./packages/web-components/src/media/equirect-viewport.ts"
+      ],
       "@rosettadash/web-components/wasm": ["./packages/web-components/src/wasm/index.ts"],
       "@rosettadash/react": ["./packages/react/src/index.ts"],
       "@rosettadash/react/layout/accordion": [
@@ -47,6 +53,12 @@
       ],
       "@rosettadash/react/visual/link-list": [
         "./packages/react/src/visual/link-list/index.ts"
+      ],
+      "@rosettadash/react/visual/media/video-source": [
+        "./packages/react/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/react/visual/media/equirect-viewport": [
+        "./packages/react/src/visual/media/equirect-viewport/index.ts"
       ],
       "@rosettadash/angular": ["./packages/angular/src/index.ts"],
       "@rosettadash/angular/layout/accordion": [
@@ -64,6 +76,12 @@
         "./packages/vue/src/layout/accordion-link-list/index.ts"
       ],
       "@rosettadash/vue/visual/link-list": ["./packages/vue/src/visual/link-list/index.ts"],
+      "@rosettadash/vue/visual/media/video-source": [
+        "./packages/vue/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/vue/visual/media/equirect-viewport": [
+        "./packages/vue/src/visual/media/equirect-viewport/index.ts"
+      ],
       "@rosettadash/svelte": ["./packages/svelte/src/index.ts"],
       "@rosettadash/svelte/layout/accordion": [
         "./packages/svelte/src/layout/accordion/index.ts"

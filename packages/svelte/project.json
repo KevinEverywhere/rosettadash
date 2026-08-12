@@ -17,14 +17,19 @@
             "input": "packages/svelte",
             "glob": "README.md",
             "output": "."
+          },
+          {
+            "input": "packages/svelte/src",
+            "glob": "**/*.svelte",
+            "output": "./src"
           }
         ],
         "additionalEntryPoints": [
-          "packages/svelte/src/layout/accordion/index.ts",
-          "packages/svelte/src/layout/accordion-link-list/index.ts",
-          "packages/svelte/src/visual/link-list/index.ts"
+          "packages/svelte/src/layout/accordion/types.ts",
+          "packages/svelte/src/layout/accordion-link-list/types.ts",
+          "packages/svelte/src/visual/link-list/types.ts"
         ],
-        "generateExportsField": true
+        "generateExportsField": false
       }
     },
     "typecheck": {

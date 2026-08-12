@@ -1,7 +1,44 @@
 # `@rosettadash/svelte`
 
-RosettaDash svelte runtime. Import paths match `@rosettadash/web-components`.
+RosettaDash **Svelte 5** runtime. Import paths match `@rosettadash/web-components`.
 
-```ts
-import { Accordion, type AccordionProps } from '@rosettadash/svelte/layout/accordion';
+Peer dependency: `svelte` ^5.
+
+Components ship as `.svelte` source (compiled by the consumer’s Vite / SvelteKit toolchain).
+
+## Accordion (`bind:open`)
+
+```svelte
+<script lang="ts">
+  import Accordion from '@rosettadash/svelte/layout/accordion';
+
+  let open = $state(false);
+</script>
+
+<Accordion bind:open title="Resources">
+  <p>Panel body</p>
+</Accordion>
 ```
+
+## Recipes (DAS-94)
+
+```svelte
+<script lang="ts">
+  import Accordion from '@rosettadash/svelte/layout/accordion';
+  import LinkList from '@rosettadash/svelte/visual/link-list';
+  import AccordionLinkList from '@rosettadash/svelte/layout/accordion-link-list';
+
+  const items = [
+    { label: 'Docs', href: '/docs' },
+    { label: 'API', href: '/api' },
+  ];
+</script>
+
+<Accordion title="Resources">
+  <LinkList {items} />
+</Accordion>
+
+<AccordionLinkList title="Resources" {items} />
+```
+
+Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome.

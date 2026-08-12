@@ -1,3 +1,3 @@
-export * from './layout/accordion/index';
-export * from './layout/accordion-link-list/index';
-export * from './visual/link-list/index';
+export type { AccordionProps } from './layout/accordion/types';
+export type { AccordionLinkListProps } from './layout/accordion-link-list/types';
+export type { LinkListItem, LinkListProps } from './visual/link-list/types';

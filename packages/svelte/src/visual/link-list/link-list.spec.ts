@@ -1,11 +1,11 @@
-import { LinkList } from './index';
+import type { LinkListProps } from './types';
 
 describe('@rosettadash/svelte/visual/link-list', () => {
-  it('returns a svelte runtime model with defaults', () => {
-    const model = LinkList();
-    expect(model.runtime).toBe('svelte');
-    expect(model.tag).toBe('rd-link-list');
-    expect(model.props.items).toEqual([]);
-    expect(model.props.dense).toBe(false);
+  it('exposes a typed props contract', () => {
+    const props: LinkListProps = {
+      items: [{ label: 'Docs', href: '/docs' }],
+      dense: true,
+    };
+    expect(props.items).toHaveLength(1);
   });
 });

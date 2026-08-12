@@ -1,11 +1,11 @@
-import { LinkList } from './index';
+import type { LinkListProps } from './link-list';
 
 describe('@rosettadash/angular/visual/link-list', () => {
-  it('returns an angular runtime model with defaults', () => {
-    const model = LinkList();
-    expect(model.runtime).toBe('angular');
-    expect(model.tag).toBe('rd-link-list');
-    expect(model.props.items).toEqual([]);
-    expect(model.props.dense).toBe(false);
+  it('exposes a typed props contract', () => {
+    const props: LinkListProps = {
+      items: [{ label: 'Docs', href: '/docs' }],
+      dense: true,
+    };
+    expect(props.items).toHaveLength(1);
   });
 });

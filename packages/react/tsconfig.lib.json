@@ -2,8 +2,14 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "declaration": true
+    "declaration": true,
+    "jsx": "react-jsx",
+    "lib": ["es2020", "dom"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts", "jest.config.cts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "jest.config.cts"
+  ]
 }

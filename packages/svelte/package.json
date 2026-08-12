@@ -5,6 +5,7 @@
   "type": "module",
   "license": "MIT",
   "private": false,
+  "svelte": "./src/layout/accordion/Accordion.svelte",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
@@ -14,23 +15,29 @@
       "default": "./src/index.js"
     },
     "./layout/accordion": {
-      "types": "./src/layout/accordion/index.d.ts",
-      "import": "./src/layout/accordion/index.js",
-      "default": "./src/layout/accordion/index.js"
+      "types": "./src/layout/accordion/types.d.ts",
+      "svelte": "./src/layout/accordion/Accordion.svelte",
+      "import": "./src/layout/accordion/Accordion.svelte",
+      "default": "./src/layout/accordion/Accordion.svelte"
     },
     "./layout/accordion-link-list": {
-      "types": "./src/layout/accordion-link-list/index.d.ts",
-      "import": "./src/layout/accordion-link-list/index.js",
-      "default": "./src/layout/accordion-link-list/index.js"
+      "types": "./src/layout/accordion-link-list/types.d.ts",
+      "svelte": "./src/layout/accordion-link-list/AccordionLinkList.svelte",
+      "import": "./src/layout/accordion-link-list/AccordionLinkList.svelte",
+      "default": "./src/layout/accordion-link-list/AccordionLinkList.svelte"
     },
     "./visual/link-list": {
-      "types": "./src/visual/link-list/index.d.ts",
-      "import": "./src/visual/link-list/index.js",
-      "default": "./src/visual/link-list/index.js"
+      "types": "./src/visual/link-list/types.d.ts",
+      "svelte": "./src/visual/link-list/LinkList.svelte",
+      "import": "./src/visual/link-list/LinkList.svelte",
+      "default": "./src/visual/link-list/LinkList.svelte"
     }
   },
   "files": ["src", "README.md"],
   "dependencies": {
     "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
   }
 }

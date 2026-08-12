@@ -1,11 +1,28 @@
-import { LinkList } from './index';
+import { mount } from '@vue/test-utils';
+import { LinkList } from './link-list';
 
 describe('@rosettadash/vue/visual/link-list', () => {
-  it('returns a vue runtime model with defaults', () => {
-    const model = LinkList();
-    expect(model.runtime).toBe('vue');
-    expect(model.tag).toBe('rd-link-list');
-    expect(model.props.items).toEqual([]);
-    expect(model.props.dense).toBe(false);
+  it('defaults to an empty list', () => {
+    const wrapper = mount(LinkList);
+    expect(wrapper.findAll('a')).toHaveLength(0);
+  });
+
+  it('renders items with rd-* classnames', () => {
+    const wrapper = mount(LinkList, {
+      props: {
+        items: [
+          { label: 'Docs', href: '/docs' },
+          { label: 'API', href: '/api' },
+        ],
+        dense: true,
+      },
+    });
+
+    const root = wrapper.get('[data-testid="rd-link-list"]');
+    expect(root.classes()).toContain('rd-link-list--dense');
+    const links = wrapper.findAll('a.rd-link-list__link');
+    expect(links).toHaveLength(2);
+    expect(links[0].attributes('href')).toBe('/docs');
+    expect(links[0].text()).toBe('Docs');
   });
 });

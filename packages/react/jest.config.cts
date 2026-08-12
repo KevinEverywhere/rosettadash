@@ -1,10 +1,10 @@
 module.exports = {
   displayName: 'runtime-react',
   preset: '../../jest.preset.js',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
+    '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
-  moduleFileExtensions: ['ts', 'js', 'html'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'html'],
   coverageDirectory: '../../coverage/packages/react',
 };

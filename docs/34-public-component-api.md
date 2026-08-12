@@ -82,8 +82,8 @@ import {
 
 | Import (any runtime) | Intent | Status |
 |----------------------|--------|--------|
-| `…/visual/link-list` | List of `{ label, href }` | Shipped on all runtimes (`feature/DAS-94-npm-recipe-helpers`) |
-| `…/layout/accordion-link-list` | Collapsible nav / TOC | Shipped on all runtimes |
+| `…/visual/link-list` | List of `{ label, href }` | Real components on WC / Vue / React / Angular / Svelte |
+| `…/layout/accordion-link-list` | Collapsible nav / TOC | Real recipes on WC / Vue / React / Angular / Svelte |
 
 ## Typing contract
 

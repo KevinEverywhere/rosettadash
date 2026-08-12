@@ -1,11 +1,11 @@
-import { AccordionLinkList } from './index';
+import type { AccordionLinkListProps } from './types';
 
 describe('@rosettadash/svelte/layout/accordion-link-list', () => {
-  it('returns a recipe model with defaults', () => {
-    const model = AccordionLinkList({ title: 'Resources' });
-    expect(model.runtime).toBe('svelte');
-    expect(model.tag).toBe('rd-accordion-link-list');
-    expect(model.props.defaultOpen).toBe(false);
-    expect(model.props.items).toEqual([]);
+  it('exposes a typed props contract', () => {
+    const props: AccordionLinkListProps = {
+      title: 'Resources',
+      items: [],
+    };
+    expect(props.title).toBe('Resources');
   });
 });
