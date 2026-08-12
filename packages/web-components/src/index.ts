@@ -1,14 +1,14 @@
-export * from './media/index';
-export * from './wasm/index';
-export * from './layout/accordion/index';
-export * from './layout/accordion-link-list/index';
-export * from './visual/link-list/index';
+export * from './media/index.js';
+export * from './wasm/index.js';
+export * from './layout/accordion/index.js';
+export * from './layout/accordion-link-list/index.js';
+export * from './visual/link-list/index.js';
 
-import { registerLayoutAccordion } from './layout/accordion/index';
-import { registerLayoutAccordionLinkList } from './layout/accordion-link-list/index';
-import { registerVisualLinkList } from './visual/link-list/index';
-import { registerRosettaDashMediaElements } from './media/index';
-import { registerRosettaDashWasmElements } from './wasm/index';
+import { registerLayoutAccordion } from './layout/accordion/index.js';
+import { registerLayoutAccordionLinkList } from './layout/accordion-link-list/index.js';
+import { registerVisualLinkList } from './visual/link-list/index.js';
+import { registerRosettaDashMediaElements } from './media/index.js';
+import { registerRosettaDashWasmElements } from './wasm/index.js';
 
 /** Register all RosettaDash runtime custom elements (layout + media + wasm). */
 export function registerRosettaDashElements(): void {

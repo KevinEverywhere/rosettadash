@@ -1,13 +1,13 @@
-import { defineRosettaElement, readString } from '../../lib/element-utils';
+import { defineRosettaElement, readString } from '../../lib/element-utils.js';
 import {
   registerRdAccordion,
   type AccordionProps,
-} from '../accordion/accordion';
+} from '../accordion/accordion.js';
 import {
   registerRdLinkList,
   type LinkListItem,
   type LinkListProps,
-} from '../../visual/link-list/link-list';
+} from '../../visual/link-list/link-list.js';
 
 export const RD_ACCORDION_LINK_LIST_TAG = 'rd-accordion-link-list';
 

@@ -2,11 +2,15 @@
 
 Default RosettaDash UI runtime (Web Components).
 
+**Author:** Kevin Ready \<kevin@planetkevin.com\>
+
 ## Install
 
 ```bash
 npm install @rosettadash/web-components
 ```
+
+> Unscoped [`rosettadash`](https://www.npmjs.com/package/rosettadash) is the **product monorepo**, not this package. See [consumer install](../../docs/39-npm-consumer-install.md).
 
 ## Import shape
 
@@ -53,6 +57,21 @@ AccordionLinkList({
   items='[{"label":"Docs","href":"/docs"}]'
 ></rd-accordion-link-list>
 ```
+
+### Media (ffmp3Console / DAS-83)
+
+```ts
+import { registerRosettaDashMediaElements } from '@rosettadash/web-components/media';
+
+registerRosettaDashMediaElements();
+```
+
+```html
+<rd-video-source></rd-video-source>
+<rd-equirect-viewport preview-mode="rectilinear" yaw="0" pitch="0" horizontal-fov="90"></rd-equirect-viewport>
+```
+
+Events: `video-file`, `crop-region`. Filter math: `@rosettadash/core` (`buildEquirectExtractFilter`).
 
 Same `<group>/…/<component>` paths are used on `@rosettadash/react`, `@rosettadash/angular`, `@rosettadash/vue`, and `@rosettadash/svelte`.
 

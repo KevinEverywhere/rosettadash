@@ -3,8 +3,8 @@ import {
   RdEquirectViewportElement,
   DB_EQUIRECT_VIEWPORT_TAG,
   registerRdEquirectViewport,
-} from './equirect-viewport';
-import { RdVideoSourceElement, DB_VIDEO_SOURCE_TAG, registerRdVideoSource } from './video-source';
+} from './equirect-viewport.js';
+import { RdVideoSourceElement, DB_VIDEO_SOURCE_TAG, registerRdVideoSource } from './video-source.js';
 
 describe('@rosettadash/web-components/media', () => {
   beforeAll(() => {

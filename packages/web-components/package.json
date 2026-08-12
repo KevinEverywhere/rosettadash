@@ -2,6 +2,7 @@
   "name": "@rosettadash/web-components",
   "version": "0.0.1",
   "description": "RosettaDash Web Components runtime - default public UI package",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",
   "private": false,
@@ -51,6 +52,10 @@
       "import": "./src/media/equirect-viewport.js",
       "default": "./src/media/equirect-viewport.js"
     },
+    "./browser/media": {
+      "import": "./browser/media.js",
+      "default": "./browser/media.js"
+    },
     "./tokens.css": "./styles/tokens.css",
     "./styles.css": "./styles/styles.css"
   },
@@ -58,7 +63,9 @@
     "src",
     "styles",
     "media",
-    "README.md"
+    "browser",
+    "README.md",
+    "LICENSE"
   ],
   "peerDependencies": {
     "@ffmpeg/ffmpeg": ">=0.12.0",
@@ -73,7 +80,19 @@
     }
   },
   "dependencies": {
-    "@rosettadash/core": "*",
+    "@rosettadash/core": "0.0.1",
     "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinEverywhere/rosettadash.git",
+    "directory": "packages/web-components"
+  },
+  "homepage": "https://github.com/KevinEverywhere/rosettadash#readme",
+  "bugs": {
+    "url": "https://github.com/KevinEverywhere/rosettadash/issues"
   }
 }

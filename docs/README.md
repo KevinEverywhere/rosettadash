@@ -41,10 +41,11 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 29. [Styling and classnames](./35-styling-and-classnames.md) — `rd-*` / `--rd-*`, minimal opt-in styles (DAS-90)
 30. [Post–DAS-90 plan](./36-npm-post-90-plan.md) — delivery order after npm docs (DAS-90)
 31. [npm library build](./37-npm-library-build.md) — runtime packages + exports + pack (DAS-91)
+32. [npm consumer install](./39-npm-consumer-install.md) — scoped packages for ffmp3Console & siblings (DAS-99)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-90** — npm package prep docs — on `feature/DAS-90-npm-package-prep`.
+See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-99** — npm consumer path for `@rosettadash/web-components` — on `feature/DAS-99-npm-consumer-web-components-ffmp3`.
 
 ## Current capabilities (at a glance)
 

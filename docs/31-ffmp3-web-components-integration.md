@@ -19,6 +19,19 @@ Optional **package-mode** linking for dogfooding RosettaDash media/WASM componen
 | `@rosettadash/web-components/wasm` | `<rd-wasm-media>` (equirect-extract) |
 | `@rosettadash/core` | `buildEquirectExtractFilter`, defaults |
 
+## Install for consumers (DAS-99)
+
+Prefer scoped packages — **not** unscoped `rosettadash`. Full recipes: [39-npm-consumer-install.md](./39-npm-consumer-install.md).
+
+```bash
+# After scoped publish:
+npm install @rosettadash/web-components @rosettadash/core
+
+# Or local pack from RosettaDash:
+npm run pack:consumer
+# then in ffmp3Console: npm install ../dashbuilder/rosettadash/*.tgz
+```
+
 ## Local link (monorepo dev)
 
 From RosettaDash root:

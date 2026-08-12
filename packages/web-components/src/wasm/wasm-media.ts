@@ -2,7 +2,7 @@ import {
   buildEquirectExtractFilter,
   DEFAULT_EQUIRECT_FLAT_CROP,
 } from '@rosettadash/core';
-import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils.js';
 
 export const DB_WASM_MEDIA_TAG = 'rd-wasm-media';
 

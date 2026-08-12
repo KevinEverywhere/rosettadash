@@ -3,7 +3,7 @@ import {
   DEFAULT_EQUIRECT_FLAT_CROP,
   DEFAULT_EQUIRECT_SOURCE,
 } from '@rosettadash/core';
-import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+import { BASE_STYLES, defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils.js';
 
 export const DB_EQUIRECT_VIEWPORT_TAG = 'rd-equirect-viewport';
 

@@ -1,11 +1,44 @@
-# core
+# `@rosettadash/core`
 
-This library was generated with [Nx](https://nx.dev).
+Shared types, defaults, and media helpers for RosettaDash runtimes.
+
+**Author:** Kevin Ready \<kevin@planetkevin.com\>
+
+## Install
+
+```bash
+npm install @rosettadash/core
+```
+
+Sibling apps (before registry publish) can use local pack / `file:` — see [docs/39-npm-consumer-install.md](../../docs/39-npm-consumer-install.md).
+
+## Media filters (ffmp3 / FFmpeg)
+
+```ts
+import {
+  buildEquirectExtractFilter,
+  buildEquirectFlatCropFilter,
+  buildEquirectRectilinearFilter,
+} from '@rosettadash/core';
+
+const vf = buildEquirectExtractFilter('rectilinear', {
+  yaw: 30,
+  pitch: -10,
+  horizontalFov: 90,
+  outputWidth: 1280,
+  outputHeight: 720,
+});
+```
 
 ## Building
 
-Run `nx build core` to build the library.
+```bash
+nx build core
+npm pack ./dist/packages/core --dry-run
+```
 
-## Running unit tests
+## Tests
 
-Run `nx test core` to execute the unit tests via [Jest](https://jestjs.io).
+```bash
+nx test core
+```

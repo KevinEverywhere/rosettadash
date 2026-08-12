@@ -1,5 +1,5 @@
 import { DEFAULT_EQUIRECT_SOURCE } from '@rosettadash/core';
-import { defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils';
+import { defineRosettaElement, type DashRow, readNumber, readString } from '../lib/element-utils.js';
 
 export const DB_VIDEO_SOURCE_TAG = 'rd-video-source';
 export const VIDEO_SOURCE_STYLESHEET = './video-source.css';

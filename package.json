@@ -1,6 +1,8 @@
 {
   "name": "rosettadash",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "RosettaDash product monorepo (visual dashboard builder). Not a component library — install @rosettadash/web-components for UI elements.",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,7 +24,9 @@
     "lint": "nx run-many -t lint -p client,server,core,ui-primitives,web-components,runtime-react,runtime-angular,runtime-vue,runtime-svelte,exporters-react,exporters-nest,exporters-angular,exporters-vue,exporters-express,exporters-next,exporters-nuxt,exporters-svelte,exporters-web-components,exporters-mongodb,exporters-mysql,exporters-supabase",
     "typecheck": "nx run-many -t typecheck -p client,server,core,ui-primitives,web-components,runtime-react,runtime-angular,runtime-vue,runtime-svelte,exporters-react,exporters-nest,exporters-angular,exporters-vue,exporters-express,exporters-next,exporters-nuxt,exporters-svelte,exporters-web-components,exporters-mongodb,exporters-mysql,exporters-supabase",
     "verify": "npm run lint && npm run typecheck && npm run test",
-    "pack:web-components": "nx build web-components && npm pack ./dist/packages/web-components --dry-run",
+    "pack:core": "nx build core && npm pack ./dist/packages/core --dry-run",
+    "pack:web-components": "nx build web-components && node scripts/bundle-browser-media.mjs && npm pack ./dist/packages/web-components --dry-run",
+    "pack:consumer": "nx run-many -t build -p core,web-components && node scripts/bundle-browser-media.mjs && npm pack ./dist/packages/core && npm pack ./dist/packages/web-components",
     "setup:e2e": "playwright install chromium",
     "e2e:prep": "node scripts/check-e2e-ports.mjs",
     "e2e": "npm run e2e:prep && nx e2e client-e2e",

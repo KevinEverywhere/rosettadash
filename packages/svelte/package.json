@@ -2,6 +2,7 @@
   "name": "@rosettadash/svelte",
   "version": "0.0.1",
   "description": "RosettaDash svelte runtime - same group/component paths as web-components",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",
   "private": false,
@@ -45,12 +46,15 @@
       "default": "./src/visual/media/equirect-viewport/EquirectViewport.svelte"
     }
   },
-  "files": ["src", "README.md"],
+  "files": ["src", "README.md", "LICENSE"],
   "dependencies": {
     "@rosettadash/web-components": "*",
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

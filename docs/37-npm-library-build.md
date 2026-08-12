@@ -19,7 +19,7 @@ import { … } from '@rosettadash/<runtime>/<group>/…/<component>';
 | `@rosettadash/vue` | `runtime-vue` | Vue adapter package |
 | `@rosettadash/svelte` | `runtime-svelte` | Svelte adapter package |
 
-Unscoped root `rosettadash` remains the product/clone workspace (`private: true`) — not a component barrel.
+Unscoped root `rosettadash` remains the product/clone workspace (`private: true`) — not a component barrel. Author on publishable packages: `Kevin Ready <kevin@planetkevin.com>`. Consumer install / ffmp3 dogfood: [DAS-99](https://planetkevin.atlassian.net/browse/DAS-99) / [docs/39](./39-npm-consumer-install.md).
 
 ## Pilot + recipe exports
 

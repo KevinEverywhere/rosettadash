@@ -2,6 +2,7 @@
   "name": "@rosettadash/react",
   "version": "0.0.1",
   "description": "RosettaDash react runtime - same group/component paths as web-components",
+  "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",
   "private": false,
@@ -41,7 +42,8 @@
   },
   "files": [
     "src",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "dependencies": {
     "@rosettadash/web-components": "*",
@@ -55,5 +57,8 @@
     "react-dom": {
       "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

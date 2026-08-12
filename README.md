@@ -15,17 +15,18 @@ RosettaDash is intended to run on **your machine** during development. There is 
 | **Product (`rosettadash`)** | Contribute, run the visual builder, extend the monorepo | `git clone` this repo → `npm install` → `npm start` |
 | **Components (scoped npm)** | Drop typed elements into an existing app | `npm install @rosettadash/<runtime>` → `@rosettadash/<runtime>/<group>/…/<component>` |
 
-Unscoped **rosettadash** is the product (same as clone) — not a component barrel. Library API: [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90); `0.1.0` waits on full taxonomy. Until then: clone/build or standalone export zips.
+Unscoped **rosettadash** is the product (same as clone) — not a component barrel. Library API: [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90); full taxonomy `0.1.0` waits on [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93). Consumer install path: [DAS-99](https://planetkevin.atlassian.net/browse/DAS-99) / [docs/39](docs/39-npm-consumer-install.md).
+
+**Author:** Kevin Ready \<kevin@planetkevin.com\>
 
 ```ts
-// Planned consumer API (see docs/33–36) — not published as 0.1.0 yet
-// Same <group>/…/<component> on every runtime (web-components default)
+// Consumer API — install scoped packages (not unscoped rosettadash)
 import { Accordion } from '@rosettadash/web-components/layout/accordion';
 import { Accordion } from '@rosettadash/react/layout/accordion';
-import { VideoSource } from '@rosettadash/vue/visual/media/video-source';
+import { registerRosettaDashMediaElements } from '@rosettadash/web-components/media';
 ```
 
-Details: [npm prep](docs/33-npm-package-prep.md) · [Public API](docs/34-public-component-api.md) · [Styling](docs/35-styling-and-classnames.md) · [Post-90 plan](docs/36-npm-post-90-plan.md).
+Details: [npm prep](docs/33-npm-package-prep.md) · [Public API](docs/34-public-component-api.md) · [Styling](docs/35-styling-and-classnames.md) · [Post-90 plan](docs/36-npm-post-90-plan.md) · [Consumer install](docs/39-npm-consumer-install.md).
 
 ## Monorepo
 
@@ -295,8 +296,9 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-89](https://planetkevin.atlassian.net/browse/DAS-89)** — Resizable and collapsible Components/Inspector panels with centered canvas  
-Branch: `feature/DAS-89-resizable-collapsible-builder-panels`
+**[DAS-99](https://planetkevin.atlassian.net/browse/DAS-99)** — Verify npm consumer install path for `@rosettadash/web-components` (ffmp3Console dogfood)  
+Branch: `feature/DAS-99-npm-consumer-web-components-ffmp3`  
+Related: [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3)
 
 ## License
 

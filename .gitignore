@@ -38,6 +38,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# npm pack artifacts (DAS-99 consumer tarballs)
+*.tgz
+
 .nx/cache
 .nx/workspace-data
 .nx/migrate-runs

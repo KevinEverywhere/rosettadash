@@ -1,4 +1,4 @@
-import { RdAccordionElement, registerRdAccordion, RD_ACCORDION_TAG } from './accordion';
+import { RdAccordionElement, registerRdAccordion, RD_ACCORDION_TAG } from './accordion.js';
 
 describe('@rosettadash/web-components/layout/accordion', () => {
   beforeAll(() => {

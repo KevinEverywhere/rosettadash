@@ -1,5 +1,5 @@
 import { buildEquirectFlatCropFilter } from '@rosettadash/core';
-import { RdWasmMediaElement, DB_WASM_MEDIA_TAG, registerRdWasmMedia } from './wasm-media';
+import { RdWasmMediaElement, DB_WASM_MEDIA_TAG, registerRdWasmMedia } from './wasm-media.js';
 
 describe('@rosettadash/web-components/wasm', () => {
   beforeAll(() => {

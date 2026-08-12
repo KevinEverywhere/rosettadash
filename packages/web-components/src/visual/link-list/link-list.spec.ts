@@ -2,7 +2,7 @@ import {
   RdLinkListElement,
   registerRdLinkList,
   RD_LINK_LIST_TAG,
-} from './link-list';
+} from './link-list.js';
 
 describe('@rosettadash/web-components/visual/link-list', () => {
   beforeAll(() => {

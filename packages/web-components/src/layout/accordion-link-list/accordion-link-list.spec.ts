@@ -3,7 +3,7 @@ import {
   RdAccordionLinkListElement,
   registerRdAccordionLinkList,
   RD_ACCORDION_LINK_LIST_TAG,
-} from './accordion-link-list';
+} from './accordion-link-list.js';
 
 describe('@rosettadash/web-components/layout/accordion-link-list', () => {
   beforeAll(() => {

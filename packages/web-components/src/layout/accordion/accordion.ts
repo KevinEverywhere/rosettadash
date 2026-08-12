@@ -1,4 +1,4 @@
-import { defineRosettaElement, readString } from '../../lib/element-utils';
+import { defineRosettaElement, readString } from '../../lib/element-utils.js';
 
 export const RD_ACCORDION_TAG = 'rd-accordion';
 
