@@ -1,6 +1,6 @@
 {
   "name": "@rosettadash/web-components",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "RosettaDash Web Components runtime - default public UI package",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
@@ -80,7 +80,7 @@
     }
   },
   "dependencies": {
-    "@rosettadash/core": "0.0.1",
+    "@rosettadash/core": "0.1.0",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

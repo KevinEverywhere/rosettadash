@@ -16,7 +16,7 @@ import { registerRosettaDashMediaElements } from '@rosettadash/web-components/me
 
 Same subpaths on every runtime: `@rosettadash/react/layout/accordion`, `@rosettadash/vue/visual/media/video-source`, etc. See [docs/34-public-component-api.md](./34-public-component-api.md).
 
-Until registry publish, use **local pack** (`npm run pack:consumer`) or `file:` / tarball install.
+Until scoped packages are on the registry, use **local pack** (`npm run pack:consumer`) or `file:` / tarball install. Published versions: `@rosettadash/core@0.1.0`, `@rosettadash/web-components@0.1.0`.
 
 ## Critical distinction
 
@@ -60,10 +60,10 @@ Keep Three.js live sphere (`EquirectSphereViewport`) in ffmp3; bridge pose ↔ `
 
 ## Install paths
 
-### A) Registry (after scoped publish)
+### A) Registry (recommended)
 
 ```bash
-npm install @rosettadash/web-components @rosettadash/core
+npm install @rosettadash/web-components@0.1.0 @rosettadash/core@0.1.0
 ```
 
 ### B) Local tarballs (dogfood before registry)
@@ -73,7 +73,7 @@ From RosettaDash:
 ```bash
 cd /Volumes/Three/apps/dashbuilder/rosettadash
 npm run pack:consumer
-# writes rosettadash-core-0.0.1.tgz and rosettadash-web-components-0.0.1.tgz in repo root
+# writes rosettadash-core-0.1.0.tgz and rosettadash-web-components-0.1.0.tgz in repo root
 ```
 
 From ffmp3Console:
@@ -81,8 +81,8 @@ From ffmp3Console:
 ```bash
 cd /Volumes/Three/apps/ffmp3Console
 npm install \
-  ../dashbuilder/rosettadash/rosettadash-core-0.0.1.tgz \
-  ../dashbuilder/rosettadash/rosettadash-web-components-0.0.1.tgz
+  ../dashbuilder/rosettadash/rosettadash-core-0.1.0.tgz \
+  ../dashbuilder/rosettadash/rosettadash-web-components-0.1.0.tgz
 ```
 
 ### C) `file:` deps (local monorepo path)

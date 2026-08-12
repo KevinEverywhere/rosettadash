@@ -1,6 +1,6 @@
 {
   "name": "@rosettadash/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "RosettaDash shared types, defaults, and media filter helpers (used by runtime packages)",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "license": "MIT",
