@@ -38,6 +38,11 @@
       "types": "./src/visual/media/equirect-viewport/index.d.ts",
       "import": "./src/visual/media/equirect-viewport/index.js",
       "default": "./src/visual/media/equirect-viewport/index.js"
+    },
+    "./wasm/wasm-media": {
+      "types": "./src/wasm/wasm-media/index.d.ts",
+      "import": "./src/wasm/wasm-media/index.js",
+      "default": "./src/wasm/wasm-media/index.js"
     }
   },
   "files": [

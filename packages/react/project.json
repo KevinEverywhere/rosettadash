@@ -25,7 +25,8 @@
           "packages/react/src/layout/accordion-link-list/index.ts",
           "packages/react/src/visual/link-list/index.ts",
           "packages/react/src/visual/media/video-source/index.ts",
-          "packages/react/src/visual/media/equirect-viewport/index.ts"
+          "packages/react/src/visual/media/equirect-viewport/index.ts",
+          "packages/react/src/wasm/wasm-media/index.ts"
         ],
         "generateExportsField": true
       }

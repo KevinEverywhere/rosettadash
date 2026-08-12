@@ -67,6 +67,9 @@
       "@rosettadash/react/visual/media/equirect-viewport": [
         "./packages/react/src/visual/media/equirect-viewport/index.ts"
       ],
+      "@rosettadash/react/wasm/wasm-media": [
+        "./packages/react/src/wasm/wasm-media/index.ts"
+      ],
       "@rosettadash/angular": ["./packages/angular/src/index.ts"],
       "@rosettadash/angular/layout/accordion": [
         "./packages/angular/src/layout/accordion/index.ts"

@@ -4,6 +4,18 @@ RosettaDash **React** runtime. Import paths match `@rosettadash/web-components`.
 
 Peer dependency: `react` >= 18 (`react-dom` recommended for apps).
 
+**Docs:** [React runtime integration](../../docs/40-react-runtime-integration.md) · [Stack styling guides](../../docs/41-stack-styling-guides.md)
+
+## Styling modes
+
+| Mode | Import |
+|------|--------|
+| Minimal | (none) — structure + `rd-*` classnames |
+| Tokens | `@rosettadash/web-components/tokens.css` |
+| Themed default | `@rosettadash/web-components/styles.css` |
+
+Native React components (accordion, link-list) inherit your stack CSS. CE hosts (media, wasm) accept `className` / `style` and `--rd-*` variables on the host.
+
 ## Accordion
 
 ```tsx
@@ -20,9 +32,9 @@ export function Example() {
 }
 ```
 
-Uncontrolled mode still works via `defaultOpen`.
+Panel content stays mounted when closed; pair with `styles.css` or your own `.rd-accordion__panel { display: none }` rules.
 
-## Recipes (DAS-94)
+## Recipes
 
 ```tsx
 import { LinkList } from '@rosettadash/react/visual/link-list';
@@ -45,13 +57,12 @@ export function ResourcesNav() {
 }
 ```
 
-## Media wrappers
+## Media & WASM wrappers
 
 ```tsx
 import { VideoSource } from '@rosettadash/react/visual/media/video-source';
 import { EquirectViewport } from '@rosettadash/react/visual/media/equirect-viewport';
+import { WasmMedia } from '@rosettadash/react/wasm/wasm-media';
 ```
 
-Thin hosts over the WC runtime (same paths as `@rosettadash/web-components`).
-
-Components render with `rd-*` BEM classnames. Pair with `@rosettadash/web-components/styles.css` for the opt-in light theme.
+Thin hosts over the WC runtime (same paths as `@rosettadash/web-components`). All components support `forwardRef`.

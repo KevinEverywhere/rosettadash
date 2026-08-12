@@ -105,6 +105,8 @@ Library CSS must avoid:
 
 - [npm package prep](./33-npm-package-prep.md)
 - [Public component API](./34-public-component-api.md)
+- [React runtime integration](./40-react-runtime-integration.md)
+- [Stack styling guides](./41-stack-styling-guides.md)
 - [npm library build](./37-npm-library-build.md)
 - [App component CSS convention](./28-app-component-css-convention.md)
 - [Standalone-first export](./32-standalone-first-export.md)

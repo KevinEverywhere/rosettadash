@@ -1,10 +1,19 @@
-import { useEffect, useRef, type RefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  type Ref,
+  type RefCallback,
+} from 'react';
+import { mergeRef } from './merge-ref.js';
 
 type AttrValue = string | number | boolean | undefined | null;
 
 export interface CustomElementHostOptions {
   register: () => void;
   attrs?: Record<string, string>;
+  /** Prop keys synced via `element.setProperty(name, value)` when available. */
+  properties?: string[];
   events?: Record<string, string>;
 }
 
@@ -33,18 +42,39 @@ function syncAttributes(
  * Thin React host around a registered custom element.
  * Attributes use setAttribute only (WC getters often have no setters).
  */
+function syncProperties(
+  el: HTMLElement,
+  propertyValues: Record<string, unknown>,
+  propertyKeys: string[],
+): void {
+  const setProperty = (el as { setProperty?: (name: string, value: unknown) => void })
+    .setProperty;
+  if (typeof setProperty !== 'function') {
+    return;
+  }
+  for (const key of propertyKeys) {
+    setProperty.call(el, key, propertyValues[key]);
+  }
+}
+
 export function useCustomElementHost(
   options: CustomElementHostOptions,
   values: Record<string, AttrValue>,
   handlers: Record<string, ((detail: unknown) => void) | undefined> = {},
-): RefObject<HTMLElement | null> {
+  forwardedRef?: Ref<HTMLElement | null>,
+  propertyValues: Record<string, unknown> = {},
+): RefCallback<HTMLElement | null> {
   const host = useRef<HTMLElement | null>(null);
   const attrMap = options.attrs ?? {};
   const eventMap = options.events ?? {};
+  const registerRef = useRef(options.register);
+  registerRef.current = options.register;
 
   useEffect(() => {
-    options.register();
-  }, [options]);
+    registerRef.current();
+  }, []);
+
+  const propertyKeys = options.properties ?? [];
 
   useEffect(() => {
     const el = host.current;
@@ -52,6 +82,7 @@ export function useCustomElementHost(
       return;
     }
     syncAttributes(el, values, attrMap);
+    syncProperties(el, propertyValues, propertyKeys);
   });
 
   useEffect(() => {
@@ -78,5 +109,5 @@ export function useCustomElementHost(
     };
   });
 
-  return host;
+  return useCallback(mergeRef(host, forwardedRef), [forwardedRef]);
 }

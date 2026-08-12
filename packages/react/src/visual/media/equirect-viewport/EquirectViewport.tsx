@@ -1,10 +1,10 @@
-import { createElement, type CSSProperties } from 'react';
+import { createElement, forwardRef, type CSSProperties } from 'react';
 import {
   DB_EQUIRECT_VIEWPORT_TAG,
   registerRdEquirectViewport,
   type EquirectPreviewMode,
 } from '@rosettadash/web-components/visual/media/equirect-viewport';
-import { useCustomElementHost } from '../../../lib/custom-element-host';
+import { useCustomElementHost } from '../../../lib/custom-element-host.js';
 
 export type { EquirectPreviewMode };
 
@@ -30,43 +30,8 @@ export interface EquirectViewportProps {
 }
 
 /** React wrapper around `<rd-equirect-viewport>`. */
-export function EquirectViewport({
-  label,
-  previewMode,
-  sourceWidth,
-  sourceHeight,
-  cropX,
-  cropY,
-  cropWidth,
-  cropHeight,
-  outputWidth,
-  outputHeight,
-  yaw,
-  pitch,
-  horizontalFov,
-  className,
-  style,
-  onCropRegion,
-}: EquirectViewportProps) {
-  const host = useCustomElementHost(
-    {
-      register: registerRdEquirectViewport,
-      attrs: {
-        previewMode: 'preview-mode',
-        sourceWidth: 'source-width',
-        sourceHeight: 'source-height',
-        cropX: 'crop-x',
-        cropY: 'crop-y',
-        cropWidth: 'crop-width',
-        cropHeight: 'crop-height',
-        outputWidth: 'output-width',
-        outputHeight: 'output-height',
-        horizontalFov: 'horizontal-fov',
-      },
-      events: {
-        'crop-region': 'onCropRegion',
-      },
-    },
+export const EquirectViewport = forwardRef<HTMLElement, EquirectViewportProps>(
+  function EquirectViewport(
     {
       label,
       previewMode,
@@ -81,15 +46,56 @@ export function EquirectViewport({
       yaw,
       pitch,
       horizontalFov,
+      className,
+      style,
+      onCropRegion,
     },
-    {
-      onCropRegion: onCropRegion as ((detail: unknown) => void) | undefined,
-    },
-  );
+    ref,
+  ) {
+    const hostRef = useCustomElementHost(
+      {
+        register: registerRdEquirectViewport,
+        attrs: {
+          previewMode: 'preview-mode',
+          sourceWidth: 'source-width',
+          sourceHeight: 'source-height',
+          cropX: 'crop-x',
+          cropY: 'crop-y',
+          cropWidth: 'crop-width',
+          cropHeight: 'crop-height',
+          outputWidth: 'output-width',
+          outputHeight: 'output-height',
+          horizontalFov: 'horizontal-fov',
+        },
+        events: {
+          'crop-region': 'onCropRegion',
+        },
+      },
+      {
+        label,
+        previewMode,
+        sourceWidth,
+        sourceHeight,
+        cropX,
+        cropY,
+        cropWidth,
+        cropHeight,
+        outputWidth,
+        outputHeight,
+        yaw,
+        pitch,
+        horizontalFov,
+      },
+      {
+        onCropRegion: onCropRegion as ((detail: unknown) => void) | undefined,
+      },
+      ref,
+    );
 
-  return createElement(DB_EQUIRECT_VIEWPORT_TAG, {
-    ref: host,
-    className,
-    style,
-  });
-}
+    return createElement(DB_EQUIRECT_VIEWPORT_TAG, {
+      ref: hostRef,
+      className,
+      style,
+    });
+  },
+);

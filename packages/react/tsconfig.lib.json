@@ -6,7 +6,11 @@
     "jsx": "react-jsx",
     "lib": ["es2020", "dom"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../web-components/src/types/ffmpeg.d.ts"
+  ],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",

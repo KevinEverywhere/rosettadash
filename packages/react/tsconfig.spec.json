@@ -15,6 +15,7 @@
     "src/**/*.spec.tsx",
     "src/**/*.d.ts",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "../web-components/src/types/ffmpeg.d.ts"
   ]
 }

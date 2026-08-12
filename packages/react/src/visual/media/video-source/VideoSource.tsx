@@ -1,9 +1,9 @@
-import { createElement, type CSSProperties } from 'react';
+import { createElement, forwardRef, type CSSProperties } from 'react';
 import {
   DB_VIDEO_SOURCE_TAG,
   registerRdVideoSource,
 } from '@rosettadash/web-components/visual/media/video-source';
-import { useCustomElementHost } from '../../../lib/custom-element-host';
+import { useCustomElementHost } from '../../../lib/custom-element-host.js';
 
 export interface VideoSourceProps {
   label?: string;
@@ -22,17 +22,20 @@ export interface VideoSourceProps {
 }
 
 /** React wrapper around `<rd-video-source>`. */
-export function VideoSource({
-  label,
-  accept,
-  sourceWidth,
-  sourceHeight,
-  className,
-  style,
-  onVideoFile,
-  onMetadata,
-}: VideoSourceProps) {
-  const host = useCustomElementHost(
+export const VideoSource = forwardRef<HTMLElement, VideoSourceProps>(function VideoSource(
+  {
+    label,
+    accept,
+    sourceWidth,
+    sourceHeight,
+    className,
+    style,
+    onVideoFile,
+    onMetadata,
+  },
+  ref,
+) {
+  const hostRef = useCustomElementHost(
     {
       register: registerRdVideoSource,
       attrs: {
@@ -49,11 +52,12 @@ export function VideoSource({
       onVideoFile: onVideoFile as ((detail: unknown) => void) | undefined,
       onMetadata: onMetadata as ((detail: unknown) => void) | undefined,
     },
+    ref,
   );
 
   return createElement(DB_VIDEO_SOURCE_TAG, {
-    ref: host,
+    ref: hostRef,
     className,
     style,
   });
-}
+});

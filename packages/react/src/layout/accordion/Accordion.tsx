@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   useId,
   useState,
   type CSSProperties,
@@ -19,16 +20,19 @@ export interface AccordionProps {
   onToggle?: (open: boolean) => void;
 }
 
-export function Accordion({
-  title,
-  open: openProp,
-  defaultOpen = false,
-  className,
-  style,
-  children,
-  onOpenChange,
-  onToggle,
-}: AccordionProps) {
+export const Accordion = forwardRef<HTMLElement, AccordionProps>(function Accordion(
+  {
+    title,
+    open: openProp,
+    defaultOpen = false,
+    className,
+    style,
+    children,
+    onOpenChange,
+    onToggle,
+  },
+  ref,
+) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const isControlled = openProp !== undefined;
   const open = isControlled ? Boolean(openProp) : uncontrolledOpen;
@@ -51,7 +55,12 @@ export function Accordion({
     .join(' ');
 
   return (
-    <section className={rootClass} style={style} data-testid="rd-accordion">
+    <section
+      ref={ref}
+      className={rootClass}
+      style={style}
+      data-testid="rd-accordion"
+    >
       <button
         type="button"
         className="rd-accordion__header"
@@ -64,11 +73,9 @@ export function Accordion({
           ›
         </span>
       </button>
-      {open ? (
-        <div className="rd-accordion__panel" id={panelId} role="region">
-          {children}
-        </div>
-      ) : null}
+      <div className="rd-accordion__panel" id={panelId} role="region">
+        {children}
+      </div>
     </section>
   );
-}
+});

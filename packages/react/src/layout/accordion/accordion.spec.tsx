@@ -1,3 +1,4 @@
+import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { Accordion } from './Accordion';
@@ -10,16 +11,16 @@ describe('@rosettadash/react/layout/accordion', () => {
       </Accordion>,
     );
 
-    expect(screen.getByTestId('rd-accordion').className).not.toContain(
-      'rd-accordion--open',
-    );
-    expect(screen.queryByText('Body')).toBeNull();
+    const root = screen.getByTestId('rd-accordion');
+    const trigger = screen.getByRole('button', { name: /Resources/i });
 
-    fireEvent.click(screen.getByRole('button', { name: /Resources/i }));
-    expect(screen.getByTestId('rd-accordion').className).toContain(
-      'rd-accordion--open',
-    );
+    expect(root.className).not.toContain('rd-accordion--open');
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(screen.getByText('Body')).toBeTruthy();
+
+    fireEvent.click(trigger);
+    expect(root.className).toContain('rd-accordion--open');
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
   });
 
   it('honors defaultOpen', () => {
@@ -28,6 +29,7 @@ describe('@rosettadash/react/layout/accordion', () => {
         <span>Hi</span>
       </Accordion>,
     );
+    expect(screen.getByRole('button').getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByText('Hi')).toBeTruthy();
   });
 
@@ -42,8 +44,21 @@ describe('@rosettadash/react/layout/accordion', () => {
     }
 
     render(<Harness />);
-    expect(screen.queryByText('Panel')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: /Controlled/i }));
+    const trigger = screen.getByRole('button', { name: /Controlled/i });
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(trigger);
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByText('Panel')).toBeTruthy();
+  });
+
+  it('forwards ref to the root section', () => {
+    const ref = createRef<HTMLElement>();
+    render(
+      <Accordion ref={ref} title="Ref">
+        <p>Body</p>
+      </Accordion>,
+    );
+    expect(ref.current?.tagName).toBe('SECTION');
+    expect(ref.current?.getAttribute('data-testid')).toBe('rd-accordion');
   });
 });

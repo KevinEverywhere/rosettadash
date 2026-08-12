@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { forwardRef, type CSSProperties } from 'react';
 
 /** Single link item for visual/link-list. */
 export interface LinkListItem {
@@ -14,12 +14,10 @@ export interface LinkListProps {
   style?: CSSProperties;
 }
 
-export function LinkList({
-  items = [],
-  className,
-  dense = false,
-  style,
-}: LinkListProps) {
+export const LinkList = forwardRef<HTMLUListElement, LinkListProps>(function LinkList(
+  { items = [], className, dense = false, style },
+  ref,
+) {
   const rootClass = [
     'rd-link-list',
     dense ? 'rd-link-list--dense' : '',
@@ -29,12 +27,9 @@ export function LinkList({
     .join(' ');
 
   return (
-    <ul className={rootClass} style={style} data-testid="rd-link-list">
+    <ul ref={ref} className={rootClass} style={style} data-testid="rd-link-list">
       {items.map((item) => (
-        <li
-          className="rd-link-list__item"
-          key={`${item.href}:${item.label}`}
-        >
+        <li className="rd-link-list__item" key={`${item.href}:${item.label}`}>
           <a className="rd-link-list__link" href={item.href}>
             {item.label}
           </a>
@@ -42,4 +37,4 @@ export function LinkList({
       ))}
     </ul>
   );
-}
+});
