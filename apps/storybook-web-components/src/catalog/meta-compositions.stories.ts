@@ -4,6 +4,8 @@ import {
   mountMetaComposition,
   mountMetaCompositionCoverage,
 } from '../../../../tools/storybook-shared/meta-compositions/mount-meta-composition.js';
+import { metaCompositionStoryConfig } from '../../../../tools/storybook-shared/meta-compositions/meta-composition-story-config.ts';
+import { storybookAggregateStoryParameters } from '../../../../tools/storybook-shared/storybook-actions.ts';
 import '../../../../tools/storybook-shared/meta-compositions/meta-composition-styles.css';
 import '../../../../tools/storybook-shared/palette-catalog/palette-demo-styles.css';
 
@@ -13,7 +15,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          '**Live dashboard and recipe layouts** — each meta composition shows a **layout diagram** (schematic) beside the **live preview** (stacked on narrow viewports). Together they cover every taxonomy type and shipped npm `rd-*` atom.',
+          '**Live dashboard and recipe layouts** — use **Controls** to tune KPIs, charts, media framing, and filters in context. **Actions** logs table and custom-element events; **Interactions** runs smoke flows (time preset → table drill-down, news row select, etc.).',
       },
     },
   },
@@ -28,9 +30,13 @@ function compositionStory(id: string): Story {
   if (!definition) {
     throw new Error(`Unknown meta composition: ${id}`);
   }
+  const config = metaCompositionStoryConfig(id);
   return {
     name: definition.title,
-    render: () => mountMetaComposition(definition),
+    args: config.args,
+    argTypes: config.argTypes,
+    render: (args) => mountMetaComposition(definition, args as Record<string, unknown>, config.demoOverrides),
+    play: config.play,
     parameters: {
       docs: {
         description: {
@@ -54,4 +60,7 @@ export const NavigationLayoutShell = compositionStory('navigation-shell');
 export const ComponentCoverageAudit: Story = {
   name: 'Component coverage audit',
   render: () => mountMetaCompositionCoverage(),
+  parameters: {
+    ...storybookAggregateStoryParameters,
+  },
 };

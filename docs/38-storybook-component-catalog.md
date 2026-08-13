@@ -32,7 +32,7 @@ Primary navigation:
 
 1. **Getting Started** — intro + component index with deep links
 2. **Catalog / Palette** — one story per builder group + All components scroll
-3. **Catalog / Meta compositions** — dashboard recipes (diagram + live preview + XML)
+3. **Catalog / Meta compositions** — dashboard recipes (diagram + live preview + component XML) with **Controls**, **Actions**, and **Interactions** on real in-context demos (DAS-114)
 
 Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed from **web-components** in DAS-110 — coverage lives in Palette, Meta compositions, and **NPM layout atoms (rd-*)**.
 

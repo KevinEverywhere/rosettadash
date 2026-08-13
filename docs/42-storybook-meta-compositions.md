@@ -41,6 +41,7 @@ Users browse **Palette** to learn a single component; **Meta compositions** to u
 - Mount + wiring: `tools/storybook-shared/meta-compositions/mount-meta-composition.ts`
 - Plain component XML: `tools/storybook-shared/palette-catalog/render-component-markup.ts`
 - Panel tabs (diagram, live preview, component XML): `wire-meta-composition-panels.ts` — visual tabs show diagram + live side by side (≥960px); XML tab shows markup only
+- **Controls / Actions / Interactions (DAS-114):** `meta-composition-story-config.ts` — story args drive live KPI, chart, timer, media, and news demos inside each composition; `play` tests cover drill-down flows
 - Reuses palette demo markup and `wireCatalogInteractivity()` from the palette catalog engine
 - Styles: `meta-composition-styles.css` + shared `palette-demo-styles.css`
 

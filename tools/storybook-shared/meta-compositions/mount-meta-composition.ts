@@ -29,23 +29,26 @@ function esc(value: string): string {
     .replace(/"/g, '&quot;');
 }
 
-function renderNpmAtom(atomId: string): string {
+function renderNpmAtom(atomId: string, overrides: Record<string, unknown> = {}): string {
   switch (atomId) {
     case 'npm.rd-accordion':
-      return `<rd-accordion heading="Resources" default-open><p>Slot content for filters, copy, or nested lists.</p></rd-accordion>`;
+      return `<rd-accordion heading="${esc(String(overrides.heading ?? 'Resources'))}" default-open><p>Slot content for filters, copy, or nested lists.</p></rd-accordion>`;
     case 'npm.rd-link-list':
       return `<rd-link-list items='${navigationLinkItemsJson}'></rd-link-list>`;
     case 'npm.rd-accordion-link-list':
-      return `<rd-accordion-link-list heading="On this page" default-open items='${documentationTocItemsJson}'></rd-accordion-link-list>`;
+      return `<rd-accordion-link-list heading="${esc(String(overrides.heading ?? 'On this page'))}" default-open items='${documentationTocItemsJson}'></rd-accordion-link-list>`;
     default:
       return `<div class="preview-fallback"><code>${esc(atomId)}</code></div>`;
   }
 }
 
-function renderItem(itemId: string): { label: string; html: string; markup: string } {
+function renderItem(
+  itemId: string,
+  demoOverrides: Record<string, Record<string, unknown>> = {},
+): { label: string; html: string; markup: string } {
   if (itemId.startsWith('npm.')) {
     const label = itemId.replace('npm.rd-', 'rd-').replace('npm.', '');
-    const html = renderNpmAtom(itemId);
+    const html = renderNpmAtom(itemId, demoOverrides[itemId] ?? {});
     return { label, html, markup: html };
   }
 
@@ -60,12 +63,15 @@ function renderItem(itemId: string): { label: string; html: string; markup: stri
 
   return {
     label: definition.label,
-    html: renderPaletteDemo(itemId, definition),
+    html: renderPaletteDemo(itemId, definition, demoOverrides[itemId] ?? {}),
     markup: renderPlainComponentMarkup(definition),
   };
 }
 
-function buildLivePanel(definition: MetaCompositionDefinition): HTMLElement {
+function buildLivePanel(
+  definition: MetaCompositionDefinition,
+  demoOverrides: Record<string, Record<string, unknown>> = {},
+): HTMLElement {
   const live = document.createElement('div');
   live.className = 'rd-meta-composition__live';
 
@@ -84,7 +90,7 @@ function buildLivePanel(definition: MetaCompositionDefinition): HTMLElement {
     sectionEl.appendChild(grid);
 
     section.items.forEach((itemId, itemIndex) => {
-      const { label, html } = renderItem(itemId);
+      const { label, html } = renderItem(itemId, demoOverrides);
       const item = document.createElement('div');
       item.className = 'rd-meta-composition__item';
       item.dataset.componentType = itemId;
@@ -431,7 +437,12 @@ function wireMetaCompositionNavigation(root: HTMLElement): void {
 }
 
 /** Mount a live meta composition with diagram, preview, and component XML panels. */
-export function mountMetaComposition(definition: MetaCompositionDefinition): HTMLElement {
+export function mountMetaComposition(
+  definition: MetaCompositionDefinition,
+  storyArgs: Record<string, unknown> = {},
+  demoOverridesFromArgs?: (args: Record<string, unknown>) => Record<string, Record<string, unknown>>,
+): HTMLElement {
+  const demoOverrides = demoOverridesFromArgs?.(storyArgs) ?? {};
   const root = document.createElement('article');
   root.className = 'rd-meta-composition';
   root.dataset.compositionId = definition.id;
@@ -466,7 +477,7 @@ export function mountMetaComposition(definition: MetaCompositionDefinition): HTM
   diagramAside.innerHTML = renderCompositionDiagram(definition);
   split.appendChild(diagramAside);
 
-  split.appendChild(buildLivePanel(definition));
+  split.appendChild(buildLivePanel(definition, demoOverrides));
   split.appendChild(buildXmlPanel(definition));
   workspace.appendChild(split);
   root.appendChild(workspace);

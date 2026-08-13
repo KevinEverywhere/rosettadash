@@ -3,11 +3,13 @@ import {
   mountComponentCountIndex,
   mountStartHere,
 } from '../../../../tools/storybook-shared/getting-started/mount-getting-started';
+import { storybookAggregateStoryParameters } from '../../../../tools/storybook-shared/storybook-actions.ts';
 import '../../../../tools/storybook-shared/getting-started/getting-started-styles.css';
 
 const meta: Meta = {
   title: 'Getting Started/Introduction',
   parameters: {
+    ...storybookAggregateStoryParameters,
     docs: {
       description: {
         component:

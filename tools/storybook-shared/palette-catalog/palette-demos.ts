@@ -64,12 +64,16 @@ function pieGradient(): string {
 const wasmFilter = buildEquirectExtractFilter('flat-crop', DEFAULT_EQUIRECT_FLAT_CROP);
 
 /** Render interactive demo markup for a component type. */
-export function renderPaletteDemo(type: string, definition: ComponentDefinition): string {
+export function renderPaletteDemo(
+  type: string,
+  definition: ComponentDefinition,
+  overrides: Record<string, unknown> = {},
+): string {
   const label = esc(definition.label);
 
   switch (type) {
     case 'visual.input.text':
-      return `<label class="preview-field"><span class="preview-field__label">${label}</span><input type="text" class="preview-input" placeholder="Customer name" /></label>`;
+      return `<label class="preview-field"><span class="preview-field__label">${label}</span><input type="text" class="preview-input" placeholder="${esc(String(overrides.placeholder ?? 'Customer name'))}" /></label>`;
 
     case 'visual.input.select':
       return `<div class="preview-field"><span class="preview-field__label">${label}</span>${selectHtml('demo-select', 'Select region…')}</div>`;
@@ -101,19 +105,21 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
       return `<div class="preview-detail" data-catalog-detail><div class="preview-detail__header"><span class="preview-detail__title">Details</span><span class="preview-chip">Table row selection</span></div><p class="preview-detail__empty">Select a row in the Data Table demo</p></div>`;
 
     case 'visual.kpi':
-      return `<div class="preview-kpi"><span class="preview-kpi__title">Monthly revenue</span><span class="preview-kpi__value">$128,420</span><span class="preview-kpi__delta">+12.4%</span></div>`;
+      return `<div class="preview-kpi"><span class="preview-kpi__title">${esc(String(overrides.title ?? 'Monthly revenue'))}</span><span class="preview-kpi__value">${esc(String(overrides.value ?? '$128,420'))}</span><span class="preview-kpi__delta">${esc(String(overrides.delta ?? '+12.4%'))}</span></div>`;
 
     case 'visual.skeleton':
       return `<div class="preview-skeleton" data-catalog-skeleton><span class="preview-skeleton__line"></span><span class="preview-skeleton__line"></span><span class="preview-skeleton__line preview-skeleton__line--short"></span><span class="preview-skeleton__line"></span></div>`;
 
-    case 'logic.timer':
-      return `<div class="preview-timer" data-catalog-timer data-mode="interval"><div class="preview-timer__header"><span class="preview-field__label">${label}</span><span class="preview-chip">interval</span></div><span class="preview-timer__value" data-timer-display>0 ticks</span></div>`;
+    case 'logic.timer': {
+      const intervalMs = Number(overrides.intervalMs ?? 1200);
+      return `<div class="preview-timer" data-catalog-timer data-mode="interval" data-interval-ms="${intervalMs}"><div class="preview-timer__header"><span class="preview-field__label">${label}</span><span class="preview-chip">interval</span></div><span class="preview-timer__value" data-timer-display>0 ticks</span></div>`;
+    }
 
     case 'visual.chart.line':
-      return `<div class="preview-chart"><div class="preview-chart__header"><span class="preview-chart__title">Sessions over time</span><span class="preview-chip">Date range bound</span></div><svg viewBox="0 0 240 96" class="preview-chart__svg"><polyline class="preview-chart__line" points="${lineChartPoints}" /></svg></div>`;
+      return `<div class="preview-chart"><div class="preview-chart__header"><span class="preview-chart__title">${esc(String(overrides.chartTitle ?? 'Sessions over time'))}</span><span class="preview-chip">Date range bound</span></div><svg viewBox="0 0 240 96" class="preview-chart__svg"><polyline class="preview-chart__line" points="${lineChartPoints}" /></svg></div>`;
 
     case 'visual.chart.bar':
-      return `<div class="preview-chart"><div class="preview-chart__header"><span class="preview-chart__title">Signups by day</span></div><div class="preview-chart__bars">${chartPoints
+      return `<div class="preview-chart"><div class="preview-chart__header"><span class="preview-chart__title">${esc(String(overrides.chartTitle ?? 'Signups by day'))}</span></div><div class="preview-chart__bars">${chartPoints
         .map(
           (p) =>
             `<div class="preview-chart__bar-wrap"><div class="preview-chart__bar" style="height:${Math.round((p.value / 73) * 100)}%"></div><span>${esc(p.label)}</span></div>`,
@@ -121,7 +127,7 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
         .join('')}</div></div>`;
 
     case 'visual.chart.pie':
-      return `<div class="preview-chart"><div class="preview-chart__header"><span class="preview-chart__title">Traffic mix</span></div><div class="preview-chart__pie" style="background:${pieGradient()}"></div><ul class="preview-chart__pie-legend">${pieSlices
+      return `<div class="preview-chart"><div class="preview-chart__header"><span class="preview-chart__title">${esc(String(overrides.chartTitle ?? 'Traffic mix'))}</span></div><div class="preview-chart__pie" style="background:${pieGradient()}"></div><ul class="preview-chart__pie-legend">${pieSlices
         .map(
           (s) =>
             `<li><span class="preview-chart__pie-swatch" style="background:${s.color}"></span>${esc(s.label)}</li>`,
@@ -138,25 +144,25 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
       return `<div class="preview-layout" data-catalog-tabs><span class="preview-layout__title">${label}</span><div class="preview-tabs"><button type="button" class="preview-tabs__tab preview-tabs__tab--active" data-tab="0">Overview</button><button type="button" class="preview-tabs__tab" data-tab="1">Metrics</button><button type="button" class="preview-tabs__tab" data-tab="2">Settings</button></div><div class="preview-layout__slot" data-tab-panel>Overview panel — summary KPIs and filters</div></div>`;
 
     case 'layout.modal':
-      return `<div class="preview-modal"><div class="preview-modal__dialog"><span class="preview-modal__title">Confirm export</span><p class="preview-modal__body">Export 12 composites to NestJS + PostgreSQL?</p><button type="button" class="preview-onboarding__button">Confirm</button></div></div>`;
+      return `<div class="preview-modal"><div class="preview-modal__dialog"><span class="preview-modal__title">${esc(String(overrides.modalTitle ?? 'Confirm export'))}</span><p class="preview-modal__body">${esc(String(overrides.modalBody ?? 'Export 12 composites to NestJS + PostgreSQL?'))}</p><button type="button" class="preview-onboarding__button">${esc(String(overrides.confirmLabel ?? 'Confirm'))}</button></div></div>`;
 
     case 'layout.collapsible':
-      return `<div class="preview-layout preview-collapsible" data-catalog-collapsible><button type="button" class="preview-collapsible__header" aria-expanded="false"><span>Advanced filters</span><span aria-hidden="true">›</span></button><div class="preview-collapsible__panel" hidden><div class="preview-layout__slot">Hidden slot — bind filters here</div></div></div>`;
+      return `<div class="preview-layout preview-collapsible" data-catalog-collapsible><button type="button" class="preview-collapsible__header" aria-expanded="false"><span>${esc(String(overrides.title ?? 'Advanced filters'))}</span><span aria-hidden="true">›</span></button><div class="preview-collapsible__panel" hidden><div class="preview-layout__slot">Hidden slot — bind filters here</div></div></div>`;
 
     case 'domain.role-gate':
-      return `<div class="preview-role-gate"><span class="preview-field__label">${label}</span><p class="preview-role-gate__status">Visible</p><p class="preview-role-gate__hint">Allowed roles:</p><code>["editor","admin"]</code></div>`;
+      return `<div class="preview-role-gate"><span class="preview-field__label">${label}</span><p class="preview-role-gate__status">${esc(String(overrides.statusText ?? 'Visible'))}</p><p class="preview-role-gate__hint">Allowed roles:</p><code>["editor","admin"]</code></div>`;
 
     case 'domain.person-invite':
-      return `<div class="preview-onboarding"><span class="preview-field__label">Invite team member</span><input type="email" class="preview-input" placeholder="name@company.com" /><button type="button" class="preview-onboarding__button">Send invite</button></div>`;
+      return `<div class="preview-onboarding"><span class="preview-field__label">Invite team member</span><input type="email" class="preview-input" placeholder="${esc(String(overrides.emailPlaceholder ?? 'name@company.com'))}" /><button type="button" class="preview-onboarding__button">Send invite</button></div>`;
 
     case 'domain.role-assign':
       return `<div class="preview-onboarding"><span class="preview-field__label">Assign role</span><p class="preview-onboarding__summary">Review access before confirming</p>${selectHtml('demo-role', 'Choose role…', roleOptions)}<button type="button" class="preview-onboarding__button">Confirm access</button></div>`;
 
     case 'infra.env':
-      return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">Environment config</span><code>DATABASE_URL, API_KEY, FEATURE_FLAGS</code></div>`;
+      return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">Environment config</span><code>${esc(String(overrides.envKeys ?? 'DATABASE_URL, API_KEY, FEATURE_FLAGS'))}</code></div>`;
 
     case 'infra.postgresql':
-      return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">PostgreSQL</span><code>DATABASE_URL</code><span class="preview-infra__meta">table: analytics_events</span></div>`;
+      return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">PostgreSQL</span><code>DATABASE_URL</code><span class="preview-infra__meta">table: ${esc(String(overrides.tableName ?? 'analytics_events'))}</span></div>`;
 
     case 'infra.mongodb':
       return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">MongoDB</span><code>MONGODB_URI</code><span class="preview-infra__meta">collection: sessions</span></div>`;
@@ -168,7 +174,7 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
       return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">MySQL</span><code>MYSQL_URL</code><span class="preview-infra__meta">table: orders</span></div>`;
 
     case 'infra.server.nest':
-      return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">NestJS Server</span><code>globalPrefix: api</code></div>`;
+      return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">NestJS Server</span><code>globalPrefix: ${esc(String(overrides.globalPrefix ?? 'api'))}</code></div>`;
 
     case 'infra.server.express':
       return `<div class="preview-infra"><span class="preview-infra__badge">INFRA</span><span class="preview-field__label">Express Server</span><code>globalPrefix: api</code></div>`;
@@ -189,34 +195,34 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
       return `<div class="preview-field"><span class="preview-field__label">${label}</span>${selectHtml('news-type', 'News type')}</div>`;
 
     case 'visual.news.search-box':
-      return `<div class="preview-field preview-search"><span class="preview-field__label">${label}</span><div class="preview-search__row"><input type="search" class="preview-input preview-search__input" placeholder="Search news…" value="equirect pipeline" /><button type="button" class="preview-search__button">Search</button></div></div>`;
+      return `<div class="preview-field preview-search"><span class="preview-field__label">${label}</span><div class="preview-search__row"><input type="search" class="preview-input preview-search__input" placeholder="${esc(String(overrides.placeholder ?? 'Search news…'))}" value="equirect pipeline" /><button type="button" class="preview-search__button">Search</button></div></div>`;
 
     case 'visual.news.results-table':
-      return `<div class="preview-table" data-catalog-news-table><table><thead><tr><th>Headline</th><th>Source</th><th>Region</th><th>Published</th></tr></thead><tbody>${newsRowsHtml()}</tbody></table></div>`;
+      return `<div class="preview-table" data-catalog-news-table><div class="preview-table__header"><span>${esc(String(overrides.tableTitle ?? label))}</span></div><table><thead><tr><th>Headline</th><th>Source</th><th>Region</th><th>Published</th></tr></thead><tbody>${newsRowsHtml()}</tbody></table></div>`;
 
     case 'visual.news.article-detail':
       return `<div class="preview-detail" data-catalog-news-detail><div class="preview-detail__header"><span class="preview-detail__title">Article</span><span class="preview-chip">Results row selection</span></div><p class="preview-detail__empty">Select a headline in News Results</p></div>`;
 
     case 'visual.plugin.status-badge':
-      return `<div class="preview-plugin preview-plugin--badge preview-plugin--success">Active</div>`;
+      return `<div class="preview-plugin preview-plugin--badge preview-plugin--success">${esc(String(overrides.statusText ?? 'Active'))}</div>`;
 
     case 'visual.plugin.metric-chip':
-      return `<div class="preview-plugin preview-plugin--chip"><span class="preview-plugin__chip-label">Latency</span><span class="preview-plugin__chip-value">42ms</span></div>`;
+      return `<div class="preview-plugin preview-plugin--chip"><span class="preview-plugin__chip-label">${esc(String(overrides.chipLabel ?? 'Latency'))}</span><span class="preview-plugin__chip-value">${esc(String(overrides.chipValue ?? '42ms'))}</span></div>`;
 
     case 'visual.display.3d-bar-chart':
-      return `<div class="preview-three-host" data-three-mode="bar-chart" data-three-title="3D Bar Chart"></div>`;
+      return `<div class="preview-three-host" data-three-mode="bar-chart" data-three-title="${esc(String(overrides.threeTitle ?? '3D Bar Chart'))}"></div>`;
 
     case 'visual.display.3d-scatter':
-      return `<div class="preview-three-host" data-three-mode="scatter" data-three-title="3D Scatter"></div>`;
+      return `<div class="preview-three-host" data-three-mode="scatter" data-three-title="${esc(String(overrides.threeTitle ?? '3D Scatter'))}"></div>`;
 
     case 'visual.display.3d-scene':
-      return `<div class="preview-three-host" data-three-mode="scene" data-three-title="3D Scene"></div>`;
+      return `<div class="preview-three-host" data-three-mode="scene" data-three-title="${esc(String(overrides.threeTitle ?? '3D Scene'))}"></div>`;
 
     case 'visual.display.3d-gltf-model':
-      return `<div class="preview-three-host" data-three-mode="gltf-model" data-three-title="GLTF Model"></div>`;
+      return `<div class="preview-three-host" data-three-mode="gltf-model" data-three-title="${esc(String(overrides.threeTitle ?? 'GLTF Model'))}"></div>`;
 
     case 'visual.display.3d-geo-globe':
-      return `<div class="preview-three-host" data-three-mode="geo-globe" data-three-title="Geo Globe"></div>`;
+      return `<div class="preview-three-host" data-three-mode="geo-globe" data-three-title="${esc(String(overrides.threeTitle ?? 'Geo Globe'))}"></div>`;
 
     case 'visual.svg.inline':
       return `<div class="preview-svg preview-svg--inline" style="width:96px;height:96px">${DEFAULT_INLINE_SVG}</div>`;
@@ -225,25 +231,25 @@ export function renderPaletteDemo(type: string, definition: ComponentDefinition)
       return `<div class="preview-svg preview-svg--icon" style="width:28px;height:28px;color:#2563eb" title="Star">${DEFAULT_ICON_SVG}</div>`;
 
     case 'visual.media.video-source':
-      return `<rd-video-source label="Program source" accept="video/*" source-width="3840" source-height="1920"></rd-video-source>`;
+      return `<rd-video-source label="${esc(String(overrides.label ?? 'Program source'))}" accept="video/*" source-width="3840" source-height="1920"></rd-video-source>`;
 
     case 'visual.media.equirect-viewport':
-      return `<rd-equirect-viewport label="Crop metadata" preview-mode="rectilinear" yaw="25" pitch="-8" horizontal-fov="75" output-width="1280" output-height="720" style="display:block;max-width:100%"></rd-equirect-viewport>`;
+      return `<rd-equirect-viewport label="${esc(String(overrides.label ?? 'Crop metadata'))}" preview-mode="rectilinear" yaw="${Number(overrides.yaw ?? 25)}" pitch="${Number(overrides.pitch ?? -8)}" horizontal-fov="${Number(overrides.horizontalFov ?? 75)}" output-width="1280" output-height="720" style="display:block;max-width:100%"></rd-equirect-viewport>`;
 
     case 'visual.media.live-capture':
       return `<div class="preview-media preview-media--capture"><span class="preview-media__label">Live capture</span><button type="button" class="preview-media__capture-btn">Start camera</button><span class="preview-media__meta">Authoring only</span></div>`;
 
     case 'infra.wasm.asset':
-      return `<div class="preview-wasm preview-wasm--asset"><span class="preview-wasm__badge">WASM</span><code>wasm/modules/example.wasm</code><span class="preview-wasm__glue">+ wasm/glue/example.js</span></div>`;
+      return `<div class="preview-wasm preview-wasm--asset"><span class="preview-wasm__badge">WASM</span><code>${esc(String(overrides.assetPath ?? 'wasm/modules/example.wasm'))}</code><span class="preview-wasm__glue">+ wasm/glue/example.js</span></div>`;
 
     case 'visual.wasm.worker-host':
-      return `<div class="preview-wasm preview-wasm--worker"><span class="preview-wasm__label">dash-wasm-worker</span><span class="preview-wasm__status">Worker idle</span></div>`;
+      return `<div class="preview-wasm preview-wasm--worker"><span class="preview-wasm__label">${esc(String(overrides.workerLabel ?? 'dash-wasm-worker'))}</span><span class="preview-wasm__status">${esc(String(overrides.workerStatus ?? 'Worker idle'))}</span></div>`;
 
     case 'visual.wasm.module':
-      return `<div class="preview-wasm preview-wasm--module"><span class="preview-wasm__label">WASM Module</span><code>run()</code></div>`;
+      return `<div class="preview-wasm preview-wasm--module"><span class="preview-wasm__label">${esc(String(overrides.moduleLabel ?? 'WASM Module'))}</span><code>run()</code></div>`;
 
     case 'visual.wasm.media':
-      return `<rd-wasm-media label="Equirect extract" operation="equirect-extract" extraction-mode="flat-crop" output-format="mp4"></rd-wasm-media>`;
+      return `<rd-wasm-media label="${esc(String(overrides.label ?? 'Equirect extract'))}" operation="equirect-extract" extraction-mode="flat-crop" output-format="mp4"></rd-wasm-media>`;
 
     default:
       return `<div class="preview-fallback"><span>${label}</span><code>${esc(type)}</code></div>`;

@@ -225,6 +225,13 @@ function wireTableDetail(root: HTMLElement): void {
         return;
       }
       detail.innerHTML = `<div class="preview-detail__header"><span class="preview-detail__title">Details</span><span class="preview-chip">Row ${row.id}</span></div><dl class="preview-detail__fields">${detailFieldsHtml(row)}</dl>`;
+      table.dispatchEvent(
+        new CustomEvent('rd-table-row-select', {
+          bubbles: true,
+          composed: true,
+          detail: { rowId: row.id, name: row.name },
+        }),
+      );
     });
   });
 }
@@ -302,12 +309,13 @@ function wireTimers(root: HTMLElement): void {
   root.querySelectorAll('[data-catalog-timer]').forEach((block) => {
     let ticks = 0;
     const display = block.querySelector('[data-timer-display]');
+    const intervalMs = Number((block as HTMLElement).dataset.intervalMs ?? 1200);
     const id = window.setInterval(() => {
       ticks += 1;
       if (display) {
         display.textContent = `${ticks} ticks`;
       }
-    }, 1200);
+    }, Math.max(400, intervalMs));
     timerHandles.set(block as HTMLElement, id);
   });
 }

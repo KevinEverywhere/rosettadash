@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/web-components-vite';
 import { registerRosettaDashElements } from '@rosettadash/web-components';
 import '../../../tools/storybook-shared/rosettadash-preview.css';
 import '../../../tools/storybook-shared/palette-catalog/palette-demo-styles.css';
+import { storybookActionsParameters } from '../../../tools/storybook-shared/storybook-actions.ts';
 import { storybookTypographyParameters } from '../../../tools/storybook-shared/storybook-typography.ts';
 
 registerRosettaDashElements();
@@ -9,7 +10,15 @@ registerRosettaDashElements();
 const preview: Preview = {
   ...storybookTypographyParameters,
   parameters: {
+    ...storybookActionsParameters,
     layout: 'padded',
+    controls: {
+      expanded: true,
+      matchers: {
+        color: /(color|fill|stroke)/i,
+        date: /Date$/,
+      },
+    },
     options: {
       storySort: {
         order: ['Getting Started', 'Catalog', ['Palette', 'Meta compositions']],

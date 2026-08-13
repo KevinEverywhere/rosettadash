@@ -53,7 +53,7 @@ See [Planned Tickets](./11-planned-tickets.md) for the full backlog.
 
 | Ticket | Summary | Branch |
 |--------|---------|--------|
-| [DAS-113](https://planetkevin.atlassian.net/browse/DAS-113) | Storybook meta composition tightening — panel tabs and selection highlighting | `feature/DAS-113-storybook-meta-composition-tightening` |
+| [DAS-114](https://planetkevin.atlassian.net/browse/DAS-114) | Storybook Controls, Actions, Interactions | `feature/DAS-114-storybook-controls-actions-interactions` |
 | [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) | Per-framework Storybook sidebar alignment (planned next) | — |
 
 ## Current capabilities (at a glance)

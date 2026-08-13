@@ -319,12 +319,12 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-113](https://planetkevin.atlassian.net/browse/DAS-113)** — Storybook meta composition tightening — panel tabs and selection highlighting  
-Branch: `feature/DAS-113-storybook-meta-composition-tightening`
+**[DAS-114](https://planetkevin.atlassian.net/browse/DAS-114)** — Storybook Controls, Actions, and Interactions — operationalize addon panels  
+Branch: `feature/DAS-114-storybook-controls-actions-interactions`
 
-**Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — per-framework Storybook sidebar alignment.
+**Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — per-framework Storybook sidebar alignment (after DAS-114 patterns land on web-components).
 
-Recently closed: DAS-105–111. npm taxonomy [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) remains the `0.1.0` gate.
+Recently closed: DAS-105–113.
 
 ## License
 

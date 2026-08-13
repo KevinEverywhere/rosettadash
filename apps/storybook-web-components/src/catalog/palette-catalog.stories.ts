@@ -5,11 +5,13 @@ import {
   mountNpmLayoutAtoms,
   mountPaletteCatalog,
 } from '../../../../tools/storybook-shared/palette-catalog/mount-palette-catalog';
+import { storybookAggregateStoryParameters } from '../../../../tools/storybook-shared/storybook-actions.ts';
 import '../../../../tools/storybook-shared/palette-catalog/palette-demo-styles.css';
 
 const meta: Meta = {
   title: 'Catalog/Palette',
   parameters: {
+    ...storybookAggregateStoryParameters,
     docs: {
       description: {
         component:
