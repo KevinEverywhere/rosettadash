@@ -142,10 +142,24 @@
 .rd-meta-composition__diagram {
   position: sticky;
   top: 1rem;
+  align-self: start;
   padding: 0.875rem;
   border: 1px solid var(--rd-color-border, #d0d0d0);
   border-radius: var(--rd-radius-md, 0.5rem);
   background: var(--rd-color-surface, #f8fafc);
+}
+
+@media (min-width: 960px) {
+  /* Self-contained scroll — prevents sticky diagram sections from "rolling up"
+     when hover sync scrolls a lower live preview item into view. */
+  .rd-meta-composition__diagram,
+  .rd-meta-composition__live,
+  .rd-meta-composition__xml {
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
 }
 
 @media (max-width: 959px) {
@@ -158,6 +172,7 @@
   display: grid;
   gap: 1.25rem;
   min-width: 0;
+  align-self: start;
 }
 
 /* Schematic diagram blocks */
@@ -383,6 +398,7 @@
 
 .rd-meta-composition__xml {
   min-width: 0;
+  align-self: start;
   padding: 0.875rem;
   border: 1px solid var(--rd-color-border, #d0d0d0);
   border-radius: var(--rd-radius-md, 0.5rem);
@@ -477,4 +493,33 @@
 
 .rd-meta-composition__coverage-table code {
   font-size: 0.75rem;
+}
+
+.rd-meta-composition__coverage-link,
+.rd-meta-composition__coverage-composition-link {
+  appearance: none;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.rd-meta-composition__coverage-link:hover code,
+.rd-meta-composition__coverage-link:focus-visible code,
+.rd-meta-composition__coverage-composition-link:hover,
+.rd-meta-composition__coverage-composition-link:focus-visible {
+  color: var(--rd-color-accent, #1d4ed8);
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rd-meta-composition__coverage-composition-link {
+  color: var(--rd-color-accent, #1d4ed8);
+  font-size: 0.8125rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

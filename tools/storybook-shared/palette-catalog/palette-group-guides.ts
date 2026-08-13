@@ -271,7 +271,20 @@ export function renderGroupGuideHtml(guide: PaletteGroupGuide, options?: { showT
 }
 
 function formatLearnMore(text: string): string {
-  return text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  return text.replace(/\*\*([^*]+)\*\*/g, (_, label: string) => {
+    const trimmed = label.trim();
+    const groupEntry = Object.entries(PALETTE_GROUP_STORY_NAMES).find(([, name]) => {
+      if (name === trimmed || trimmed.startsWith(`${name} →`) || trimmed.startsWith(`${name} ·`)) {
+        return true;
+      }
+      return trimmed.includes(`→ ${name}`) || trimmed.endsWith(name);
+    });
+    if (groupEntry) {
+      const [groupId, name] = groupEntry;
+      return `<button type="button" class="rd-catalog-guide__link" data-nav-group="${groupId}">${label}</button>`;
+    }
+    return `<strong>${label}</strong>`;
+  });
 }
 
 export function renderComponentLearnMore(type: string): string {

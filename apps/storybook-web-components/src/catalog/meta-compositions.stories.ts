@@ -41,11 +41,6 @@ function compositionStory(id: string): Story {
   };
 }
 
-export const ComponentCoverageAudit: Story = {
-  name: 'Component coverage audit',
-  render: () => mountMetaCompositionCoverage(),
-};
-
 export const OperationsKpiDashboard = compositionStory('operations-kpi');
 export const AnalyticsReportingDashboard = compositionStory('analytics-reporting');
 export const AdminSettingsDashboard = compositionStory('admin-settings');
@@ -55,3 +50,8 @@ export const WasmComputeLab = compositionStory('wasm-compute-lab');
 export const Vr3dGallery = compositionStory('vr-3d-gallery');
 export const DataPlatformPanel = compositionStory('data-platform');
 export const NavigationLayoutShell = compositionStory('navigation-shell');
+
+export const ComponentCoverageAudit: Story = {
+  name: 'Component coverage audit',
+  render: () => mountMetaCompositionCoverage(),
+};

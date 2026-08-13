@@ -13,7 +13,7 @@ const preview: Preview = {
         order: [
           'Getting Started',
           'Catalog',
-          ['Meta compositions', 'Palette'],
+          ['Palette', 'Meta compositions'],
           'Layout',
           'Visual',
           ['Link List', 'Media'],

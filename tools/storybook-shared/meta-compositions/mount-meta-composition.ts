@@ -7,6 +7,10 @@ import { wireCatalogInteractivity, navigateToPaletteComponent } from '../palette
 import { renderPlainComponentMarkup } from '../palette-catalog/render-component-markup.js';
 import { renderPaletteDemo } from '../palette-catalog/palette-demos.js';
 import {
+  META_COMPOSITION_STORY_NAMES,
+  wireStorybookNavigation,
+} from '../storybook-navigation.js';
+import {
   ALL_PALETTE_TYPES,
   META_COMPOSITIONS,
   NPM_ATOM_IDS,
@@ -142,6 +146,27 @@ function buildXmlPanel(definition: MetaCompositionDefinition): HTMLElement {
   return xml;
 }
 
+function scrollWithinPanel(panel: HTMLElement | null, target: HTMLElement): void {
+  if (!panel) {
+    return;
+  }
+
+  const panelRect = panel.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+
+  if (targetRect.top >= panelRect.top && targetRect.bottom <= panelRect.bottom) {
+    return;
+  }
+
+  const nextTop =
+    targetRect.top - panelRect.top + panel.scrollTop - (panel.clientHeight - target.offsetHeight) / 2;
+
+  panel.scrollTo({
+    top: Math.max(0, Math.min(nextTop, panel.scrollHeight - panel.clientHeight)),
+    behavior: 'smooth',
+  });
+}
+
 function wireDiagramHover(root: HTMLElement): void {
   const split = root.querySelector<HTMLElement>('.rd-meta-composition__split');
   if (!split) {
@@ -172,13 +197,18 @@ function wireDiagramHover(root: HTMLElement): void {
     }
   }
 
-  function highlight(target: string, scrollLive = false): void {
+  function highlight(
+    target: string,
+    options: { scrollLive?: boolean; scrollDiagram?: boolean } = {},
+  ): void {
     clearHighlight();
     let liveMatch: HTMLElement | null = null;
+    let diagramMatch: HTMLElement | null = null;
 
     for (const el of diagramBlocks()) {
       if (el.dataset.diagramTarget === target) {
         el.classList.add('rd-meta-diagram__block--active');
+        diagramMatch = el;
       }
     }
 
@@ -195,8 +225,12 @@ function wireDiagramHover(root: HTMLElement): void {
       }
     }
 
-    if (scrollLive && liveMatch) {
-      liveMatch.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    if (options.scrollLive && liveMatch) {
+      scrollWithinPanel(liveMatch.closest('.rd-meta-composition__live'), liveMatch);
+    }
+
+    if (options.scrollDiagram && diagramMatch) {
+      scrollWithinPanel(diagramMatch.closest('.rd-meta-composition__diagram'), diagramMatch);
     }
   }
 
@@ -212,7 +246,13 @@ function wireDiagramHover(root: HTMLElement): void {
       return;
     }
     const fromDiagram = Boolean(hovered.closest('.rd-meta-diagram'));
-    highlight(target, fromDiagram);
+    const fromLive = Boolean(hovered.closest('.rd-meta-composition__live'));
+    const fromXml = Boolean(hovered.closest('.rd-meta-composition__xml'));
+
+    highlight(target, {
+      scrollLive: fromDiagram,
+      scrollDiagram: fromLive || fromXml,
+    });
   });
 
   split.addEventListener('mouseleave', (event) => {
@@ -228,7 +268,7 @@ function wireDiagramHover(root: HTMLElement): void {
     block.addEventListener('focus', () => {
       const target = block.dataset.diagramTarget;
       if (target) {
-        highlight(target, true);
+        highlight(target, { scrollLive: true });
       }
     });
     block.addEventListener('blur', () => {
@@ -387,14 +427,14 @@ export function mountMetaCompositionCoverage(): HTMLElement {
 
   const npmRows = NPM_ATOM_IDS.map(
     (id) =>
-      `<tr><td><code>${esc(id)}</code></td><td>${covered.has(id) ? '✓' : '—'}</td><td>${META_COMPOSITIONS.filter((c) => c.sections.some((s) => s.items.includes(id))).map((c) => c.title).join(', ') || '—'}</td></tr>`,
+      `<tr><td><button type="button" class="rd-meta-composition__coverage-link" data-nav-component-type="${esc(id)}"><code>${esc(id)}</code></button></td><td>${covered.has(id) ? '✓' : '—'}</td><td>${renderCoverageCompositionLinks(META_COMPOSITIONS.filter((c) => c.sections.some((s) => s.items.includes(id))))}</td></tr>`,
   ).join('');
 
   const paletteRows = ALL_PALETTE_TYPES.map((type) => {
     const comps = META_COMPOSITIONS.filter(
       (c) => c.componentTypes.includes(type) || c.sections.some((s) => s.items.includes(type)),
     );
-    return `<tr><td><code>${esc(type)}</code></td><td>${covered.has(type) ? '✓' : '✗'}</td><td>${comps.map((c) => c.title).join(', ') || '—'}</td></tr>`;
+    return `<tr><td><button type="button" class="rd-meta-composition__coverage-link" data-nav-component-type="${esc(type)}"><code>${esc(type)}</code></button></td><td>${covered.has(type) ? '✓' : '✗'}</td><td>${renderCoverageCompositionLinks(comps)}</td></tr>`;
   }).join('');
 
   root.innerHTML = `
@@ -425,7 +465,33 @@ export function mountMetaCompositionCoverage(): HTMLElement {
     </section>
   `;
 
+  wireStorybookNavigation(root);
+
+  root.querySelectorAll<HTMLElement>('[data-nav-component-type]').forEach((el) => {
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      const componentType = el.getAttribute('data-nav-component-type');
+      if (componentType) {
+        navigateToPaletteComponent(componentType);
+      }
+    });
+  });
+
   return root;
+}
+
+function renderCoverageCompositionLinks(
+  compositions: typeof META_COMPOSITIONS,
+): string {
+  if (compositions.length === 0) {
+    return '—';
+  }
+  return compositions
+    .map((composition) => {
+      const label = META_COMPOSITION_STORY_NAMES[composition.id] ?? composition.title;
+      return `<button type="button" class="rd-meta-composition__coverage-composition-link" data-nav-meta-composition="${esc(composition.id)}">${esc(label)}</button>`;
+    })
+    .join(' ');
 }
 
 export { META_COMPOSITIONS };
