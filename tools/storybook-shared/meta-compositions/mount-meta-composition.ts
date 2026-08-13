@@ -17,6 +17,7 @@ import {
   type MetaCompositionDefinition,
   uncoveredPaletteTypes,
 } from './composition-definitions.js';
+import { mountWasmComputeLabSandbox } from '../wasm/mount-wasm-compute-lab-sandbox.js';
 import { renderCompositionDiagram } from './render-composition-diagram.js';
 import { wireMetaCompositionPanels } from './wire-meta-composition-panels.js';
 
@@ -399,6 +400,10 @@ export function mountMetaComposition(definition: MetaCompositionDefinition): HTM
   split.appendChild(buildXmlPanel(definition));
   workspace.appendChild(split);
   root.appendChild(workspace);
+
+  if (definition.id === 'wasm-compute-lab') {
+    root.appendChild(mountWasmComputeLabSandbox());
+  }
 
   wireCatalogInteractivity(root);
   wireDiagramHover(root);

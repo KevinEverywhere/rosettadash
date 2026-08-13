@@ -258,7 +258,8 @@ export const META_COMPOSITIONS: MetaCompositionDefinition[] = [
   {
     id: 'wasm-compute-lab',
     title: 'WASM compute lab',
-    summary: 'Asset bundle, worker host, module entry, and media transcode working together.',
+    summary:
+      'Asset bundle, worker host, module entry, and media transcode — scroll down for live Rust WASM, Node React authoring, and preview frame.',
     componentTypes: [
       'infra.wasm.asset',
       'visual.wasm.worker-host',
