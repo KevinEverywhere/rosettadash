@@ -25,7 +25,7 @@ Applies to the **RosettaDash** monorepo (npm scope `@rosettadash/*`). Jira proje
 
 4. **Verify** — `npm run verify` (and `npm run verify:all` for builder UI changes).
 
-5. **Draft commit message** — Kevin commits; agents do not commit unless explicitly asked.
+5. **Ready to commit** — summarize changes; draft a commit message only if Kevin asks. **Agents never commit and never ask to commit** (see `00-agent-no-commits.mdc`).
 
 ## Hard stops — do NOT
 
