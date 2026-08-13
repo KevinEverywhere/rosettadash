@@ -197,6 +197,28 @@ npm run verify:all     # both
 
 **E2E tips:** Playwright uses dedicated ports **4201** (client) and **3001** (API) so it can run alongside `npm start` on 4200/3000. Install browsers with `npm run setup:e2e` before the first e2e run. See [docs/13-local-development-and-components.md](docs/13-local-development-and-components.md).
 
+## Component examples (Storybook)
+
+RosettaDash ships **five Storybook catalogs** — one per runtime — for interactive component and dashboard examples without opening the builder. See [Storybook component catalog](docs/38-storybook-component-catalog.md) (DAS-98).
+
+| Runtime | Port | Command |
+|---------|------|---------|
+| Web Components (primary) | 6006 | `npm run storybook:web-components` |
+| React | 6007 | `npm run storybook:react` |
+| Vue | 6008 | `npm run storybook:vue` |
+| Angular | 6009 | `npm run storybook:angular` |
+| Svelte | 6010 | `npm run storybook:svelte` |
+
+Run all five in parallel: `npm run storybook:all`. Build static sites: `npm run build-storybook`.
+
+The **web-components** catalog (port **6006**) is the primary entry:
+
+- **Getting Started** — intro and component index with deep links
+- **Catalog / Palette** — every builder group with live demos
+- **Catalog / Meta compositions** — full dashboard recipes (layout diagram, live preview, component XML, WASM compute lab)
+
+Per-framework catalogs (React, Vue, Angular, Svelte) are documented and runnable on their ports; sidebar alignment with the web-components catalog is tracked in [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112).
+
 ## CI on GitHub (optional)
 
 CI validates PRs to `development`; no public deployment is required for local development.
@@ -279,6 +301,7 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 **Developer guides:**
 
 - [Local development & component how-to](docs/13-local-development-and-components.md)
+- [Storybook component catalog](docs/38-storybook-component-catalog.md)
 - [CI and hosting](docs/12-ci-and-hosting.md)
 - [Docker containers (local)](docs/14-docker-containers.md)
 - [App component CSS convention](docs/28-app-component-css-convention.md)
@@ -296,10 +319,12 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-93](https://planetkevin.atlassian.net/browse/DAS-93)** — Full taxonomy on all `@rosettadash/<runtime>` packages for `0.1.0`  
-Branch: `feature/DAS-93-npm-taxonomy-atoms-0-1-0` (when started)
+**[DAS-111](https://planetkevin.atlassian.net/browse/DAS-111)** — Docs & README sync — current ticket, Storybook examples, backlog refresh  
+Branch: `feature/DAS-111-docs-readme-storybook-sync`
 
-Recently closed: DAS-83, DAS-90–92, DAS-94, DAS-98, DAS-99. Scoped packages `@rosettadash/core@0.1.0` and `@rosettadash/web-components@0.1.0` — publish with `npm run publish:npm` (npm OTP required).
+**Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — align React, Vue, Angular, and Svelte Storybook sidebars with web-components (DAS-110).
+
+Recently closed: DAS-105–110 (Storybook meta compositions, palette, three-panel XML, getting started, WASM compute lab, sidebar tightening). npm taxonomy [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) remains the `0.1.0` gate.
 
 ## License
 

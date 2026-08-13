@@ -1,7 +1,9 @@
 import type { Preview } from '@storybook/svelte-vite';
 import '../../../tools/storybook-shared/rosettadash-preview.css';
+import { storybookTypographyParameters } from '../../../tools/storybook-shared/storybook-typography.ts';
 
 const preview: Preview = {
+  ...storybookTypographyParameters,
   parameters: {
     layout: 'padded',
     options: {

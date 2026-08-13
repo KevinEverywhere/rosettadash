@@ -177,6 +177,20 @@ npm run verify:all     # both
 
 **E2E tips:** Playwright uses dedicated ports **4201** (client) and **3001** (API) so it can run alongside `npm start` on 4200/3000. Install browsers with `npm run setup:e2e` before the first e2e run. See [docs/13-local-development-and-components.md](docs/13-local-development-and-components.md).
 
+## Component examples (Storybook)
+
+Five Storybook servers — one per runtime — provide live component and dashboard examples. See [Storybook component catalog](docs/38-storybook-component-catalog.md).
+
+| Runtime | Port | Command |
+|---------|------|---------|
+| Web Components (primary) | 6006 | `npm run storybook:web-components` |
+| React | 6007 | `npm run storybook:react` |
+| Vue | 6008 | `npm run storybook:vue` |
+| Angular | 6009 | `npm run storybook:angular` |
+| Svelte | 6010 | `npm run storybook:svelte` |
+
+Primary catalog: **Getting Started**, **Catalog / Palette**, and **Catalog / Meta compositions** on port **6006**. Framework catalogs (6007–6010) are documented in DAS-98; sidebar alignment lands in DAS-112.
+
 ## CI on GitHub (optional)
 
 CI validates PRs to `development`; no public deployment is required for local development.
@@ -259,6 +273,7 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 **Developer guides:**
 
 - [Local development & component how-to](docs/13-local-development-and-components.md)
+- [Storybook component catalog](docs/38-storybook-component-catalog.md)
 - [CI and hosting](docs/12-ci-and-hosting.md)
 - [Docker containers (local)](docs/14-docker-containers.md)
 - [App component CSS convention](docs/28-app-component-css-convention.md)
@@ -276,8 +291,10 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-89](https://planetkevin.atlassian.net/browse/DAS-89)** — Resizable and collapsible Components/Inspector panels with centered canvas  
-Branch: `feature/DAS-89-resizable-collapsible-builder-panels`
+**[DAS-111](https://planetkevin.atlassian.net/browse/DAS-111)** — Docs & README sync — current ticket, Storybook examples, backlog refresh  
+Branch: `feature/DAS-111-docs-readme-storybook-sync`
+
+**Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — per-framework Storybook sidebar alignment.
 
 ## License
 

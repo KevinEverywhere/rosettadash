@@ -34,9 +34,9 @@ Primary navigation:
 2. **Catalog / Palette** — one story per builder group + All components scroll
 3. **Catalog / Meta compositions** — dashboard recipes (diagram + live preview + XML)
 
-Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed in DAS-110 — coverage lives in Palette, Meta compositions, and **NPM layout atoms (rd-*)**.
+Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed from **web-components** in DAS-110 — coverage lives in Palette, Meta compositions, and **NPM layout atoms (rd-*)**.
 
-Per-framework Storybook apps (React, Vue, Angular, Svelte) may still carry atom stories until aligned in a follow-up.
+Per-framework Storybook apps (React, Vue, Angular, Svelte) ship today on ports 6007–6010 per DAS-98; sidebar alignment with this taxonomy is tracked in **[DAS-112](https://planetkevin.atlassian.net/browse/DAS-112)** (implementation in follow-up branches).
 
 ## Story quality bar (DAS-101)
 
@@ -48,7 +48,7 @@ Each palette page shows every component in that group with:
 - Interactive wiring where it matters (table → detail, news results → article, tabs, timers, Three.js VR/3D hosts)
 - Shipped npm `<rd-*>` elements embedded for media + wasm rows
 
-Atom-level stories under Layout / Visual / Wasm document npm custom elements in depth.
+Atom-level npm custom element deep dives previously lived under Layout / Visual / Wasm; that coverage now lives in **Catalog / Palette**, **Meta compositions**, and **NPM layout atoms (rd-*)** (DAS-110).
 
 Shared fixtures: `tools/storybook-shared/fixtures.ts` · catalog engine: `tools/storybook-shared/palette-catalog/`.
 

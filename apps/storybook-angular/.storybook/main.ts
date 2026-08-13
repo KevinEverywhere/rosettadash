@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/angular-vite';
+import { rosettadashStorybookFeatures } from '../../../tools/storybook-shared/storybook-features.ts';
 import { rosettadashViteFinal } from '../../../tools/storybook-shared/vite-final.ts';
 
 const config: StorybookConfig = {
@@ -10,6 +11,7 @@ const config: StorybookConfig = {
       compodoc: false,
     },
   },
+  features: rosettadashStorybookFeatures,
   async viteFinal(viteConfig) {
     return rosettadashViteFinal(viteConfig);
   },

@@ -27,8 +27,9 @@
 .rd-getting-started__title {
   margin: 0 0 0.5rem;
   font-size: 1.75rem;
-  line-height: 1.2;
-  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .rd-getting-started__lede {

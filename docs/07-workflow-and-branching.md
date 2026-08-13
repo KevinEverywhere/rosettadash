@@ -147,8 +147,8 @@ domain model, and workflow conventions for RosettaDash.
 
 - **GitHub:** `https://github.com/KevinEverywhere/rosettadash.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-37](https://planetkevin.atlassian.net/browse/DAS-37) — Docker local containers
-- **Current branch:** `feature/DAS-37-docker-local-containers`
+- **Current ticket:** [DAS-111](https://planetkevin.atlassian.net/browse/DAS-111) — Docs & README sync (Storybook examples, backlog refresh)
+- **Current branch:** `feature/DAS-111-docs-readme-storybook-sync`
 
 ## Related documents
 

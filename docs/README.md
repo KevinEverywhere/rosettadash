@@ -44,11 +44,17 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 32. [React runtime integration](./40-react-runtime-integration.md) — native React + CE hosts, refs (DAS-104)
 33. [Stack styling guides](./41-stack-styling-guides.md) — Tailwind, CSS Modules, MUI, plain CSS (DAS-104)
 34. [Storybook meta compositions](./42-storybook-meta-compositions.md) — live dashboard demos for all components (DAS-105)
-35. [npm consumer install](./39-npm-consumer-install.md) — scoped packages for ffmp3Console & siblings (DAS-99)
+35. [Storybook component catalog](./38-storybook-component-catalog.md) — per-runtime Storybook apps and ports (DAS-98)
+36. [npm consumer install](./39-npm-consumer-install.md) — scoped packages for ffmp3Console & siblings (DAS-99)
 
 ## Active work
 
-See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-105** — Storybook meta compositions — on `feature/DAS-105-storybook-meta-compositions`.
+See [Planned Tickets](./11-planned-tickets.md) for the full backlog.
+
+| Ticket | Summary | Branch |
+|--------|---------|--------|
+| [DAS-111](https://planetkevin.atlassian.net/browse/DAS-111) | Docs & README sync — Storybook examples, backlog refresh | `feature/DAS-111-docs-readme-storybook-sync` |
+| [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) | Per-framework Storybook sidebar alignment (planned next) | — |
 
 ## Current capabilities (at a glance)
 
@@ -68,6 +74,7 @@ See [Planned Tickets](./11-planned-tickets.md) for current backlog. **DAS-105** 
 | Admin control panel + content library | DAS-74 — in progress |
 | Animated demo dashboards (3 examples) | Phase 21 — planned after Phase 20 |
 | Docker Compose local dev | Shipped |
+| Per-runtime Storybook catalogs (ports 6006–6010) | Shipped (DAS-98); web-components sidebar tightened (DAS-110); framework alignment planned (DAS-112) |
 | Full taxonomy + page template library | Phase 6 — complete |
 | Phase 7 production hardening | Complete (DAS-50–DAS-54) |
 | Phase 8 component plugins & 3D | Complete (DAS-55–DAS-56) |

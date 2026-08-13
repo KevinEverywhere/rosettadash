@@ -1,5 +1,6 @@
 @import '../../packages/web-components/src/styles/tokens.css';
 @import '../../packages/web-components/src/styles/styles.css';
+@import './storybook-typography.css';
 
 .sb-show-main {
   background: var(--rd-color-surface, #fff);
@@ -19,7 +20,7 @@
   border: 1px solid var(--rd-color-border, #d0d0d0);
   border-radius: var(--rd-radius-md, 0.5rem);
   background: rgb(15 23 42 / 4%);
-  font: 0.75rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font: 0.75rem/1.45 var(--rd-font-mono);
   white-space: pre-wrap;
   word-break: break-word;
   max-height: 12rem;

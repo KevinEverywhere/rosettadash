@@ -37,6 +37,7 @@
     "docker:dev:down": "docker compose --profile dev down",
     "docker:app": "docker compose --profile app up --build",
     "docker:app:down": "docker compose --profile app down",
+    "storybook:clean-cache": "rm -rf node_modules/.cache/storybook",
     "storybook:web-components": "nx storybook storybook-web-components",
     "storybook:react": "nx storybook storybook-react",
     "storybook:vue": "nx storybook storybook-vue",

@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/svelte-vite';
+import { rosettadashStorybookFeatures } from '../../../tools/storybook-shared/storybook-features.ts';
 import { rosettadashSvelteViteFinal } from '../../../tools/storybook-shared/vite-final-svelte.ts';
 
 const config: StorybookConfig = {
@@ -10,6 +11,7 @@ const config: StorybookConfig = {
       docgen: false,
     },
   },
+  features: rosettadashStorybookFeatures,
   async viteFinal(viteConfig) {
     return rosettadashSvelteViteFinal(viteConfig);
   },
