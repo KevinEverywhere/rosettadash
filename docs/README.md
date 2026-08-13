@@ -53,7 +53,7 @@ See [Planned Tickets](./11-planned-tickets.md) for the full backlog.
 
 | Ticket | Summary | Branch |
 |--------|---------|--------|
-| [DAS-111](https://planetkevin.atlassian.net/browse/DAS-111) | Docs & README sync — Storybook examples, backlog refresh | `feature/DAS-111-docs-readme-storybook-sync` |
+| [DAS-113](https://planetkevin.atlassian.net/browse/DAS-113) | Storybook meta composition tightening — panel tabs and selection highlighting | `feature/DAS-113-storybook-meta-composition-tightening` |
 | [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) | Per-framework Storybook sidebar alignment (planned next) | — |
 
 ## Current capabilities (at a glance)

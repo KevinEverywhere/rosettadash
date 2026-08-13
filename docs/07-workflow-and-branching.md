@@ -147,8 +147,8 @@ domain model, and workflow conventions for RosettaDash.
 
 - **GitHub:** `https://github.com/KevinEverywhere/rosettadash.git`
 - **Integration branch:** `development`
-- **Current ticket:** [DAS-111](https://planetkevin.atlassian.net/browse/DAS-111) — Docs & README sync (Storybook examples, backlog refresh)
-- **Current branch:** `feature/DAS-111-docs-readme-storybook-sync`
+- **Current ticket:** [DAS-113](https://planetkevin.atlassian.net/browse/DAS-113) — Storybook meta composition tightening (panel tabs, selection highlighting)
+- **Current branch:** `feature/DAS-113-storybook-meta-composition-tightening`
 
 ## Related documents
 

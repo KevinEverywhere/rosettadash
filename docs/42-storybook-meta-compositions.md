@@ -5,10 +5,11 @@
 
 Storybook **Catalog → Meta compositions** replaces the old **Meta elements** markup-only stories. Each entry shows:
 
-1. **Layout diagram** — schematic of sections and component blocks (with hover sync to live preview)
-2. **Live preview** — interactive dashboard or recipe with real palette demos
+1. **Layout diagram** — schematic blocks (click to select; hover syncs to live preview)
+2. **Live preview** — interactive dashboard or recipe with bordered preview containers per component
+3. **Component XML** — underlying custom-element markup only
 
-On wide screens the diagram sits beside the preview; on narrow viewports they stack (diagram first, then live).
+Panel tabs switch between diagram-only, live-only (mobile), diagram + live (≥960px), or XML full-width. Selection persists on click until another block is chosen.
 
 ## Why two catalog layers?
 
@@ -39,7 +40,7 @@ Users browse **Palette** to learn a single component; **Meta compositions** to u
 - Definitions: `tools/storybook-shared/meta-compositions/composition-definitions.ts`
 - Mount + wiring: `tools/storybook-shared/meta-compositions/mount-meta-composition.ts`
 - Plain component XML: `tools/storybook-shared/palette-catalog/render-component-markup.ts`
-- Panel tabs (diagram + live vs XML): `wire-meta-composition-panels.ts` — wide screens (≥1400px) show all three columns
+- Panel tabs (diagram, live preview, component XML): `wire-meta-composition-panels.ts` — visual tabs show diagram + live side by side (≥960px); XML tab shows markup only
 - Reuses palette demo markup and `wireCatalogInteractivity()` from the palette catalog engine
 - Styles: `meta-composition-styles.css` + shared `palette-demo-styles.css`
 

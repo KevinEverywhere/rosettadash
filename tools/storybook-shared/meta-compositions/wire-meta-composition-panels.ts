@@ -11,6 +11,7 @@ export function wireMetaCompositionPanels(root: HTMLElement): void {
     if (view === 'xml') {
       workspace.dataset.activeView = 'xml';
       delete workspace.dataset.visualFocus;
+      delete workspace.dataset.selectedTarget;
     } else {
       workspace.dataset.activeView = 'visual';
       workspace.dataset.visualFocus = view;

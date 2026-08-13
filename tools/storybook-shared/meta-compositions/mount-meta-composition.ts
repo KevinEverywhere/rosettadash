@@ -93,7 +93,9 @@ function buildLivePanel(definition: MetaCompositionDefinition): HTMLElement {
           <span class="rd-meta-composition__item-label">${esc(label)}</span>
           <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Palette →</button>
         </header>
-        <div class="rd-meta-composition__item-demo">${html}</div>`;
+        <div class="rd-meta-composition__item-preview" data-diagram-target="s${sectionIndex}-i${itemIndex}">
+          <div class="rd-meta-composition__item-demo">${html}</div>
+        </div>`;
       grid.appendChild(item);
     });
 
@@ -169,8 +171,9 @@ function scrollWithinPanel(panel: HTMLElement | null, target: HTMLElement): void
 }
 
 function wireDiagramHover(root: HTMLElement): void {
+  const workspace = root.querySelector<HTMLElement>('.rd-meta-composition__workspace');
   const split = root.querySelector<HTMLElement>('.rd-meta-composition__split');
-  if (!split) {
+  if (!split || !workspace) {
     return;
   }
 
@@ -192,6 +195,9 @@ function wireDiagramHover(root: HTMLElement): void {
     }
     for (const el of liveItems()) {
       el.classList.remove('rd-meta-composition__item--highlight');
+      el.querySelector('.rd-meta-composition__item-preview')?.classList.remove(
+        'rd-meta-composition__item-preview--highlight',
+      );
     }
     for (const el of xmlItems()) {
       el.classList.remove('rd-meta-composition__xml-item--highlight');
@@ -200,7 +206,7 @@ function wireDiagramHover(root: HTMLElement): void {
 
   function highlight(
     target: string,
-    options: { scrollLive?: boolean; scrollDiagram?: boolean } = {},
+    options: { scrollLive?: boolean; scrollDiagram?: boolean; persist?: boolean } = {},
   ): void {
     clearHighlight();
     let liveMatch: HTMLElement | null = null;
@@ -216,6 +222,9 @@ function wireDiagramHover(root: HTMLElement): void {
     for (const el of liveItems()) {
       if (el.dataset.diagramTarget === target) {
         el.classList.add('rd-meta-composition__item--highlight');
+        el.querySelector('.rd-meta-composition__item-preview')?.classList.add(
+          'rd-meta-composition__item-preview--highlight',
+        );
         liveMatch = el;
       }
     }
@@ -226,6 +235,10 @@ function wireDiagramHover(root: HTMLElement): void {
       }
     }
 
+    if (options.persist) {
+      workspace.dataset.selectedTarget = target;
+    }
+
     if (options.scrollLive && liveMatch) {
       scrollWithinPanel(liveMatch.closest('.rd-meta-composition__live'), liveMatch);
     }
@@ -233,6 +246,26 @@ function wireDiagramHover(root: HTMLElement): void {
     if (options.scrollDiagram && diagramMatch) {
       scrollWithinPanel(diagramMatch.closest('.rd-meta-composition__diagram'), diagramMatch);
     }
+  }
+
+  function restoreSelection(): void {
+    const selected = workspace.dataset.selectedTarget;
+    if (selected) {
+      highlight(selected);
+    } else {
+      clearHighlight();
+    }
+  }
+
+  function selectTarget(
+    target: string,
+    source: 'diagram' | 'live' | 'xml',
+  ): void {
+    highlight(target, {
+      persist: true,
+      scrollLive: source === 'diagram',
+      scrollDiagram: source === 'live' || source === 'xml',
+    });
   }
 
   split.addEventListener('mouseover', (event) => {
@@ -261,7 +294,34 @@ function wireDiagramHover(root: HTMLElement): void {
     if (related && split.contains(related)) {
       return;
     }
-    clearHighlight();
+    restoreSelection();
+  });
+
+  split.addEventListener('click', (event) => {
+    const clicked = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+      '[data-diagram-target]',
+    );
+    if (!clicked || !split.contains(clicked)) {
+      return;
+    }
+    if ((event.target as HTMLElement | null)?.closest('[data-palette-link]')) {
+      return;
+    }
+    const target = clicked.dataset.diagramTarget;
+    if (!target) {
+      return;
+    }
+    if (clicked.closest('.rd-meta-diagram')) {
+      selectTarget(target, 'diagram');
+      return;
+    }
+    if (clicked.closest('.rd-meta-composition__live')) {
+      selectTarget(target, 'live');
+      return;
+    }
+    if (clicked.closest('.rd-meta-composition__xml')) {
+      selectTarget(target, 'xml');
+    }
   });
 
   for (const block of diagramBlocks()) {
@@ -269,12 +329,22 @@ function wireDiagramHover(root: HTMLElement): void {
     block.addEventListener('focus', () => {
       const target = block.dataset.diagramTarget;
       if (target) {
-        highlight(target, { scrollLive: true });
+        selectTarget(target, 'diagram');
       }
     });
-    block.addEventListener('blur', () => {
-      clearHighlight();
-    });
+  }
+
+  for (const item of liveItems()) {
+    const preview = item.querySelector<HTMLElement>('.rd-meta-composition__item-preview');
+    if (preview) {
+      preview.tabIndex = 0;
+      preview.addEventListener('focus', () => {
+        const target = item.dataset.diagramTarget;
+        if (target) {
+          selectTarget(target, 'live');
+        }
+      });
+    }
   }
 }
 

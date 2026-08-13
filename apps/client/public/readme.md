@@ -291,8 +291,8 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-111](https://planetkevin.atlassian.net/browse/DAS-111)** — Docs & README sync — current ticket, Storybook examples, backlog refresh  
-Branch: `feature/DAS-111-docs-readme-storybook-sync`
+**[DAS-113](https://planetkevin.atlassian.net/browse/DAS-113)** — Storybook meta composition tightening — panel tabs and selection highlighting  
+Branch: `feature/DAS-113-storybook-meta-composition-tightening`
 
 **Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — per-framework Storybook sidebar alignment.
 
