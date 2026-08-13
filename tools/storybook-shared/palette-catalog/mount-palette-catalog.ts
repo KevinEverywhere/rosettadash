@@ -21,7 +21,7 @@ import {
   PALETTE_GROUP_STORY_NAMES,
 } from './palette-group-guides.js';
 
-const STORY_TITLE = 'Catalog/Palette';
+const STORY_TITLE = 'Catalog/Components';
 const NPM_LAYOUT_ATOMS_STORY = 'NPM layout atoms (rd-*)';
 const CATALOG_SCROLL_KEY = 'rosettadash:catalog-scroll-target';
 

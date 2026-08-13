@@ -18,20 +18,20 @@ export const PALETTE_GROUP_STORY_NAMES: Record<string, string> = {
 
 /** Storybook story ids — fallback when addon-links is unavailable in iframe embeds */
 export const PALETTE_GROUP_STORY_IDS: Record<string, string> = {
-  'form-inputs': 'catalog-palette--form-inputs',
-  'data-display': 'catalog-palette--data-display',
-  'logic-motion': 'catalog-palette--logic-and-motion',
-  'charts': 'catalog-palette--charts',
-  'layout': 'catalog-palette--layout-and-navigation',
-  'access-onboarding': 'catalog-palette--access-and-onboarding',
-  'data-sources': 'catalog-palette--data-sources',
-  'api-servers': 'catalog-palette--api-servers',
-  'news-discovery': 'catalog-palette--news-discovery',
-  'plugin-extensions': 'catalog-palette--plugin-extensions',
-  'vr-visuals': 'catalog-palette--vr-and-3-d',
-  'svg-visuals': 'catalog-palette--svg-visuals',
-  'media-authoring': 'catalog-palette--media-authoring',
-  'wasm-compute': 'catalog-palette--wasm-compute',
+  'form-inputs': 'catalog-components--form-inputs',
+  'data-display': 'catalog-components--data-display',
+  'logic-motion': 'catalog-components--logic-and-motion',
+  'charts': 'catalog-components--charts',
+  'layout': 'catalog-components--layout-and-navigation',
+  'access-onboarding': 'catalog-components--access-and-onboarding',
+  'data-sources': 'catalog-components--data-sources',
+  'api-servers': 'catalog-components--api-servers',
+  'news-discovery': 'catalog-components--news-discovery',
+  'plugin-extensions': 'catalog-components--plugin-extensions',
+  'vr-visuals': 'catalog-components--vr-and-3-d',
+  'svg-visuals': 'catalog-components--svg-visuals',
+  'media-authoring': 'catalog-components--media-authoring',
+  'wasm-compute': 'catalog-components--wasm-compute',
 };
 
 export interface PaletteGroupGuide {
@@ -185,7 +185,7 @@ export const PALETTE_GROUP_GUIDES: Record<string, PaletteGroupGuide> = {
     relationships:
       'Video Source ingests files and emits metadata. Equirect Viewport owns crop/filter strings (not a 3D renderer). Live Capture previews camera input for authoring. Shipped npm elements `<rd-video-source>` and `<rd-equirect-viewport>` implement the first two.',
     learnMore:
-      'See **Meta compositions → Media authoring pipeline** and **Wasm compute lab** for end-to-end flows. Shipped npm elements `<rd-video-source>` and `<rd-equirect-viewport>` are on **NPM layout atoms**.',
+      'See **Meta components → Media authoring pipeline** and **Wasm compute lab** for end-to-end flows. Shipped npm elements `<rd-video-source>` and `<rd-equirect-viewport>` are on **NPM layout atoms**.',
     relatedGroupIds: ['wasm-compute', 'vr-visuals'],
   },
   'wasm-compute': {
@@ -216,7 +216,7 @@ export const COMPONENT_LEARN_MORE: Partial<Record<string, string>> = {
   'visual.news.results-table': 'Click a headline, then see **Article Detail** in this group.',
   'visual.media.video-source': 'Shipped npm `<rd-video-source>` — see **NPM layout atoms** and **Media Authoring** group.',
   'visual.media.equirect-viewport': 'Shipped npm `<rd-equirect-viewport>` — see **NPM layout atoms** · emits crop-region events.',
-  'visual.wasm.media': 'Live demo on **WASM Compute** palette + **Meta compositions → WASM compute lab** · optional @ffmpeg peers.',
+  'visual.wasm.media': 'Live demo on **WASM Compute** group + **Meta components → WASM compute lab** · optional @ffmpeg peers.',
   'layout.collapsible': 'Similar UX to npm `<rd-accordion>` — see **NPM layout atoms**.',
 };
 

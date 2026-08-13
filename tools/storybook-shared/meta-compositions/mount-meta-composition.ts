@@ -97,7 +97,7 @@ function buildLivePanel(
       item.dataset.diagramTarget = `s${sectionIndex}-i${itemIndex}`;
       item.innerHTML = `<header class="rd-meta-composition__item-header">
           <span class="rd-meta-composition__item-label">${esc(label)}</span>
-          <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Palette →</button>
+          <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Components →</button>
         </header>
         <div class="rd-meta-composition__item-preview" data-diagram-target="s${sectionIndex}-i${itemIndex}">
           <div class="rd-meta-composition__item-demo">${html}</div>
@@ -142,7 +142,7 @@ function buildXmlPanel(definition: MetaCompositionDefinition): HTMLElement {
       item.dataset.diagramTarget = `s${sectionIndex}-i${itemIndex}`;
       item.innerHTML = `<header class="rd-meta-composition__xml-item-header">
           <span class="rd-meta-composition__xml-item-label">${esc(label)}</span>
-          <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Palette →</button>
+          <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Components →</button>
         </header>
         <pre class="rd-meta-composition__xml-snippet"><code>${esc(markup)}</code></pre>`;
       list.appendChild(item);

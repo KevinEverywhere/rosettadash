@@ -20,11 +20,16 @@ export function storybookPreviewHead(head: string): string {
   return `${head}${STORYBOOK_FONT_LINKS}`;
 }
 
-export const storybookManagerTheme = create({
-  ...themes.light,
-  fontBase: STORYBOOK_FONT_BASE,
-  fontCode: STORYBOOK_FONT_CODE,
-});
+export function createStorybookManagerTheme(runtimeLabel: string) {
+  return create({
+    ...themes.light,
+    brandTitle: `RosettaDash · ${runtimeLabel}`,
+    fontBase: STORYBOOK_FONT_BASE,
+    fontCode: STORYBOOK_FONT_CODE,
+  });
+}
+
+export const storybookManagerTheme = createStorybookManagerTheme('Web components catalog');
 
 export const storybookTypographyParameters = {
   previewHead: storybookPreviewHead,

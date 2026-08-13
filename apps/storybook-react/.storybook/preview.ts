@@ -1,22 +1,27 @@
 import type { Preview } from '@storybook/react-vite';
+import { registerRosettaDashElements } from '@rosettadash/web-components';
 import '../../../tools/storybook-shared/rosettadash-preview.css';
-import { storybookActionsParameters } from '../../../tools/storybook-shared/storybook-actions.ts';
+import '../../../tools/storybook-shared/palette-catalog/palette-demo-styles.css';
+import { rosettadashFrameworkPreviewParameters } from '../../../tools/storybook-shared/framework-preview.ts';
 import { storybookTypographyParameters } from '../../../tools/storybook-shared/storybook-typography.ts';
+
+registerRosettaDashElements();
 
 const preview: Preview = {
   ...storybookTypographyParameters,
   parameters: {
-    ...storybookActionsParameters,
-    layout: 'padded',
+    ...rosettadashFrameworkPreviewParameters,
     options: {
       storySort: {
         order: [
           'Getting Started',
-          'Layout',
-          'Visual',
-          ['Link List', 'Media'],
-          'Recipes',
+          ['Start here', 'Component count', 'Styling modes'],
+          'Catalog',
+          ['Components', 'Meta components'],
         ],
+        includeNames: true,
+        method: 'alphabetical',
+        locales: 'en-US',
       },
     },
   },

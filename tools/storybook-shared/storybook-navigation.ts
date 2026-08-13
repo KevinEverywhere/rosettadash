@@ -4,25 +4,29 @@ import {
   PALETTE_GROUP_STORY_NAMES,
 } from './palette-catalog/palette-group-guides.js';
 
-export const STORY_TITLE_PALETTE = 'Catalog/Palette';
-export const STORY_TITLE_META = 'Catalog/Meta compositions';
-export const STORY_TITLE_GETTING_STARTED = 'Getting Started/Introduction';
+export const STORY_TITLE_COMPONENTS = 'Catalog/Components';
+export const STORY_TITLE_META_COMPONENTS = 'Catalog/Meta components';
+/** @deprecated Use STORY_TITLE_COMPONENTS — kept for internal call sites during migration */
+export const STORY_TITLE_PALETTE = STORY_TITLE_COMPONENTS;
+/** @deprecated Use STORY_TITLE_META_COMPONENTS */
+export const STORY_TITLE_META = STORY_TITLE_META_COMPONENTS;
+export const STORY_TITLE_GETTING_STARTED = 'Getting Started';
 
 export const PALETTE_ALL_COMPONENTS_STORY = 'All components (full scroll)';
 export const PALETTE_NPM_ATOMS_STORY = 'NPM layout atoms (rd-*)';
 
 /** Storybook story ids — fallback when addon-links is unavailable in iframe embeds */
 export const META_COMPOSITION_STORY_IDS: Record<string, string> = {
-  'operations-kpi': 'catalog-meta-compositions--operations-kpi-dashboard',
-  'analytics-reporting': 'catalog-meta-compositions--analytics-reporting-dashboard',
-  'admin-settings': 'catalog-meta-compositions--admin-settings-dashboard',
-  'news-discovery': 'catalog-meta-compositions--news-discovery-flow',
-  'media-authoring': 'catalog-meta-compositions--media-authoring-pipeline',
-  'wasm-compute-lab': 'catalog-meta-compositions--wasm-compute-lab',
-  'vr-3d-gallery': 'catalog-meta-compositions--vr-3-d-gallery',
-  'data-platform': 'catalog-meta-compositions--data-platform-panel',
-  'navigation-shell': 'catalog-meta-compositions--navigation-layout-shell',
-  coverage: 'catalog-meta-compositions--component-coverage-audit',
+  'operations-kpi': 'catalog-meta-components--operations-kpi-dashboard',
+  'analytics-reporting': 'catalog-meta-components--analytics-reporting-dashboard',
+  'admin-settings': 'catalog-meta-components--admin-settings-dashboard',
+  'news-discovery': 'catalog-meta-components--news-discovery-flow',
+  'media-authoring': 'catalog-meta-components--media-authoring-pipeline',
+  'wasm-compute-lab': 'catalog-meta-components--wasm-compute-lab',
+  'vr-3d-gallery': 'catalog-meta-components--vr-3-d-gallery',
+  'data-platform': 'catalog-meta-components--data-platform-panel',
+  'navigation-shell': 'catalog-meta-components--navigation-layout-shell',
+  coverage: 'catalog-meta-components--component-coverage-audit',
 };
 
 export const META_COMPOSITION_STORY_NAMES: Record<string, string> = {
@@ -53,7 +57,7 @@ function navigateStorybookToStory(storyId: string): void {
 export function navigateToPaletteGroupStory(groupId: string): void {
   const storyName = PALETTE_GROUP_STORY_NAMES[groupId];
   if (storyName) {
-    linkTo(STORY_TITLE_PALETTE, storyName)();
+    linkTo(STORY_TITLE_COMPONENTS, storyName)();
     return;
   }
   const storyId = PALETTE_GROUP_STORY_IDS[groupId];
@@ -65,7 +69,7 @@ export function navigateToPaletteGroupStory(groupId: string): void {
 export function navigateToMetaComposition(compositionId: string): void {
   const storyName = META_COMPOSITION_STORY_NAMES[compositionId];
   if (storyName) {
-    linkTo(STORY_TITLE_META, storyName)();
+    linkTo(STORY_TITLE_META_COMPONENTS, storyName)();
     return;
   }
   const storyId = META_COMPOSITION_STORY_IDS[compositionId];
@@ -79,7 +83,7 @@ export function navigateToGettingStartedStory(storyName: string): void {
 }
 
 export function navigateToPaletteAllComponents(): void {
-  linkTo(STORY_TITLE_PALETTE, PALETTE_ALL_COMPONENTS_STORY)();
+  linkTo(STORY_TITLE_COMPONENTS, PALETTE_ALL_COMPONENTS_STORY)();
 }
 
 export function wireStorybookNavigation(root: HTMLElement): void {

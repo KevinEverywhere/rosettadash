@@ -36,7 +36,7 @@ Primary navigation:
 
 Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed from **web-components** in DAS-110 — coverage lives in Palette, Meta compositions, and **NPM layout atoms (rd-*)**.
 
-Per-framework Storybook apps (React, Vue, Angular, Svelte) ship today on ports 6007–6010 per DAS-98; sidebar alignment with this taxonomy is tracked in **[DAS-112](https://planetkevin.atlassian.net/browse/DAS-112)** (implementation in follow-up branches).
+Per-framework Storybook apps (React, Vue, Angular, Svelte) on ports 6007–6010 share the same **Getting Started + Catalog** sidebar as web-components (DAS-112). Legacy Layout / Visual / Recipes atom groups were retired in favor of shared palette and meta composition mounts.
 
 ## Story quality bar (DAS-101)
 

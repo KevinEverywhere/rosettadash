@@ -17,6 +17,10 @@ import {
   PALETTE_GROUP_GUIDES,
   PALETTE_GROUP_STORY_NAMES,
 } from '../palette-catalog/palette-group-guides.js';
+import {
+  STORYBOOK_RUNTIME_CATALOGS,
+  type StorybookRuntimeId,
+} from '../storybook-runtime-catalogs.js';
 
 function esc(value: string): string {
   return value
@@ -65,22 +69,23 @@ function renderTemplateList(): string {
 const paletteTypeCount = resolvePaletteGroups().reduce((sum, group) => sum + group.items.length, 0);
 
 /** Memorable landing page — how Storybook maps to the builder. */
-export function mountStartHere(): HTMLElement {
+export function mountStartHere(runtimeId: StorybookRuntimeId = 'web-components'): HTMLElement {
+  const runtime = STORYBOOK_RUNTIME_CATALOGS[runtimeId];
   const root = document.createElement('article');
   root.className = 'rd-getting-started';
 
   root.innerHTML = `
     <header class="rd-getting-started__hero">
-      <p class="rd-getting-started__eyebrow">RosettaDash · Web components catalog</p>
+      <p class="rd-getting-started__eyebrow">RosettaDash · ${esc(runtime.label)}</p>
       <h1 class="rd-getting-started__title">See every component. Compose like the builder.</h1>
       <p class="rd-getting-started__lede">
         This Storybook mirrors the RosettaDash builder palette — isolated demos, grouped guidance,
-        and live dashboard compositions. Pure custom elements today; React catalog follows once atoms ship.
+        and live dashboard compositions. ${esc(runtime.importHint)}
       </p>
       <div class="rd-getting-started__stats">
         <div class="rd-getting-started__stat">
           <span class="rd-getting-started__stat-value">${paletteTypeCount}</span>
-          <span class="rd-getting-started__stat-label">Palette components</span>
+          <span class="rd-getting-started__stat-label">Components</span>
         </div>
         <div class="rd-getting-started__stat">
           <span class="rd-getting-started__stat-value">${NPM_ATOM_IDS.length}</span>
@@ -88,11 +93,11 @@ export function mountStartHere(): HTMLElement {
         </div>
         <div class="rd-getting-started__stat">
           <span class="rd-getting-started__stat-value">${META_COMPOSITIONS.length}</span>
-          <span class="rd-getting-started__stat-label">Live compositions</span>
+          <span class="rd-getting-started__stat-label">Meta components</span>
         </div>
         <div class="rd-getting-started__stat">
           <span class="rd-getting-started__stat-value">${resolvePaletteGroups().length}</span>
-          <span class="rd-getting-started__stat-label">Palette groups</span>
+          <span class="rd-getting-started__stat-label">Component groups</span>
         </div>
       </div>
     </header>
@@ -104,14 +109,14 @@ export function mountStartHere(): HTMLElement {
   └─ Component count     ← full index with deep links
 
 Catalog
-  ├─ Palette             ← one story per builder group + All components scroll
-  └─ Meta compositions   ← dashboards & recipes (diagram + live preview + XML)</pre>
+  ├─ Components          ← one story per builder group + All components scroll
+  └─ Meta components     ← dashboards & recipes (diagram + live preview + XML)</pre>
     </section>
 
     <section class="rd-getting-started__section">
       <div class="rd-getting-started__grid rd-getting-started__grid--two">
         <article class="rd-getting-started__card">
-          <h3>Palette — learn one component</h3>
+          <h3>Components — learn one at a time</h3>
           <p>
             Every builder taxonomy type on grouped pages with spec cards, relationship guides,
             and interactive demos (table → detail, news flow, Three.js hosts, timers).
@@ -122,7 +127,7 @@ Catalog
           </div>
         </article>
         <article class="rd-getting-started__card">
-          <h3>Meta compositions — see them work together</h3>
+          <h3>Meta components — see them work together</h3>
           <p>
             Ten live dashboard layouts with a schematic diagram beside the preview.
             Each composition covers a cross-section of palette groups — the fastest way to understand real layouts.
@@ -140,25 +145,25 @@ Catalog
       <p class="rd-getting-started__lede">
         In RosettaDash, open the toolbar <strong>Select template…</strong> pulldown and click
         <strong>Apply template</strong> to drop a wired component group onto the canvas — the same
-        patterns you explore under <strong>Catalog → Meta compositions</strong>.
+        patterns you explore under <strong>Catalog → Meta components</strong>.
       </p>
       <div class="rd-getting-started__templates">${renderTemplateList()}</div>
     </section>
 
     <section class="rd-getting-started__section">
-      <h2 class="rd-getting-started__section-title">Palette groups</h2>
+      <h2 class="rd-getting-started__section-title">Component groups</h2>
       <p class="rd-getting-started__lede">Jump directly to a builder group story.</p>
       <div class="rd-getting-started__links">${renderPaletteGroupLinks()}</div>
     </section>
 
     <section class="rd-getting-started__section">
-      <h2 class="rd-getting-started__section-title">Featured compositions</h2>
+      <h2 class="rd-getting-started__section-title">Featured meta components</h2>
       <div class="rd-getting-started__links">${renderMetaCompositionLinks()}</div>
     </section>
 
     <p class="rd-getting-started__footnote">
-      Run locally: <code>npm run storybook:web-components</code> (port 6006).
-      React, Vue, Angular, and Svelte catalogs share the same taxonomy — web components first.
+      Run locally: <code>${esc(runtime.storybookCommand)}</code> (port ${runtime.port}).
+      All five runtime catalogs share the same taxonomy — web components on 6006, frameworks on 6007–6010.
     </p>
   `;
 
@@ -182,7 +187,7 @@ function renderComponentIndexRow(componentType: string): string {
     <td class="rd-component-index__type"><code>${esc(componentType)}</code></td>
     <td>
       <div class="rd-component-index__actions">
-        <button type="button" class="rd-component-index__action" data-nav-component-type="${esc(componentType)}">Palette →</button>
+        <button type="button" class="rd-component-index__action" data-nav-component-type="${esc(componentType)}">Components →</button>
       </div>
     </td>
     <td>
@@ -209,7 +214,7 @@ function renderNpmAtomRow(atomId: string): string {
     <td class="rd-component-index__type"><code>${esc(atomId)}</code></td>
     <td>
       <div class="rd-component-index__actions">
-        <button type="button" class="rd-component-index__action" data-nav-component-type="${esc(atomId)}">Palette →</button>
+        <button type="button" class="rd-component-index__action" data-nav-component-type="${esc(atomId)}">Components →</button>
       </div>
     </td>
     <td>
@@ -219,7 +224,8 @@ function renderNpmAtomRow(atomId: string): string {
 }
 
 /** Full component index — every type with palette and composition deep links. */
-export function mountComponentCountIndex(): HTMLElement {
+export function mountComponentCountIndex(runtimeId: StorybookRuntimeId = 'web-components'): HTMLElement {
+  const runtime = STORYBOOK_RUNTIME_CATALOGS[runtimeId];
   const root = document.createElement('article');
   root.className = 'rd-getting-started rd-component-index';
 
@@ -249,8 +255,8 @@ export function mountComponentCountIndex(): HTMLElement {
               <tr>
                 <th>Component</th>
                 <th>Taxonomy type</th>
-                <th>Palette</th>
-                <th>Meta composition</th>
+                <th>Components</th>
+                <th>Meta component</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -268,7 +274,8 @@ export function mountComponentCountIndex(): HTMLElement {
       <h1 class="rd-getting-started__title">${paletteTypeCount + NPM_ATOM_IDS.length} components at a glance</h1>
       <p class="rd-getting-started__lede">
         Every builder palette type and shipped npm atom — with one-click navigation to its
-        isolated palette demo or a live meta composition where it appears.
+        isolated palette demo or a live meta composition where it appears. Runtime:
+        <code>${esc(runtime.packageName)}</code>.
       </p>
       <div class="rd-getting-started__links" style="margin-top: 1rem">
         <button type="button" class="rd-getting-started__link rd-getting-started__link--primary" data-nav-palette-all>All components (full scroll)</button>
@@ -288,8 +295,8 @@ export function mountComponentCountIndex(): HTMLElement {
             <tr>
               <th>Atom</th>
               <th>Id</th>
-              <th>Palette</th>
-              <th>Meta composition</th>
+              <th>Components</th>
+              <th>Meta component</th>
             </tr>
           </thead>
           <tbody>${npmRows}</tbody>
