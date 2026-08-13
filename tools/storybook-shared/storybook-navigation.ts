@@ -45,6 +45,7 @@ export const META_COMPOSITION_STORY_NAMES: Record<string, string> = {
 export const GETTING_STARTED_STORY_NAMES = {
   startHere: 'Start here',
   componentCount: 'Component count',
+  stylingModes: 'Styling modes',
 } as const;
 
 function navigateStorybookToStory(storyId: string): void {

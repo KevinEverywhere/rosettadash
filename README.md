@@ -211,13 +211,15 @@ RosettaDash ships **five Storybook catalogs** — one per runtime — for intera
 
 Run all five in parallel: `npm run storybook:all`. Build static sites: `npm run build-storybook`.
 
-The **web-components** catalog (port **6006**) is the primary entry:
+All five catalogs share the same sidebar (DAS-112). Open **http://localhost:6006/** (or any runtime port) to land on **Getting Started → Start here**.
 
-- **Getting Started** — intro and component index with deep links
-- **Catalog / Palette** — every builder group with live demos
-- **Catalog / Meta compositions** — full dashboard recipes (layout diagram, live preview, component XML, WASM compute lab)
+| Section | Stories |
+|---------|---------|
+| **Getting Started** | Start here · Component count · Styling modes |
+| **Catalog / Components** | One story per builder group, All components scroll, NPM layout atoms |
+| **Catalog / Meta components** | Live dashboard recipes (diagram, preview, XML, Controls, Interactions) |
 
-Per-framework catalogs (React, Vue, Angular, Svelte) are documented and runnable on their ports; sidebar alignment with the web-components catalog is tracked in [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112).
+The **web-components** catalog on port **6006** is the primary reference; React (6007), Vue (6008), Angular (6009), and Svelte (6010) reuse the same taxonomy via shared DOM mounts. See [Storybook component catalog](docs/38-storybook-component-catalog.md).
 
 ## CI on GitHub (optional)
 
@@ -319,12 +321,9 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-114](https://planetkevin.atlassian.net/browse/DAS-114)** — Storybook Controls, Actions, and Interactions — operationalize addon panels  
-Branch: `feature/DAS-114-storybook-controls-actions-interactions`
+See [Planned Tickets](docs/11-planned-tickets.md) for active work.
 
-**Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — per-framework Storybook sidebar alignment (after DAS-114 patterns land on web-components).
-
-Recently closed: DAS-105–113.
+Recently closed: DAS-105–115 (Storybook catalogs, framework alignment, docs sync).
 
 ## License
 

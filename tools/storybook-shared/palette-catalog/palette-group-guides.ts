@@ -1,4 +1,4 @@
-/** Storybook display names — must match `name` in palette-catalog.stories.ts */
+/** Storybook display names — must match `name` in components-catalog.stories.* */
 export const PALETTE_GROUP_STORY_NAMES: Record<string, string> = {
   'form-inputs': 'Form Inputs',
   'data-display': 'Data Display',

@@ -45,4 +45,4 @@ import { EquirectViewport } from '@rosettadash/angular/visual/media/equirect-vie
 
 Depends on `@rosettadash/web-components` for the underlying custom elements.
 
-Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome.
+Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome. Storybook: **Getting Started → Styling modes** on port 6009 (`npm run storybook:angular`).

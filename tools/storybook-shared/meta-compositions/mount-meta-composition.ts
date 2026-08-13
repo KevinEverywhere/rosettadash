@@ -532,7 +532,7 @@ export function mountMetaCompositionCoverage(): HTMLElement {
       </p>
     </header>
     <section class="rd-meta-composition__section">
-      <h3 class="rd-meta-composition__section-title">Palette taxonomy (${ALL_PALETTE_TYPES.length})</h3>
+      <h3 class="rd-meta-composition__section-title">Component taxonomy (${ALL_PALETTE_TYPES.length})</h3>
       <div class="rd-meta-composition__coverage-table-wrap">
         <table class="rd-meta-composition__coverage-table">
           <thead><tr><th>Type</th><th>Covered</th><th>Compositions</th></tr></thead>

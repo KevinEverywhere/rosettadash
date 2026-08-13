@@ -26,35 +26,40 @@ npm run build-storybook
 
 Output: `dist/storybook/<project>/`.
 
-## Sidebar taxonomy (web-components)
+Default canvas route when no story is in the URL: **Getting Started → Start here** (`getting-started--start-here`).
 
-Primary navigation:
+## Sidebar taxonomy (all five catalogs)
 
-1. **Getting Started** — intro + component index with deep links
-2. **Catalog / Palette** — one story per builder group + All components scroll
-3. **Catalog / Meta compositions** — dashboard recipes (diagram + live preview + component XML) with **Controls**, **Actions**, and **Interactions** on real in-context demos (DAS-114)
+Every runtime Storybook shares the same sidebar (DAS-112):
 
-Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed from **web-components** in DAS-110 — coverage lives in Palette, Meta compositions, and **NPM layout atoms (rd-*)**.
+1. **Getting Started**
+   - **Start here** — catalog map, builder templates, deep links
+   - **Component count** — full index with navigation to Components and Meta components
+   - **Styling modes** — side-by-side minimal / tokens / themed comparison (all runtimes; stack-specific copy)
+2. **Catalog / Components** — one story per builder group + **All components (full scroll)** + **NPM layout atoms (rd-*)**
+3. **Catalog / Meta components** — dashboard recipes (diagram + live preview + component XML) with **Controls**, **Actions**, and **Interactions** on real in-context demos (DAS-114)
 
-Per-framework Storybook apps (React, Vue, Angular, Svelte) on ports 6007–6010 share the same **Getting Started + Catalog** sidebar as web-components (DAS-112). Legacy Layout / Visual / Recipes atom groups were retired in favor of shared palette and meta composition mounts.
+Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed in DAS-110 — coverage lives in **Components**, **Meta components**, and **NPM layout atoms (rd-*)**.
+
+Manager header branding: **RosettaDash · {runtime} catalog** (e.g. React catalog on port 6007).
 
 ## Story quality bar (DAS-101)
 
-**Primary entry:** `Catalog → Palette` — one story per builder palette group (~50 component types) plus **All components (full scroll)**.
+**Primary entry:** `Catalog → Components` — one story per builder group (~50 component types) plus **All components (full scroll)**.
 
-Each palette page shows every component in that group with:
+Each Components page shows every type in that group with:
 
 - Builder-parity preview markup (same visual language as the dashboard preview panel)
 - Interactive wiring where it matters (table → detail, news results → article, tabs, timers, Three.js VR/3D hosts)
 - Shipped npm `<rd-*>` elements embedded for media + wasm rows
 
-Atom-level npm custom element deep dives previously lived under Layout / Visual / Wasm; that coverage now lives in **Catalog / Palette**, **Meta compositions**, and **NPM layout atoms (rd-*)** (DAS-110).
+Atom-level npm custom element deep dives previously lived under Layout / Visual / Wasm; that coverage now lives in **Catalog / Components**, **Meta components**, and **NPM layout atoms (rd-*)** (DAS-110).
 
 Shared fixtures: `tools/storybook-shared/fixtures.ts` · catalog engine: `tools/storybook-shared/palette-catalog/`.
 
-**Catalog meta compositions (DAS-105):** **Catalog → Meta compositions** — ~10 live dashboard/recipe layouts showing every palette component and npm `rd-*` atom **in action** together. Replaces markup-only **Meta elements** stories. See [Storybook meta compositions](./42-storybook-meta-compositions.md).
+**Catalog meta components (DAS-105):** **Catalog → Meta components** — ~10 live dashboard/recipe layouts showing every builder component and npm `rd-*` atom **in action** together. Replaces markup-only **Meta elements** stories. See [Storybook meta components](./42-storybook-meta-compositions.md).
 
-**Catalog meta custom elements (DAS-102):** `@rosettadash/web-components/catalog` registers `rd-palette-catalog`, `rd-palette-group`, `rd-component-spec`, `rd-component-port`, `rd-component-requirement`, and `rd-component-option`. Use `variant="default|compact|plain"` for density/chrome; BEM classes match future React/Vue wrappers. Storybook palette pages mount these CEs for per-component spec cards.
+**Catalog meta custom elements (DAS-102):** `@rosettadash/web-components/catalog` registers `rd-palette-catalog`, `rd-palette-group`, `rd-component-spec`, `rd-component-port`, `rd-component-requirement`, and `rd-component-option`. Use `variant="default|compact|plain"` for density/chrome; BEM classes match future React/Vue wrappers. Storybook Components pages mount these CEs for per-component spec cards.
 
 ## Styling
 
@@ -65,6 +70,8 @@ Preview loads opt-in RosettaDash chrome globally:
 
 Shared via `tools/storybook-shared/rosettadash-preview.css`.
 
+**Getting Started → Styling modes** (`tools/storybook-shared/styling-modes/`) explains minimal vs tokens vs themed imports and how each runtime fits Tailwind, plain CSS, CSS Modules, MUI, etc. See [Stack styling guides](./41-stack-styling-guides.md).
+
 ## Shared fixtures
 
 Demo link items and JSON for web-component attributes live in `tools/storybook-shared/fixtures.ts`.
@@ -72,6 +79,8 @@ Demo link items and JSON for web-component attributes live in `tools/storybook-s
 ## Implementation notes
 
 - Storybook **10.5** with Vite builders (`@storybook/*-vite`, `@storybook/angular-vite` for Angular 22).
+- `storySort` must be defined **inline** in each app’s `.storybook/preview.ts` (Storybook 10 ignores imported sort config).
+- Framework catalog stories reuse shared DOM mounts via `tools/storybook-shared/dom-story-host.*`.
 - Stories import from workspace path aliases in `tsconfig.base.json` (same paths as consumers).
 - Framework media components register underlying web components on mount.
 
@@ -80,3 +89,4 @@ Demo link items and JSON for web-component attributes live in `tools/storybook-s
 - [Component taxonomy](./08-component-taxonomy.md)
 - [Styling and classnames](./35-styling-and-classnames.md)
 - [npm library build](./37-npm-library-build.md)
+- [React runtime integration](./40-react-runtime-integration.md)

@@ -106,7 +106,8 @@ export function mountStartHere(runtimeId: StorybookRuntimeId = 'web-components')
       <h2 class="rd-getting-started__section-title">How this catalog is arranged</h2>
       <pre class="rd-getting-started__map">Getting Started
   ├─ Start here          ← you are here
-  └─ Component count     ← full index with deep links
+  ├─ Component count     ← full index with deep links
+  └─ Styling modes       ← minimal / tokens / themed (all runtimes)
 
 Catalog
   ├─ Components          ← one story per builder group + All components scroll
@@ -223,7 +224,7 @@ function renderNpmAtomRow(atomId: string): string {
   </tr>`;
 }
 
-/** Full component index — every type with palette and composition deep links. */
+/** Full component index — every type with Components and meta component deep links. */
 export function mountComponentCountIndex(runtimeId: StorybookRuntimeId = 'web-components'): HTMLElement {
   const runtime = STORYBOOK_RUNTIME_CATALOGS[runtimeId];
   const root = document.createElement('article');
@@ -273,8 +274,8 @@ export function mountComponentCountIndex(runtimeId: StorybookRuntimeId = 'web-co
       <p class="rd-getting-started__eyebrow">Component index</p>
       <h1 class="rd-getting-started__title">${paletteTypeCount + NPM_ATOM_IDS.length} components at a glance</h1>
       <p class="rd-getting-started__lede">
-        Every builder palette type and shipped npm atom — with one-click navigation to its
-        isolated palette demo or a live meta composition where it appears. Runtime:
+        Every builder taxonomy type and shipped npm atom — with one-click navigation to its
+        isolated component demo or a live meta component where it appears. Runtime:
         <code>${esc(runtime.packageName)}</code>.
       </p>
       <div class="rd-getting-started__links" style="margin-top: 1rem">

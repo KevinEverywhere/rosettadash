@@ -189,7 +189,9 @@ Five Storybook servers — one per runtime — provide live component and dashbo
 | Angular | 6009 | `npm run storybook:angular` |
 | Svelte | 6010 | `npm run storybook:svelte` |
 
-Primary catalog: **Getting Started**, **Catalog / Palette**, and **Catalog / Meta compositions** on port **6006**. Framework catalogs (6007–6010) are documented in DAS-98; sidebar alignment lands in DAS-112.
+Run all five in parallel: `npm run storybook:all`.
+
+All five catalogs share the same sidebar: **Getting Started** (Start here, Component count, Styling modes), **Catalog / Components**, and **Catalog / Meta components**. Default route: **Start here**. See [Storybook component catalog](docs/38-storybook-component-catalog.md).
 
 ## CI on GitHub (optional)
 
@@ -291,10 +293,9 @@ See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Current ticket
 
-**[DAS-114](https://planetkevin.atlassian.net/browse/DAS-114)** — Storybook Controls, Actions, and Interactions — operationalize addon panels  
-Branch: `feature/DAS-114-storybook-controls-actions-interactions`
+See [Planned Tickets](docs/11-planned-tickets.md) for active work.
 
-**Next:** [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) — per-framework Storybook sidebar alignment.
+Recently closed: DAS-105–115 (Storybook catalogs, framework alignment, docs sync).
 
 ## License
 

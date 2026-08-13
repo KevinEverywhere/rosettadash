@@ -1,9 +1,9 @@
-# Storybook meta compositions (DAS-105)
+# Storybook meta components (DAS-105)
 
 **Ticket:** [DAS-105](https://planetkevin.atlassian.net/browse/DAS-105)  
 **Companion:** [Storybook component catalog](./38-storybook-component-catalog.md), [Demo dashboards](./22-demo-dashboards.md)
 
-Storybook **Catalog → Meta compositions** replaces the old **Meta elements** markup-only stories. Each entry shows:
+Storybook **Catalog → Meta components** replaces the old **Meta elements** markup-only stories. Each entry shows:
 
 1. **Layout diagram** — schematic blocks (click to select; hover syncs to live preview)
 2. **Live preview** — interactive dashboard or recipe with bordered preview containers per component
@@ -15,10 +15,10 @@ Panel tabs switch between diagram-only, live-only (mobile), diagram + live (≥9
 
 | Layer | Purpose |
 |-------|---------|
-| **Palette** | One row per taxonomy component — spec card + isolated demo |
-| **Meta compositions** | Abstract “see it working together” — dashboards and cross-group recipes |
+| **Components** | One row per taxonomy component — spec card + isolated demo |
+| **Meta components** | Abstract “see it working together” — dashboards and cross-group recipes |
 
-Users browse **Palette** to learn a single component; **Meta compositions** to understand how the library composes in real layouts.
+Users browse **Components** to learn a single component; **Meta components** to understand how the library composes in real layouts.
 
 ## Compositions (10)
 
@@ -44,14 +44,15 @@ Users browse **Palette** to learn a single component; **Meta compositions** to u
 - **Controls / Actions / Interactions (DAS-114):** `meta-composition-story-config.ts` — story args drive live KPI, chart, timer, media, and news demos inside each composition; `play` tests cover drill-down flows
 - Reuses palette demo markup and `wireCatalogInteractivity()` from the palette catalog engine
 - Styles: `meta-composition-styles.css` + shared `palette-demo-styles.css`
+- Stories: `apps/storybook-*/src/catalog/meta-components.stories.*` (all five runtimes)
 
 ## Adding a composition
 
 1. Add a `MetaCompositionDefinition` to `META_COMPOSITIONS` with `componentTypes` and `sections`.
-2. Export a story in `apps/storybook-web-components/src/catalog/meta-compositions.stories.ts`.
+2. Export a story in each runtime’s `meta-components.stories.*` (or web-components first, then mirror via shared mount).
 3. Confirm **Component coverage audit** stays green (no uncovered palette types).
 
 ## Related
 
-- Phase 21 [Demo dashboards](./22-demo-dashboards.md) — animated in-builder walkthroughs (separate from Storybook meta compositions)
-- DAS-102 catalog meta CEs (`rd-component-name`, etc.) remain for palette spec cards; meta compositions use **live preview HTML**, not markup-tree-only demos
+- Phase 21 [Demo dashboards](./22-demo-dashboards.md) — animated in-builder walkthroughs (separate from Storybook meta components)
+- DAS-102 catalog meta CEs (`rd-component-name`, etc.) remain for Components spec cards; meta components use **live preview HTML**, not markup-tree-only demos

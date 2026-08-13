@@ -16,6 +16,8 @@ Peer dependency: `react` >= 18 (`react-dom` recommended for apps).
 
 Native React components (accordion, link-list) inherit your stack CSS. CE hosts (media, wasm) accept `className` / `style` and `--rd-*` variables on the host.
 
+Compare modes live in Storybook: **Getting Started → Styling modes** on port 6007 (`npm run storybook:react`). All five runtime catalogs include the same story.
+
 ## Accordion
 
 ```tsx

@@ -105,7 +105,7 @@ See [Stack styling guides](./41-stack-styling-guides.md) for Tailwind, plain CSS
 
 ## Storybook
 
-`apps/storybook-react` loads tokens + `styles.css` globally. The **Getting Started / Styling modes** story compares minimal vs tokens vs full stylesheet side by side.
+`apps/storybook-react` loads tokens + `styles.css` globally. **Getting Started → Styling modes** compares minimal vs tokens vs full stylesheet side by side (same story on all five runtime catalogs).
 
 ## Tests
 

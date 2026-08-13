@@ -55,4 +55,4 @@ Components ship as `.svelte` source (compiled by the consumer’s Vite / SvelteK
 
 Depends on `@rosettadash/web-components` for the underlying custom elements.
 
-Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome.
+Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome. Storybook: **Getting Started → Styling modes** on port 6010 (`npm run storybook:svelte`).

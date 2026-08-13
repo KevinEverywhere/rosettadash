@@ -84,6 +84,10 @@ import '@rosettadash/web-components/styles.css';
 
 Tokens use the `--rd-*` prefix. Components work without these imports (minimal defaults in shadow CSS).
 
+## Storybook
+
+Primary catalog on port **6006** (`npm run storybook:web-components`): **Getting Started** → Start here, Component count, Styling modes; **Catalog / Components**; **Catalog / Meta components**. See [Storybook component catalog](../../docs/38-storybook-component-catalog.md).
+
 ## Build / pack
 
 ```bash
