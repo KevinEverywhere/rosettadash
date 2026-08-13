@@ -185,7 +185,7 @@ export const PALETTE_GROUP_GUIDES: Record<string, PaletteGroupGuide> = {
     relationships:
       'Video Source ingests files and emits metadata. Equirect Viewport owns crop/filter strings (not a 3D renderer). Live Capture previews camera input for authoring. Shipped npm elements `<rd-video-source>` and `<rd-equirect-viewport>` implement the first two.',
     learnMore:
-      'Deep dives: **Visual/Media** atom stories and **Wasm Compute → Wasm Media** for browser extract. Host apps keep their own Three.js preview; RosettaDash owns filter math via `@rosettadash/core`.',
+      'See **Meta compositions → Media authoring pipeline** and **Wasm compute lab** for end-to-end flows. Shipped npm elements `<rd-video-source>` and `<rd-equirect-viewport>` are on **NPM layout atoms**.',
     relatedGroupIds: ['wasm-compute', 'vr-visuals'],
   },
   'wasm-compute': {
@@ -214,9 +214,9 @@ export const COMPONENT_LEARN_MORE: Partial<Record<string, string>> = {
   'domain.person-invite': 'First step in team onboarding; follow with Role Assign in this group.',
   'domain.role-assign': 'Confirms access after Person Invite; pair with Role Gate on sensitive pages.',
   'visual.news.results-table': 'Click a headline, then see **Article Detail** in this group.',
-  'visual.media.video-source': 'Atom story: **Visual/Media/Video Source** · pairs with Equirect Viewport.',
-  'visual.media.equirect-viewport': 'Atom story: **Visual/Media/Equirect Viewport** · emits crop-region events.',
-  'visual.wasm.media': 'Atom story: **Wasm/Wasm Media** · requires optional @ffmpeg peers.',
+  'visual.media.video-source': 'Shipped npm `<rd-video-source>` — see **NPM layout atoms** and **Media Authoring** group.',
+  'visual.media.equirect-viewport': 'Shipped npm `<rd-equirect-viewport>` — see **NPM layout atoms** · emits crop-region events.',
+  'visual.wasm.media': 'Live demo on **WASM Compute** palette + **Meta compositions → WASM compute lab** · optional @ffmpeg peers.',
   'layout.collapsible': 'Similar UX to npm `<rd-accordion>` — see **NPM layout atoms**.',
 };
 

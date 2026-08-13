@@ -10,16 +10,7 @@ const preview: Preview = {
     layout: 'padded',
     options: {
       storySort: {
-        order: [
-          'Getting Started',
-          'Catalog',
-          ['Palette', 'Meta compositions'],
-          'Layout',
-          'Visual',
-          ['Link List', 'Media'],
-          'Recipes',
-          'Wasm',
-        ],
+        order: ['Getting Started', 'Catalog', ['Palette', 'Meta compositions']],
       },
     },
   },

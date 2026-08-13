@@ -101,8 +101,10 @@ Forward-looking Jira ticket plan for RosettaDash.
 | [DAS-104](https://planetkevin.atlassian.net/browse/DAS-104) | React runtime integration — native accordion parity, CE hosts + WasmMedia, stack styling guides — **done** |
 | [DAS-105](https://planetkevin.atlassian.net/browse/DAS-105) | Storybook meta compositions — live dashboards covering all components — **in progress** (`feature/DAS-105-storybook-meta-compositions`) |
 | [DAS-106](https://planetkevin.atlassian.net/browse/DAS-106) | Storybook palette cleanup — meta composition deep links and VR/3D live previews — **done** (`feature/DAS-106-storybook-palette-vr-previews`) |
-| [DAS-107](https://planetkevin.atlassian.net/browse/DAS-107) | Meta compositions three-panel view — diagram, live preview, component XML — **in progress** (`feature/DAS-107-meta-composition-three-panel-xml`) |
-| [DAS-108](https://planetkevin.atlassian.net/browse/DAS-108) | Storybook getting started — hero intro, component index, sidebar reorder — **in progress** (`feature/DAS-108-storybook-getting-started`) |
+| [DAS-107](https://planetkevin.atlassian.net/browse/DAS-107) | Meta compositions three-panel view — diagram, live preview, component XML — **done** |
+| [DAS-108](https://planetkevin.atlassian.net/browse/DAS-108) | Storybook getting started — hero intro, component index, sidebar reorder — **done** |
+| [DAS-109](https://planetkevin.atlassian.net/browse/DAS-109) | Storybook WASM compute lab — live Rust/Node/React sandbox in meta composition — **done** |
+| [DAS-110](https://planetkevin.atlassian.net/browse/DAS-110) | Storybook sidebar tightening — retire redundant Layout/Visual/Recipes/Wasm atom stories — **in progress** (`feature/DAS-110-storybook-sidebar-tightening`) |
 
 **Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`). DAS-99 dogfoods scoped packs with [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3) before full DAS-93 gate.
 

@@ -26,17 +26,17 @@ npm run build-storybook
 
 Output: `dist/storybook/<project>/`.
 
-## Sidebar taxonomy
+## Sidebar taxonomy (web-components)
 
-Each catalog uses the same sidebar ordering:
+Primary navigation:
 
-1. **Getting Started** — runtime intro + shipped element index
-2. **Layout** — e.g. Accordion
-3. **Visual** — Link List; **Visual/Media** — Video Source, Equirect Viewport
-4. **Recipes** — Accordion Link List
-5. **Wasm** — Wasm Media (browser extract)
+1. **Getting Started** — intro + component index with deep links
+2. **Catalog / Palette** — one story per builder group + All components scroll
+3. **Catalog / Meta compositions** — dashboard recipes (diagram + live preview + XML)
 
-Stories grow as components ship (DAS-93 full taxonomy).
+Legacy atom story groups (Layout, Visual, Recipes, Wasm) were removed in DAS-110 — coverage lives in Palette, Meta compositions, and **NPM layout atoms (rd-*)**.
+
+Per-framework Storybook apps (React, Vue, Angular, Svelte) may still carry atom stories until aligned in a follow-up.
 
 ## Story quality bar (DAS-101)
 

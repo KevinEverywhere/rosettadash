@@ -105,10 +105,7 @@ export function mountStartHere(): HTMLElement {
 
 Catalog
   ├─ Palette             ← one story per builder group + All components scroll
-  └─ Meta compositions   ← dashboards & recipes (diagram + live preview + XML)
-
-Layout · Visual · Recipes · Wasm
-  └─ Shipped npm &lt;rd-*&gt; atom deep dives</pre>
+  └─ Meta compositions   ← dashboards & recipes (diagram + live preview + XML)</pre>
     </section>
 
     <section class="rd-getting-started__section">
