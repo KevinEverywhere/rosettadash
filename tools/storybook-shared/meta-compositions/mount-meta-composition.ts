@@ -4,6 +4,7 @@ import {
   navigationLinkItemsJson,
 } from '../fixtures.js';
 import { wireCatalogInteractivity, navigateToPaletteComponent } from '../palette-catalog/mount-palette-catalog.js';
+import { renderPlainComponentMarkup } from '../palette-catalog/render-component-markup.js';
 import { renderPaletteDemo } from '../palette-catalog/palette-demos.js';
 import {
   ALL_PALETTE_TYPES,
@@ -13,6 +14,7 @@ import {
   uncoveredPaletteTypes,
 } from './composition-definitions.js';
 import { renderCompositionDiagram } from './render-composition-diagram.js';
+import { wireMetaCompositionPanels } from './wire-meta-composition-panels.js';
 
 function esc(value: string): string {
   return value
@@ -35,10 +37,11 @@ function renderNpmAtom(atomId: string): string {
   }
 }
 
-function renderItem(itemId: string): { label: string; html: string } {
+function renderItem(itemId: string): { label: string; html: string; markup: string } {
   if (itemId.startsWith('npm.')) {
     const label = itemId.replace('npm.rd-', 'rd-').replace('npm.', '');
-    return { label, html: renderNpmAtom(itemId) };
+    const html = renderNpmAtom(itemId);
+    return { label, html, markup: html };
   }
 
   const definition = defaultComponentRegistry.get(itemId);
@@ -46,23 +49,20 @@ function renderItem(itemId: string): { label: string; html: string } {
     return {
       label: itemId,
       html: `<div class="preview-fallback"><span>Unknown type</span><code>${esc(itemId)}</code></div>`,
+      markup: `<!-- unknown type: ${esc(itemId)} -->`,
     };
   }
 
   return {
     label: definition.label,
     html: renderPaletteDemo(itemId, definition),
+    markup: renderPlainComponentMarkup(definition),
   };
 }
 
 function buildLivePanel(definition: MetaCompositionDefinition): HTMLElement {
   const live = document.createElement('div');
   live.className = 'rd-meta-composition__live';
-
-  const liveTitle = document.createElement('h3');
-  liveTitle.className = 'rd-meta-composition__panel-title';
-  liveTitle.textContent = 'Live preview';
-  live.appendChild(liveTitle);
 
   definition.sections.forEach((section, sectionIndex) => {
     const sectionEl = document.createElement('section');
@@ -84,7 +84,10 @@ function buildLivePanel(definition: MetaCompositionDefinition): HTMLElement {
       item.className = 'rd-meta-composition__item';
       item.dataset.componentType = itemId;
       item.dataset.diagramTarget = `s${sectionIndex}-i${itemIndex}`;
-      item.innerHTML = `<header class="rd-meta-composition__item-label">${esc(label)}</header>
+      item.innerHTML = `<header class="rd-meta-composition__item-header">
+          <span class="rd-meta-composition__item-label">${esc(label)}</span>
+          <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Palette →</button>
+        </header>
         <div class="rd-meta-composition__item-demo">${html}</div>`;
       grid.appendChild(item);
     });
@@ -93,6 +96,50 @@ function buildLivePanel(definition: MetaCompositionDefinition): HTMLElement {
   });
 
   return live;
+}
+
+function buildXmlPanel(definition: MetaCompositionDefinition): HTMLElement {
+  const xml = document.createElement('aside');
+  xml.className = 'rd-meta-composition__xml';
+  xml.setAttribute('aria-label', 'Component XML');
+
+  const xmlHint = document.createElement('p');
+  xmlHint.className = 'rd-meta-composition__xml-hint';
+  xmlHint.textContent =
+    'Underlying custom-element markup only — no Storybook demo chrome or preview wrappers.';
+  xml.appendChild(xmlHint);
+
+  definition.sections.forEach((section, sectionIndex) => {
+    const sectionEl = document.createElement('section');
+    sectionEl.className = 'rd-meta-composition__section rd-meta-composition__section--xml';
+
+    const sectionHeader = document.createElement('h4');
+    sectionHeader.className = 'rd-meta-composition__section-title';
+    sectionHeader.textContent = section.title;
+    sectionEl.appendChild(sectionHeader);
+
+    const list = document.createElement('div');
+    list.className = 'rd-meta-composition__xml-items';
+
+    section.items.forEach((itemId, itemIndex) => {
+      const { label, markup } = renderItem(itemId);
+      const item = document.createElement('div');
+      item.className = 'rd-meta-composition__xml-item';
+      item.dataset.componentType = itemId;
+      item.dataset.diagramTarget = `s${sectionIndex}-i${itemIndex}`;
+      item.innerHTML = `<header class="rd-meta-composition__xml-item-header">
+          <span class="rd-meta-composition__xml-item-label">${esc(label)}</span>
+          <button type="button" class="rd-meta-composition__palette-link" data-palette-link>Palette →</button>
+        </header>
+        <pre class="rd-meta-composition__xml-snippet"><code>${esc(markup)}</code></pre>`;
+      list.appendChild(item);
+    });
+
+    sectionEl.appendChild(list);
+    xml.appendChild(sectionEl);
+  });
+
+  return xml;
 }
 
 function wireDiagramHover(root: HTMLElement): void {
@@ -109,12 +156,19 @@ function wireDiagramHover(root: HTMLElement): void {
     return [...split.querySelectorAll<HTMLElement>('.rd-meta-composition__item[data-diagram-target]')];
   }
 
+  function xmlItems(): HTMLElement[] {
+    return [...split.querySelectorAll<HTMLElement>('.rd-meta-composition__xml-item[data-diagram-target]')];
+  }
+
   function clearHighlight(): void {
     for (const el of diagramBlocks()) {
       el.classList.remove('rd-meta-diagram__block--active');
     }
     for (const el of liveItems()) {
       el.classList.remove('rd-meta-composition__item--highlight');
+    }
+    for (const el of xmlItems()) {
+      el.classList.remove('rd-meta-composition__xml-item--highlight');
     }
   }
 
@@ -132,6 +186,12 @@ function wireDiagramHover(root: HTMLElement): void {
       if (el.dataset.diagramTarget === target) {
         el.classList.add('rd-meta-composition__item--highlight');
         liveMatch = el;
+      }
+    }
+
+    for (const el of xmlItems()) {
+      if (el.dataset.diagramTarget === target) {
+        el.classList.add('rd-meta-composition__xml-item--highlight');
       }
     }
 
@@ -177,6 +237,20 @@ function wireDiagramHover(root: HTMLElement): void {
   }
 }
 
+function wirePaletteLinks(root: HTMLElement, container: HTMLElement): void {
+  container.querySelectorAll<HTMLElement>('[data-palette-link]').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const item = button.closest<HTMLElement>('[data-component-type]');
+      const componentType = item?.dataset.componentType;
+      if (componentType) {
+        navigateToPaletteComponent(componentType);
+      }
+    });
+  });
+}
+
 function wireMetaCompositionNavigation(root: HTMLElement): void {
   const split = root.querySelector<HTMLElement>('.rd-meta-composition__split');
   if (!split) {
@@ -191,6 +265,8 @@ function wireMetaCompositionNavigation(root: HTMLElement): void {
       }
     });
   });
+
+  wirePaletteLinks(root, split);
 
   split.querySelectorAll<HTMLElement>('.rd-meta-composition__item').forEach((item) => {
     const label = item.querySelector<HTMLElement>('.rd-meta-composition__item-label');
@@ -216,9 +292,34 @@ function wireMetaCompositionNavigation(root: HTMLElement): void {
       }
     });
   });
+
+  split.querySelectorAll<HTMLElement>('.rd-meta-composition__xml-item').forEach((item) => {
+    const label = item.querySelector<HTMLElement>('.rd-meta-composition__xml-item-label');
+    const componentType = item.dataset.componentType;
+    if (!label || !componentType) {
+      return;
+    }
+
+    label.tabIndex = 0;
+    label.setAttribute('role', 'link');
+    label.setAttribute('title', `Open ${componentType} in palette`);
+
+    const openPalette = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      navigateToPaletteComponent(componentType);
+    };
+
+    label.addEventListener('click', openPalette);
+    label.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        openPalette(event);
+      }
+    });
+  });
 }
 
-/** Mount a live meta composition with diagram + preview split. */
+/** Mount a live meta composition with diagram, preview, and component XML panels. */
 export function mountMetaComposition(definition: MetaCompositionDefinition): HTMLElement {
   const root = document.createElement('article');
   root.className = 'rd-meta-composition';
@@ -228,8 +329,22 @@ export function mountMetaComposition(definition: MetaCompositionDefinition): HTM
   header.className = 'rd-meta-composition__header';
   header.innerHTML = `<h2 class="rd-meta-composition__title">${esc(definition.title)}</h2>
     <p class="rd-meta-composition__summary">${esc(definition.summary)}</p>
-    <p class="rd-meta-composition__meta">${definition.componentTypes.length} component types · diagram + live preview</p>`;
+    <p class="rd-meta-composition__meta">${definition.componentTypes.length} component types · diagram + live preview + component XML</p>`;
   root.appendChild(header);
+
+  const workspace = document.createElement('div');
+  workspace.className = 'rd-meta-composition__workspace';
+  workspace.dataset.activeView = 'visual';
+  workspace.dataset.visualFocus = 'diagram';
+
+  const tabstrip = document.createElement('nav');
+  tabstrip.className = 'rd-meta-composition__tabstrip';
+  tabstrip.setAttribute('role', 'tablist');
+  tabstrip.setAttribute('aria-label', 'Composition panels');
+  tabstrip.innerHTML = `<button type="button" class="rd-meta-composition__panel-tab" role="tab" data-view="diagram" aria-selected="true">Layout diagram</button>
+    <button type="button" class="rd-meta-composition__panel-tab" role="tab" data-view="live" aria-selected="false" tabindex="-1">Live preview</button>
+    <button type="button" class="rd-meta-composition__panel-tab" role="tab" data-view="xml" aria-selected="false" tabindex="-1">Component XML</button>`;
+  workspace.appendChild(tabstrip);
 
   const split = document.createElement('div');
   split.className = 'rd-meta-composition__split';
@@ -237,15 +352,18 @@ export function mountMetaComposition(definition: MetaCompositionDefinition): HTM
   const diagramAside = document.createElement('aside');
   diagramAside.className = 'rd-meta-composition__diagram';
   diagramAside.setAttribute('aria-label', 'Layout diagram');
-  diagramAside.innerHTML = `<h3 class="rd-meta-composition__panel-title">Layout diagram</h3>${renderCompositionDiagram(definition)}`;
+  diagramAside.innerHTML = renderCompositionDiagram(definition);
   split.appendChild(diagramAside);
 
   split.appendChild(buildLivePanel(definition));
-  root.appendChild(split);
+  split.appendChild(buildXmlPanel(definition));
+  workspace.appendChild(split);
+  root.appendChild(workspace);
 
   wireCatalogInteractivity(root);
   wireDiagramHover(root);
   wireMetaCompositionNavigation(root);
+  wireMetaCompositionPanels(root);
   return root;
 }
 

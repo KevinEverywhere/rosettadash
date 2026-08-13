@@ -38,6 +38,8 @@ Users browse **Palette** to learn a single component; **Meta compositions** to u
 
 - Definitions: `tools/storybook-shared/meta-compositions/composition-definitions.ts`
 - Mount + wiring: `tools/storybook-shared/meta-compositions/mount-meta-composition.ts`
+- Plain component XML: `tools/storybook-shared/palette-catalog/render-component-markup.ts`
+- Panel tabs (diagram + live vs XML): `wire-meta-composition-panels.ts` — wide screens (≥1400px) show all three columns
 - Reuses palette demo markup and `wireCatalogInteractivity()` from the palette catalog engine
 - Styles: `meta-composition-styles.css` + shared `palette-demo-styles.css`
 

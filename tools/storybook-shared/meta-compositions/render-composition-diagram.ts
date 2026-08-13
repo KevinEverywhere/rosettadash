@@ -66,7 +66,7 @@ export function renderCompositionDiagram(definition: MetaCompositionDefinition):
     .join('');
 
   return `<div class="rd-meta-diagram" role="img" aria-label="Layout diagram for ${esc(definition.title)}">
-    <p class="rd-meta-diagram__hint">Hover any block to highlight the matching live preview. <strong>Click a block or component label</strong> to open its palette detail page.</p>
+    <p class="rd-meta-diagram__hint">Hover any block to highlight matching live preview and XML. <strong>Click a block, label, or Palette →</strong> to open its palette detail.</p>
     ${sections}
   </div>`;
 }

@@ -16,6 +16,24 @@ export const PALETTE_GROUP_STORY_NAMES: Record<string, string> = {
   'wasm-compute': 'WASM Compute',
 };
 
+/** Storybook story ids — fallback when addon-links is unavailable in iframe embeds */
+export const PALETTE_GROUP_STORY_IDS: Record<string, string> = {
+  'form-inputs': 'catalog-palette--form-inputs',
+  'data-display': 'catalog-palette--data-display',
+  'logic-motion': 'catalog-palette--logic-and-motion',
+  'charts': 'catalog-palette--charts',
+  'layout': 'catalog-palette--layout-and-navigation',
+  'access-onboarding': 'catalog-palette--access-and-onboarding',
+  'data-sources': 'catalog-palette--data-sources',
+  'api-servers': 'catalog-palette--api-servers',
+  'news-discovery': 'catalog-palette--news-discovery',
+  'plugin-extensions': 'catalog-palette--plugin-extensions',
+  'vr-visuals': 'catalog-palette--vr-and-3-d',
+  'svg-visuals': 'catalog-palette--svg-visuals',
+  'media-authoring': 'catalog-palette--media-authoring',
+  'wasm-compute': 'catalog-palette--wasm-compute',
+};
+
 export interface PaletteGroupGuide {
   id: string;
   /** Universal = fits most dashboards; specialized = domain-specific flows */

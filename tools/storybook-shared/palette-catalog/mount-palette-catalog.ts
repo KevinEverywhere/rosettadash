@@ -17,6 +17,7 @@ import { chartPoints, newsRows, tableRows } from './palette-demo-data.js';
 import { buildCatalogGroupElement, ensureCatalogElementsRegistered } from './build-palette-catalog-ce.js';
 import {
   getGroupGuide,
+  PALETTE_GROUP_STORY_IDS,
   PALETTE_GROUP_STORY_NAMES,
 } from './palette-group-guides.js';
 
@@ -78,6 +79,13 @@ function applyPendingCatalogScroll(root: HTMLElement): void {
   });
 }
 
+function navigateStorybookToStory(storyId: string): void {
+  const targetWindow = window.top ?? window;
+  const url = new URL(targetWindow.location.href);
+  url.searchParams.set('path', `/story/${storyId}`);
+  targetWindow.location.href = url.toString();
+}
+
 /** Navigate from meta composition (or elsewhere) to a palette component detail page. */
 export function navigateToPaletteComponent(componentType: string): void {
   setCatalogScrollTarget(componentType);
@@ -88,9 +96,20 @@ export function navigateToPaletteComponent(componentType: string): void {
   }
 
   const groupId = findPaletteGroupIdForType(componentType);
-  const storyName = groupId ? PALETTE_GROUP_STORY_NAMES[groupId] : undefined;
+  if (!groupId) {
+    return;
+  }
+
+  const storyName = PALETTE_GROUP_STORY_NAMES[groupId];
+  const storyId = PALETTE_GROUP_STORY_IDS[groupId];
+
   if (storyName) {
     linkTo(STORY_TITLE, storyName)();
+    return;
+  }
+
+  if (storyId) {
+    navigateStorybookToStory(storyId);
   }
 }
 
