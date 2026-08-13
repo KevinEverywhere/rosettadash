@@ -65,4 +65,8 @@ import { EquirectViewport } from '@rosettadash/vue/visual/media/equirect-viewpor
 </template>
 ```
 
-Pair with `@rosettadash/web-components/styles.css` / `tokens.css` for opt-in `--rd-*` chrome. Storybook: **Getting Started → Styling modes** on port 6008 (`npm run storybook:vue`).
+Pair with `@rosettadash/web-components/styles.css` / `tokens.css` for opt-in `--rd-*` chrome.
+
+## Storybook
+
+Clone the [RosettaDash repo](https://github.com/KevinEverywhere/rosettadash) and run `npm run storybook:vue` (port **6008**). See [GitHub — Storybook](https://github.com/KevinEverywhere/rosettadash#component-examples-storybook).

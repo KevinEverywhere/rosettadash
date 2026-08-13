@@ -42,3 +42,7 @@ npm pack ./dist/packages/core --dry-run
 ```bash
 nx test core
 ```
+
+## Storybook
+
+Component demos live in the [RosettaDash repo](https://github.com/KevinEverywhere/rosettadash#component-examples-storybook) — five Storybook apps (6006–6010), not in this package.

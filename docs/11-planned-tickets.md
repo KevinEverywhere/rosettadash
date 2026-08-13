@@ -109,7 +109,7 @@ Forward-looking Jira ticket plan for RosettaDash.
 | [DAS-112](https://planetkevin.atlassian.net/browse/DAS-112) | Per-framework Storybook sidebar alignment (React, Vue, Angular, Svelte) — **done** |
 | [DAS-113](https://planetkevin.atlassian.net/browse/DAS-113) | Storybook meta composition tightening — panel tabs and selection highlighting — **done** |
 | [DAS-114](https://planetkevin.atlassian.net/browse/DAS-114) | Storybook Controls, Actions, and Interactions — operationalize addon panels — **done** |
-| [DAS-115](https://planetkevin.atlassian.net/browse/DAS-115) | Storybook taxonomy docs sync — README, catalog docs, in-app copy — **done** (`docs/DAS-115-storybook-taxonomy-sync`) |
+| [DAS-115](https://planetkevin.atlassian.net/browse/DAS-115) | Storybook taxonomy docs sync — README, npm package READMEs, catalog docs — **in progress** (`feature/DAS-115-storybook-taxonomy-docs-sync`) |
 
 **Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`). DAS-99 dogfoods scoped packs with [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3) before full DAS-93 gate.
 

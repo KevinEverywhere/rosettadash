@@ -1,7 +1,7 @@
 {
   "name": "@rosettadash/vue",
   "version": "0.0.1",
-  "description": "RosettaDash vue runtime - same group/component paths as web-components",
+  "description": "RosettaDash Vue 3 runtime — same import paths as @rosettadash/web-components. Storybook: github.com/KevinEverywhere/rosettadash (port 6008).",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",

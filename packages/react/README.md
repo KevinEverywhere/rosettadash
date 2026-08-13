@@ -16,7 +16,9 @@ Peer dependency: `react` >= 18 (`react-dom` recommended for apps).
 
 Native React components (accordion, link-list) inherit your stack CSS. CE hosts (media, wasm) accept `className` / `style` and `--rd-*` variables on the host.
 
-Compare modes live in Storybook: **Getting Started → Styling modes** on port 6007 (`npm run storybook:react`). All five runtime catalogs include the same story.
+## Storybook
+
+Clone the [RosettaDash repo](https://github.com/KevinEverywhere/rosettadash) and run `npm run storybook:react` (port **6007**). Same sidebar as the web-components catalog: **Getting Started → Styling modes**, **Catalog / Components**, **Catalog / Meta components**. See [GitHub — Storybook](https://github.com/KevinEverywhere/rosettadash#component-examples-storybook).
 
 ## Accordion
 

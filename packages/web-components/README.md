@@ -86,7 +86,14 @@ Tokens use the `--rd-*` prefix. Components work without these imports (minimal d
 
 ## Storybook
 
-Primary catalog on port **6006** (`npm run storybook:web-components`): **Getting Started** → Start here, Component count, Styling modes; **Catalog / Components**; **Catalog / Meta components**. See [Storybook component catalog](../../docs/38-storybook-component-catalog.md).
+Interactive component catalogs ship with the **RosettaDash GitHub repo** (not this npm tarball). Clone [KevinEverywhere/rosettadash](https://github.com/KevinEverywhere/rosettadash), then:
+
+```bash
+npm install
+npm run storybook:web-components   # port 6006 — primary catalog
+```
+
+Sidebar: **Getting Started** (Start here, Component count, Styling modes) · **Catalog / Components** · **Catalog / Meta components**. Framework catalogs on ports 6007–6010 (`npm run storybook:react`, etc.). Details: [Storybook component catalog](https://github.com/KevinEverywhere/rosettadash/blob/development/docs/38-storybook-component-catalog.md).
 
 ## Build / pack
 

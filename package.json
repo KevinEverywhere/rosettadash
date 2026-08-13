@@ -1,7 +1,7 @@
 {
   "name": "rosettadash",
   "version": "0.1.0",
-  "description": "RosettaDash product monorepo (visual dashboard builder). Not a component library — install @rosettadash/web-components for UI elements.",
+  "description": "RosettaDash product monorepo — visual dashboard builder plus five Storybook component catalogs. Not a component library; install @rosettadash/web-components for UI elements.",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "license": "MIT",
   "repository": {

@@ -71,7 +71,7 @@ Recently closed: DAS-112–115 (framework Storybook alignment, Controls/Interact
 | Admin control panel + content library | DAS-74 — in progress |
 | Animated demo dashboards (3 examples) | Phase 21 — planned after Phase 20 |
 | Docker Compose local dev | Shipped |
-| Per-runtime Storybook catalogs (ports 6006–6010) | Shipped (DAS-98); web-components sidebar tightened (DAS-110); framework alignment planned (DAS-112) |
+| Per-runtime Storybook catalogs (ports 6006–6010) | Shipped (DAS-98); sidebar tightened (DAS-110); framework alignment (DAS-112); docs sync (DAS-115) |
 | Full taxonomy + page template library | Phase 6 — complete |
 | Phase 7 production hardening | Complete (DAS-50–DAS-54) |
 | Phase 8 component plugins & 3D | Complete (DAS-55–DAS-56) |

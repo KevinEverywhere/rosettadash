@@ -1,7 +1,7 @@
 {
   "name": "@rosettadash/web-components",
   "version": "0.1.0",
-  "description": "RosettaDash Web Components runtime - default public UI package",
+  "description": "RosettaDash Web Components runtime — typed custom elements with optional tokens.css / styles.css. Storybook catalog: clone github.com/KevinEverywhere/rosettadash (port 6006).",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",
@@ -106,7 +106,7 @@
     "url": "git+https://github.com/KevinEverywhere/rosettadash.git",
     "directory": "packages/web-components"
   },
-  "homepage": "https://github.com/KevinEverywhere/rosettadash#readme",
+  "homepage": "https://github.com/KevinEverywhere/rosettadash#component-examples-storybook",
   "bugs": {
     "url": "https://github.com/KevinEverywhere/rosettadash/issues"
   }

@@ -55,4 +55,8 @@ Components ship as `.svelte` source (compiled by the consumer’s Vite / SvelteK
 
 Depends on `@rosettadash/web-components` for the underlying custom elements.
 
-Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome. Storybook: **Getting Started → Styling modes** on port 6010 (`npm run storybook:svelte`).
+Pair with `@rosettadash/web-components/styles.css` for opt-in `--rd-*` chrome.
+
+## Storybook
+
+Clone the [RosettaDash repo](https://github.com/KevinEverywhere/rosettadash) and run `npm run storybook:svelte` (port **6010**). See [GitHub — Storybook](https://github.com/KevinEverywhere/rosettadash#component-examples-storybook).

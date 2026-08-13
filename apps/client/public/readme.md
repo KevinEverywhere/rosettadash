@@ -4,9 +4,32 @@
 
 RosettaDash is a visual dashboard component builder for **developers working locally**. Design dashboard UIs—forms, tables, charts, layouts—assemble them into composites, and export code for your target stack.
 
+**Storybook:** Five interactive catalogs (ports 6006–6010) document every component per runtime — clone this repo and see [Component examples (Storybook)](#component-examples-storybook) below.
+
 ## Who this is for
 
 RosettaDash is intended to run on **your machine** during development. There is no required public deployment; GitHub Actions only validates PRs.
+
+## Two ways to use RosettaDash
+
+| Path | When | How |
+|------|------|-----|
+| **Product (`rosettadash`)** | Contribute, run the visual builder, extend the monorepo | `git clone` this repo → `npm install` → `npm start` |
+| **Components (scoped npm)** | Drop typed elements into an existing app | `npm install @rosettadash/<runtime>` → `@rosettadash/<runtime>/<group>/…/<component>` |
+| **Storybook (repo only)** | Browse live demos without the builder | Clone repo → `npm run storybook:web-components` (or `:react`, `:vue`, `:angular`, `:svelte`) |
+
+Unscoped **rosettadash** is the product (same as clone) — not a component barrel. Library API: [DAS-90](https://planetkevin.atlassian.net/browse/DAS-90); full taxonomy `0.1.0` waits on [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93). Consumer install path: [DAS-99](https://planetkevin.atlassian.net/browse/DAS-99) / [docs/39](docs/39-npm-consumer-install.md).
+
+**Author:** Kevin Ready \<kevin@planetkevin.com\>
+
+```ts
+// Consumer API — install scoped packages (not unscoped rosettadash)
+import { Accordion } from '@rosettadash/web-components/layout/accordion';
+import { Accordion } from '@rosettadash/react/layout/accordion';
+import { registerRosettaDashMediaElements } from '@rosettadash/web-components/media';
+```
+
+Details: [npm prep](docs/33-npm-package-prep.md) · [Public API](docs/34-public-component-api.md) · [Styling](docs/35-styling-and-classnames.md) · [Post-90 plan](docs/36-npm-post-90-plan.md) · [Consumer install](docs/39-npm-consumer-install.md).
 
 ## Monorepo
 
@@ -18,7 +41,16 @@ This repository is an [Nx](https://nx.dev) workspace (free tier, no Nx Cloud req
 | `server` | `apps/server` | NestJS API |
 | `core` | `packages/core` | Shared types and utilities |
 | `web-components` | `packages/web-components` | Runtime custom elements (`@rosettadash/web-components`) |
+| `runtime-react` | `packages/react` | React runtime (`@rosettadash/react`) |
+| `runtime-vue` | `packages/vue` | Vue 3 runtime (`@rosettadash/vue`) |
+| `runtime-angular` | `packages/angular` | Angular runtime (`@rosettadash/angular`) |
+| `runtime-svelte` | `packages/svelte` | Svelte 5 runtime (`@rosettadash/svelte`) |
 | `ui-primitives` | `packages/ui-primitives` | Preview mock data and generators |
+| `storybook-web-components` | `apps/storybook-web-components` | Storybook catalog — Web Components (port 6006) |
+| `storybook-react` | `apps/storybook-react` | Storybook catalog — React (port 6007) |
+| `storybook-vue` | `apps/storybook-vue` | Storybook catalog — Vue (port 6008) |
+| `storybook-angular` | `apps/storybook-angular` | Storybook catalog — Angular (port 6009) |
+| `storybook-svelte` | `apps/storybook-svelte` | Storybook catalog — Svelte (port 6010) |
 | `exporters-react` | `packages/exporters-react` | React UI code generator from ExportIR |
 | `exporters-nest` | `packages/exporters-nest` | NestJS + PostgreSQL server generator from ExportIR |
 | `exporters-express` | `packages/exporters-express` | Express + PostgreSQL server generator from ExportIR |
@@ -179,7 +211,7 @@ npm run verify:all     # both
 
 ## Component examples (Storybook)
 
-Five Storybook servers — one per runtime — provide live component and dashboard examples. See [Storybook component catalog](docs/38-storybook-component-catalog.md).
+RosettaDash ships **five Storybook catalogs** — one per runtime — for interactive component and dashboard examples without opening the builder. See [Storybook component catalog](docs/38-storybook-component-catalog.md) (DAS-98).
 
 | Runtime | Port | Command |
 |---------|------|---------|
@@ -189,9 +221,19 @@ Five Storybook servers — one per runtime — provide live component and dashbo
 | Angular | 6009 | `npm run storybook:angular` |
 | Svelte | 6010 | `npm run storybook:svelte` |
 
-Run all five in parallel: `npm run storybook:all`.
+Run all five in parallel: `npm run storybook:all`. Build static sites: `npm run build-storybook`.
 
-All five catalogs share the same sidebar: **Getting Started** (Start here, Component count, Styling modes), **Catalog / Components**, and **Catalog / Meta components**. Default route: **Start here**. See [Storybook component catalog](docs/38-storybook-component-catalog.md).
+If Storybook logs **Unable to index files** / `ENOENT` after switching branches, stop the dev server, run `npm run storybook:clean-cache`, and start again — the index cache can reference renamed story files from a prior checkout.
+
+All five catalogs share the same sidebar. Open **http://localhost:6006/** (or any runtime port) to land on **Getting Started → Start here**.
+
+| Section | Stories |
+|---------|---------|
+| **Getting Started** | Start here · Component count · Styling modes |
+| **Catalog / Components** | One story per builder group, All components scroll, NPM layout atoms |
+| **Catalog / Meta components** | Live dashboard recipes (diagram, preview, XML, Controls, Interactions) |
+
+The **web-components** catalog on port **6006** is the primary reference; React (6007), Vue (6008), Angular (6009), and Svelte (6010) reuse the same taxonomy via shared DOM mounts. See [Storybook component catalog](docs/38-storybook-component-catalog.md).
 
 ## CI on GitHub (optional)
 

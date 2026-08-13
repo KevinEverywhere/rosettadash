@@ -1,7 +1,7 @@
 {
   "name": "@rosettadash/svelte",
   "version": "0.0.1",
-  "description": "RosettaDash svelte runtime - same group/component paths as web-components",
+  "description": "RosettaDash Svelte 5 runtime — same import paths as @rosettadash/web-components. Storybook: github.com/KevinEverywhere/rosettadash (port 6010).",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",

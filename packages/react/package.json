@@ -1,7 +1,7 @@
 {
   "name": "@rosettadash/react",
   "version": "0.0.1",
-  "description": "RosettaDash react runtime - same group/component paths as web-components",
+  "description": "RosettaDash React runtime — same import paths as @rosettadash/web-components. Storybook: github.com/KevinEverywhere/rosettadash (port 6007).",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
   "license": "MIT",
