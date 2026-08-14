@@ -30,6 +30,7 @@
     "generate:react-runtime": "node scripts/generate-react-runtime.mjs --write",
     "generate:angular-runtime": "node scripts/generate-angular-runtime.mjs --write",
     "generate:vue-runtime": "node scripts/generate-vue-runtime.mjs --write",
+    "generate:svelte-runtime": "node scripts/generate-svelte-runtime.mjs --write",
     "publish:npm": "npm run pack:consumer && npm publish ./dist/packages/core --access public && npm publish ./dist/packages/web-components --access public",
     "setup:e2e": "playwright install chromium",
     "e2e:prep": "node scripts/check-e2e-ports.mjs",

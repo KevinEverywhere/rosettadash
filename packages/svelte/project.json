@@ -3,12 +3,19 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/svelte/src",
   "projectType": "library",
-  "tags": ["scope:runtime", "type:ui"],
-  "implicitDependencies": ["web-components"],
+  "tags": [
+    "scope:runtime",
+    "type:ui"
+  ],
+  "implicitDependencies": [
+    "web-components"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/svelte",
         "main": "packages/svelte/src/index.ts",
@@ -26,11 +33,64 @@
           }
         ],
         "additionalEntryPoints": [
+          "packages/svelte/src/domain/person-invite/types.ts",
+          "packages/svelte/src/domain/role-assign/types.ts",
+          "packages/svelte/src/domain/role-gate/types.ts",
+          "packages/svelte/src/domain/time-preset/types.ts",
+          "packages/svelte/src/infra/env/types.ts",
+          "packages/svelte/src/infra/mongodb/types.ts",
+          "packages/svelte/src/infra/mysql/types.ts",
+          "packages/svelte/src/infra/postgresql/types.ts",
+          "packages/svelte/src/infra/server/express/types.ts",
+          "packages/svelte/src/infra/server/nest/types.ts",
+          "packages/svelte/src/infra/server/next/types.ts",
+          "packages/svelte/src/infra/server/nuxt/types.ts",
+          "packages/svelte/src/infra/supabase/types.ts",
+          "packages/svelte/src/infra/wasm/asset/types.ts",
           "packages/svelte/src/layout/accordion/types.ts",
           "packages/svelte/src/layout/accordion-link-list/types.ts",
+          "packages/svelte/src/layout/collapsible/types.ts",
+          "packages/svelte/src/layout/flex/types.ts",
+          "packages/svelte/src/layout/grid/types.ts",
+          "packages/svelte/src/layout/modal/types.ts",
+          "packages/svelte/src/layout/tabs/types.ts",
+          "packages/svelte/src/logic/timer/types.ts",
+          "packages/svelte/src/visual/chart/bar/types.ts",
+          "packages/svelte/src/visual/chart/line/types.ts",
+          "packages/svelte/src/visual/chart/pie/types.ts",
+          "packages/svelte/src/visual/detail/types.ts",
+          "packages/svelte/src/visual/display/3d-bar-chart/types.ts",
+          "packages/svelte/src/visual/display/3d-geo-globe/types.ts",
+          "packages/svelte/src/visual/display/3d-gltf-model/types.ts",
+          "packages/svelte/src/visual/display/3d-scatter/types.ts",
+          "packages/svelte/src/visual/display/3d-scene/types.ts",
+          "packages/svelte/src/visual/input/checkbox/types.ts",
+          "packages/svelte/src/visual/input/date-range/types.ts",
+          "packages/svelte/src/visual/input/number/types.ts",
+          "packages/svelte/src/visual/input/select/types.ts",
+          "packages/svelte/src/visual/input/text/types.ts",
+          "packages/svelte/src/visual/input/textarea/types.ts",
+          "packages/svelte/src/visual/kpi/types.ts",
           "packages/svelte/src/visual/link-list/types.ts",
+          "packages/svelte/src/visual/media/equirect-viewport/types.ts",
+          "packages/svelte/src/visual/media/live-capture/types.ts",
           "packages/svelte/src/visual/media/video-source/types.ts",
-          "packages/svelte/src/visual/media/equirect-viewport/types.ts"
+          "packages/svelte/src/visual/news/article-detail/types.ts",
+          "packages/svelte/src/visual/news/language-select/types.ts",
+          "packages/svelte/src/visual/news/region-select/types.ts",
+          "packages/svelte/src/visual/news/results-table/types.ts",
+          "packages/svelte/src/visual/news/search-box/types.ts",
+          "packages/svelte/src/visual/news/type-select/types.ts",
+          "packages/svelte/src/visual/plugin/metric-chip/types.ts",
+          "packages/svelte/src/visual/plugin/status-badge/types.ts",
+          "packages/svelte/src/visual/skeleton/types.ts",
+          "packages/svelte/src/visual/svg/icon/types.ts",
+          "packages/svelte/src/visual/svg/inline/types.ts",
+          "packages/svelte/src/visual/table/types.ts",
+          "packages/svelte/src/visual/wasm/media/types.ts",
+          "packages/svelte/src/visual/wasm/module/types.ts",
+          "packages/svelte/src/visual/wasm/worker-host/types.ts",
+          "packages/svelte/src/wasm/wasm-media/types.ts"
         ],
         "generateExportsField": false
       }

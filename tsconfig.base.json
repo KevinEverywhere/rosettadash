@@ -99,21 +99,6 @@
       "@rosettadash/svelte": [
         "./packages/svelte/src/index.ts"
       ],
-      "@rosettadash/svelte/layout/accordion": [
-        "./packages/svelte/src/layout/accordion/Accordion.svelte"
-      ],
-      "@rosettadash/svelte/layout/accordion-link-list": [
-        "./packages/svelte/src/layout/accordion-link-list/AccordionLinkList.svelte"
-      ],
-      "@rosettadash/svelte/visual/link-list": [
-        "./packages/svelte/src/visual/link-list/LinkList.svelte"
-      ],
-      "@rosettadash/svelte/visual/media/video-source": [
-        "./packages/svelte/src/visual/media/video-source/VideoSource.svelte"
-      ],
-      "@rosettadash/svelte/visual/media/equirect-viewport": [
-        "./packages/svelte/src/visual/media/equirect-viewport/EquirectViewport.svelte"
-      ],
       "@rosettadash/exporters-mongodb": [
         "./packages/exporters-mongodb/src/index.ts"
       ],
@@ -644,6 +629,180 @@
       ],
       "@rosettadash/vue/wasm/wasm-media": [
         "./packages/vue/src/wasm/wasm-media/index.ts"
+      ],
+      "@rosettadash/svelte/domain/person-invite": [
+        "./packages/svelte/src/domain/person-invite/types.ts"
+      ],
+      "@rosettadash/svelte/domain/role-assign": [
+        "./packages/svelte/src/domain/role-assign/types.ts"
+      ],
+      "@rosettadash/svelte/domain/role-gate": [
+        "./packages/svelte/src/domain/role-gate/types.ts"
+      ],
+      "@rosettadash/svelte/domain/time-preset": [
+        "./packages/svelte/src/domain/time-preset/types.ts"
+      ],
+      "@rosettadash/svelte/infra/env": [
+        "./packages/svelte/src/infra/env/types.ts"
+      ],
+      "@rosettadash/svelte/infra/mongodb": [
+        "./packages/svelte/src/infra/mongodb/types.ts"
+      ],
+      "@rosettadash/svelte/infra/mysql": [
+        "./packages/svelte/src/infra/mysql/types.ts"
+      ],
+      "@rosettadash/svelte/infra/postgresql": [
+        "./packages/svelte/src/infra/postgresql/types.ts"
+      ],
+      "@rosettadash/svelte/infra/server/express": [
+        "./packages/svelte/src/infra/server/express/types.ts"
+      ],
+      "@rosettadash/svelte/infra/server/nest": [
+        "./packages/svelte/src/infra/server/nest/types.ts"
+      ],
+      "@rosettadash/svelte/infra/server/next": [
+        "./packages/svelte/src/infra/server/next/types.ts"
+      ],
+      "@rosettadash/svelte/infra/server/nuxt": [
+        "./packages/svelte/src/infra/server/nuxt/types.ts"
+      ],
+      "@rosettadash/svelte/infra/supabase": [
+        "./packages/svelte/src/infra/supabase/types.ts"
+      ],
+      "@rosettadash/svelte/infra/wasm/asset": [
+        "./packages/svelte/src/infra/wasm/asset/types.ts"
+      ],
+      "@rosettadash/svelte/layout/accordion": [
+        "./packages/svelte/src/layout/accordion/types.ts"
+      ],
+      "@rosettadash/svelte/layout/accordion-link-list": [
+        "./packages/svelte/src/layout/accordion-link-list/types.ts"
+      ],
+      "@rosettadash/svelte/layout/collapsible": [
+        "./packages/svelte/src/layout/collapsible/types.ts"
+      ],
+      "@rosettadash/svelte/layout/flex": [
+        "./packages/svelte/src/layout/flex/types.ts"
+      ],
+      "@rosettadash/svelte/layout/grid": [
+        "./packages/svelte/src/layout/grid/types.ts"
+      ],
+      "@rosettadash/svelte/layout/modal": [
+        "./packages/svelte/src/layout/modal/types.ts"
+      ],
+      "@rosettadash/svelte/layout/tabs": [
+        "./packages/svelte/src/layout/tabs/types.ts"
+      ],
+      "@rosettadash/svelte/logic/timer": [
+        "./packages/svelte/src/logic/timer/types.ts"
+      ],
+      "@rosettadash/svelte/visual/chart/bar": [
+        "./packages/svelte/src/visual/chart/bar/types.ts"
+      ],
+      "@rosettadash/svelte/visual/chart/line": [
+        "./packages/svelte/src/visual/chart/line/types.ts"
+      ],
+      "@rosettadash/svelte/visual/chart/pie": [
+        "./packages/svelte/src/visual/chart/pie/types.ts"
+      ],
+      "@rosettadash/svelte/visual/detail": [
+        "./packages/svelte/src/visual/detail/types.ts"
+      ],
+      "@rosettadash/svelte/visual/display/3d-bar-chart": [
+        "./packages/svelte/src/visual/display/3d-bar-chart/types.ts"
+      ],
+      "@rosettadash/svelte/visual/display/3d-geo-globe": [
+        "./packages/svelte/src/visual/display/3d-geo-globe/types.ts"
+      ],
+      "@rosettadash/svelte/visual/display/3d-gltf-model": [
+        "./packages/svelte/src/visual/display/3d-gltf-model/types.ts"
+      ],
+      "@rosettadash/svelte/visual/display/3d-scatter": [
+        "./packages/svelte/src/visual/display/3d-scatter/types.ts"
+      ],
+      "@rosettadash/svelte/visual/display/3d-scene": [
+        "./packages/svelte/src/visual/display/3d-scene/types.ts"
+      ],
+      "@rosettadash/svelte/visual/input/checkbox": [
+        "./packages/svelte/src/visual/input/checkbox/types.ts"
+      ],
+      "@rosettadash/svelte/visual/input/date-range": [
+        "./packages/svelte/src/visual/input/date-range/types.ts"
+      ],
+      "@rosettadash/svelte/visual/input/number": [
+        "./packages/svelte/src/visual/input/number/types.ts"
+      ],
+      "@rosettadash/svelte/visual/input/select": [
+        "./packages/svelte/src/visual/input/select/types.ts"
+      ],
+      "@rosettadash/svelte/visual/input/text": [
+        "./packages/svelte/src/visual/input/text/types.ts"
+      ],
+      "@rosettadash/svelte/visual/input/textarea": [
+        "./packages/svelte/src/visual/input/textarea/types.ts"
+      ],
+      "@rosettadash/svelte/visual/kpi": [
+        "./packages/svelte/src/visual/kpi/types.ts"
+      ],
+      "@rosettadash/svelte/visual/link-list": [
+        "./packages/svelte/src/visual/link-list/types.ts"
+      ],
+      "@rosettadash/svelte/visual/media/equirect-viewport": [
+        "./packages/svelte/src/visual/media/equirect-viewport/types.ts"
+      ],
+      "@rosettadash/svelte/visual/media/live-capture": [
+        "./packages/svelte/src/visual/media/live-capture/types.ts"
+      ],
+      "@rosettadash/svelte/visual/media/video-source": [
+        "./packages/svelte/src/visual/media/video-source/types.ts"
+      ],
+      "@rosettadash/svelte/visual/news/article-detail": [
+        "./packages/svelte/src/visual/news/article-detail/types.ts"
+      ],
+      "@rosettadash/svelte/visual/news/language-select": [
+        "./packages/svelte/src/visual/news/language-select/types.ts"
+      ],
+      "@rosettadash/svelte/visual/news/region-select": [
+        "./packages/svelte/src/visual/news/region-select/types.ts"
+      ],
+      "@rosettadash/svelte/visual/news/results-table": [
+        "./packages/svelte/src/visual/news/results-table/types.ts"
+      ],
+      "@rosettadash/svelte/visual/news/search-box": [
+        "./packages/svelte/src/visual/news/search-box/types.ts"
+      ],
+      "@rosettadash/svelte/visual/news/type-select": [
+        "./packages/svelte/src/visual/news/type-select/types.ts"
+      ],
+      "@rosettadash/svelte/visual/plugin/metric-chip": [
+        "./packages/svelte/src/visual/plugin/metric-chip/types.ts"
+      ],
+      "@rosettadash/svelte/visual/plugin/status-badge": [
+        "./packages/svelte/src/visual/plugin/status-badge/types.ts"
+      ],
+      "@rosettadash/svelte/visual/skeleton": [
+        "./packages/svelte/src/visual/skeleton/types.ts"
+      ],
+      "@rosettadash/svelte/visual/svg/icon": [
+        "./packages/svelte/src/visual/svg/icon/types.ts"
+      ],
+      "@rosettadash/svelte/visual/svg/inline": [
+        "./packages/svelte/src/visual/svg/inline/types.ts"
+      ],
+      "@rosettadash/svelte/visual/table": [
+        "./packages/svelte/src/visual/table/types.ts"
+      ],
+      "@rosettadash/svelte/visual/wasm/media": [
+        "./packages/svelte/src/visual/wasm/media/types.ts"
+      ],
+      "@rosettadash/svelte/visual/wasm/module": [
+        "./packages/svelte/src/visual/wasm/module/types.ts"
+      ],
+      "@rosettadash/svelte/visual/wasm/worker-host": [
+        "./packages/svelte/src/visual/wasm/worker-host/types.ts"
+      ],
+      "@rosettadash/svelte/wasm/wasm-media": [
+        "./packages/svelte/src/wasm/wasm-media/types.ts"
       ]
     }
   },

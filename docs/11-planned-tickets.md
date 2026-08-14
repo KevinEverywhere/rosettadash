@@ -112,8 +112,8 @@ Forward-looking Jira ticket plan for RosettaDash.
 | [DAS-115](https://planetkevin.atlassian.net/browse/DAS-115) | Storybook taxonomy docs sync — README, npm package READMEs, catalog docs — **in progress** (`feature/DAS-115-storybook-taxonomy-docs-sync`) |
 | [DAS-116](https://planetkevin.atlassian.net/browse/DAS-116) | `@rosettadash/react` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
 | [DAS-117](https://planetkevin.atlassian.net/browse/DAS-117) | `@rosettadash/angular` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
-| [DAS-118](https://planetkevin.atlassian.net/browse/DAS-118) | `@rosettadash/vue` full taxonomy @ 0.1.1 — **in progress** (`feature/DAS-118-vue-full-taxonomy-0-1-1`) |
-| [DAS-119](https://planetkevin.atlassian.net/browse/DAS-119) | `@rosettadash/svelte` full taxonomy @ 0.1.1 — planned |
+| [DAS-118](https://planetkevin.atlassian.net/browse/DAS-118) | `@rosettadash/vue` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
+| [DAS-119](https://planetkevin.atlassian.net/browse/DAS-119) | `@rosettadash/svelte` full taxonomy @ 0.1.1 — **in progress** (`feature/DAS-119-svelte-full-taxonomy-0-1-1`) |
 
 ### DAS-93 deferred follow-ups (post sub-ticket merge)
 

@@ -1,6 +1,6 @@
 {
   "name": "@rosettadash/svelte",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "RosettaDash Svelte 5 runtime — same import paths as @rosettadash/web-components. Storybook: github.com/KevinEverywhere/rosettadash (port 6010).",
   "author": "Kevin Ready <kevin@planetkevin.com>",
   "type": "module",
@@ -15,6 +15,90 @@
       "import": "./src/index.js",
       "default": "./src/index.js"
     },
+    "./domain/person-invite": {
+      "types": "./src/domain/person-invite/types.d.ts",
+      "svelte": "./src/domain/person-invite/PersonInvite.svelte",
+      "import": "./src/domain/person-invite/PersonInvite.svelte",
+      "default": "./src/domain/person-invite/PersonInvite.svelte"
+    },
+    "./domain/role-assign": {
+      "types": "./src/domain/role-assign/types.d.ts",
+      "svelte": "./src/domain/role-assign/RoleAssign.svelte",
+      "import": "./src/domain/role-assign/RoleAssign.svelte",
+      "default": "./src/domain/role-assign/RoleAssign.svelte"
+    },
+    "./domain/role-gate": {
+      "types": "./src/domain/role-gate/types.d.ts",
+      "svelte": "./src/domain/role-gate/RoleGate.svelte",
+      "import": "./src/domain/role-gate/RoleGate.svelte",
+      "default": "./src/domain/role-gate/RoleGate.svelte"
+    },
+    "./domain/time-preset": {
+      "types": "./src/domain/time-preset/types.d.ts",
+      "svelte": "./src/domain/time-preset/TimePreset.svelte",
+      "import": "./src/domain/time-preset/TimePreset.svelte",
+      "default": "./src/domain/time-preset/TimePreset.svelte"
+    },
+    "./infra/env": {
+      "types": "./src/infra/env/types.d.ts",
+      "svelte": "./src/infra/env/EnvConfig.svelte",
+      "import": "./src/infra/env/EnvConfig.svelte",
+      "default": "./src/infra/env/EnvConfig.svelte"
+    },
+    "./infra/mongodb": {
+      "types": "./src/infra/mongodb/types.d.ts",
+      "svelte": "./src/infra/mongodb/MongodbInfra.svelte",
+      "import": "./src/infra/mongodb/MongodbInfra.svelte",
+      "default": "./src/infra/mongodb/MongodbInfra.svelte"
+    },
+    "./infra/mysql": {
+      "types": "./src/infra/mysql/types.d.ts",
+      "svelte": "./src/infra/mysql/MysqlInfra.svelte",
+      "import": "./src/infra/mysql/MysqlInfra.svelte",
+      "default": "./src/infra/mysql/MysqlInfra.svelte"
+    },
+    "./infra/postgresql": {
+      "types": "./src/infra/postgresql/types.d.ts",
+      "svelte": "./src/infra/postgresql/PostgresqlInfra.svelte",
+      "import": "./src/infra/postgresql/PostgresqlInfra.svelte",
+      "default": "./src/infra/postgresql/PostgresqlInfra.svelte"
+    },
+    "./infra/server/express": {
+      "types": "./src/infra/server/express/types.d.ts",
+      "svelte": "./src/infra/server/express/ExpressServerInfra.svelte",
+      "import": "./src/infra/server/express/ExpressServerInfra.svelte",
+      "default": "./src/infra/server/express/ExpressServerInfra.svelte"
+    },
+    "./infra/server/nest": {
+      "types": "./src/infra/server/nest/types.d.ts",
+      "svelte": "./src/infra/server/nest/NestServerInfra.svelte",
+      "import": "./src/infra/server/nest/NestServerInfra.svelte",
+      "default": "./src/infra/server/nest/NestServerInfra.svelte"
+    },
+    "./infra/server/next": {
+      "types": "./src/infra/server/next/types.d.ts",
+      "svelte": "./src/infra/server/next/NextServerInfra.svelte",
+      "import": "./src/infra/server/next/NextServerInfra.svelte",
+      "default": "./src/infra/server/next/NextServerInfra.svelte"
+    },
+    "./infra/server/nuxt": {
+      "types": "./src/infra/server/nuxt/types.d.ts",
+      "svelte": "./src/infra/server/nuxt/NuxtServerInfra.svelte",
+      "import": "./src/infra/server/nuxt/NuxtServerInfra.svelte",
+      "default": "./src/infra/server/nuxt/NuxtServerInfra.svelte"
+    },
+    "./infra/supabase": {
+      "types": "./src/infra/supabase/types.d.ts",
+      "svelte": "./src/infra/supabase/SupabaseInfra.svelte",
+      "import": "./src/infra/supabase/SupabaseInfra.svelte",
+      "default": "./src/infra/supabase/SupabaseInfra.svelte"
+    },
+    "./infra/wasm/asset": {
+      "types": "./src/infra/wasm/asset/types.d.ts",
+      "svelte": "./src/infra/wasm/asset/WasmAsset.svelte",
+      "import": "./src/infra/wasm/asset/WasmAsset.svelte",
+      "default": "./src/infra/wasm/asset/WasmAsset.svelte"
+    },
     "./layout/accordion": {
       "types": "./src/layout/accordion/types.d.ts",
       "svelte": "./src/layout/accordion/Accordion.svelte",
@@ -27,11 +111,155 @@
       "import": "./src/layout/accordion-link-list/AccordionLinkList.svelte",
       "default": "./src/layout/accordion-link-list/AccordionLinkList.svelte"
     },
+    "./layout/collapsible": {
+      "types": "./src/layout/collapsible/types.d.ts",
+      "svelte": "./src/layout/collapsible/Collapsible.svelte",
+      "import": "./src/layout/collapsible/Collapsible.svelte",
+      "default": "./src/layout/collapsible/Collapsible.svelte"
+    },
+    "./layout/flex": {
+      "types": "./src/layout/flex/types.d.ts",
+      "svelte": "./src/layout/flex/FlexLayout.svelte",
+      "import": "./src/layout/flex/FlexLayout.svelte",
+      "default": "./src/layout/flex/FlexLayout.svelte"
+    },
+    "./layout/grid": {
+      "types": "./src/layout/grid/types.d.ts",
+      "svelte": "./src/layout/grid/GridLayout.svelte",
+      "import": "./src/layout/grid/GridLayout.svelte",
+      "default": "./src/layout/grid/GridLayout.svelte"
+    },
+    "./layout/modal": {
+      "types": "./src/layout/modal/types.d.ts",
+      "svelte": "./src/layout/modal/ModalLayout.svelte",
+      "import": "./src/layout/modal/ModalLayout.svelte",
+      "default": "./src/layout/modal/ModalLayout.svelte"
+    },
+    "./layout/tabs": {
+      "types": "./src/layout/tabs/types.d.ts",
+      "svelte": "./src/layout/tabs/TabsLayout.svelte",
+      "import": "./src/layout/tabs/TabsLayout.svelte",
+      "default": "./src/layout/tabs/TabsLayout.svelte"
+    },
+    "./logic/timer": {
+      "types": "./src/logic/timer/types.d.ts",
+      "svelte": "./src/logic/timer/Timer.svelte",
+      "import": "./src/logic/timer/Timer.svelte",
+      "default": "./src/logic/timer/Timer.svelte"
+    },
+    "./visual/chart/bar": {
+      "types": "./src/visual/chart/bar/types.d.ts",
+      "svelte": "./src/visual/chart/bar/BarChart.svelte",
+      "import": "./src/visual/chart/bar/BarChart.svelte",
+      "default": "./src/visual/chart/bar/BarChart.svelte"
+    },
+    "./visual/chart/line": {
+      "types": "./src/visual/chart/line/types.d.ts",
+      "svelte": "./src/visual/chart/line/LineChart.svelte",
+      "import": "./src/visual/chart/line/LineChart.svelte",
+      "default": "./src/visual/chart/line/LineChart.svelte"
+    },
+    "./visual/chart/pie": {
+      "types": "./src/visual/chart/pie/types.d.ts",
+      "svelte": "./src/visual/chart/pie/PieChart.svelte",
+      "import": "./src/visual/chart/pie/PieChart.svelte",
+      "default": "./src/visual/chart/pie/PieChart.svelte"
+    },
+    "./visual/detail": {
+      "types": "./src/visual/detail/types.d.ts",
+      "svelte": "./src/visual/detail/DetailPanel.svelte",
+      "import": "./src/visual/detail/DetailPanel.svelte",
+      "default": "./src/visual/detail/DetailPanel.svelte"
+    },
+    "./visual/display/3d-bar-chart": {
+      "types": "./src/visual/display/3d-bar-chart/types.d.ts",
+      "svelte": "./src/visual/display/3d-bar-chart/ThreeBarChart.svelte",
+      "import": "./src/visual/display/3d-bar-chart/ThreeBarChart.svelte",
+      "default": "./src/visual/display/3d-bar-chart/ThreeBarChart.svelte"
+    },
+    "./visual/display/3d-geo-globe": {
+      "types": "./src/visual/display/3d-geo-globe/types.d.ts",
+      "svelte": "./src/visual/display/3d-geo-globe/ThreeGeoGlobe.svelte",
+      "import": "./src/visual/display/3d-geo-globe/ThreeGeoGlobe.svelte",
+      "default": "./src/visual/display/3d-geo-globe/ThreeGeoGlobe.svelte"
+    },
+    "./visual/display/3d-gltf-model": {
+      "types": "./src/visual/display/3d-gltf-model/types.d.ts",
+      "svelte": "./src/visual/display/3d-gltf-model/ThreeGltfModel.svelte",
+      "import": "./src/visual/display/3d-gltf-model/ThreeGltfModel.svelte",
+      "default": "./src/visual/display/3d-gltf-model/ThreeGltfModel.svelte"
+    },
+    "./visual/display/3d-scatter": {
+      "types": "./src/visual/display/3d-scatter/types.d.ts",
+      "svelte": "./src/visual/display/3d-scatter/ThreeScatterPlot.svelte",
+      "import": "./src/visual/display/3d-scatter/ThreeScatterPlot.svelte",
+      "default": "./src/visual/display/3d-scatter/ThreeScatterPlot.svelte"
+    },
+    "./visual/display/3d-scene": {
+      "types": "./src/visual/display/3d-scene/types.d.ts",
+      "svelte": "./src/visual/display/3d-scene/ThreeScenePointCloud.svelte",
+      "import": "./src/visual/display/3d-scene/ThreeScenePointCloud.svelte",
+      "default": "./src/visual/display/3d-scene/ThreeScenePointCloud.svelte"
+    },
+    "./visual/input/checkbox": {
+      "types": "./src/visual/input/checkbox/types.d.ts",
+      "svelte": "./src/visual/input/checkbox/CheckboxInput.svelte",
+      "import": "./src/visual/input/checkbox/CheckboxInput.svelte",
+      "default": "./src/visual/input/checkbox/CheckboxInput.svelte"
+    },
+    "./visual/input/date-range": {
+      "types": "./src/visual/input/date-range/types.d.ts",
+      "svelte": "./src/visual/input/date-range/DateRangeFilter.svelte",
+      "import": "./src/visual/input/date-range/DateRangeFilter.svelte",
+      "default": "./src/visual/input/date-range/DateRangeFilter.svelte"
+    },
+    "./visual/input/number": {
+      "types": "./src/visual/input/number/types.d.ts",
+      "svelte": "./src/visual/input/number/NumberInput.svelte",
+      "import": "./src/visual/input/number/NumberInput.svelte",
+      "default": "./src/visual/input/number/NumberInput.svelte"
+    },
+    "./visual/input/select": {
+      "types": "./src/visual/input/select/types.d.ts",
+      "svelte": "./src/visual/input/select/SelectInput.svelte",
+      "import": "./src/visual/input/select/SelectInput.svelte",
+      "default": "./src/visual/input/select/SelectInput.svelte"
+    },
+    "./visual/input/text": {
+      "types": "./src/visual/input/text/types.d.ts",
+      "svelte": "./src/visual/input/text/TextInput.svelte",
+      "import": "./src/visual/input/text/TextInput.svelte",
+      "default": "./src/visual/input/text/TextInput.svelte"
+    },
+    "./visual/input/textarea": {
+      "types": "./src/visual/input/textarea/types.d.ts",
+      "svelte": "./src/visual/input/textarea/TextareaInput.svelte",
+      "import": "./src/visual/input/textarea/TextareaInput.svelte",
+      "default": "./src/visual/input/textarea/TextareaInput.svelte"
+    },
+    "./visual/kpi": {
+      "types": "./src/visual/kpi/types.d.ts",
+      "svelte": "./src/visual/kpi/KpiCard.svelte",
+      "import": "./src/visual/kpi/KpiCard.svelte",
+      "default": "./src/visual/kpi/KpiCard.svelte"
+    },
     "./visual/link-list": {
       "types": "./src/visual/link-list/types.d.ts",
       "svelte": "./src/visual/link-list/LinkList.svelte",
       "import": "./src/visual/link-list/LinkList.svelte",
       "default": "./src/visual/link-list/LinkList.svelte"
+    },
+    "./visual/media/equirect-viewport": {
+      "types": "./src/visual/media/equirect-viewport/types.d.ts",
+      "svelte": "./src/visual/media/equirect-viewport/EquirectViewport.svelte",
+      "import": "./src/visual/media/equirect-viewport/EquirectViewport.svelte",
+      "default": "./src/visual/media/equirect-viewport/EquirectViewport.svelte"
+    },
+    "./visual/media/live-capture": {
+      "types": "./src/visual/media/live-capture/types.d.ts",
+      "svelte": "./src/visual/media/live-capture/LiveCapture.svelte",
+      "import": "./src/visual/media/live-capture/LiveCapture.svelte",
+      "default": "./src/visual/media/live-capture/LiveCapture.svelte"
     },
     "./visual/media/video-source": {
       "types": "./src/visual/media/video-source/types.d.ts",
@@ -39,14 +267,108 @@
       "import": "./src/visual/media/video-source/VideoSource.svelte",
       "default": "./src/visual/media/video-source/VideoSource.svelte"
     },
-    "./visual/media/equirect-viewport": {
-      "types": "./src/visual/media/equirect-viewport/types.d.ts",
-      "svelte": "./src/visual/media/equirect-viewport/EquirectViewport.svelte",
-      "import": "./src/visual/media/equirect-viewport/EquirectViewport.svelte",
-      "default": "./src/visual/media/equirect-viewport/EquirectViewport.svelte"
+    "./visual/news/article-detail": {
+      "types": "./src/visual/news/article-detail/types.d.ts",
+      "svelte": "./src/visual/news/article-detail/NewsArticleDetail.svelte",
+      "import": "./src/visual/news/article-detail/NewsArticleDetail.svelte",
+      "default": "./src/visual/news/article-detail/NewsArticleDetail.svelte"
+    },
+    "./visual/news/language-select": {
+      "types": "./src/visual/news/language-select/types.d.ts",
+      "svelte": "./src/visual/news/language-select/NewsLanguageSelect.svelte",
+      "import": "./src/visual/news/language-select/NewsLanguageSelect.svelte",
+      "default": "./src/visual/news/language-select/NewsLanguageSelect.svelte"
+    },
+    "./visual/news/region-select": {
+      "types": "./src/visual/news/region-select/types.d.ts",
+      "svelte": "./src/visual/news/region-select/NewsRegionSelect.svelte",
+      "import": "./src/visual/news/region-select/NewsRegionSelect.svelte",
+      "default": "./src/visual/news/region-select/NewsRegionSelect.svelte"
+    },
+    "./visual/news/results-table": {
+      "types": "./src/visual/news/results-table/types.d.ts",
+      "svelte": "./src/visual/news/results-table/NewsResultsTable.svelte",
+      "import": "./src/visual/news/results-table/NewsResultsTable.svelte",
+      "default": "./src/visual/news/results-table/NewsResultsTable.svelte"
+    },
+    "./visual/news/search-box": {
+      "types": "./src/visual/news/search-box/types.d.ts",
+      "svelte": "./src/visual/news/search-box/NewsSearchBox.svelte",
+      "import": "./src/visual/news/search-box/NewsSearchBox.svelte",
+      "default": "./src/visual/news/search-box/NewsSearchBox.svelte"
+    },
+    "./visual/news/type-select": {
+      "types": "./src/visual/news/type-select/types.d.ts",
+      "svelte": "./src/visual/news/type-select/NewsTypeSelect.svelte",
+      "import": "./src/visual/news/type-select/NewsTypeSelect.svelte",
+      "default": "./src/visual/news/type-select/NewsTypeSelect.svelte"
+    },
+    "./visual/plugin/metric-chip": {
+      "types": "./src/visual/plugin/metric-chip/types.d.ts",
+      "svelte": "./src/visual/plugin/metric-chip/MetricChip.svelte",
+      "import": "./src/visual/plugin/metric-chip/MetricChip.svelte",
+      "default": "./src/visual/plugin/metric-chip/MetricChip.svelte"
+    },
+    "./visual/plugin/status-badge": {
+      "types": "./src/visual/plugin/status-badge/types.d.ts",
+      "svelte": "./src/visual/plugin/status-badge/StatusBadge.svelte",
+      "import": "./src/visual/plugin/status-badge/StatusBadge.svelte",
+      "default": "./src/visual/plugin/status-badge/StatusBadge.svelte"
+    },
+    "./visual/skeleton": {
+      "types": "./src/visual/skeleton/types.d.ts",
+      "svelte": "./src/visual/skeleton/LoadingSkeleton.svelte",
+      "import": "./src/visual/skeleton/LoadingSkeleton.svelte",
+      "default": "./src/visual/skeleton/LoadingSkeleton.svelte"
+    },
+    "./visual/svg/icon": {
+      "types": "./src/visual/svg/icon/types.d.ts",
+      "svelte": "./src/visual/svg/icon/SvgIcon.svelte",
+      "import": "./src/visual/svg/icon/SvgIcon.svelte",
+      "default": "./src/visual/svg/icon/SvgIcon.svelte"
+    },
+    "./visual/svg/inline": {
+      "types": "./src/visual/svg/inline/types.d.ts",
+      "svelte": "./src/visual/svg/inline/SvgInline.svelte",
+      "import": "./src/visual/svg/inline/SvgInline.svelte",
+      "default": "./src/visual/svg/inline/SvgInline.svelte"
+    },
+    "./visual/table": {
+      "types": "./src/visual/table/types.d.ts",
+      "svelte": "./src/visual/table/DataTable.svelte",
+      "import": "./src/visual/table/DataTable.svelte",
+      "default": "./src/visual/table/DataTable.svelte"
+    },
+    "./visual/wasm/media": {
+      "types": "./src/visual/wasm/media/types.d.ts",
+      "svelte": "./src/visual/wasm/media/WasmMedia.svelte",
+      "import": "./src/visual/wasm/media/WasmMedia.svelte",
+      "default": "./src/visual/wasm/media/WasmMedia.svelte"
+    },
+    "./visual/wasm/module": {
+      "types": "./src/visual/wasm/module/types.d.ts",
+      "svelte": "./src/visual/wasm/module/WasmModule.svelte",
+      "import": "./src/visual/wasm/module/WasmModule.svelte",
+      "default": "./src/visual/wasm/module/WasmModule.svelte"
+    },
+    "./visual/wasm/worker-host": {
+      "types": "./src/visual/wasm/worker-host/types.d.ts",
+      "svelte": "./src/visual/wasm/worker-host/WasmWorkerHost.svelte",
+      "import": "./src/visual/wasm/worker-host/WasmWorkerHost.svelte",
+      "default": "./src/visual/wasm/worker-host/WasmWorkerHost.svelte"
+    },
+    "./wasm/wasm-media": {
+      "types": "./src/wasm/wasm-media/types.d.ts",
+      "svelte": "./src/visual/wasm/media/WasmMedia.svelte",
+      "import": "./src/visual/wasm/media/WasmMedia.svelte",
+      "default": "./src/visual/wasm/media/WasmMedia.svelte"
     }
   },
-  "files": ["src", "README.md", "LICENSE"],
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@rosettadash/web-components": "*",
     "tslib": "^2.3.0"
