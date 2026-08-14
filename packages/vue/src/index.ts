@@ -1,3 +1,4 @@
+export * from './domain/i18n/app-language-select/index.js';
 export * from './domain/person-invite/index.js';
 export * from './domain/role-assign/index.js';
 export * from './domain/role-gate/index.js';

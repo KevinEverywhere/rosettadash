@@ -14,6 +14,11 @@
       "import": "./src/index.js",
       "default": "./src/index.js"
     },
+    "./domain/i18n/app-language-select": {
+      "types": "./src/domain/i18n/app-language-select/index.d.ts",
+      "import": "./src/domain/i18n/app-language-select/index.js",
+      "default": "./src/domain/i18n/app-language-select/index.js"
+    },
     "./domain/person-invite": {
       "types": "./src/domain/person-invite/index.d.ts",
       "import": "./src/domain/person-invite/index.js",

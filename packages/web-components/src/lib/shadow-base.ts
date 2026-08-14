@@ -8,6 +8,7 @@ export const SHADOW_ELEMENT_DIRS: Record<string, string> = {
   'rd-video-source': 'visual/media/video-source',
   'rd-equirect-viewport': 'visual/media/equirect-viewport',
   'rd-youtube-embed': 'visual/media/youtube-embed',
+  'rd-app-language-select': 'domain/i18n/app-language-select',
   'rd-wasm-media': 'wasm/wasm-media',
   'rd-component-name': 'catalog/component-name',
 };

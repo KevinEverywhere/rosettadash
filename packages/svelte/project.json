@@ -33,6 +33,7 @@
           }
         ],
         "additionalEntryPoints": [
+          "packages/svelte/src/domain/i18n/app-language-select/types.ts",
           "packages/svelte/src/domain/person-invite/types.ts",
           "packages/svelte/src/domain/role-assign/types.ts",
           "packages/svelte/src/domain/role-gate/types.ts",

@@ -15,6 +15,12 @@
       "import": "./src/index.js",
       "default": "./src/index.js"
     },
+    "./domain/i18n/app-language-select": {
+      "types": "./src/domain/i18n/app-language-select/types.d.ts",
+      "svelte": "./src/domain/i18n/app-language-select/AppLanguageSelect.svelte",
+      "import": "./src/domain/i18n/app-language-select/AppLanguageSelect.svelte",
+      "default": "./src/domain/i18n/app-language-select/AppLanguageSelect.svelte"
+    },
     "./domain/person-invite": {
       "types": "./src/domain/person-invite/types.d.ts",
       "svelte": "./src/domain/person-invite/PersonInvite.svelte",

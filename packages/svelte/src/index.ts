@@ -1,3 +1,4 @@
+export type { AppLocaleOption, AppLanguageSelectProps } from './domain/i18n/app-language-select/types';
 export type { PersonInviteProps } from './domain/person-invite/types';
 export type { RoleAssignProps } from './domain/role-assign/types';
 export type { RoleGateProps } from './domain/role-gate/types';

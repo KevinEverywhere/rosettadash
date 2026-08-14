@@ -84,6 +84,14 @@ export const PALETTE_RUNTIME_ENTRIES = [
   { type: 'domain.role-gate', subpath: 'domain/role-gate', exportName: 'RoleGate', pattern: 'native', kind: 'role-gate', testId: 'rd-role-gate' },
   { type: 'domain.person-invite', subpath: 'domain/person-invite', exportName: 'PersonInvite', pattern: 'native', kind: 'person-invite', testId: 'rd-person-invite' },
   { type: 'domain.role-assign', subpath: 'domain/role-assign', exportName: 'RoleAssign', pattern: 'native', kind: 'role-assign', testId: 'rd-role-assign' },
+  {
+    type: 'domain.i18n.app-language-select',
+    subpath: 'domain/i18n/app-language-select',
+    exportName: 'AppLanguageSelect',
+    pattern: 'manual',
+    testId: 'rd-i18n-app-language-select',
+    wcImport: 'domain/i18n/app-language-select',
+  },
   // Infra
   { type: 'infra.env', subpath: 'infra/env', exportName: 'EnvConfig', pattern: 'native', kind: 'infra-env', testId: 'rd-env-config' },
   { type: 'infra.postgresql', subpath: 'infra/postgresql', exportName: 'PostgresqlInfra', pattern: 'native', kind: 'infra-db', testId: 'rd-postgresql-infra' },

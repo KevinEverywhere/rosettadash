@@ -143,6 +143,7 @@ const EXTRA_TYPE_EXPORTS = {
   'visual/link-list': ['LinkListItem'],
   'visual/media/video-source': ['VideoFileDetail'],
   'visual/media/equirect-viewport': ['EquirectPreviewMode'],
+  'domain/i18n/app-language-select': ['AppLocaleOption'],
 };
 
 function patchIndexTs(subpaths) {

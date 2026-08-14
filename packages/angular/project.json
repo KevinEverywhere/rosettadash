@@ -28,6 +28,7 @@
           }
         ],
         "additionalEntryPoints": [
+          "packages/angular/src/domain/i18n/app-language-select/index.ts",
           "packages/angular/src/domain/person-invite/index.ts",
           "packages/angular/src/domain/role-assign/index.ts",
           "packages/angular/src/domain/role-gate/index.ts",

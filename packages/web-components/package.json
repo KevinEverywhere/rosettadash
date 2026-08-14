@@ -72,6 +72,11 @@
       "import": "./src/visual/media/youtube-embed/index.js",
       "default": "./src/visual/media/youtube-embed/index.js"
     },
+    "./domain/i18n/app-language-select": {
+      "types": "./src/domain/i18n/app-language-select/index.d.ts",
+      "import": "./src/domain/i18n/app-language-select/index.js",
+      "default": "./src/domain/i18n/app-language-select/index.js"
+    },
     "./visual/wasm/media": {
       "types": "./src/visual/wasm/media/index.d.ts",
       "import": "./src/visual/wasm/media/index.js",

@@ -28,6 +28,7 @@
           }
         ],
         "additionalEntryPoints": [
+          "packages/vue/src/domain/i18n/app-language-select/index.ts",
           "packages/vue/src/domain/person-invite/index.ts",
           "packages/vue/src/domain/role-assign/index.ts",
           "packages/vue/src/domain/role-gate/index.ts",

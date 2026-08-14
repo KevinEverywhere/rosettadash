@@ -64,6 +64,14 @@ export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogEx
     dependencies: ['Authenticated user context with role claims in exported apps.'],
     assumptions: ['Children render only when the viewer role matches allowed roles.'],
   },
+  'domain.i18n.app-language-select': {
+    dependencies: ['Developer-owned i18n library (vue-i18n, ngx-translate, react-intl, etc.).'],
+    assumptions: [
+      'Sets app base locale (BCP-47) — does not translate RosettaDash builder or catalog UI.',
+      'Distinct from visual.news.language-select (news API filter only).',
+      'Emits locale-change; wire to your translation layer.',
+    ],
+  },
   'domain.person-invite': {
     assumptions: ['Typically first step in admin onboarding before Role Assign.'],
   },
