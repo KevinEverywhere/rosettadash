@@ -224,6 +224,11 @@
       "import": "./src/visual/media/video-source/index.js",
       "default": "./src/visual/media/video-source/index.js"
     },
+    "./visual/media/youtube-embed": {
+      "types": "./src/visual/media/youtube-embed/index.d.ts",
+      "import": "./src/visual/media/youtube-embed/index.js",
+      "default": "./src/visual/media/youtube-embed/index.js"
+    },
     "./visual/news/article-detail": {
       "types": "./src/visual/news/article-detail/index.d.ts",
       "import": "./src/visual/news/article-detail/index.js",

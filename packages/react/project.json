@@ -70,6 +70,7 @@
           "packages/react/src/visual/media/equirect-viewport/index.ts",
           "packages/react/src/visual/media/live-capture/index.ts",
           "packages/react/src/visual/media/video-source/index.ts",
+          "packages/react/src/visual/media/youtube-embed/index.ts",
           "packages/react/src/visual/news/article-detail/index.ts",
           "packages/react/src/visual/news/language-select/index.ts",
           "packages/react/src/visual/news/region-select/index.ts",

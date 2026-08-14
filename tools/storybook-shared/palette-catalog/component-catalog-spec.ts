@@ -143,6 +143,13 @@ export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogEx
     dependencies: ['@rosettadash/web-components (`<rd-video-source>`) when shipped to npm consumers.'],
     assumptions: ['Expects equirectangular (2:1) or flat video; emits metadata for downstream crop.'],
   },
+  'visual.media.youtube-embed': {
+    dependencies: ['YouTube embed availability; subject to Google Terms of Service and advertising/branding rules.'],
+    assumptions: [
+      'Use `video-id` or parseable YouTube URL; privacy-enhanced nocookie host by default.',
+      'No offline playback — use Video Source for owned media files.',
+    ],
+  },
   'visual.media.equirect-viewport': {
     dependencies: ['@rosettadash/web-components (`<rd-equirect-viewport>`)', 'Video Source metadata input.'],
     assumptions: ['Defines crop/framing on a 2:1 frame — not a 3D renderer; host app owns WebGL preview.'],

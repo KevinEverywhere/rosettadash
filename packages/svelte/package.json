@@ -267,6 +267,12 @@
       "import": "./src/visual/media/video-source/VideoSource.svelte",
       "default": "./src/visual/media/video-source/VideoSource.svelte"
     },
+    "./visual/media/youtube-embed": {
+      "types": "./src/visual/media/youtube-embed/types.d.ts",
+      "svelte": "./src/visual/media/youtube-embed/YoutubeEmbed.svelte",
+      "import": "./src/visual/media/youtube-embed/YoutubeEmbed.svelte",
+      "default": "./src/visual/media/youtube-embed/YoutubeEmbed.svelte"
+    },
     "./visual/news/article-detail": {
       "types": "./src/visual/news/article-detail/types.d.ts",
       "svelte": "./src/visual/news/article-detail/NewsArticleDetail.svelte",

@@ -75,6 +75,9 @@
       "@rosettadash/web-components/visual/media/equirect-viewport": [
         "./packages/web-components/src/visual/media/equirect-viewport/index.ts"
       ],
+      "@rosettadash/web-components/visual/media/youtube-embed": [
+        "./packages/web-components/src/visual/media/youtube-embed/index.ts"
+      ],
       "@rosettadash/web-components/visual/wasm/media": [
         "./packages/web-components/src/visual/wasm/media/index.ts"
       ],
@@ -236,6 +239,9 @@
       ],
       "@rosettadash/react/visual/media/video-source": [
         "./packages/react/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/react/visual/media/youtube-embed": [
+        "./packages/react/src/visual/media/youtube-embed/index.ts"
       ],
       "@rosettadash/react/visual/news/article-detail": [
         "./packages/react/src/visual/news/article-detail/index.ts"
@@ -411,6 +417,9 @@
       "@rosettadash/angular/visual/media/video-source": [
         "./packages/angular/src/visual/media/video-source/index.ts"
       ],
+      "@rosettadash/angular/visual/media/youtube-embed": [
+        "./packages/angular/src/visual/media/youtube-embed/index.ts"
+      ],
       "@rosettadash/angular/visual/news/article-detail": [
         "./packages/angular/src/visual/news/article-detail/index.ts"
       ],
@@ -585,6 +594,9 @@
       "@rosettadash/vue/visual/media/video-source": [
         "./packages/vue/src/visual/media/video-source/index.ts"
       ],
+      "@rosettadash/vue/visual/media/youtube-embed": [
+        "./packages/vue/src/visual/media/youtube-embed/index.ts"
+      ],
       "@rosettadash/vue/visual/news/article-detail": [
         "./packages/vue/src/visual/news/article-detail/index.ts"
       ],
@@ -758,6 +770,9 @@
       ],
       "@rosettadash/svelte/visual/media/video-source": [
         "./packages/svelte/src/visual/media/video-source/types.ts"
+      ],
+      "@rosettadash/svelte/visual/media/youtube-embed": [
+        "./packages/svelte/src/visual/media/youtube-embed/types.ts"
       ],
       "@rosettadash/svelte/visual/news/article-detail": [
         "./packages/svelte/src/visual/news/article-detail/types.ts"

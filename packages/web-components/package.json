@@ -67,6 +67,11 @@
       "import": "./src/visual/media/equirect-viewport/index.js",
       "default": "./src/visual/media/equirect-viewport/index.js"
     },
+    "./visual/media/youtube-embed": {
+      "types": "./src/visual/media/youtube-embed/index.d.ts",
+      "import": "./src/visual/media/youtube-embed/index.js",
+      "default": "./src/visual/media/youtube-embed/index.js"
+    },
     "./visual/wasm/media": {
       "types": "./src/visual/wasm/media/index.d.ts",
       "import": "./src/visual/wasm/media/index.js",

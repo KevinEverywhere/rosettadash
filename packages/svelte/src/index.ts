@@ -40,6 +40,7 @@ export type { LinkListItem, LinkListProps } from './visual/link-list/types';
 export type { EquirectPreviewMode, EquirectViewportProps } from './visual/media/equirect-viewport/types';
 export type { LiveCaptureProps } from './visual/media/live-capture/types';
 export type { VideoFileDetail, VideoSourceProps } from './visual/media/video-source/types';
+export type { YoutubeEmbedProps } from './visual/media/youtube-embed/types';
 export type { NewsArticleDetailProps } from './visual/news/article-detail/types';
 export type { NewsLanguageSelectProps } from './visual/news/language-select/types';
 export type { NewsRegionSelectProps } from './visual/news/region-select/types';

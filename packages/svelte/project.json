@@ -75,6 +75,7 @@
           "packages/svelte/src/visual/media/equirect-viewport/types.ts",
           "packages/svelte/src/visual/media/live-capture/types.ts",
           "packages/svelte/src/visual/media/video-source/types.ts",
+          "packages/svelte/src/visual/media/youtube-embed/types.ts",
           "packages/svelte/src/visual/news/article-detail/types.ts",
           "packages/svelte/src/visual/news/language-select/types.ts",
           "packages/svelte/src/visual/news/region-select/types.ts",

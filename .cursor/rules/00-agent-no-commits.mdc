@@ -1,26 +1,27 @@
 ---
-description: Agents never commit and never offer to — Kevin commits locally
+description: Agents NEVER commit, stage-for-commit, or ask about committing — Kevin only
 alwaysApply: true
 ---
 
 # No git commits (agent policy)
 
-**Kevin commits. Agents do not.**
+**Kevin commits. Agents never do.**
 
 ## Never do
 
-- Run `git commit`, `git commit --amend`, or any other command that creates or rewrites commits.
-- Stage files **for the purpose of committing** unless Kevin explicitly asks you to stage (rare).
-- Ask “Want me to commit?” or “Should I commit with this message?” — not even after drafting a message.
-- Offer to commit as a follow-up or sign-off.
+- Run `git commit`, `git commit --amend`, or any command that creates or rewrites commits.
+- Stage files for the purpose of committing unless Kevin explicitly asks you to stage (rare).
+- **Ask** whether to commit — not ever. No “Want me to commit?”, “Should I commit?”, “Say the word if you want me to commit”, or any variant.
+- **Offer** to commit as a follow-up, sign-off, or optional next step.
+- Imply that committing is something the agent might do if prompted.
 
 ## Do instead
 
 - Implement, verify, and summarize changes.
-- When helpful, **draft a commit message** in chat if Kevin asks — or briefly note that changes are ready to commit. Stop there.
-- Kevin runs `git add` and `git commit` locally.
+- When Kevin asks, **draft a commit message in chat only** — then stop. No follow-up about running it.
+- Optionally note that changes are ready for Kevin to commit locally — without asking or offering to do it.
 
 ## Related
 
 - Agents **never push** (see `jira-ticket-and-branch.mdc`).
-- Jira ticket + feature branch rules still apply before implementation.
+- Jira ticket + feature branch before implementation (see `jira-ticket-and-branch.mdc`).

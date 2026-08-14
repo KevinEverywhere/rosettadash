@@ -130,6 +130,14 @@ export const PALETTE_RUNTIME_ENTRIES = [
     testId: 'rd-equirect-viewport',
     wcImport: 'visual/media/equirect-viewport',
   },
+  {
+    type: 'visual.media.youtube-embed',
+    subpath: 'visual/media/youtube-embed',
+    exportName: 'YoutubeEmbed',
+    pattern: 'manual',
+    testId: 'rd-media-youtube-embed',
+    wcImport: 'visual/media/youtube-embed',
+  },
   { type: 'visual.media.live-capture', subpath: 'visual/media/live-capture', exportName: 'LiveCapture', pattern: 'native', kind: 'live-capture', testId: 'rd-live-capture' },
   // WASM
   { type: 'infra.wasm.asset', subpath: 'infra/wasm/asset', exportName: 'WasmAsset', pattern: 'native', kind: 'wasm-asset', testId: 'rd-wasm-asset' },

@@ -70,6 +70,7 @@
           "packages/vue/src/visual/media/equirect-viewport/index.ts",
           "packages/vue/src/visual/media/live-capture/index.ts",
           "packages/vue/src/visual/media/video-source/index.ts",
+          "packages/vue/src/visual/media/youtube-embed/index.ts",
           "packages/vue/src/visual/news/article-detail/index.ts",
           "packages/vue/src/visual/news/language-select/index.ts",
           "packages/vue/src/visual/news/region-select/index.ts",

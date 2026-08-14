@@ -40,6 +40,7 @@ export * from './visual/link-list/index.js';
 export * from './visual/media/equirect-viewport/index.js';
 export * from './visual/media/live-capture/index.js';
 export * from './visual/media/video-source/index.js';
+export * from './visual/media/youtube-embed/index.js';
 export * from './visual/news/article-detail/index.js';
 export * from './visual/news/language-select/index.js';
 export * from './visual/news/region-select/index.js';
