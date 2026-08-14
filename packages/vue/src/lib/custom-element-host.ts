@@ -16,6 +16,8 @@ export interface CustomElementHostOptions {
   register: () => void;
   /** Prop name → attribute name (omit for same kebab conversion). */
   attrs?: Record<string, string>;
+  /** Prop keys synced via `element.setProperty(name, value)` when available. */
+  properties?: string[];
   /** DOM event name → Vue emit name. */
   events?: Record<string, string>;
 }
@@ -43,6 +45,21 @@ function syncAttributes(
   }
 }
 
+function syncProperties(
+  el: HTMLElement,
+  props: Record<string, unknown>,
+  propertyKeys: string[],
+): void {
+  const setProperty = (el as { setProperty?: (name: string, value: unknown) => void })
+    .setProperty;
+  if (typeof setProperty !== 'function') {
+    return;
+  }
+  for (const key of propertyKeys) {
+    setProperty.call(el, key, props[key]);
+  }
+}
+
 /**
  * Thin Vue wrapper factory around a registered custom element.
  * Attributes are applied with setAttribute only (WC hosts often expose
@@ -55,6 +72,7 @@ export function defineCustomElementHost(
   const attrMap = options.attrs ?? {};
   const eventMap = options.events ?? {};
   const propKeys = Object.keys(propDefs);
+  const propertyKeys = options.properties ?? [];
 
   return defineComponent({
     name: options.name,
@@ -79,6 +97,7 @@ export function defineCustomElementHost(
             propKeys,
             attrMap,
           );
+          syncProperties(host.value, props as Record<string, unknown>, propertyKeys);
         }
       }
 
@@ -105,7 +124,10 @@ export function defineCustomElementHost(
       });
 
       watch(
-        () => propKeys.map((key) => (props as Record<string, AttrValue>)[key]),
+        () => [
+          ...propKeys.map((key) => (props as Record<string, AttrValue>)[key]),
+          ...propertyKeys.map((key) => (props as Record<string, unknown>)[key]),
+        ],
         () => applyAttrs(),
       );
 

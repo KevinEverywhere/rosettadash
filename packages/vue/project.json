@@ -3,12 +3,19 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/vue/src",
   "projectType": "library",
-  "tags": ["scope:runtime", "type:ui"],
-  "implicitDependencies": ["web-components"],
+  "tags": [
+    "scope:runtime",
+    "type:ui"
+  ],
+  "implicitDependencies": [
+    "web-components"
+  ],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/packages/vue",
         "main": "packages/vue/src/index.ts",
@@ -21,11 +28,64 @@
           }
         ],
         "additionalEntryPoints": [
+          "packages/vue/src/domain/person-invite/index.ts",
+          "packages/vue/src/domain/role-assign/index.ts",
+          "packages/vue/src/domain/role-gate/index.ts",
+          "packages/vue/src/domain/time-preset/index.ts",
+          "packages/vue/src/infra/env/index.ts",
+          "packages/vue/src/infra/mongodb/index.ts",
+          "packages/vue/src/infra/mysql/index.ts",
+          "packages/vue/src/infra/postgresql/index.ts",
+          "packages/vue/src/infra/server/express/index.ts",
+          "packages/vue/src/infra/server/nest/index.ts",
+          "packages/vue/src/infra/server/next/index.ts",
+          "packages/vue/src/infra/server/nuxt/index.ts",
+          "packages/vue/src/infra/supabase/index.ts",
+          "packages/vue/src/infra/wasm/asset/index.ts",
           "packages/vue/src/layout/accordion/index.ts",
           "packages/vue/src/layout/accordion-link-list/index.ts",
+          "packages/vue/src/layout/collapsible/index.ts",
+          "packages/vue/src/layout/flex/index.ts",
+          "packages/vue/src/layout/grid/index.ts",
+          "packages/vue/src/layout/modal/index.ts",
+          "packages/vue/src/layout/tabs/index.ts",
+          "packages/vue/src/logic/timer/index.ts",
+          "packages/vue/src/visual/chart/bar/index.ts",
+          "packages/vue/src/visual/chart/line/index.ts",
+          "packages/vue/src/visual/chart/pie/index.ts",
+          "packages/vue/src/visual/detail/index.ts",
+          "packages/vue/src/visual/display/3d-bar-chart/index.ts",
+          "packages/vue/src/visual/display/3d-geo-globe/index.ts",
+          "packages/vue/src/visual/display/3d-gltf-model/index.ts",
+          "packages/vue/src/visual/display/3d-scatter/index.ts",
+          "packages/vue/src/visual/display/3d-scene/index.ts",
+          "packages/vue/src/visual/input/checkbox/index.ts",
+          "packages/vue/src/visual/input/date-range/index.ts",
+          "packages/vue/src/visual/input/number/index.ts",
+          "packages/vue/src/visual/input/select/index.ts",
+          "packages/vue/src/visual/input/text/index.ts",
+          "packages/vue/src/visual/input/textarea/index.ts",
+          "packages/vue/src/visual/kpi/index.ts",
           "packages/vue/src/visual/link-list/index.ts",
+          "packages/vue/src/visual/media/equirect-viewport/index.ts",
+          "packages/vue/src/visual/media/live-capture/index.ts",
           "packages/vue/src/visual/media/video-source/index.ts",
-          "packages/vue/src/visual/media/equirect-viewport/index.ts"
+          "packages/vue/src/visual/news/article-detail/index.ts",
+          "packages/vue/src/visual/news/language-select/index.ts",
+          "packages/vue/src/visual/news/region-select/index.ts",
+          "packages/vue/src/visual/news/results-table/index.ts",
+          "packages/vue/src/visual/news/search-box/index.ts",
+          "packages/vue/src/visual/news/type-select/index.ts",
+          "packages/vue/src/visual/plugin/metric-chip/index.ts",
+          "packages/vue/src/visual/plugin/status-badge/index.ts",
+          "packages/vue/src/visual/skeleton/index.ts",
+          "packages/vue/src/visual/svg/icon/index.ts",
+          "packages/vue/src/visual/svg/inline/index.ts",
+          "packages/vue/src/visual/table/index.ts",
+          "packages/vue/src/visual/wasm/media/index.ts",
+          "packages/vue/src/visual/wasm/module/index.ts",
+          "packages/vue/src/visual/wasm/worker-host/index.ts",
+          "packages/vue/src/wasm/wasm-media/index.ts"
         ],
         "generateExportsField": true
       }

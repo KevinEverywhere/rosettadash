@@ -96,21 +96,6 @@
       "@rosettadash/vue": [
         "./packages/vue/src/index.ts"
       ],
-      "@rosettadash/vue/layout/accordion": [
-        "./packages/vue/src/layout/accordion/index.ts"
-      ],
-      "@rosettadash/vue/layout/accordion-link-list": [
-        "./packages/vue/src/layout/accordion-link-list/index.ts"
-      ],
-      "@rosettadash/vue/visual/link-list": [
-        "./packages/vue/src/visual/link-list/index.ts"
-      ],
-      "@rosettadash/vue/visual/media/video-source": [
-        "./packages/vue/src/visual/media/video-source/index.ts"
-      ],
-      "@rosettadash/vue/visual/media/equirect-viewport": [
-        "./packages/vue/src/visual/media/equirect-viewport/index.ts"
-      ],
       "@rosettadash/svelte": [
         "./packages/svelte/src/index.ts"
       ],
@@ -485,6 +470,180 @@
       ],
       "@rosettadash/angular/wasm/wasm-media": [
         "./packages/angular/src/wasm/wasm-media/index.ts"
+      ],
+      "@rosettadash/vue/domain/person-invite": [
+        "./packages/vue/src/domain/person-invite/index.ts"
+      ],
+      "@rosettadash/vue/domain/role-assign": [
+        "./packages/vue/src/domain/role-assign/index.ts"
+      ],
+      "@rosettadash/vue/domain/role-gate": [
+        "./packages/vue/src/domain/role-gate/index.ts"
+      ],
+      "@rosettadash/vue/domain/time-preset": [
+        "./packages/vue/src/domain/time-preset/index.ts"
+      ],
+      "@rosettadash/vue/infra/env": [
+        "./packages/vue/src/infra/env/index.ts"
+      ],
+      "@rosettadash/vue/infra/mongodb": [
+        "./packages/vue/src/infra/mongodb/index.ts"
+      ],
+      "@rosettadash/vue/infra/mysql": [
+        "./packages/vue/src/infra/mysql/index.ts"
+      ],
+      "@rosettadash/vue/infra/postgresql": [
+        "./packages/vue/src/infra/postgresql/index.ts"
+      ],
+      "@rosettadash/vue/infra/server/express": [
+        "./packages/vue/src/infra/server/express/index.ts"
+      ],
+      "@rosettadash/vue/infra/server/nest": [
+        "./packages/vue/src/infra/server/nest/index.ts"
+      ],
+      "@rosettadash/vue/infra/server/next": [
+        "./packages/vue/src/infra/server/next/index.ts"
+      ],
+      "@rosettadash/vue/infra/server/nuxt": [
+        "./packages/vue/src/infra/server/nuxt/index.ts"
+      ],
+      "@rosettadash/vue/infra/supabase": [
+        "./packages/vue/src/infra/supabase/index.ts"
+      ],
+      "@rosettadash/vue/infra/wasm/asset": [
+        "./packages/vue/src/infra/wasm/asset/index.ts"
+      ],
+      "@rosettadash/vue/layout/accordion": [
+        "./packages/vue/src/layout/accordion/index.ts"
+      ],
+      "@rosettadash/vue/layout/accordion-link-list": [
+        "./packages/vue/src/layout/accordion-link-list/index.ts"
+      ],
+      "@rosettadash/vue/layout/collapsible": [
+        "./packages/vue/src/layout/collapsible/index.ts"
+      ],
+      "@rosettadash/vue/layout/flex": [
+        "./packages/vue/src/layout/flex/index.ts"
+      ],
+      "@rosettadash/vue/layout/grid": [
+        "./packages/vue/src/layout/grid/index.ts"
+      ],
+      "@rosettadash/vue/layout/modal": [
+        "./packages/vue/src/layout/modal/index.ts"
+      ],
+      "@rosettadash/vue/layout/tabs": [
+        "./packages/vue/src/layout/tabs/index.ts"
+      ],
+      "@rosettadash/vue/logic/timer": [
+        "./packages/vue/src/logic/timer/index.ts"
+      ],
+      "@rosettadash/vue/visual/chart/bar": [
+        "./packages/vue/src/visual/chart/bar/index.ts"
+      ],
+      "@rosettadash/vue/visual/chart/line": [
+        "./packages/vue/src/visual/chart/line/index.ts"
+      ],
+      "@rosettadash/vue/visual/chart/pie": [
+        "./packages/vue/src/visual/chart/pie/index.ts"
+      ],
+      "@rosettadash/vue/visual/detail": [
+        "./packages/vue/src/visual/detail/index.ts"
+      ],
+      "@rosettadash/vue/visual/display/3d-bar-chart": [
+        "./packages/vue/src/visual/display/3d-bar-chart/index.ts"
+      ],
+      "@rosettadash/vue/visual/display/3d-geo-globe": [
+        "./packages/vue/src/visual/display/3d-geo-globe/index.ts"
+      ],
+      "@rosettadash/vue/visual/display/3d-gltf-model": [
+        "./packages/vue/src/visual/display/3d-gltf-model/index.ts"
+      ],
+      "@rosettadash/vue/visual/display/3d-scatter": [
+        "./packages/vue/src/visual/display/3d-scatter/index.ts"
+      ],
+      "@rosettadash/vue/visual/display/3d-scene": [
+        "./packages/vue/src/visual/display/3d-scene/index.ts"
+      ],
+      "@rosettadash/vue/visual/input/checkbox": [
+        "./packages/vue/src/visual/input/checkbox/index.ts"
+      ],
+      "@rosettadash/vue/visual/input/date-range": [
+        "./packages/vue/src/visual/input/date-range/index.ts"
+      ],
+      "@rosettadash/vue/visual/input/number": [
+        "./packages/vue/src/visual/input/number/index.ts"
+      ],
+      "@rosettadash/vue/visual/input/select": [
+        "./packages/vue/src/visual/input/select/index.ts"
+      ],
+      "@rosettadash/vue/visual/input/text": [
+        "./packages/vue/src/visual/input/text/index.ts"
+      ],
+      "@rosettadash/vue/visual/input/textarea": [
+        "./packages/vue/src/visual/input/textarea/index.ts"
+      ],
+      "@rosettadash/vue/visual/kpi": [
+        "./packages/vue/src/visual/kpi/index.ts"
+      ],
+      "@rosettadash/vue/visual/link-list": [
+        "./packages/vue/src/visual/link-list/index.ts"
+      ],
+      "@rosettadash/vue/visual/media/equirect-viewport": [
+        "./packages/vue/src/visual/media/equirect-viewport/index.ts"
+      ],
+      "@rosettadash/vue/visual/media/live-capture": [
+        "./packages/vue/src/visual/media/live-capture/index.ts"
+      ],
+      "@rosettadash/vue/visual/media/video-source": [
+        "./packages/vue/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/vue/visual/news/article-detail": [
+        "./packages/vue/src/visual/news/article-detail/index.ts"
+      ],
+      "@rosettadash/vue/visual/news/language-select": [
+        "./packages/vue/src/visual/news/language-select/index.ts"
+      ],
+      "@rosettadash/vue/visual/news/region-select": [
+        "./packages/vue/src/visual/news/region-select/index.ts"
+      ],
+      "@rosettadash/vue/visual/news/results-table": [
+        "./packages/vue/src/visual/news/results-table/index.ts"
+      ],
+      "@rosettadash/vue/visual/news/search-box": [
+        "./packages/vue/src/visual/news/search-box/index.ts"
+      ],
+      "@rosettadash/vue/visual/news/type-select": [
+        "./packages/vue/src/visual/news/type-select/index.ts"
+      ],
+      "@rosettadash/vue/visual/plugin/metric-chip": [
+        "./packages/vue/src/visual/plugin/metric-chip/index.ts"
+      ],
+      "@rosettadash/vue/visual/plugin/status-badge": [
+        "./packages/vue/src/visual/plugin/status-badge/index.ts"
+      ],
+      "@rosettadash/vue/visual/skeleton": [
+        "./packages/vue/src/visual/skeleton/index.ts"
+      ],
+      "@rosettadash/vue/visual/svg/icon": [
+        "./packages/vue/src/visual/svg/icon/index.ts"
+      ],
+      "@rosettadash/vue/visual/svg/inline": [
+        "./packages/vue/src/visual/svg/inline/index.ts"
+      ],
+      "@rosettadash/vue/visual/table": [
+        "./packages/vue/src/visual/table/index.ts"
+      ],
+      "@rosettadash/vue/visual/wasm/media": [
+        "./packages/vue/src/visual/wasm/media/index.ts"
+      ],
+      "@rosettadash/vue/visual/wasm/module": [
+        "./packages/vue/src/visual/wasm/module/index.ts"
+      ],
+      "@rosettadash/vue/visual/wasm/worker-host": [
+        "./packages/vue/src/visual/wasm/worker-host/index.ts"
+      ],
+      "@rosettadash/vue/wasm/wasm-media": [
+        "./packages/vue/src/wasm/wasm-media/index.ts"
       ]
     }
   },

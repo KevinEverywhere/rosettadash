@@ -110,6 +110,18 @@ Forward-looking Jira ticket plan for RosettaDash.
 | [DAS-113](https://planetkevin.atlassian.net/browse/DAS-113) | Storybook meta composition tightening — panel tabs and selection highlighting — **done** |
 | [DAS-114](https://planetkevin.atlassian.net/browse/DAS-114) | Storybook Controls, Actions, and Interactions — operationalize addon panels — **done** |
 | [DAS-115](https://planetkevin.atlassian.net/browse/DAS-115) | Storybook taxonomy docs sync — README, npm package READMEs, catalog docs — **in progress** (`feature/DAS-115-storybook-taxonomy-docs-sync`) |
+| [DAS-116](https://planetkevin.atlassian.net/browse/DAS-116) | `@rosettadash/react` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
+| [DAS-117](https://planetkevin.atlassian.net/browse/DAS-117) | `@rosettadash/angular` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
+| [DAS-118](https://planetkevin.atlassian.net/browse/DAS-118) | `@rosettadash/vue` full taxonomy @ 0.1.1 — **in progress** (`feature/DAS-118-vue-full-taxonomy-0-1-1`) |
+| [DAS-119](https://planetkevin.atlassian.net/browse/DAS-119) | `@rosettadash/svelte` full taxonomy @ 0.1.1 — planned |
+
+### DAS-93 deferred follow-ups (post sub-ticket merge)
+
+| Item | Scope | Notes |
+|------|-------|-------|
+| Angular runtime TestBed specs | `@rosettadash/angular` | Match React RTL depth: render + BEM root `data-testid` for generated atoms; behavioral specs for hand-authored `Accordion` (toggle, `defaultOpen`, controlled `open` / `openChange`) |
+| Storybook runtime catalog smoke | ports 6007–6010 | Acceptance gap from DAS-116 / DAS-117 — spot-check generated atoms in React + Angular catalogs |
+| Extend `publish:npm` | root `package.json` | Include all runtime packages for coordinated 0.1.1 publish (DAS-93 gate) |
 
 **Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`). DAS-99 dogfoods scoped packs with [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3) before full DAS-93 gate.
 
