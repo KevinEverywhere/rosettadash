@@ -60,6 +60,12 @@ export interface Destination {
   visitorsHistoric: DestinationHistoricStat[];
   /** Optional per-locale labels — wired by developer i18n, not RosettaDash chrome. */
   labels?: Record<string, string>;
+  /** Average traveler rating (1–5) for analytics views. */
+  travelRating?: number;
+  /** Distance from a reference hub airport in km. */
+  hubDistanceKm?: number;
+  /** Typical packaged trip price in USD. */
+  avgTripPriceUsd?: number;
 }
 
 export type DestinationAtlasScreenId =
@@ -70,6 +76,7 @@ export type DestinationAtlasScreenId =
   | 'media'
   | 'intel'
   | 'plan'
+  | 'views'
   | 'stack'
   | 'settings';
 
@@ -114,6 +121,11 @@ export const DESTINATION_ATLAS_SCREENS: DestinationAtlasScreen[] = [
     id: 'plan',
     label: 'Plan',
     description: 'Trip planning forms and role-gated collaboration.',
+  },
+  {
+    id: 'views',
+    label: 'Views',
+    description: 'Advanced charts, journey flows, and media carousel demos.',
   },
   {
     id: 'stack',

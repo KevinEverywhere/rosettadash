@@ -25,6 +25,7 @@ describe('palette-groups', () => {
       'data-display',
       'logic-motion',
       'charts',
+      'views',
       'layout',
       'access-onboarding',
       'data-sources',

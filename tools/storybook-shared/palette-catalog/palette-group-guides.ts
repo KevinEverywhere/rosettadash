@@ -4,6 +4,7 @@ export const PALETTE_GROUP_STORY_NAMES: Record<string, string> = {
   'data-display': 'Data Display',
   'logic-motion': 'Logic & Motion',
   'charts': 'Charts',
+  'views': 'Views',
   'layout': 'Layout & Navigation',
   'access-onboarding': 'Access & Onboarding',
   'data-sources': 'Data Sources',
@@ -22,6 +23,7 @@ export const PALETTE_GROUP_STORY_IDS: Record<string, string> = {
   'data-display': 'catalog-components--data-display',
   'logic-motion': 'catalog-components--logic-and-motion',
   'charts': 'catalog-components--charts',
+  'views': 'catalog-components--views',
   'layout': 'catalog-components--layout-and-navigation',
   'access-onboarding': 'catalog-components--access-and-onboarding',
   'data-sources': 'catalog-components--data-sources',
@@ -88,6 +90,17 @@ export const PALETTE_GROUP_GUIDES: Record<string, PaletteGroupGuide> = {
     learnMore:
       'Start with **Form Inputs → Date Range**, then open **Charts** stories. For spatial or immersive alternatives, compare **VR & 3D** bar/scatter hosts.',
     relatedGroupIds: ['form-inputs', 'data-display', 'vr-visuals'],
+  },
+  'views': {
+    id: 'views',
+    fit: 'mixed',
+    summary:
+      'Views showcase richer storytelling visuals — journey Sankey flows, Venn overlap diagrams, 3D scatter plots, and media carousels. Use for travel funnels, segment overlap, multi-axis comparisons, and thumbnail navigation.',
+    relationships:
+      'Sankey and Venn bind to pre-aggregated datasets or derived metrics. Three Scatter Plot maps three numeric fields (price, distance, rating). Slide Carousel pairs with destination or media rowsets and emits selection for Detail or Map nodes.',
+    learnMore:
+      'Open the Destination Atlas **Views** proof screen for a four-panel demo. Compare with **Charts** for standard 2D analytics and **VR & 3D** for immersive hosts.',
+    relatedGroupIds: ['charts', 'data-display', 'vr-visuals', 'media-authoring'],
   },
   'layout': {
     id: 'layout',

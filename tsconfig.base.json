@@ -207,6 +207,12 @@
       "@rosettadash/react/visual/chart/pie": [
         "./packages/react/src/visual/chart/pie/index.ts"
       ],
+      "@rosettadash/react/visual/chart/sankey": [
+        "./packages/react/src/visual/chart/sankey/index.ts"
+      ],
+      "@rosettadash/react/visual/chart/venn": [
+        "./packages/react/src/visual/chart/venn/index.ts"
+      ],
       "@rosettadash/react/visual/detail": [
         "./packages/react/src/visual/detail/index.ts"
       ],
@@ -260,6 +266,9 @@
       ],
       "@rosettadash/react/visual/link-list": [
         "./packages/react/src/visual/link-list/index.ts"
+      ],
+      "@rosettadash/react/visual/media/carousel": [
+        "./packages/react/src/visual/media/carousel/index.ts"
       ],
       "@rosettadash/react/visual/media/equirect-viewport": [
         "./packages/react/src/visual/media/equirect-viewport/index.ts"

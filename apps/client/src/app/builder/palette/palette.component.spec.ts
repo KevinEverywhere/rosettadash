@@ -12,7 +12,7 @@ describe('PaletteComponent', () => {
     const fixture = TestBed.createComponent(PaletteComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelectorAll('.palette__group').length).toBe(14);
+    expect(element.querySelectorAll('.palette__group').length).toBe(15);
     expect(element.querySelector('[data-testid="palette-group-news-discovery"]')).toBeTruthy();
     expect(element.querySelector('[data-testid="palette-group-data-display"]')).toBeTruthy();
     expect(element.querySelector('[data-testid="palette-group-logic-motion"]')).toBeTruthy();

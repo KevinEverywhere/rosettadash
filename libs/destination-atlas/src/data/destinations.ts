@@ -16,6 +16,9 @@ export const MOCK_DESTINATIONS: Destination[] = [
       { year: 2024, visitors: 15_800_000 },
     ],
     labels: { es: 'Tokio', fr: 'Tokyo', ja: '東京' },
+    travelRating: 4.8,
+    hubDistanceKm: 40,
+    avgTripPriceUsd: 3200,
   },
   {
     id: 'paris',
@@ -31,6 +34,9 @@ export const MOCK_DESTINATIONS: Destination[] = [
       { year: 2024, visitors: 12_100_000 },
     ],
     labels: { es: 'París', fr: 'Paris' },
+    travelRating: 4.6,
+    hubDistanceKm: 25,
+    avgTripPriceUsd: 2800,
   },
   {
     id: 'cusco',
@@ -48,6 +54,9 @@ export const MOCK_DESTINATIONS: Destination[] = [
       { year: 2024, visitors: 1_450_000 },
     ],
     labels: { es: 'Cuzco' },
+    travelRating: 4.7,
+    hubDistanceKm: 5800,
+    avgTripPriceUsd: 2400,
   },
   {
     id: 'marrakech',
@@ -62,6 +71,9 @@ export const MOCK_DESTINATIONS: Destination[] = [
       { year: 2022, visitors: 1_100_000 },
       { year: 2024, visitors: 2_900_000 },
     ],
+    travelRating: 4.5,
+    hubDistanceKm: 2100,
+    avgTripPriceUsd: 1900,
   },
   {
     id: 'sydney',
@@ -76,6 +88,9 @@ export const MOCK_DESTINATIONS: Destination[] = [
       { year: 2022, visitors: 1_900_000 },
       { year: 2024, visitors: 4_200_000 },
     ],
+    travelRating: 4.4,
+    hubDistanceKm: 8800,
+    avgTripPriceUsd: 4100,
   },
   {
     id: 'new-york',
@@ -91,6 +106,9 @@ export const MOCK_DESTINATIONS: Destination[] = [
       { year: 2024, visitors: 13_300_000 },
     ],
     labels: { es: 'Nueva York', fr: 'New York' },
+    travelRating: 4.3,
+    hubDistanceKm: 15,
+    avgTripPriceUsd: 2600,
   },
 ];
 

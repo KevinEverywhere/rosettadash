@@ -34,6 +34,11 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
     types: ['visual.chart.line', 'visual.chart.bar', 'visual.chart.pie'],
   },
   {
+    id: 'views',
+    label: 'Views',
+    types: ['visual.chart.sankey', 'visual.chart.venn', 'visual.media.carousel'],
+  },
+  {
     id: 'layout',
     label: 'Layout & Navigation',
     types: ['layout.grid', 'layout.flex', 'layout.tabs', 'layout.modal', 'layout.collapsible'],

@@ -9,6 +9,7 @@ import { GlobeScreen, GLOBE_SOURCE } from './screens/GlobeScreen';
 import { MediaScreen, MEDIA_SOURCE } from './screens/MediaScreen';
 import { IntelScreen, INTEL_SOURCE } from './screens/IntelScreen';
 import { PlanScreen, PLAN_SOURCE } from './screens/PlanScreen';
+import { ViewsScreen, VIEWS_SOURCE } from './screens/ViewsScreen';
 import { StackScreen, STACK_SOURCE } from './screens/StackScreen';
 import { SettingsScreen, SETTINGS_SOURCE } from './screens/SettingsScreen';
 import { ThemeToggle, useThemePreference } from './lib/theme';
@@ -24,6 +25,7 @@ const SCREEN_SOURCES: Record<string, string> = {
   media: MEDIA_SOURCE,
   intel: INTEL_SOURCE,
   plan: PLAN_SOURCE,
+  views: VIEWS_SOURCE,
   stack: STACK_SOURCE,
   settings: SETTINGS_SOURCE,
 };
@@ -156,6 +158,9 @@ export function App() {
             />
           ) : null}
           {atlas.screen === 'plan' ? <PlanScreen userRole={atlas.userRole} locale={atlas.locale} /> : null}
+          {atlas.screen === 'views' ? (
+            <ViewsScreen locale={atlas.locale} selectedId={atlas.selectedId} setSelectedId={atlas.setSelectedId} />
+          ) : null}
           {atlas.screen === 'stack' ? <StackScreen userRole={atlas.userRole} /> : null}
           {atlas.screen === 'settings' ? (
             <SettingsScreen

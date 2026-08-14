@@ -74,6 +74,27 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Add a Date Range filter and KPI cards for dashboard context.',
   },
   {
+    type: 'visual.chart.sankey',
+    summary: 'Journey or funnel flow — bind nodes and links for branching volume.',
+    animationKey: 'filter-chart',
+    companionTypes: ['visual.table', 'visual.kpi'],
+    placementMessage: 'Place beside KPI cards; bind aggregated flow metrics from a table rowset.',
+  },
+  {
+    type: 'visual.chart.venn',
+    summary: 'Audience overlap — show intersection counts across 2–3 segments.',
+    animationKey: 'filter-chart',
+    companionTypes: ['visual.table', 'visual.kpi'],
+    placementMessage: 'Pair with segment filters or a table that defines set membership.',
+  },
+  {
+    type: 'visual.media.carousel',
+    summary: 'Media thumbnail carousel — navigate destinations or gallery slides.',
+    animationKey: 'data-stack',
+    companionTypes: ['visual.detail', 'visual.display.geo-map'],
+    placementMessage: 'Bind slide selection to detail panel or map focus.',
+  },
+  {
     type: 'visual.display.3d-bar-chart',
     summary: '3D categorical chart — bind table rowset data and orbit to explore.',
     animationKey: 'filter-chart',

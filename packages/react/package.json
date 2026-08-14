@@ -159,6 +159,16 @@
       "import": "./src/visual/chart/pie/index.js",
       "default": "./src/visual/chart/pie/index.js"
     },
+    "./visual/chart/sankey": {
+      "types": "./src/visual/chart/sankey/index.d.ts",
+      "import": "./src/visual/chart/sankey/index.js",
+      "default": "./src/visual/chart/sankey/index.js"
+    },
+    "./visual/chart/venn": {
+      "types": "./src/visual/chart/venn/index.d.ts",
+      "import": "./src/visual/chart/venn/index.js",
+      "default": "./src/visual/chart/venn/index.js"
+    },
     "./visual/detail": {
       "types": "./src/visual/detail/index.d.ts",
       "import": "./src/visual/detail/index.js",
@@ -248,6 +258,11 @@
       "types": "./src/visual/link-list/index.d.ts",
       "import": "./src/visual/link-list/index.js",
       "default": "./src/visual/link-list/index.js"
+    },
+    "./visual/media/carousel": {
+      "types": "./src/visual/media/carousel/index.d.ts",
+      "import": "./src/visual/media/carousel/index.js",
+      "default": "./src/visual/media/carousel/index.js"
     },
     "./visual/media/equirect-viewport": {
       "types": "./src/visual/media/equirect-viewport/index.d.ts",

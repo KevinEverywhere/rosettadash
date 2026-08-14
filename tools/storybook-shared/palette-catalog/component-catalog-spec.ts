@@ -48,6 +48,18 @@ export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogEx
   'visual.chart.pie': {
     assumptions: ['Rowset uses labelField and valueField for slice labels and sizes.'],
   },
+  'visual.chart.sankey': {
+    assumptions: ['Provide nodes (id, label) and links (source, target, value) for journey or funnel flows.'],
+  },
+  'visual.chart.venn': {
+    assumptions: ['Sets define circle labels and totals; overlaps define intersection counts for 2–3 segments.'],
+  },
+  'visual.media.carousel': {
+    assumptions: ['Slides need id, title, and imageUrl; optional onSelect for destination or media binding.'],
+  },
+  'visual.display.3d-scatter': {
+    assumptions: ['Points map x/y/z numeric fields (e.g. price, distance, rating); requires WebGL runtime.'],
+  },
   'layout.grid': {
     assumptions: ['Child visuals are placed in grid slots in the builder canvas.'],
   },
