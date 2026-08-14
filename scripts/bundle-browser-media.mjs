@@ -17,7 +17,7 @@ mkdirSync(outdir, { recursive: true });
 
 await esbuild.build({
   absWorkingDir: root,
-  entryPoints: [path.join(root, 'packages/web-components/src/media/index.ts')],
+  entryPoints: [path.join(root, 'packages/web-components/src/visual/media/index.ts')],
   bundle: true,
   format: 'esm',
   platform: 'browser',
