@@ -1,0 +1,38 @@
+{
+  "name": "proof-react",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/proof-react/src",
+  "tags": ["scope:destination-atlas", "type:proof-app"],
+  "implicitDependencies": ["runtime-react", "web-components", "destination-atlas"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite",
+        "cwd": "apps/proof-react"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/proof-react"],
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/proof-react"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview --port 4311",
+        "cwd": "apps/proof-react"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/proof-react/tsconfig.json"
+      }
+    }
+  }
+}

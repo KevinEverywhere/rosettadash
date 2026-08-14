@@ -51,7 +51,9 @@
     "storybook:all": "nx run-many -t storybook -p storybook-web-components,storybook-react,storybook-vue,storybook-angular,storybook-svelte --parallel=5",
     "build-storybook": "nx run-many -t build-storybook -p storybook-web-components,storybook-react,storybook-vue,storybook-angular,storybook-svelte",
     "proof:web-components": "nx serve proof-web-components",
-    "proof:web-components:build": "nx build proof-web-components"
+    "proof:web-components:build": "nx build proof-web-components",
+    "proof:react": "nx serve proof-react",
+    "proof:react:build": "nx build proof-react"
   },
   "private": true,
   "packageManager": "npm@11.17.0",

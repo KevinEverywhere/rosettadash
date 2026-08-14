@@ -91,8 +91,9 @@ Local dev without registry: `npm run pack:consumer` then `file:` tarballs. See [
 
 1. **DAS-126** — matrix + WC specs (in progress)
 2. **DAS-127–129** — gap WC base components → manifest regen → **0.1.2** publish
-3. **DAS-121** — `proof-web-components` shell (started)
-4. **DAS-122–125** — framework apps (identical UX)
+3. **DAS-121** — `proof-web-components` shell — **done**
+4. **DAS-122** — `proof-react` (full taxonomy UX) — **in progress**
+5. **DAS-123–125** — remaining framework apps (identical UX to React)
 
 ## References
 
