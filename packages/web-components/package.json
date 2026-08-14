@@ -77,6 +77,11 @@
       "import": "./src/domain/i18n/app-language-select/index.js",
       "default": "./src/domain/i18n/app-language-select/index.js"
     },
+    "./visual/display/geo-map": {
+      "types": "./src/visual/display/geo-map/index.d.ts",
+      "import": "./src/visual/display/geo-map/index.js",
+      "default": "./src/visual/display/geo-map/index.js"
+    },
     "./visual/wasm/media": {
       "types": "./src/visual/wasm/media/index.d.ts",
       "import": "./src/visual/wasm/media/index.js",
@@ -99,13 +104,25 @@
   ],
   "peerDependencies": {
     "@ffmpeg/ffmpeg": ">=0.12.0",
-    "@ffmpeg/util": ">=0.12.0"
+    "@ffmpeg/util": ">=0.12.0",
+    "@googlemaps/js-api-loader": ">=1.16.0",
+    "leaflet": ">=1.9.0",
+    "maplibre-gl": ">=4.0.0"
   },
   "peerDependenciesMeta": {
     "@ffmpeg/ffmpeg": {
       "optional": true
     },
     "@ffmpeg/util": {
+      "optional": true
+    },
+    "@googlemaps/js-api-loader": {
+      "optional": true
+    },
+    "leaflet": {
+      "optional": true
+    },
+    "maplibre-gl": {
       "optional": true
     }
   },

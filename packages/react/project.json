@@ -60,6 +60,7 @@
           "packages/react/src/visual/display/3d-gltf-model/index.ts",
           "packages/react/src/visual/display/3d-scatter/index.ts",
           "packages/react/src/visual/display/3d-scene/index.ts",
+          "packages/react/src/visual/display/geo-map/index.ts",
           "packages/react/src/visual/input/checkbox/index.ts",
           "packages/react/src/visual/input/date-range/index.ts",
           "packages/react/src/visual/input/number/index.ts",

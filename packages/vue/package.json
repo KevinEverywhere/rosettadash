@@ -174,6 +174,11 @@
       "import": "./src/visual/display/3d-scene/index.js",
       "default": "./src/visual/display/3d-scene/index.js"
     },
+    "./visual/display/geo-map": {
+      "types": "./src/visual/display/geo-map/index.d.ts",
+      "import": "./src/visual/display/geo-map/index.js",
+      "default": "./src/visual/display/geo-map/index.js"
+    },
     "./visual/input/checkbox": {
       "types": "./src/visual/input/checkbox/index.d.ts",
       "import": "./src/visual/input/checkbox/index.js",

@@ -30,6 +30,7 @@ export * from './visual/display/3d-geo-globe/index.js';
 export * from './visual/display/3d-gltf-model/index.js';
 export * from './visual/display/3d-scatter/index.js';
 export * from './visual/display/3d-scene/index.js';
+export * from './visual/display/geo-map/index.js';
 export * from './visual/input/checkbox/index.js';
 export * from './visual/input/date-range/index.js';
 export * from './visual/input/number/index.js';

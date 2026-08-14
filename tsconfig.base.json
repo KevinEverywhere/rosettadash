@@ -81,6 +81,9 @@
       "@rosettadash/web-components/domain/i18n/app-language-select": [
         "./packages/web-components/src/domain/i18n/app-language-select/index.ts"
       ],
+      "@rosettadash/web-components/visual/display/geo-map": [
+        "./packages/web-components/src/visual/display/geo-map/index.ts"
+      ],
       "@rosettadash/web-components/visual/wasm/media": [
         "./packages/web-components/src/visual/wasm/media/index.ts"
       ],
@@ -212,6 +215,9 @@
       ],
       "@rosettadash/react/visual/display/3d-scene": [
         "./packages/react/src/visual/display/3d-scene/index.ts"
+      ],
+      "@rosettadash/react/visual/display/geo-map": [
+        "./packages/react/src/visual/display/geo-map/index.ts"
       ],
       "@rosettadash/react/visual/input/checkbox": [
         "./packages/react/src/visual/input/checkbox/index.ts"
@@ -393,6 +399,9 @@
       "@rosettadash/angular/visual/display/3d-scene": [
         "./packages/angular/src/visual/display/3d-scene/index.ts"
       ],
+      "@rosettadash/angular/visual/display/geo-map": [
+        "./packages/angular/src/visual/display/geo-map/index.ts"
+      ],
       "@rosettadash/angular/visual/input/checkbox": [
         "./packages/angular/src/visual/input/checkbox/index.ts"
       ],
@@ -573,6 +582,9 @@
       "@rosettadash/vue/visual/display/3d-scene": [
         "./packages/vue/src/visual/display/3d-scene/index.ts"
       ],
+      "@rosettadash/vue/visual/display/geo-map": [
+        "./packages/vue/src/visual/display/geo-map/index.ts"
+      ],
       "@rosettadash/vue/visual/input/checkbox": [
         "./packages/vue/src/visual/input/checkbox/index.ts"
       ],
@@ -752,6 +764,9 @@
       ],
       "@rosettadash/svelte/visual/display/3d-scene": [
         "./packages/svelte/src/visual/display/3d-scene/types.ts"
+      ],
+      "@rosettadash/svelte/visual/display/geo-map": [
+        "./packages/svelte/src/visual/display/geo-map/types.ts"
       ],
       "@rosettadash/svelte/visual/input/checkbox": [
         "./packages/svelte/src/visual/input/checkbox/types.ts"

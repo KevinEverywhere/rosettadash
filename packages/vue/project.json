@@ -60,6 +60,7 @@
           "packages/vue/src/visual/display/3d-gltf-model/index.ts",
           "packages/vue/src/visual/display/3d-scatter/index.ts",
           "packages/vue/src/visual/display/3d-scene/index.ts",
+          "packages/vue/src/visual/display/geo-map/index.ts",
           "packages/vue/src/visual/input/checkbox/index.ts",
           "packages/vue/src/visual/input/date-range/index.ts",
           "packages/vue/src/visual/input/number/index.ts",

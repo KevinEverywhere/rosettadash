@@ -30,6 +30,7 @@ export type { ThreeGeoGlobeProps } from './visual/display/3d-geo-globe/types';
 export type { ThreeGltfModelProps } from './visual/display/3d-gltf-model/types';
 export type { ThreeScatterPlotProps } from './visual/display/3d-scatter/types';
 export type { ThreeScenePointCloudProps } from './visual/display/3d-scene/types';
+export type { GeoMapProps } from './visual/display/geo-map/types';
 export type { CheckboxInputProps } from './visual/input/checkbox/types';
 export type { DateRangeFilterProps } from './visual/input/date-range/types';
 export type { NumberInputProps } from './visual/input/number/types';

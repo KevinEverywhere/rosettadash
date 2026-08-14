@@ -118,6 +118,14 @@ export const PALETTE_RUNTIME_ENTRIES = [
   { type: 'visual.display.3d-scene', subpath: 'visual/display/3d-scene', exportName: 'ThreeScenePointCloud', pattern: 'native', kind: 'three-host', testId: 'rd-three-scene' },
   { type: 'visual.display.3d-gltf-model', subpath: 'visual/display/3d-gltf-model', exportName: 'ThreeGltfModel', pattern: 'native', kind: 'three-host', testId: 'rd-three-gltf-model' },
   { type: 'visual.display.3d-geo-globe', subpath: 'visual/display/3d-geo-globe', exportName: 'ThreeGeoGlobe', pattern: 'native', kind: 'three-host', testId: 'rd-three-geo-globe' },
+  {
+    type: 'visual.display.geo-map',
+    subpath: 'visual/display/geo-map',
+    exportName: 'GeoMap',
+    pattern: 'manual',
+    testId: 'rd-display-geo-map',
+    wcImport: 'visual/display/geo-map',
+  },
   // SVG
   { type: 'visual.svg.inline', subpath: 'visual/svg/inline', exportName: 'SvgInline', pattern: 'native', kind: 'svg-inline', testId: 'rd-svg-inline' },
   { type: 'visual.svg.icon', subpath: 'visual/svg/icon', exportName: 'SvgIcon', pattern: 'native', kind: 'svg-icon', testId: 'rd-svg-icon' },

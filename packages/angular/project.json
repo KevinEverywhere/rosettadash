@@ -60,6 +60,7 @@
           "packages/angular/src/visual/display/3d-gltf-model/index.ts",
           "packages/angular/src/visual/display/3d-scatter/index.ts",
           "packages/angular/src/visual/display/3d-scene/index.ts",
+          "packages/angular/src/visual/display/geo-map/index.ts",
           "packages/angular/src/visual/input/checkbox/index.ts",
           "packages/angular/src/visual/input/date-range/index.ts",
           "packages/angular/src/visual/input/number/index.ts",

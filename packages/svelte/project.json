@@ -65,6 +65,7 @@
           "packages/svelte/src/visual/display/3d-gltf-model/types.ts",
           "packages/svelte/src/visual/display/3d-scatter/types.ts",
           "packages/svelte/src/visual/display/3d-scene/types.ts",
+          "packages/svelte/src/visual/display/geo-map/types.ts",
           "packages/svelte/src/visual/input/checkbox/types.ts",
           "packages/svelte/src/visual/input/date-range/types.ts",
           "packages/svelte/src/visual/input/number/types.ts",

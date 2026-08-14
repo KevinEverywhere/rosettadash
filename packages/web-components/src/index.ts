@@ -1,4 +1,5 @@
 export * from './domain/index.js';
+export * from './visual/display/index.js';
 export * from './visual/media/index.js';
 export * from './wasm/index.js';
 export * from './layout/accordion/index.js';
@@ -7,6 +8,7 @@ export * from './visual/link-list/index.js';
 export * from './catalog/index.js';
 
 import { registerRosettaDashDomainElements } from './domain/index.js';
+import { registerRosettaDashDisplayElements } from './visual/display/index.js';
 import { registerLayoutAccordion } from './layout/accordion/index.js';
 import { registerLayoutAccordionLinkList } from './layout/accordion-link-list/index.js';
 import { registerVisualLinkList } from './visual/link-list/index.js';
@@ -23,6 +25,7 @@ export function registerRosettaDashElements(): void {
   registerLayoutAccordionLinkList();
   registerVisualLinkList();
   registerRosettaDashDomainElements();
+  registerRosettaDashDisplayElements();
   registerRosettaDashMediaElements();
   registerRosettaDashWasmElements();
   registerRosettaDashCatalogElements();

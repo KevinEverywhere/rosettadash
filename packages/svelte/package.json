@@ -207,6 +207,12 @@
       "import": "./src/visual/display/3d-scene/ThreeScenePointCloud.svelte",
       "default": "./src/visual/display/3d-scene/ThreeScenePointCloud.svelte"
     },
+    "./visual/display/geo-map": {
+      "types": "./src/visual/display/geo-map/types.d.ts",
+      "svelte": "./src/visual/display/geo-map/GeoMap.svelte",
+      "import": "./src/visual/display/geo-map/GeoMap.svelte",
+      "default": "./src/visual/display/geo-map/GeoMap.svelte"
+    },
     "./visual/input/checkbox": {
       "types": "./src/visual/input/checkbox/types.d.ts",
       "svelte": "./src/visual/input/checkbox/CheckboxInput.svelte",

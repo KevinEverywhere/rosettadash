@@ -141,6 +141,19 @@ export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogEx
     dependencies: ['Three.js runtime', 'Globe texture URL (e.g. equirectangular earth map).'],
     assumptions: ['Markers bind from rowset lat/lng fields per latField/lngField inspector keys.'],
   },
+  'visual.display.geo-map': {
+    dependencies: [
+      'Provider library: maplibre-gl (default), leaflet, or @googlemaps/js-api-loader + Maps JavaScript API key.',
+      'Tile URL and/or API key depending on provider — see Destination Atlas provider matrix.',
+    ],
+    assumptions: [
+      'Props: provider, tile-url, api-key, center, zoom, markers (JSON rowset), selected-id.',
+      'Emits marker-select with { id, lat, lng }.',
+      'maplibre — OSS vector UX; tiles often need MapTiler or similar key.',
+      'leaflet — lightweight raster-first; OSM tiles have usage limits.',
+      'google-maps — paid after free tier; Google branding and ToS apply.',
+    ],
+  },
   'visual.svg.inline': {
     assumptions: ['Markup, remote URL, or asset path must resolve in the host app.'],
   },
