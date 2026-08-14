@@ -54,7 +54,8 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 | **Destinations** | Browse + filter | DataTable, DetailPanel, TextInput, SelectInput, DateRangeFilter, TimePreset |
 | **Map** | 2D exploration | GeoMap (provider prop), LinkList, TabsLayout |
 | **Globe** | 3D markers | ThreeGeoGlobe |
-| **Media** | Video + 360 | YoutubeEmbed, VideoSource, EquirectViewport, WasmMedia |
+| **Media** | Video consumption | YoutubeEmbed, VideoMetadataPanel |
+| **Authoring** | Upload + WASM extract | VideoSource, EquirectViewport, WasmMedia (ffmpeg.wasm — [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131)) |
 | **Intel** | Regional news | NewsSearchBox, NewsRegionSelect, NewsResultsTable, NewsArticleDetail |
 | **Plan** | Trip + access | RoleGate, PersonInvite, RoleAssign, Timer, form inputs |
 | **Stack** | Infra demo | infra/* read-only panel |
@@ -65,6 +66,17 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 The **About** tab is the first screen and the **only** page-level scroller in each proof app. Long-form copy (runtime guides, npm commands, Storybook ports) lives inside **`layout.scroll-region`**. The shell locks `body` overflow; other tabs fit within the viewport without page scroll. When content fits, the scroll region shows no visible scrollbar; overflow uses a thin overlay scrollbar.
 
 Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/DAS-130). Shared copy: `libs/destination-atlas/src/data/about-guides.ts`.
+
+### Authoring tab (ffmpeg.wasm)
+
+**Authoring** is separate from **Media**. Media is for watching destination embeds; Authoring is where users upload source video and run **ffmpeg.wasm** extract:
+
+- **Source pane** — file upload, source video preview, equirect framing (yaw/pitch/FOV), scale, optional reverse, extract control
+- **Output pane** — live preview of the extracted MP4 blob + download
+
+Shipped with one example: **Cusco plaza (360° equirect)** (`libs/destination-atlas/src/data/authoring-examples.ts`). Requires optional `@ffmpeg/ffmpeg` + `@ffmpeg/util` peers.
+
+Implemented in React proof: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131). Editor/Admin roles only.
 
 ## Geo-map providers
 

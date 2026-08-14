@@ -62,20 +62,32 @@
 
 .rd-date-range__controls {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 0.65rem;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+}
+
+.rd-date-range__field {
+  display: grid;
+  gap: 0.25rem;
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+
+.rd-date-range__field-label {
+  font-size: 0.75rem;
+  color: var(--rd-color-muted);
 }
 
 .rd-date-range__sep {
   flex: 0 0 auto;
-  padding: 0 0.15rem;
+  padding: 0 0.15rem 0.55rem;
   font-size: 0.8125rem;
   color: var(--rd-color-muted);
 }
 
 .rd-date-range__input {
-  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
 }
 

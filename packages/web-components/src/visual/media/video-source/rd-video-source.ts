@@ -101,27 +101,57 @@ export class RdVideoSourceElement extends HTMLElement {
       nameEl.textContent = file.name;
     }
 
-    const metadata: DashRow = {
-      name: file.name,
-      sourceWidth: this.sourceWidth,
-      sourceHeight: this.sourceHeight,
-      size: file.size,
-    };
+    void this.probeVideoDimensions(file).then(({ width, height }) => {
+      if (width > 0 && height > 0) {
+        this.setAttribute('source-width', String(width));
+        this.setAttribute('source-height', String(height));
+        const metaEl = this.shadowRoot?.querySelector('[data-ref="meta"]');
+        if (metaEl) {
+          metaEl.textContent = `${width}×${height}`;
+        }
+      }
 
-    this.dispatchEvent(
-      new CustomEvent('video-file', {
-        detail: { file, metadata },
-        bubbles: true,
-        composed: true,
-      }),
-    );
-    this.dispatchEvent(
-      new CustomEvent('metadata', {
-        detail: metadata,
-        bubbles: true,
-        composed: true,
-      }),
-    );
+      const metadata: DashRow = {
+        name: file.name,
+        sourceWidth: width > 0 ? width : this.sourceWidth,
+        sourceHeight: height > 0 ? height : this.sourceHeight,
+        size: file.size,
+      };
+
+      this.dispatchEvent(
+        new CustomEvent('video-file', {
+          detail: { file, metadata },
+          bubbles: true,
+          composed: true,
+        }),
+      );
+      this.dispatchEvent(
+        new CustomEvent('metadata', {
+          detail: metadata,
+          bubbles: true,
+          composed: true,
+        }),
+      );
+    });
+  }
+
+  private probeVideoDimensions(file: File): Promise<{ width: number; height: number }> {
+    return new Promise((resolve) => {
+      const url = URL.createObjectURL(file);
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        const width = video.videoWidth;
+        const height = video.videoHeight;
+        URL.revokeObjectURL(url);
+        resolve({ width, height });
+      };
+      video.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve({ width: 0, height: 0 });
+      };
+      video.src = url;
+    });
   }
 }
 

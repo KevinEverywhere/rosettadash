@@ -20,6 +20,9 @@ export function defineRosettaElement(
 export type DashRow = Record<string, string | number | boolean | null | undefined>;
 
 export function readNumber(value: unknown, fallback: number): number {
+  if (value === null || value === undefined || value === '') {
+    return fallback;
+  }
   const next = Number(value);
   return Number.isFinite(next) ? next : fallback;
 }

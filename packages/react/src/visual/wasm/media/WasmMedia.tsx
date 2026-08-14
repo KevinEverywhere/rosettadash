@@ -20,6 +20,7 @@ export interface WasmMediaProps {
   yaw?: number;
   pitch?: number;
   horizontalFov?: number;
+  reverse?: boolean;
   inputFile?: File | Blob | null;
   cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
   className?: string;
@@ -51,6 +52,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
     yaw,
     pitch,
     horizontalFov,
+    reverse,
     inputFile,
     cropRegion,
     className,
@@ -76,6 +78,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
         outputWidth: 'output-width',
         outputHeight: 'output-height',
         horizontalFov: 'horizontal-fov',
+        reverse: 'reverse',
       },
       events: {
         progress: 'onProgress',
@@ -98,6 +101,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
       yaw,
       pitch,
       horizontalFov,
+      reverse,
     },
     {
       onProgress: onProgress as ((detail: unknown) => void) | undefined,

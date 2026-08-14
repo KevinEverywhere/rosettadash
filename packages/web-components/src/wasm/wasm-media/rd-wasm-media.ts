@@ -119,6 +119,10 @@ export class RdWasmMediaElement extends HTMLElement {
     return this.getAttribute('show-progress') !== 'false';
   }
 
+  get reverse(): boolean {
+    return this.getAttribute('reverse') === 'true';
+  }
+
   get filterPreview(): string {
     if (this.operation !== 'equirect-extract') {
       return '';
@@ -129,6 +133,7 @@ export class RdWasmMediaElement extends HTMLElement {
       yaw: readNumber(this.getAttribute('yaw'), 0),
       pitch: readNumber(this.getAttribute('pitch'), 0),
       horizontalFov: readNumber(this.getAttribute('horizontal-fov'), 90),
+      reverse: this.reverse,
     });
   }
 
@@ -294,6 +299,7 @@ export class RdWasmMediaElement extends HTMLElement {
         yaw: readNumber(this.getAttribute('yaw'), 0),
         pitch: readNumber(this.getAttribute('pitch'), 0),
         horizontalFov: readNumber(this.getAttribute('horizontal-fov'), 90),
+        reverse: this.reverse,
       });
 
       await ffmpeg.writeFile(inputName, await utilModule.fetchFile(this.inputFile));
@@ -305,6 +311,7 @@ export class RdWasmMediaElement extends HTMLElement {
         outputWidth: crop.outputWidth,
         outputHeight: crop.outputHeight,
         format: this.outputFormat,
+        reverse: this.reverse,
       };
 
       this.dispatchEvent(

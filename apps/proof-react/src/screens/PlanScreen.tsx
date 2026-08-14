@@ -20,7 +20,7 @@ export const PLAN_SOURCE = `<PlanScreen userRole={userRole}>
       <FormSectionGrid.Section title="Trip details" columns={2}>
         <TextInput label="Trip name" />
         <SelectInput label="Primary destination" />
-        <DateRangeFilter label="Trip dates" granularity="date" />
+        <DateRangeFilter label="Trip dates" startLabel="Departure" endLabel="Return" />
         <NumberInput label="Trip duration (days)" />
         <NumberInput label="Travelers" value={2} />
         <CheckboxInput label="Share itinerary with team" />
@@ -38,12 +38,18 @@ function daySpanInclusive(startDate: string, endDate: string): number | null {
   if (!startDate || !endDate) {
     return null;
   }
-  const start = Date.parse(startDate);
-  const end = Date.parse(endDate);
+  const start = Date.parse(`${startDate}T12:00:00`);
+  const end = Date.parse(`${endDate}T12:00:00`);
   if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
     return null;
   }
   return Math.round((end - start) / 86_400_000) + 1;
+}
+
+function endDateFromStartAndDays(startDate: string, days: number): string {
+  const start = new Date(`${startDate}T12:00:00`);
+  start.setDate(start.getDate() + Math.max(1, days) - 1);
+  return start.toISOString().slice(0, 10);
 }
 
 export function PlanScreen({ userRole, locale = 'en' }: Props) {
@@ -59,6 +65,14 @@ export function PlanScreen({ userRole, locale = 'en' }: Props) {
     const span = daySpanInclusive(range.startDate, range.endDate);
     if (span !== null) {
       setDurationDays(span);
+    }
+  };
+
+  const onDurationChange = (value: number) => {
+    const days = Math.max(1, value || 1);
+    setDurationDays(days);
+    if (tripStart) {
+      setTripEnd(endDateFromStartAndDays(tripStart, days));
     }
   };
 
@@ -96,27 +110,28 @@ export function PlanScreen({ userRole, locale = 'en' }: Props) {
                   label: localizedDestinationName(dest, locale),
                 }))}
               />
-              <DateRangeFilter
-                label="Trip dates"
-                granularity="date"
-                startDate={tripStart}
-                endDate={tripEnd}
-                onChange={onTripDatesChange}
-              />
-              <NumberInput
-                label="Trip duration (days)"
-                value={durationDays}
-                onChange={(value) => setDurationDays(value || 1)}
-              />
-              <NumberInput label="Travelers" value={2} />
-              <CheckboxInput label="Share itinerary with team" defaultChecked />
+              <div className="da-plan-field-span-2">
+                <DateRangeFilter
+                  label="Trip dates"
+                  startLabel="Departure"
+                  endLabel="Return"
+                  granularity="date"
+                  startDate={tripStart}
+                  endDate={tripEnd}
+                  onChange={onTripDatesChange}
+                />
+              </div>
+              <div className="da-plan-field-span-2 da-plan-trip-meta">
+                <NumberInput
+                  label="Trip duration (days)"
+                  value={computedDuration ?? durationDays}
+                  min={1}
+                  onChange={onDurationChange}
+                />
+                <NumberInput label="Travelers" value={2} min={1} />
+                <CheckboxInput label="Share itinerary with team" defaultChecked />
+              </div>
             </FormSectionGrid.Section>
-            {computedDuration !== null && computedDuration !== durationDays ? (
-              <p className="da-note">
-                Selected dates span <strong>{computedDuration}</strong> day{computedDuration === 1 ? '' : 's'} — duration
-                field can be adjusted independently for partial travel days.
-              </p>
-            ) : null}
             <FormSectionGrid.Section title="Notes" fullWidth>
               <TextareaInput label="Notes" placeholder="Visa requirements, rail passes, accessibility…" />
             </FormSectionGrid.Section>

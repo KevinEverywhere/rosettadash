@@ -75,6 +75,7 @@ export type DestinationAtlasScreenId =
   | 'map'
   | 'globe'
   | 'media'
+  | 'authoring'
   | 'intel'
   | 'plan'
   | 'views'
@@ -116,7 +117,12 @@ export const DESTINATION_ATLAS_SCREENS: DestinationAtlasScreen[] = [
   {
     id: 'media',
     label: 'Media',
-    description: 'YouTube embeds, video source, and 360° equirect viewport.',
+    description: 'Watch destination videos — YouTube embeds and metadata.',
+  },
+  {
+    id: 'authoring',
+    label: 'Authoring',
+    description: 'Upload source video; ffmpeg.wasm crop, scale, and output preview.',
   },
   {
     id: 'intel',

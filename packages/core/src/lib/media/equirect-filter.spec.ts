@@ -39,4 +39,16 @@ describe('equirect-filter', () => {
       }),
     ).toContain('v360=input=equirect');
   });
+
+  it('appends reverse when requested', () => {
+    expect(
+      buildEquirectExtractFilter('rectilinear', {
+        ...DEFAULT_EQUIRECT_FLAT_CROP,
+        yaw: 45,
+        pitch: -10,
+        horizontalFov: 60,
+        reverse: true,
+      }),
+    ).toContain(',reverse');
+  });
 });

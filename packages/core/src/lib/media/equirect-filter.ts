@@ -17,7 +17,7 @@ export interface EquirectRectilinearOptions {
 }
 
 /** ffmpeg -vf filter for a rectangular crop on a flat 2:1 equirect frame, then scale. */
-export function buildEquirectFlatCropFilter(options: EquirectFlatCropOptions): string {
+export function buildEquirectFlatCropFilter(options: EquirectFlatCropOptions, reverse = false): string {
   const cropX = Math.max(0, Math.round(options.cropX));
   const cropY = Math.max(0, Math.round(options.cropY));
   const cropWidth = Math.max(2, Math.round(options.cropWidth));
@@ -25,11 +25,12 @@ export function buildEquirectFlatCropFilter(options: EquirectFlatCropOptions): s
   const outputWidth = Math.max(2, Math.round(options.outputWidth));
   const outputHeight = Math.max(2, Math.round(options.outputHeight));
 
-  return `crop=${cropWidth}:${cropHeight}:${cropX}:${cropY},scale=${outputWidth}:${outputHeight}`;
+  const filter = `crop=${cropWidth}:${cropHeight}:${cropX}:${cropY},scale=${outputWidth}:${outputHeight}`;
+  return reverse ? `${filter},reverse` : filter;
 }
 
 /** ffmpeg -vf filter for rectilinear reprojection from equirect source. */
-export function buildEquirectRectilinearFilter(options: EquirectRectilinearOptions): string {
+export function buildEquirectRectilinearFilter(options: EquirectRectilinearOptions, reverse = false): string {
   const yaw = Number(options.yaw) || 0;
   const pitch = Number(options.pitch) || 0;
   const roll = Number(options.roll ?? 0) || 0;
@@ -37,28 +38,38 @@ export function buildEquirectRectilinearFilter(options: EquirectRectilinearOptio
   const outputWidth = Math.max(2, Math.round(options.outputWidth));
   const outputHeight = Math.max(2, Math.round(options.outputHeight));
 
-  return [
+  const filter = [
     `v360=input=equirect:output=rectilinear:yaw=${yaw}:pitch=${pitch}:roll=${roll}:d_fov=${horizontalFov}`,
     `scale=${outputWidth}:${outputHeight}`,
   ].join(',');
+  return reverse ? `${filter},reverse` : filter;
 }
+
+export type EquirectExtractOptions = EquirectFlatCropOptions &
+  Partial<Pick<EquirectRectilinearOptions, 'yaw' | 'pitch' | 'roll' | 'horizontalFov'>> & {
+    reverse?: boolean;
+  };
 
 export function buildEquirectExtractFilter(
   mode: 'flat-crop' | 'rectilinear',
-  options: EquirectFlatCropOptions & Partial<EquirectRectilinearOptions>,
+  options: EquirectExtractOptions,
 ): string {
+  const reverse = Boolean(options.reverse);
   if (mode === 'rectilinear') {
-    return buildEquirectRectilinearFilter({
-      yaw: options.yaw ?? 0,
-      pitch: options.pitch ?? 0,
-      roll: options.roll ?? 0,
-      horizontalFov: options.horizontalFov ?? 90,
-      outputWidth: options.outputWidth,
-      outputHeight: options.outputHeight,
-    });
+    return buildEquirectRectilinearFilter(
+      {
+        yaw: options.yaw ?? 0,
+        pitch: options.pitch ?? 0,
+        roll: options.roll ?? 0,
+        horizontalFov: options.horizontalFov ?? 90,
+        outputWidth: options.outputWidth,
+        outputHeight: options.outputHeight,
+      },
+      reverse,
+    );
   }
 
-  return buildEquirectFlatCropFilter(options);
+  return buildEquirectFlatCropFilter(options, reverse);
 }
 
 /** Default crop centered on a 4096×2048 equirect frame. */

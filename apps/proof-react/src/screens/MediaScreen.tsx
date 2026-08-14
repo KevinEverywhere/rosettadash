@@ -1,8 +1,5 @@
-import { EquirectViewport } from '@rosettadash/react/visual/media/equirect-viewport';
-import { VideoMetadataPanel } from '@rosettadash/react/visual/media/video-metadata';
-import { VideoSource } from '@rosettadash/react/visual/media/video-source';
 import { YoutubeEmbed } from '@rosettadash/react/visual/media/youtube-embed';
-import { WasmMedia } from '@rosettadash/react/visual/wasm/media';
+import { VideoMetadataPanel } from '@rosettadash/react/visual/media/video-metadata';
 import { SelectInput } from '@rosettadash/react/visual/input/select';
 import { getDestinationById, MOCK_DESTINATIONS } from '@destination-atlas';
 import type { AtlasContext } from '../state/useDestinationAtlasState';
@@ -11,13 +8,7 @@ import { localizedDestinationName } from '../lib/atlas-utils';
 export const MEDIA_SOURCE = `<MediaScreen selectedId={selectedId}>
   <SelectInput label="Destination video" value={selectedId} />
   <YoutubeEmbed videoId={selected.youtubeId} controls />
-  <VideoMetadataPanel items={flatVideoMetadata} />
-  {is360 ? (
-    <>
-      <EquirectViewport label="360° viewport" … />
-      <WasmMedia label="Wasm extract (demo)" … />
-    </>
-  ) : null}
+  <VideoMetadataPanel items={videoMetadata} />
 </MediaScreen>`;
 
 type Props = Pick<AtlasContext, 'locale' | 'selectedId' | 'setSelectedId'>;
@@ -47,10 +38,7 @@ export function MediaScreen({ locale, selectedId, setSelectedId }: Props) {
   return (
     <section className="da-panel">
       <h2>Media</h2>
-      <p>
-        Standard destination video with characteristics panel. 360° crop and wasm tooling appear only when
-        the asset is marked equirectangular.
-      </p>
+      <p>Browse and watch destination videos. Upload, crop, and WASM extract live on the Authoring tab.</p>
       <div className="rd-media-layout">
         <div className="rd-media-primary">
           <SelectInput
@@ -75,45 +63,12 @@ export function MediaScreen({ locale, selectedId, setSelectedId }: Props) {
         </div>
         <div className="rd-media-tools">
           <VideoMetadataPanel items={metadataItems} />
-          <VideoSource label="Local / file video source" accept="video/*" />
         </div>
       </div>
-
-      {is360 && selected ? (
-        <section className="rd-media-360">
-          <h3 className="rd-media-360__title">360° tooling</h3>
-          <p className="da-note">
-            This destination is tagged as equirectangular
-            {selected.equirectUrl ? (
-              <>
-                {' '}
-                (<code>{selected.equirectUrl}</code>)
-              </>
-            ) : null}
-            .
-          </p>
-          <div className="rd-media-360__grid">
-            <EquirectViewport
-              label="360° crop metadata"
-              previewMode="rectilinear"
-              yaw={25}
-              pitch={-8}
-              horizontalFov={75}
-              outputWidth={1280}
-              outputHeight={720}
-            />
-            <WasmMedia
-              label="Wasm extract (demo)"
-              operation="extract"
-              extractionMode="flat-crop"
-              showProgress
-            />
-          </div>
-        </section>
-      ) : selected ? (
+      {is360 && selected?.equirectUrl ? (
         <p className="da-note">
-          Flat video — no 360° panels. Tag <code>videoProjection: &apos;equirect&apos;</code> on a
-          destination to enable immersive tooling.
+          This destination has equirect metadata (<code>{selected.equirectUrl}</code>). Use{' '}
+          <strong>Authoring</strong> to load a local 360° file and run ffmpeg.wasm extract.
         </p>
       ) : null}
     </section>

@@ -8,6 +8,7 @@ import { DestinationsScreen, DESTINATIONS_SOURCE } from './screens/DestinationsS
 import { MapScreen, MAP_SOURCE } from './screens/MapScreen';
 import { GlobeScreen, GLOBE_SOURCE } from './screens/GlobeScreen';
 import { MediaScreen, MEDIA_SOURCE } from './screens/MediaScreen';
+import { AuthoringScreen, AUTHORING_SOURCE } from './screens/AuthoringScreen';
 import { IntelScreen, INTEL_SOURCE } from './screens/IntelScreen';
 import { PlanScreen, PLAN_SOURCE } from './screens/PlanScreen';
 import { ViewsScreen, VIEWS_SOURCE } from './screens/ViewsScreen';
@@ -25,6 +26,7 @@ const SCREEN_SOURCES: Record<string, string> = {
   map: MAP_SOURCE,
   globe: GLOBE_SOURCE,
   media: MEDIA_SOURCE,
+  authoring: AUTHORING_SOURCE,
   intel: INTEL_SOURCE,
   plan: PLAN_SOURCE,
   views: VIEWS_SOURCE,
@@ -149,6 +151,7 @@ export function App() {
               setSelectedId={atlas.setSelectedId}
             />
           ) : null}
+          {atlas.screen === 'authoring' ? <AuthoringScreen locale={atlas.locale} /> : null}
           {atlas.screen === 'intel' ? (
             <IntelScreen
               userRole={atlas.userRole}
