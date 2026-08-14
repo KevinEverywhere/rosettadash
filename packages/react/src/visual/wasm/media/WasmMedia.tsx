@@ -2,8 +2,8 @@ import { createElement, forwardRef, type CSSProperties } from 'react';
 import {
   DB_WASM_MEDIA_TAG,
   registerRdWasmMedia,
-} from '@rosettadash/web-components/wasm';
-import { useCustomElementHost } from '../../lib/custom-element-host.js';
+} from '@rosettadash/web-components/visual/wasm/media';
+import { useCustomElementHost } from '../../../lib/custom-element-host.js';
 
 export interface WasmMediaProps {
   label?: string;

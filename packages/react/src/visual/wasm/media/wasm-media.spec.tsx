@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
-import { DB_WASM_MEDIA_TAG } from '@rosettadash/web-components/wasm';
+import { DB_WASM_MEDIA_TAG } from '@rosettadash/web-components/visual/wasm/media';
 import { WasmMedia } from './WasmMedia';
 
-describe('@rosettadash/react/wasm/wasm-media', () => {
+describe('@rosettadash/react/visual/wasm/media', () => {
   it('renders and registers the WC host', () => {
     const { container } = render(
       <WasmMedia label="Transcode" operation="equirect-extract" outputFormat="mp4" />,

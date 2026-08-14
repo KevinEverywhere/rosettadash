@@ -41,6 +41,7 @@
           "packages/web-components/src/visual/media/index.ts",
           "packages/web-components/src/visual/media/video-source/index.ts",
           "packages/web-components/src/visual/media/equirect-viewport/index.ts",
+          "packages/web-components/src/visual/wasm/media/index.ts",
           "packages/web-components/src/wasm/index.ts",
           "packages/web-components/src/catalog/index.ts",
           "packages/web-components/src/catalog/component-spec/index.ts"

@@ -45,8 +45,13 @@ No `@rosettadash/vendor/…` path.
 | Taxonomy type | dotted | `layout.accordion`, `visual.media.video-source` |
 | Export symbol | PascalCase | `Accordion` |
 | Custom element | `rd-` + kebab | `rd-accordion` |
-| CSS | `rd-*` BEM + `--rd-*` | `rd-accordion__panel` |
+| CSS root block | `rd-` + kebab (taxonomy-aligned) | `rd-accordion`, `rd-input-text`, `rd-chart-line` |
+| CSS element | `rd-<block>__<element>` | `rd-accordion__panel` |
+| CSS modifier | `rd-<block>--<modifier>` | `rd-accordion--open` |
+| CSS tokens | `--rd-*` | `--rd-color-accent` |
 | Recipe helper | same shape | `@rosettadash/react/layout/accordion-link-list` |
+
+**BEM normalization (DAS-93):** Every runtime component root uses a taxonomy-aligned block class derived from the palette type (same rule as WC `taxonomyToRdTag`: strip top-level category prefix, dots → hyphens, prefix `rd-`). Elements/modifiers use that block (`rd-kpi__value`, not `rd-atom--kpi-card`). `data-testid` equals the root block class. No generic `rd-atom` wrappers.
 
 ## Recipes over atoms
 

@@ -27,6 +27,7 @@
     "pack:core": "nx build core && npm pack ./dist/packages/core --dry-run",
     "pack:web-components": "nx build web-components && node scripts/bundle-browser-media.mjs && npm pack ./dist/packages/web-components --dry-run",
     "pack:consumer": "nx run-many -t build -p core,web-components && node scripts/bundle-browser-media.mjs && npm pack ./dist/packages/core && npm pack ./dist/packages/web-components",
+    "generate:react-runtime": "node scripts/generate-react-runtime.mjs --write",
     "publish:npm": "npm run pack:consumer && npm publish ./dist/packages/core --access public && npm publish ./dist/packages/web-components --access public",
     "setup:e2e": "playwright install chromium",
     "e2e:prep": "node scripts/check-e2e-ports.mjs",

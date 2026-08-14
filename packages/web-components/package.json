@@ -67,6 +67,11 @@
       "import": "./src/visual/media/equirect-viewport/index.js",
       "default": "./src/visual/media/equirect-viewport/index.js"
     },
+    "./visual/wasm/media": {
+      "types": "./src/visual/wasm/media/index.d.ts",
+      "import": "./src/visual/wasm/media/index.js",
+      "default": "./src/visual/wasm/media/index.js"
+    },
     "./browser/media": {
       "import": "./browser/media.js",
       "default": "./browser/media.js"
