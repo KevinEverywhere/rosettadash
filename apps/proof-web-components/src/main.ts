@@ -14,6 +14,8 @@ import {
 
 registerRosettaDashElements();
 
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '';
+
 interface AppState {
   screen: DestinationAtlasScreenId;
   selectedId: string;
@@ -45,6 +47,23 @@ function renderGap(
       ${extra ?? ''}
     </div>
   `;
+}
+
+function buildMapMarkers(): Array<{ id: string; lat: number; lng: number; label: string }> {
+  return MOCK_DESTINATIONS.map((dest) => ({
+    id: dest.id,
+    lat: dest.lat,
+    lng: dest.lng,
+    label: localizedName(dest),
+  }));
+}
+
+function mapView(): { lat: number; lng: number; zoom: number } {
+  const selected = MOCK_DESTINATIONS.find((dest) => dest.id === state.selectedId);
+  if (selected) {
+    return { lat: selected.lat, lng: selected.lng, zoom: 5 };
+  }
+  return { lat: 20, lng: 0, zoom: 2 };
 }
 
 function renderOverview(): string {
@@ -94,33 +113,33 @@ function renderMap(): string {
     (p) => `<option value="${p.id}" ${p.id === state.mapProvider ? 'selected' : ''}>${p.label}</option>`,
   ).join('');
   const active = GEO_MAP_PROVIDERS.find((p) => p.id === state.mapProvider);
+  const googleKeyHint =
+    state.mapProvider === 'google-maps' && !GOOGLE_MAPS_API_KEY
+      ? `<p class="da-note">Set <code>VITE_GOOGLE_MAPS_API_KEY</code> in a <code>.env.local</code> file to load Google Maps.</p>`
+      : '';
 
   return `
     <section class="da-panel">
       <h2>Map</h2>
-      ${renderGap(
-        'Geo Map',
-        'DAS-128',
-        '2D slippy map with developer-selectable provider (MapLibre, Leaflet, Google Maps).',
-        `
-        <div class="da-provider-select">
-          <label for="map-provider">Map provider (component prop preview)</label>
-          <select id="map-provider" data-map-provider>
-            ${providerOptions}
-          </select>
-        </div>
-        ${
-          active
-            ? `<dl>
-                <dt>Cost</dt><dd>${active.costSummary}</dd>
-                <dt>API key</dt><dd>${active.apiKeyRequired ? 'Required' : 'Optional'}</dd>
-                <dt>Notes</dt><dd>${active.notes}</dd>
-              </dl>`
-            : ''
-        }
-        <p>Markers: ${MOCK_DESTINATIONS.map((d) => localizedName(d)).join(', ')}</p>
-        `,
-      )}
+      <p>2D slippy map with developer-selectable provider (<code>visual.display.geo-map</code>).</p>
+      <div class="da-provider-select">
+        <label for="map-provider">Map provider (component prop)</label>
+        <select id="map-provider" data-map-provider>
+          ${providerOptions}
+        </select>
+      </div>
+      ${
+        active
+          ? `<dl class="da-provider-meta">
+              <dt>Cost</dt><dd>${active.costSummary}</dd>
+              <dt>API key</dt><dd>${active.apiKeyRequired ? 'Required' : 'Optional'}</dd>
+              <dt>Notes</dt><dd>${active.notes}</dd>
+            </dl>`
+          : ''
+      }
+      ${googleKeyHint}
+      <rd-geo-map class="da-geo-map" data-ref="geo-map"></rd-geo-map>
+      <p class="da-note">Click a marker to select a destination. Selected: <strong>${state.selectedId || 'none'}</strong></p>
     </section>
   `;
 }
@@ -140,14 +159,27 @@ function renderGlobe(): string {
 
 function renderMedia(): string {
   const selected = MOCK_DESTINATIONS.find((d) => d.id === state.selectedId);
+  const options = MOCK_DESTINATIONS.filter((d) => d.youtubeId)
+    .map(
+      (d) =>
+        `<option value="${d.id}" ${d.id === state.selectedId ? 'selected' : ''}>${localizedName(d)}</option>`,
+    )
+    .join('');
+
   return `
     <section class="da-panel">
       <h2>Media</h2>
-      ${renderGap(
-        'YouTube Embed',
-        'DAS-129',
-        `Privacy-enhanced iframe for destination videos${selected?.youtubeId ? ` (e.g. ${selected.youtubeId})` : ''}.`,
-      )}
+      <p>YouTube embed (<code>visual.media.youtube-embed</code>) for destination highlight videos.</p>
+      <div class="da-provider-select">
+        <label for="media-dest">Destination video</label>
+        <select id="media-dest" data-media-dest>${options}</select>
+      </div>
+      <rd-youtube-embed class="da-youtube" data-ref="youtube-embed"></rd-youtube-embed>
+      ${
+        !selected?.youtubeId
+          ? '<p class="da-note">Select a destination with a YouTube id.</p>'
+          : ''
+      }
       <rd-video-source label="Local / file video source"></rd-video-source>
       <p style="margin-top:1rem"><em>Equirect viewport and wasm-media available in framework proof apps.</em></p>
     </section>
@@ -187,26 +219,12 @@ function renderStack(): string {
 }
 
 function renderSettings(): string {
-  const options = DEFAULT_APP_LOCALES.map(
-    (l) =>
-      `<option value="${l.code}" ${l.code === state.locale ? 'selected' : ''}>${l.label}${l.nativeLabel ? ` (${l.nativeLabel})` : ''}</option>`,
-  ).join('');
-
   return `
     <section class="da-panel">
       <h2>Settings</h2>
-      ${renderGap(
-        'App Language Select',
-        'DAS-127',
-        'Sets app base locale for developer i18n. Does not translate RosettaDash chrome. Emits locale-change.',
-        `
-        <div class="da-provider-select">
-          <label for="app-locale">App locale preview (until rd-app-language-select ships)</label>
-          <select id="app-locale" data-app-locale>${options}</select>
-        </div>
-        <p>Demo: destination names above use <code>labels[locale]</code> from mock data when available.</p>
-        `,
-      )}
+      <p>App base locale for developer i18n (<code>domain.i18n.app-language-select</code>). Does not translate RosettaDash chrome.</p>
+      <rd-app-language-select data-ref="app-language-select"></rd-app-language-select>
+      <p class="da-note">Demo: destination names on Overview, Destinations, and Map use <code>labels[locale]</code> from mock data when available.</p>
     </section>
   `;
 }
@@ -222,6 +240,66 @@ const SCREEN_RENDERERS: Record<DestinationAtlasScreenId, () => string> = {
   stack: renderStack,
   settings: renderSettings,
 };
+
+function wireGeoMap(root: HTMLElement): void {
+  const geoMap = root.querySelector('[data-ref="geo-map"]');
+  if (!geoMap) {
+    return;
+  }
+
+  const view = mapView();
+  geoMap.setAttribute('provider', state.mapProvider);
+  geoMap.setAttribute('center', JSON.stringify({ lat: view.lat, lng: view.lng }));
+  geoMap.setAttribute('zoom', String(view.zoom));
+  geoMap.setAttribute('markers', JSON.stringify(buildMapMarkers()));
+  geoMap.setAttribute('selected-id', state.selectedId);
+
+  if (state.mapProvider === 'google-maps' && GOOGLE_MAPS_API_KEY) {
+    geoMap.setAttribute('api-key', GOOGLE_MAPS_API_KEY);
+  } else {
+    geoMap.removeAttribute('api-key');
+  }
+
+  geoMap.addEventListener('marker-select', (event) => {
+    const detail = (event as CustomEvent<{ id: string }>).detail;
+    state.selectedId = detail.id;
+    geoMap.setAttribute('selected-id', detail.id);
+    root.querySelector('.da-note strong')?.replaceChildren(detail.id);
+  });
+}
+
+function wireAppLanguageSelect(root: HTMLElement): void {
+  const languageSelect = root.querySelector('[data-ref="app-language-select"]');
+  if (!languageSelect) {
+    return;
+  }
+
+  languageSelect.setAttribute('locales', JSON.stringify(DEFAULT_APP_LOCALES));
+  languageSelect.setAttribute('value', state.locale);
+  languageSelect.setAttribute('label', 'App language');
+  languageSelect.setAttribute('placeholder', 'Select language…');
+
+  languageSelect.addEventListener('locale-change', (event) => {
+    state.locale = (event as CustomEvent<{ locale: string }>).detail.locale;
+    render();
+  });
+}
+
+function wireYoutubeEmbed(root: HTMLElement): void {
+  const embed = root.querySelector('[data-ref="youtube-embed"]');
+  if (!embed) {
+    return;
+  }
+
+  const selected = MOCK_DESTINATIONS.find((dest) => dest.id === state.selectedId);
+  if (selected?.youtubeId) {
+    embed.setAttribute('video-id', selected.youtubeId);
+    embed.setAttribute('embed-title', `${localizedName(selected)} — destination video`);
+  } else {
+    embed.removeAttribute('video-id');
+    embed.setAttribute('embed-title', 'Destination video');
+  }
+}
 
 function render(): void {
   const root = document.getElementById('app');
@@ -242,6 +320,7 @@ function render(): void {
         <div class="da-locale-bar">
           <span>App locale: <strong>${state.locale}</strong></span>
           <span>Map provider: <strong>${state.mapProvider}</strong></span>
+          <span>Selected: <strong>${state.selectedId || 'none'}</strong></span>
         </div>
       </header>
       <nav class="da-nav" aria-label="Screens">${nav}</nav>
@@ -270,11 +349,23 @@ function render(): void {
     render();
   });
 
-  const localeSelect = root.querySelector<HTMLSelectElement>('[data-app-locale]');
-  localeSelect?.addEventListener('change', () => {
-    state.locale = localeSelect.value;
+  const mediaSelect = root.querySelector<HTMLSelectElement>('[data-media-dest]');
+  mediaSelect?.addEventListener('change', () => {
+    state.selectedId = mediaSelect.value;
     render();
   });
+
+  if (state.screen === 'map') {
+    wireGeoMap(root);
+  }
+
+  if (state.screen === 'settings') {
+    wireAppLanguageSelect(root);
+  }
+
+  if (state.screen === 'media') {
+    wireYoutubeEmbed(root);
+  }
 }
 
 render();

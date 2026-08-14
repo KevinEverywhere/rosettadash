@@ -26,4 +26,7 @@ export default defineConfig({
       ),
     },
   },
+  optimizeDeps: {
+    include: ['maplibre-gl', 'leaflet', '@googlemaps/js-api-loader'],
+  },
 });

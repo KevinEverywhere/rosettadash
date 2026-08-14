@@ -119,6 +119,37 @@ body {
   padding: 0.35rem 0.5rem;
 }
 
+.da-provider-meta {
+  margin: 0.75rem 0 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  font-size: 0.875rem;
+}
+
+.da-geo-map {
+  display: block;
+  height: 28rem;
+  margin-top: 1rem;
+}
+
+.da-youtube {
+  display: block;
+  margin-top: 1rem;
+}
+
+.da-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.875rem;
+  opacity: 0.85;
+}
+
+rd-app-language-select {
+  display: block;
+  margin-top: 0.75rem;
+  max-width: 24rem;
+}
+
 .da-locale-bar {
   display: flex;
   align-items: center;
