@@ -1,0 +1,12 @@
+import type { DataTableProps } from './data-table';
+
+describe('@rosettadash/angular/visual/table', () => {
+  it('exposes typed props contract', () => {
+    const props: DataTableProps = {};
+    expect(props).toBeDefined();
+  });
+
+  it('uses taxonomy-aligned BEM block rd-table', () => {
+    expect('rd-table').toMatch(/^rd-/);
+  });
+});

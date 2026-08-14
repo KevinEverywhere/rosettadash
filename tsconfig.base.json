@@ -93,21 +93,6 @@
       "@rosettadash/angular": [
         "./packages/angular/src/index.ts"
       ],
-      "@rosettadash/angular/layout/accordion": [
-        "./packages/angular/src/layout/accordion/index.ts"
-      ],
-      "@rosettadash/angular/layout/accordion-link-list": [
-        "./packages/angular/src/layout/accordion-link-list/index.ts"
-      ],
-      "@rosettadash/angular/visual/link-list": [
-        "./packages/angular/src/visual/link-list/index.ts"
-      ],
-      "@rosettadash/angular/visual/media/video-source": [
-        "./packages/angular/src/visual/media/video-source/index.ts"
-      ],
-      "@rosettadash/angular/visual/media/equirect-viewport": [
-        "./packages/angular/src/visual/media/equirect-viewport/index.ts"
-      ],
       "@rosettadash/vue": [
         "./packages/vue/src/index.ts"
       ],
@@ -326,6 +311,180 @@
       ],
       "@rosettadash/react/wasm/wasm-media": [
         "./packages/react/src/wasm/wasm-media/index.ts"
+      ],
+      "@rosettadash/angular/domain/person-invite": [
+        "./packages/angular/src/domain/person-invite/index.ts"
+      ],
+      "@rosettadash/angular/domain/role-assign": [
+        "./packages/angular/src/domain/role-assign/index.ts"
+      ],
+      "@rosettadash/angular/domain/role-gate": [
+        "./packages/angular/src/domain/role-gate/index.ts"
+      ],
+      "@rosettadash/angular/domain/time-preset": [
+        "./packages/angular/src/domain/time-preset/index.ts"
+      ],
+      "@rosettadash/angular/infra/env": [
+        "./packages/angular/src/infra/env/index.ts"
+      ],
+      "@rosettadash/angular/infra/mongodb": [
+        "./packages/angular/src/infra/mongodb/index.ts"
+      ],
+      "@rosettadash/angular/infra/mysql": [
+        "./packages/angular/src/infra/mysql/index.ts"
+      ],
+      "@rosettadash/angular/infra/postgresql": [
+        "./packages/angular/src/infra/postgresql/index.ts"
+      ],
+      "@rosettadash/angular/infra/server/express": [
+        "./packages/angular/src/infra/server/express/index.ts"
+      ],
+      "@rosettadash/angular/infra/server/nest": [
+        "./packages/angular/src/infra/server/nest/index.ts"
+      ],
+      "@rosettadash/angular/infra/server/next": [
+        "./packages/angular/src/infra/server/next/index.ts"
+      ],
+      "@rosettadash/angular/infra/server/nuxt": [
+        "./packages/angular/src/infra/server/nuxt/index.ts"
+      ],
+      "@rosettadash/angular/infra/supabase": [
+        "./packages/angular/src/infra/supabase/index.ts"
+      ],
+      "@rosettadash/angular/infra/wasm/asset": [
+        "./packages/angular/src/infra/wasm/asset/index.ts"
+      ],
+      "@rosettadash/angular/layout/accordion": [
+        "./packages/angular/src/layout/accordion/index.ts"
+      ],
+      "@rosettadash/angular/layout/accordion-link-list": [
+        "./packages/angular/src/layout/accordion-link-list/index.ts"
+      ],
+      "@rosettadash/angular/layout/collapsible": [
+        "./packages/angular/src/layout/collapsible/index.ts"
+      ],
+      "@rosettadash/angular/layout/flex": [
+        "./packages/angular/src/layout/flex/index.ts"
+      ],
+      "@rosettadash/angular/layout/grid": [
+        "./packages/angular/src/layout/grid/index.ts"
+      ],
+      "@rosettadash/angular/layout/modal": [
+        "./packages/angular/src/layout/modal/index.ts"
+      ],
+      "@rosettadash/angular/layout/tabs": [
+        "./packages/angular/src/layout/tabs/index.ts"
+      ],
+      "@rosettadash/angular/logic/timer": [
+        "./packages/angular/src/logic/timer/index.ts"
+      ],
+      "@rosettadash/angular/visual/chart/bar": [
+        "./packages/angular/src/visual/chart/bar/index.ts"
+      ],
+      "@rosettadash/angular/visual/chart/line": [
+        "./packages/angular/src/visual/chart/line/index.ts"
+      ],
+      "@rosettadash/angular/visual/chart/pie": [
+        "./packages/angular/src/visual/chart/pie/index.ts"
+      ],
+      "@rosettadash/angular/visual/detail": [
+        "./packages/angular/src/visual/detail/index.ts"
+      ],
+      "@rosettadash/angular/visual/display/3d-bar-chart": [
+        "./packages/angular/src/visual/display/3d-bar-chart/index.ts"
+      ],
+      "@rosettadash/angular/visual/display/3d-geo-globe": [
+        "./packages/angular/src/visual/display/3d-geo-globe/index.ts"
+      ],
+      "@rosettadash/angular/visual/display/3d-gltf-model": [
+        "./packages/angular/src/visual/display/3d-gltf-model/index.ts"
+      ],
+      "@rosettadash/angular/visual/display/3d-scatter": [
+        "./packages/angular/src/visual/display/3d-scatter/index.ts"
+      ],
+      "@rosettadash/angular/visual/display/3d-scene": [
+        "./packages/angular/src/visual/display/3d-scene/index.ts"
+      ],
+      "@rosettadash/angular/visual/input/checkbox": [
+        "./packages/angular/src/visual/input/checkbox/index.ts"
+      ],
+      "@rosettadash/angular/visual/input/date-range": [
+        "./packages/angular/src/visual/input/date-range/index.ts"
+      ],
+      "@rosettadash/angular/visual/input/number": [
+        "./packages/angular/src/visual/input/number/index.ts"
+      ],
+      "@rosettadash/angular/visual/input/select": [
+        "./packages/angular/src/visual/input/select/index.ts"
+      ],
+      "@rosettadash/angular/visual/input/text": [
+        "./packages/angular/src/visual/input/text/index.ts"
+      ],
+      "@rosettadash/angular/visual/input/textarea": [
+        "./packages/angular/src/visual/input/textarea/index.ts"
+      ],
+      "@rosettadash/angular/visual/kpi": [
+        "./packages/angular/src/visual/kpi/index.ts"
+      ],
+      "@rosettadash/angular/visual/link-list": [
+        "./packages/angular/src/visual/link-list/index.ts"
+      ],
+      "@rosettadash/angular/visual/media/equirect-viewport": [
+        "./packages/angular/src/visual/media/equirect-viewport/index.ts"
+      ],
+      "@rosettadash/angular/visual/media/live-capture": [
+        "./packages/angular/src/visual/media/live-capture/index.ts"
+      ],
+      "@rosettadash/angular/visual/media/video-source": [
+        "./packages/angular/src/visual/media/video-source/index.ts"
+      ],
+      "@rosettadash/angular/visual/news/article-detail": [
+        "./packages/angular/src/visual/news/article-detail/index.ts"
+      ],
+      "@rosettadash/angular/visual/news/language-select": [
+        "./packages/angular/src/visual/news/language-select/index.ts"
+      ],
+      "@rosettadash/angular/visual/news/region-select": [
+        "./packages/angular/src/visual/news/region-select/index.ts"
+      ],
+      "@rosettadash/angular/visual/news/results-table": [
+        "./packages/angular/src/visual/news/results-table/index.ts"
+      ],
+      "@rosettadash/angular/visual/news/search-box": [
+        "./packages/angular/src/visual/news/search-box/index.ts"
+      ],
+      "@rosettadash/angular/visual/news/type-select": [
+        "./packages/angular/src/visual/news/type-select/index.ts"
+      ],
+      "@rosettadash/angular/visual/plugin/metric-chip": [
+        "./packages/angular/src/visual/plugin/metric-chip/index.ts"
+      ],
+      "@rosettadash/angular/visual/plugin/status-badge": [
+        "./packages/angular/src/visual/plugin/status-badge/index.ts"
+      ],
+      "@rosettadash/angular/visual/skeleton": [
+        "./packages/angular/src/visual/skeleton/index.ts"
+      ],
+      "@rosettadash/angular/visual/svg/icon": [
+        "./packages/angular/src/visual/svg/icon/index.ts"
+      ],
+      "@rosettadash/angular/visual/svg/inline": [
+        "./packages/angular/src/visual/svg/inline/index.ts"
+      ],
+      "@rosettadash/angular/visual/table": [
+        "./packages/angular/src/visual/table/index.ts"
+      ],
+      "@rosettadash/angular/visual/wasm/media": [
+        "./packages/angular/src/visual/wasm/media/index.ts"
+      ],
+      "@rosettadash/angular/visual/wasm/module": [
+        "./packages/angular/src/visual/wasm/module/index.ts"
+      ],
+      "@rosettadash/angular/visual/wasm/worker-host": [
+        "./packages/angular/src/visual/wasm/worker-host/index.ts"
+      ],
+      "@rosettadash/angular/wasm/wasm-media": [
+        "./packages/angular/src/wasm/wasm-media/index.ts"
       ]
     }
   },

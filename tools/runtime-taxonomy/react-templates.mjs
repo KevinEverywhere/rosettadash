@@ -765,3 +765,5 @@ const KIND_BODIES = {
 
   fallback: `<section ref={ref as React.RefObject<HTMLElement>} className={rootClass} style={style} data-testid="{{testId}}">{children}</section>`,
 };
+
+export { KIND_PROPS };
