@@ -41,7 +41,14 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
   {
     id: 'layout',
     label: 'Layout & Navigation',
-    types: ['layout.grid', 'layout.flex', 'layout.tabs', 'layout.modal', 'layout.collapsible'],
+    types: [
+      'layout.grid',
+      'layout.flex',
+      'layout.tabs',
+      'layout.modal',
+      'layout.collapsible',
+      'layout.scroll-region',
+    ],
   },
   {
     id: 'access-onboarding',

@@ -2,6 +2,7 @@ import { DESTINATION_ATLAS_SCREENS, MOCK_DESTINATIONS, getDestinationById } from
 import { localizedDestinationName } from './lib/atlas-utils';
 import { screenAllowedForRole, roleLabel } from './lib/roles';
 import { useDestinationAtlasState } from './state/useDestinationAtlasState';
+import { AboutScreen, ABOUT_SOURCE } from './screens/AboutScreen';
 import { OverviewScreen, OVERVIEW_SOURCE } from './screens/OverviewScreen';
 import { DestinationsScreen, DESTINATIONS_SOURCE } from './screens/DestinationsScreen';
 import { MapScreen, MAP_SOURCE } from './screens/MapScreen';
@@ -18,6 +19,7 @@ import { ScreenWorkbench } from './components/ScreenWorkbench';
 import { UserRoleToggle } from './components/UserRoleToggle';
 
 const SCREEN_SOURCES: Record<string, string> = {
+  about: ABOUT_SOURCE,
   overview: OVERVIEW_SOURCE,
   destinations: DESTINATIONS_SOURCE,
   map: MAP_SOURCE,
@@ -95,7 +97,8 @@ export function App() {
         ))}
       </nav>
       <ErrorBoundary label={activeScreen?.label ?? atlas.screen}>
-        <ScreenWorkbench source={SCREEN_SOURCES[atlas.screen] ?? ''}>
+        <ScreenWorkbench source={SCREEN_SOURCES[atlas.screen] ?? ''} scrollablePreview={atlas.screen === 'about'}>
+          {atlas.screen === 'about' ? <AboutScreen /> : null}
           {atlas.screen === 'overview' ? (
             <OverviewScreen locale={atlas.locale} userRole={atlas.userRole} />
           ) : null}

@@ -361,6 +361,19 @@ export const P0_COMPONENT_DEFINITIONS: ComponentDefinition[] = [
     ],
   },
   {
+    type: 'layout.scroll-region',
+    category: 'layout',
+    label: 'Scroll Region',
+    description: 'Designated scroll container — scrollbar appears only when content overflows',
+    isVisual: true,
+    inputs: [],
+    outputs: [],
+    properties: [
+      { key: 'title', label: 'Title', type: 'string', default: '' },
+      { key: 'maxHeight', label: 'Max height', type: 'string', default: '28rem' },
+    ],
+  },
+  {
     type: 'domain.role-gate',
     category: 'domain',
     label: 'Role Gate',

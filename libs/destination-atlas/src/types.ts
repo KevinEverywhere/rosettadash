@@ -69,6 +69,7 @@ export interface Destination {
 }
 
 export type DestinationAtlasScreenId =
+  | 'about'
   | 'overview'
   | 'destinations'
   | 'map'
@@ -87,6 +88,11 @@ export interface DestinationAtlasScreen {
 }
 
 export const DESTINATION_ATLAS_SCREENS: DestinationAtlasScreen[] = [
+  {
+    id: 'about',
+    label: 'About',
+    description: 'Proof app purpose, runtime guides, and how to run Storybook.',
+  },
   {
     id: 'overview',
     label: 'Overview',

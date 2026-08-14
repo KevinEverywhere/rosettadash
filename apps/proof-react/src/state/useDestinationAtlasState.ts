@@ -42,7 +42,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   setUserRole: (role: AtlasUserRole) => void;
   setHighlightTarget: (target: 'locale' | null) => void;
 } {
-  const [screen, setScreen] = useState<DestinationAtlasScreenId>('overview');
+  const [screen, setScreen] = useState<DestinationAtlasScreenId>('about');
   const [selectedId, setSelectedId] = useState(initialSelectedId);
   const [locale, setLocale] = useState('en');
   const [mapProvider, setMapProvider] = useState<GeoMapProvider>('leaflet');
@@ -86,7 +86,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
 
   useEffect(() => {
     if (!screenAllowedForRole(screen, userRole)) {
-      setScreen('overview');
+      setScreen('about');
     }
   }, [screen, userRole]);
 

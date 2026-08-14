@@ -104,6 +104,11 @@
       "import": "./src/layout/collapsible/index.js",
       "default": "./src/layout/collapsible/index.js"
     },
+    "./layout/scroll-region": {
+      "types": "./src/layout/scroll-region/index.d.ts",
+      "import": "./src/layout/scroll-region/index.js",
+      "default": "./src/layout/scroll-region/index.js"
+    },
     "./layout/filter-grid": {
       "types": "./src/layout/filter-grid/index.d.ts",
       "import": "./src/layout/filter-grid/index.js",

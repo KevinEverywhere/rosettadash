@@ -52,6 +52,7 @@ export const ThreeGeoGlobe = forwardRef<HTMLElement, ThreeGeoGlobeProps>(functio
   const hostRef = useRef<HTMLDivElement>(null);
   const markerMeshesRef = useRef<Map<string, THREE.Mesh>>(new Map());
   const syncMarkersRef = useRef<(() => void) | null>(null);
+  const flyToLatLngRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const propsRef = useRef({ markers, selectedId, onMarkerSelect });
   propsRef.current = { markers, selectedId, onMarkerSelect };
 
@@ -151,6 +152,33 @@ export const ThreeGeoGlobe = forwardRef<HTMLElement, ThreeGeoGlobeProps>(functio
     syncMarkers();
     syncMarkersRef.current = syncMarkers;
 
+    let flyFrameId = 0;
+    flyToLatLngRef.current = (lat: number, lng: number) => {
+      cancelAnimationFrame(flyFrameId);
+      controls.autoRotate = false;
+
+      const markerPos = latLngToGlobePosition(lat, lng, GLOBE_RADIUS);
+      const distance = camera.position.length() || 4.8;
+      const endPos = markerPos.clone().normalize().multiplyScalar(distance);
+      const startPos = camera.position.clone();
+      const flyStart = performance.now();
+      const flyDuration = 900;
+
+      const animateFly = (now: number) => {
+        const t = Math.min((now - flyStart) / flyDuration, 1);
+        const eased = 1 - (1 - t) ** 3;
+        camera.position.lerpVectors(startPos, endPos, eased);
+        controls.update();
+        if (t < 1) {
+          flyFrameId = requestAnimationFrame(animateFly);
+        } else {
+          controls.autoRotate = true;
+        }
+      };
+
+      flyFrameId = requestAnimationFrame(animateFly);
+    };
+
     const resize = () => {
       const width = host.clientWidth || 1;
       const height = host.clientHeight || 1;
@@ -188,6 +216,8 @@ export const ThreeGeoGlobe = forwardRef<HTMLElement, ThreeGeoGlobeProps>(functio
 
     return () => {
       syncMarkersRef.current = null;
+      flyToLatLngRef.current = null;
+      cancelAnimationFrame(flyFrameId);
       renderer.domElement.removeEventListener('pointerdown', onPointerDown);
       cancelAnimationFrame(animationId);
       resizeObserver.disconnect();
@@ -208,6 +238,16 @@ export const ThreeGeoGlobe = forwardRef<HTMLElement, ThreeGeoGlobeProps>(functio
   useEffect(() => {
     syncMarkersRef.current?.();
   }, [markers, selectedId]);
+
+  useEffect(() => {
+    if (!selectedId) {
+      return;
+    }
+    const marker = markers.find((entry) => entry.id === selectedId);
+    if (marker) {
+      flyToLatLngRef.current?.(marker.lat, marker.lng);
+    }
+  }, [selectedId, markers]);
 
   return (
     <section

@@ -35,15 +35,25 @@ export function GlobeScreen({ locale, selectedId, setSelectedId, focusDestinatio
     meta: formatRegionLabel(dest.region),
   }));
 
-  const selectDestination = (id: string) => {
+  const selectFromList = (id: string) => {
     setSelectedId(id);
-    focusDestinationOnMap(id);
+  };
+
+  const selectFromGlobe = (id: string) => {
+    if (id === selectedId) {
+      focusDestinationOnMap(id);
+      return;
+    }
+    setSelectedId(id);
   };
 
   return (
     <section className="da-panel">
       <h2>Globe</h2>
-      <p>Three.js globe with dataset destination markers — drag to orbit, click a marker or list item to select.</p>
+      <p>
+        Three.js globe with dataset destination markers — pick a destination in the list to fly the globe to it;
+        click the same marker again to open the Map screen.
+      </p>
 
       <SelectInput
         label="Destination list placement"
@@ -60,14 +70,14 @@ export function GlobeScreen({ locale, selectedId, setSelectedId, focusDestinatio
         listPlacement={listPlacement}
         items={listItems}
         selectedId={selectedId}
-        onSelect={selectDestination}
+        onSelect={selectFromList}
       >
         <ThreeGeoGlobe
           title="Destination globe (Three.js)"
           textureUrl={DEFAULT_WORLD_EQUIRECT_URL}
           markers={markers}
           selectedId={selectedId}
-          onMarkerSelect={selectDestination}
+          onMarkerSelect={selectFromGlobe}
         />
       </GeoExplorerLayout>
 

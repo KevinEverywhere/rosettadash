@@ -49,6 +49,7 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 
 | Screen | Purpose | Key components |
 |--------|---------|----------------|
+| **About** | Proof onboarding — why Destination Atlas exists, how to run proof + Storybook per runtime | ScrollRegion (designated app scroller) |
 | **Overview** | Current stats + trends | KpiCard, LineChart, BarChart, MetricChip, StatusBadge, GridLayout |
 | **Destinations** | Browse + filter | DataTable, DetailPanel, TextInput, SelectInput, DateRangeFilter, TimePreset |
 | **Map** | 2D exploration | GeoMap (provider prop), LinkList, TabsLayout |
@@ -58,6 +59,12 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 | **Plan** | Trip + access | RoleGate, PersonInvite, RoleAssign, Timer, form inputs |
 | **Stack** | Infra demo | infra/* read-only panel |
 | **Settings** | App locale | AppLanguageSelect |
+
+### About page & scroll policy
+
+The **About** tab is the first screen and the **only** page-level scroller in each proof app. Long-form copy (runtime guides, npm commands, Storybook ports) lives inside **`layout.scroll-region`**. The shell locks `body` overflow; other tabs fit within the viewport without page scroll. When content fits, the scroll region shows no visible scrollbar; overflow uses a thin overlay scrollbar.
+
+Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/DAS-130). Shared copy: `libs/destination-atlas/src/data/about-guides.ts`.
 
 ## Geo-map providers
 

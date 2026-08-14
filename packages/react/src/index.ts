@@ -16,6 +16,7 @@ export * from './infra/wasm/asset/index.js';
 export * from './layout/accordion/index.js';
 export * from './layout/accordion-link-list/index.js';
 export * from './layout/collapsible/index.js';
+export * from './layout/scroll-region/index.js';
 export * from './layout/filter-grid/index.js';
 export * from './layout/geo-explorer/index.js';
 export * from './layout/flex/index.js';

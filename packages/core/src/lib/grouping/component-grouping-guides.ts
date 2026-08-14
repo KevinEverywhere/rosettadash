@@ -214,6 +214,13 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     placementMessage: 'Wrap KPI rows, filters, or chart groups in collapsible sections.',
   },
   {
+    type: 'layout.scroll-region',
+    summary: 'Scroll region — long-form content with overflow scroll when needed; use one per page for consistent UX.',
+    animationKey: 'form-row',
+    companionTypes: ['layout.grid', 'layout.flex'],
+    placementMessage: 'Use for About pages, docs panels, or any bounded long content — avoid nested page scroll.',
+  },
+  {
     type: 'layout.grid',
     summary: 'Grid layout — groups KPIs and charts in dashboard rows.',
     animationKey: 'filter-chart',

@@ -3,9 +3,11 @@ import { useState, type ReactNode } from 'react';
 interface Props {
   source: string;
   children: ReactNode;
+  /** When true, preview pane allows the designated ScrollRegion to scroll (About tab only). */
+  scrollablePreview?: boolean;
 }
 
-export function ScreenWorkbench({ source, children }: Props) {
+export function ScreenWorkbench({ source, children, scrollablePreview = false }: Props) {
   const [mobileView, setMobileView] = useState<'preview' | 'source'>('preview');
 
   return (
@@ -34,6 +36,7 @@ export function ScreenWorkbench({ source, children }: Props) {
         <div
           className={[
             'da-workbench__preview',
+            scrollablePreview ? 'da-workbench__preview--scroll' : '',
             mobileView === 'source' ? 'da-workbench__pane--hidden-mobile' : '',
           ]
             .filter(Boolean)
