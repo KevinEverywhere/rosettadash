@@ -93,7 +93,7 @@ Forward-looking Jira ticket plan for RosettaDash.
 |--------|---------|
 | [DAS-91](https://planetkevin.atlassian.net/browse/DAS-91) | Build + identical `exports` for runtime packages — **done** |
 | [DAS-92](https://planetkevin.atlassian.net/browse/DAS-92) | Public `--rd-*` / `rd-*` stylesheet contract — **done** |
-| [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) | Full taxonomy on all runtime packages for `0.1.0` |
+| [DAS-93](https://planetkevin.atlassian.net/browse/DAS-93) | Full taxonomy on all runtime packages @ **0.1.1** — **in progress** (`feature/DAS-93-runtime-taxonomy-0-1-1-gate`) |
 | [DAS-94](https://planetkevin.atlassian.net/browse/DAS-94) | Hand-maintained recipe helpers (`LinkList`, `AccordionLinkList`) — **done** |
 | [DAS-95](https://planetkevin.atlassian.net/browse/DAS-95) | E2E: compact layout `openBuilder` palette-ready race |
 | [DAS-98](https://planetkevin.atlassian.net/browse/DAS-98) | Per-framework Storybook catalogs — **done** |
@@ -113,22 +113,25 @@ Forward-looking Jira ticket plan for RosettaDash.
 | [DAS-116](https://planetkevin.atlassian.net/browse/DAS-116) | `@rosettadash/react` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
 | [DAS-117](https://planetkevin.atlassian.net/browse/DAS-117) | `@rosettadash/angular` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
 | [DAS-118](https://planetkevin.atlassian.net/browse/DAS-118) | `@rosettadash/vue` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
-| [DAS-119](https://planetkevin.atlassian.net/browse/DAS-119) | `@rosettadash/svelte` full taxonomy @ 0.1.1 — **in progress** (`feature/DAS-119-svelte-full-taxonomy-0-1-1`) |
+| [DAS-119](https://planetkevin.atlassian.net/browse/DAS-119) | `@rosettadash/svelte` full taxonomy @ 0.1.1 — **done** (merged to `development`) |
 
-### DAS-93 deferred follow-ups (post sub-ticket merge)
+### DAS-93 deferred follow-ups (post epic merge)
 
 | Item | Scope | Notes |
 |------|-------|-------|
-| Angular runtime TestBed specs | `@rosettadash/angular` | Match React RTL depth: render + BEM root `data-testid` for generated atoms; behavioral specs for hand-authored `Accordion` (toggle, `defaultOpen`, controlled `open` / `openChange`) |
-| Storybook runtime catalog smoke | ports 6007–6010 | Acceptance gap from DAS-116 / DAS-117 — spot-check generated atoms in React + Angular catalogs |
-| Extend `publish:npm` | root `package.json` | Include all runtime packages for coordinated 0.1.1 publish (DAS-93 gate) |
+| Angular runtime TestBed specs | `@rosettadash/angular` | Match React RTL depth (deferred) |
+| Storybook runtime catalog smoke | ports 6007–6010 | Spot-check generated atoms (deferred) |
+| **Consumer proof apps** | [DAS-120](https://planetkevin.atlassian.net/browse/DAS-120) | Five Nx apps under `apps/`: [DAS-121](https://planetkevin.atlassian.net/browse/DAS-121) WC, [DAS-122](https://planetkevin.atlassian.net/browse/DAS-122) React, [DAS-123](https://planetkevin.atlassian.net/browse/DAS-123) Angular, [DAS-124](https://planetkevin.atlassian.net/browse/DAS-124) Vue, [DAS-125](https://planetkevin.atlassian.net/browse/DAS-125) Svelte. Group-tab kitchen sink per taxonomy group. |
 
-**Order:** merge DAS-90 → (product work parallel) → DAS-91 → DAS-92 → taxonomy → DAS-94 + DAS-93 → publish `0.1.0`. Unscoped `rosettadash` = clone/product only. Imports: `@rosettadash/react/layout/accordion` (groups required; no `vendor`). DAS-99 dogfoods scoped packs with [FFMP3CON-3](https://planetkevin.atlassian.net/browse/FFMP3CON-3) before full DAS-93 gate.
+**DAS-93 gate (this branch):** extend `pack:consumer` + `publish:npm` for all six scoped packages @ 0.1.1; pin runtime `web-components` deps; framework export parity (116–119 merged).
+
+**Order:** merge DAS-90 → DAS-91 → DAS-92 → DAS-94 + DAS-116–119 → **DAS-93 gate** → publish `0.1.1` → DAS-120 proof apps.
 
 ## Planned (not yet ticketed)
 
 | Phase | Summary | Doc |
 |-------|---------|-----|
+| Post–DAS-93 | **[DAS-120](https://planetkevin.atlassian.net/browse/DAS-120)** consumer proof apps — five Nx apps under `apps/` (web-components + four frameworks); group-tab kitchen sink, ≥1 component per taxonomy group | DAS-121–125 |
 | 20 — AI assist | Natural-language component creation in builder | [AI & BYOK Integration](./20-ai-and-byok-integration.md) |
 | 21 — Demo dashboards | Three animated example dashboards (discuss before build) | [Demo Dashboards](./22-demo-dashboards.md) |
 

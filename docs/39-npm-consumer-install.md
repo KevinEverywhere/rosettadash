@@ -16,7 +16,7 @@ import { registerRosettaDashMediaElements } from '@rosettadash/web-components/me
 
 Same subpaths on every runtime: `@rosettadash/react/layout/accordion`, `@rosettadash/vue/visual/media/video-source`, etc. See [docs/34-public-component-api.md](./34-public-component-api.md).
 
-Until scoped packages are on the registry, use **local pack** (`npm run pack:consumer`) or `file:` / tarball install. Published versions: `@rosettadash/core@0.1.0`, `@rosettadash/web-components@0.1.0`.
+Until scoped packages are on the registry, use **local pack** (`npm run pack:consumer`) or `file:` / tarball install. Published versions: `@rosettadash/*@0.1.1` (core, web-components, react, angular, vue, svelte).
 
 ## Critical distinction
 
@@ -128,7 +128,9 @@ Express should static-serve `node_modules/@rosettadash/web-components` under `/v
 ```bash
 npm run pack:core            # dry-run
 npm run pack:web-components  # dry-run
-npm run pack:consumer        # real .tgz for sibling apps
+npm run pack:runtimes        # dry-run react, angular, vue, svelte
+npm run pack:consumer        # real .tgz — core + web-components + all four runtimes @ 0.1.1
+npm run publish:npm          # pack then publish all six scoped packages (maintainers)
 ```
 
 Always pack from **`dist/packages/…`**, not `packages/…` source trees.
@@ -146,4 +148,4 @@ Published packages should list:
 - [npm package prep](./33-npm-package-prep.md)  
 - [npm library build](./37-npm-library-build.md)  
 - [FFMP3 integration](./31-ffmp3-web-components-integration.md)  
-- DAS-83, DAS-90–94, DAS-93 (full taxonomy `0.1.0` gate)
+- DAS-83, DAS-90–94, DAS-93 (full taxonomy **0.1.1** gate), DAS-120 (consumer proof apps)
