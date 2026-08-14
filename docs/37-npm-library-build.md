@@ -73,4 +73,5 @@ Public CSS contract is `--rd-*` / `rd-*` only (no `--db-*`).
 - DAS-94 — recipe helpers (**in progress** on `feature/DAS-94-npm-recipe-helpers`)
 - DAS-93 — full taxonomy @ **0.1.1** on react/angular/vue/svelte (**done** via DAS-116–119); npm publish gate on `feature/DAS-93-runtime-taxonomy-0-1-1-gate`
 - DAS-96 — shared kernel to remove adapter stub duplication
-- DAS-120 — consumer proof apps (five Nx apps under `apps/`, group tabs)
+- DAS-120 — Destination Atlas proof apps (five identical Nx apps; [docs/43](./43-destination-atlas-proof-apps.md))
+- DAS-126–129 — research + gap WC (geo-map, app-language-select, youtube-embed)

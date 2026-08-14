@@ -18,6 +18,9 @@
     "skipDefaultLibCheck": true,
     "strict": false,
     "paths": {
+      "@destination-atlas": [
+        "./libs/destination-atlas/src/index.ts"
+      ],
       "@rosettadash/core": [
         "./packages/core/src/index.ts"
       ],

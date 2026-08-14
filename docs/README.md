@@ -46,6 +46,7 @@ See **[Planned Tickets](./11-planned-tickets.md)** for the full Jira ticket list
 34. [Storybook meta components](./42-storybook-meta-compositions.md) — live dashboard demos for all components (DAS-105)
 35. [Storybook component catalog](./38-storybook-component-catalog.md) — per-runtime Storybook apps and ports (DAS-98)
 36. [npm consumer install](./39-npm-consumer-install.md) — scoped packages for ffmp3Console & siblings (DAS-99)
+37. [Destination Atlas proof apps](./43-destination-atlas-proof-apps.md) — DAS-120 consumer demos (five runtimes)
 
 ## Active work
 

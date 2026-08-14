@@ -1,0 +1,38 @@
+{
+  "name": "proof-web-components",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/proof-web-components/src",
+  "tags": ["scope:destination-atlas", "type:proof-app"],
+  "implicitDependencies": ["web-components", "destination-atlas"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite",
+        "cwd": "apps/proof-web-components"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/proof-web-components"],
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/proof-web-components"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview --port 4310",
+        "cwd": "apps/proof-web-components"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/proof-web-components/tsconfig.json"
+      }
+    }
+  }
+}

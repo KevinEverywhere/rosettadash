@@ -1,0 +1,15 @@
+{
+  "name": "destination-atlas",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/destination-atlas/src",
+  "projectType": "library",
+  "tags": ["scope:destination-atlas", "type:data"],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p libs/destination-atlas/tsconfig.lib.json"
+      }
+    }
+  }
+}

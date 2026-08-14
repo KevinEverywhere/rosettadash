@@ -121,7 +121,7 @@ Forward-looking Jira ticket plan for RosettaDash.
 |------|-------|-------|
 | Angular runtime TestBed specs | `@rosettadash/angular` | Match React RTL depth (deferred) |
 | Storybook runtime catalog smoke | ports 6007–6010 | Spot-check generated atoms (deferred) |
-| **Consumer proof apps** | [DAS-120](https://planetkevin.atlassian.net/browse/DAS-120) | Five Nx apps under `apps/`: [DAS-121](https://planetkevin.atlassian.net/browse/DAS-121) WC, [DAS-122](https://planetkevin.atlassian.net/browse/DAS-122) React, [DAS-123](https://planetkevin.atlassian.net/browse/DAS-123) Angular, [DAS-124](https://planetkevin.atlassian.net/browse/DAS-124) Vue, [DAS-125](https://planetkevin.atlassian.net/browse/DAS-125) Svelte. Group-tab kitchen sink per taxonomy group. |
+| **Destination Atlas proof apps** | [DAS-120](https://planetkevin.atlassian.net/browse/DAS-120) | Five **identical** Nx apps under `apps/` — current/historic world-location explorer (not kitchen sink): [DAS-121](https://planetkevin.atlassian.net/browse/DAS-121) WC, [DAS-122](https://planetkevin.atlassian.net/browse/DAS-122) React, [DAS-123](https://planetkevin.atlassian.net/browse/DAS-123) Angular, [DAS-124](https://planetkevin.atlassian.net/browse/DAS-124) Vue, [DAS-125](https://planetkevin.atlassian.net/browse/DAS-125) Svelte. Research [DAS-126](https://planetkevin.atlassian.net/browse/DAS-126); gap WC [DAS-127](https://planetkevin.atlassian.net/browse/DAS-127)–[129](https://planetkevin.atlassian.net/browse/DAS-129). See [docs/43](./43-destination-atlas-proof-apps.md). |
 
 **DAS-93 gate (this branch):** extend `pack:consumer` + `publish:npm` for all six scoped packages @ 0.1.1; pin runtime `web-components` deps; framework export parity (116–119 merged).
 
@@ -131,7 +131,7 @@ Forward-looking Jira ticket plan for RosettaDash.
 
 | Phase | Summary | Doc |
 |-------|---------|-----|
-| Post–DAS-93 | **[DAS-120](https://planetkevin.atlassian.net/browse/DAS-120)** consumer proof apps — five Nx apps under `apps/` (web-components + four frameworks); group-tab kitchen sink, ≥1 component per taxonomy group | DAS-121–125 |
+| Post–DAS-93 | **[DAS-120](https://planetkevin.atlassian.net/browse/DAS-120)** Destination Atlas — five identical proof apps; provider-selectable geo-map; app-language-select for developer i18n | DAS-121–125, DAS-126–129 · [docs/43](./43-destination-atlas-proof-apps.md) |
 | 20 — AI assist | Natural-language component creation in builder | [AI & BYOK Integration](./20-ai-and-byok-integration.md) |
 | 21 — Demo dashboards | Three animated example dashboards (discuss before build) | [Demo Dashboards](./22-demo-dashboards.md) |
 
