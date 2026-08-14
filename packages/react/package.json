@@ -104,10 +104,25 @@
       "import": "./src/layout/collapsible/index.js",
       "default": "./src/layout/collapsible/index.js"
     },
+    "./layout/filter-grid": {
+      "types": "./src/layout/filter-grid/index.d.ts",
+      "import": "./src/layout/filter-grid/index.js",
+      "default": "./src/layout/filter-grid/index.js"
+    },
+    "./layout/geo-explorer": {
+      "types": "./src/layout/geo-explorer/index.d.ts",
+      "import": "./src/layout/geo-explorer/index.js",
+      "default": "./src/layout/geo-explorer/index.js"
+    },
     "./layout/flex": {
       "types": "./src/layout/flex/index.d.ts",
       "import": "./src/layout/flex/index.js",
       "default": "./src/layout/flex/index.js"
+    },
+    "./layout/form-section": {
+      "types": "./src/layout/form-section/index.d.ts",
+      "import": "./src/layout/form-section/index.js",
+      "default": "./src/layout/form-section/index.js"
     },
     "./layout/grid": {
       "types": "./src/layout/grid/index.d.ts",
@@ -149,6 +164,16 @@
       "import": "./src/visual/detail/index.js",
       "default": "./src/visual/detail/index.js"
     },
+    "./visual/destination/destination-select-list": {
+      "types": "./src/visual/destination/destination-select-list/index.d.ts",
+      "import": "./src/visual/destination/destination-select-list/index.js",
+      "default": "./src/visual/destination/destination-select-list/index.js"
+    },
+    "./visual/filter/filter-summary": {
+      "types": "./src/visual/filter/filter-summary/index.d.ts",
+      "import": "./src/visual/filter/filter-summary/index.js",
+      "default": "./src/visual/filter/filter-summary/index.js"
+    },
     "./visual/display/3d-bar-chart": {
       "types": "./src/visual/display/3d-bar-chart/index.d.ts",
       "import": "./src/visual/display/3d-bar-chart/index.js",
@@ -158,6 +183,11 @@
       "types": "./src/visual/display/3d-geo-globe/index.d.ts",
       "import": "./src/visual/display/3d-geo-globe/index.js",
       "default": "./src/visual/display/3d-geo-globe/index.js"
+    },
+    "./visual/display/equirect-globe": {
+      "types": "./src/visual/display/equirect-globe/index.d.ts",
+      "import": "./src/visual/display/equirect-globe/index.js",
+      "default": "./src/visual/display/equirect-globe/index.js"
     },
     "./visual/display/3d-gltf-model": {
       "types": "./src/visual/display/3d-gltf-model/index.d.ts",
@@ -223,6 +253,11 @@
       "types": "./src/visual/media/equirect-viewport/index.d.ts",
       "import": "./src/visual/media/equirect-viewport/index.js",
       "default": "./src/visual/media/equirect-viewport/index.js"
+    },
+    "./visual/media/video-metadata": {
+      "types": "./src/visual/media/video-metadata/index.d.ts",
+      "import": "./src/visual/media/video-metadata/index.js",
+      "default": "./src/visual/media/video-metadata/index.js"
     },
     "./visual/media/live-capture": {
       "types": "./src/visual/media/live-capture/index.d.ts",

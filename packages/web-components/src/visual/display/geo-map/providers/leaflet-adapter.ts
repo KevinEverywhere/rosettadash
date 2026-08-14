@@ -5,6 +5,7 @@ import { createNoopAdapter, injectStylesheet, PROVIDER_STYLESHEETS } from './pro
 type LeafletMap = {
   remove: () => void;
   setView: (center: [number, number], zoom: number) => LeafletMap;
+  invalidateSize: () => void;
 };
 
 type LeafletLayer = {
@@ -46,7 +47,13 @@ export async function createLeafletAdapter(
     return createNoopAdapter();
   }
 
-  const map = L.map(options.container, {
+  const container = options.container;
+  if ((container as HTMLElement & { _leaflet_id?: number })._leaflet_id != null) {
+    container.replaceChildren();
+    delete (container as HTMLElement & { _leaflet_id?: number })._leaflet_id;
+  }
+
+  const map = L.map(container, {
     zoomControl: true,
     attributionControl: true,
   }).setView([options.view.lat, options.view.lng], options.view.zoom);
@@ -80,6 +87,7 @@ export async function createLeafletAdapter(
   };
 
   renderMarkers();
+  requestAnimationFrame(() => map.invalidateSize());
 
   return {
     destroy() {
@@ -87,6 +95,7 @@ export async function createLeafletAdapter(
         layer.remove();
       }
       map.remove();
+      delete (container as HTMLElement & { _leaflet_id?: number })._leaflet_id;
     },
     setMarkers(markers, nextSelectedId) {
       markerData = markers;

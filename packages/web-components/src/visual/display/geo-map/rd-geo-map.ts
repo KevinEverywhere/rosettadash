@@ -233,6 +233,7 @@ export class RdGeoMapElement extends HTMLElement {
       this.adapter?.destroy();
       this.adapter = null;
       canvas.replaceChildren();
+      delete (canvas as HTMLElement & { _leaflet_id?: number })._leaflet_id;
     }
 
     this.clearError();

@@ -174,8 +174,17 @@
       "@rosettadash/react/layout/collapsible": [
         "./packages/react/src/layout/collapsible/index.ts"
       ],
+      "@rosettadash/react/layout/filter-grid": [
+        "./packages/react/src/layout/filter-grid/index.ts"
+      ],
+      "@rosettadash/react/layout/geo-explorer": [
+        "./packages/react/src/layout/geo-explorer/index.ts"
+      ],
       "@rosettadash/react/layout/flex": [
         "./packages/react/src/layout/flex/index.ts"
+      ],
+      "@rosettadash/react/layout/form-section": [
+        "./packages/react/src/layout/form-section/index.ts"
       ],
       "@rosettadash/react/layout/grid": [
         "./packages/react/src/layout/grid/index.ts"
@@ -201,11 +210,20 @@
       "@rosettadash/react/visual/detail": [
         "./packages/react/src/visual/detail/index.ts"
       ],
+      "@rosettadash/react/visual/destination/destination-select-list": [
+        "./packages/react/src/visual/destination/destination-select-list/index.ts"
+      ],
+      "@rosettadash/react/visual/filter/filter-summary": [
+        "./packages/react/src/visual/filter/filter-summary/index.ts"
+      ],
       "@rosettadash/react/visual/display/3d-bar-chart": [
         "./packages/react/src/visual/display/3d-bar-chart/index.ts"
       ],
       "@rosettadash/react/visual/display/3d-geo-globe": [
         "./packages/react/src/visual/display/3d-geo-globe/index.ts"
+      ],
+      "@rosettadash/react/visual/display/equirect-globe": [
+        "./packages/react/src/visual/display/equirect-globe/index.ts"
       ],
       "@rosettadash/react/visual/display/3d-gltf-model": [
         "./packages/react/src/visual/display/3d-gltf-model/index.ts"
@@ -245,6 +263,9 @@
       ],
       "@rosettadash/react/visual/media/equirect-viewport": [
         "./packages/react/src/visual/media/equirect-viewport/index.ts"
+      ],
+      "@rosettadash/react/visual/media/video-metadata": [
+        "./packages/react/src/visual/media/video-metadata/index.ts"
       ],
       "@rosettadash/react/visual/media/live-capture": [
         "./packages/react/src/visual/media/live-capture/index.ts"

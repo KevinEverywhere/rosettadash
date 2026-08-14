@@ -8,6 +8,7 @@
  */
 @import './tokens.css';
 @import './catalog.css';
+@import './runtime.css';
 
 .rd-accordion {
   border: 1px solid var(--rd-color-border);

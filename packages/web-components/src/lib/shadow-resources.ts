@@ -10,9 +10,14 @@ export function loadTextResource(relativePath: string, baseUrl: string): Promise
   }
 
   const promise = (async () => {
-    const response = await fetch(url);
+    const fetchUrl = new URL(relativePath, baseUrl);
+    // Vite dev serves `.css` as HMR modules unless `?raw` is requested.
+    if (relativePath.endsWith('.css')) {
+      fetchUrl.searchParams.set('raw', '');
+    }
+    const response = await fetch(fetchUrl);
     if (!response.ok) {
-      throw new Error(`Failed to load ${url.href}: ${response.status}`);
+      throw new Error(`Failed to load ${fetchUrl.href}: ${response.status}`);
     }
     return response.text();
   })();

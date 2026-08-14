@@ -143,7 +143,7 @@ export const COMPONENT_CATALOG_EXTRAS: Partial<Record<string, ComponentCatalogEx
   },
   'visual.display.geo-map': {
     dependencies: [
-      'Provider library: maplibre-gl (default), leaflet, or @googlemaps/js-api-loader + Maps JavaScript API key.',
+      'Provider library: leaflet (default), maplibre-gl, or @googlemaps/js-api-loader + Maps JavaScript API key.',
       'Tile URL and/or API key depending on provider — see Destination Atlas provider matrix.',
     ],
     assumptions: [

@@ -18,8 +18,8 @@ export const MetricChip = forwardRef<HTMLElement, MetricChipProps>(function Metr
 
   return (
     <span ref={ref as React.RefObject<HTMLElement>} className={rootClass} style={style} data-testid="rd-plugin-metric-chip">
-      <span className="rd-metric-chip__label">{props.chipLabel ?? 'Metric'}</span>
-      <span className="rd-metric-chip__value">{props.chipValue ?? '—'}</span>
+      <span className="rd-plugin-metric-chip__label">{props.chipLabel ?? 'Metric'}</span>
+      <span className="rd-plugin-metric-chip__value">{props.chipValue ?? '—'}</span>
     </span>
   );
 });

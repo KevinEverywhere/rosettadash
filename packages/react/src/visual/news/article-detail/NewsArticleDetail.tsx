@@ -14,13 +14,16 @@ export const NewsArticleDetail = forwardRef<HTMLElement, NewsArticleDetailProps>
   ref,
 ) {
   const { className, style, children } = props;
-  const rootClass = ['rd-news-article-detail', className].filter(Boolean).join(' ');
+  const rootClass = ['rd-news-article-detail', 'rd-detail', className].filter(Boolean).join(' ');
 
   return (
     <section ref={ref as React.RefObject<HTMLElement>} className={rootClass} style={style} data-testid="rd-news-article-detail">
       <header className="rd-detail__header"><span>{props.title ?? 'Article'}</span></header>
-      <p className="rd-detail__empty">{props.emptyMessage ?? 'Select a headline in News Results'}</p>
-      {children}
+      {children ? (
+        <div className="rd-detail__body">{children}</div>
+      ) : (
+        <p className="rd-detail__empty">{props.emptyMessage ?? 'Select a headline in News Results'}</p>
+      )}
     </section>
   );
 });

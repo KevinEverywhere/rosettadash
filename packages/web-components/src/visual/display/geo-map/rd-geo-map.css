@@ -1,6 +1,8 @@
 :host {
   display: block;
   font-family: var(--rd-font-family, system-ui, sans-serif);
+  min-height: 16rem;
+  height: 100%;
 }
 
 .rd-display-geo-map {

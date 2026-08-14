@@ -6,8 +6,16 @@
   --rd-color-text: #1a1a1a;
   --rd-color-muted: #5c5c5c;
   --rd-color-surface: transparent;
+  --rd-color-surface-raised: #ffffff;
   --rd-color-border: #d0d0d0;
   --rd-color-accent: #2563eb;
+  --rd-color-nav-bg: #ffffff;
+  --rd-color-nav-fg: #1a1a1a;
+  --rd-color-chart-line: #2563eb;
+  --rd-color-chart-bar: #3b82f6;
+  --rd-color-success: #15803d;
+  --rd-color-warning: #b45309;
+  --rd-color-danger: #dc2626;
   --rd-radius-sm: 0.25rem;
   --rd-radius-md: 0.5rem;
   --rd-space-xs: 0.25rem;
@@ -16,4 +24,5 @@
   --rd-font-size: 0.875rem;
   --rd-line-height: 1.4;
   --rd-font-family: system-ui, sans-serif;
+  --rd-geo-map-min-height: 16rem;
 }

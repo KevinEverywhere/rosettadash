@@ -8,7 +8,7 @@ export const MOCK_DESTINATIONS: Destination[] = [
     region: 'asia-pacific',
     lat: 35.6762,
     lng: 139.6503,
-    youtubeId: 'yk4eWjYVNIg',
+    youtubeId: 'D6RjVfUym6Q',
     visitorsCurrent: 15_800_000,
     visitorsHistoric: [
       { year: 2019, visitors: 14_240_000 },
@@ -23,7 +23,7 @@ export const MOCK_DESTINATIONS: Destination[] = [
     region: 'europe',
     lat: 48.8566,
     lng: 2.3522,
-    youtubeId: 'AQ6GyFzxQ40',
+    youtubeId: '_XwP2ldJOJs',
     visitorsCurrent: 12_100_000,
     visitorsHistoric: [
       { year: 2019, visitors: 19_100_000 },
@@ -38,7 +38,8 @@ export const MOCK_DESTINATIONS: Destination[] = [
     region: 'americas',
     lat: -13.5319,
     lng: -71.9675,
-    youtubeId: '6n3KlH8LStE',
+    youtubeId: '1La4QzGeaaQ',
+    videoProjection: 'equirect',
     equirectUrl: '/media/cusco-plaza-360.jpg',
     visitorsCurrent: 1_450_000,
     visitorsHistoric: [
@@ -54,7 +55,7 @@ export const MOCK_DESTINATIONS: Destination[] = [
     region: 'africa',
     lat: 31.6295,
     lng: -7.9811,
-    youtubeId: '3OaMrWAsS6E',
+    youtubeId: 'BKQTQzECCzc',
     visitorsCurrent: 2_900_000,
     visitorsHistoric: [
       { year: 2019, visitors: 2_400_000 },
@@ -68,13 +69,28 @@ export const MOCK_DESTINATIONS: Destination[] = [
     region: 'asia-pacific',
     lat: -33.8688,
     lng: 151.2093,
-    youtubeId: 'qQ3MIGeE3lo',
+    youtubeId: '_9g4OLdUkvU',
     visitorsCurrent: 4_200_000,
     visitorsHistoric: [
       { year: 2019, visitors: 4_800_000 },
       { year: 2022, visitors: 1_900_000 },
       { year: 2024, visitors: 4_200_000 },
     ],
+  },
+  {
+    id: 'new-york',
+    name: 'New York City',
+    region: 'americas',
+    lat: 40.7128,
+    lng: -74.006,
+    youtubeId: 'AdIwEvr6-vk',
+    visitorsCurrent: 13_300_000,
+    visitorsHistoric: [
+      { year: 2019, visitors: 13_500_000 },
+      { year: 2022, visitors: 8_200_000 },
+      { year: 2024, visitors: 13_300_000 },
+    ],
+    labels: { es: 'Nueva York', fr: 'New York' },
   },
 ];
 

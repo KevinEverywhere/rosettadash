@@ -1,9 +1,34 @@
 @import '../../../packages/web-components/src/styles/styles.css';
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font-family: system-ui, sans-serif;
   line-height: 1.5;
+
+  --da-bg: #f4f6f8;
+  --da-fg: #111827;
+  --da-muted: #4b5563;
+  --da-panel-bg: #ffffff;
+  --da-panel-fg: #111827;
+  --da-border: #c8d0d8;
+  --da-nav-bg: #ffffff;
+  --da-nav-fg: #111827;
+  --da-accent: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --da-bg: #0f172a;
+    --da-fg: #f8fafc;
+    --da-muted: #cbd5e1;
+    --da-panel-bg: #1e293b;
+    --da-panel-fg: #f8fafc;
+    --da-border: #334155;
+    --da-nav-bg: #1e293b;
+    --da-nav-fg: #f8fafc;
+    --da-accent: #60a5fa;
+  }
 }
 
 * {
@@ -13,8 +38,8 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--rd-color-surface, #f4f6f8);
-  color: var(--rd-color-text, #1a1a1a);
+  background: var(--da-bg);
+  color: var(--da-fg);
 }
 
 .da-shell {
@@ -26,11 +51,12 @@ body {
 .da-header h1 {
   margin: 0 0 0.25rem;
   font-size: 1.75rem;
+  color: var(--da-fg);
 }
 
 .da-header p {
   margin: 0 0 1rem;
-  opacity: 0.85;
+  color: var(--da-muted);
 }
 
 .da-nav {
@@ -41,8 +67,9 @@ body {
 }
 
 .da-nav button {
-  border: 1px solid var(--rd-color-border, #c8d0d8);
-  background: var(--rd-color-surface-raised, #fff);
+  border: 1px solid var(--da-border);
+  background: var(--da-nav-bg);
+  color: var(--da-nav-fg);
   border-radius: 0.375rem;
   padding: 0.4rem 0.75rem;
   cursor: pointer;
@@ -50,19 +77,22 @@ body {
 }
 
 .da-nav button[aria-current='page'] {
-  border-color: var(--rd-color-accent, #2563eb);
-  background: color-mix(in srgb, var(--rd-color-accent, #2563eb) 12%, transparent);
+  border-color: var(--da-accent);
+  background: color-mix(in srgb, var(--da-accent) 16%, var(--da-nav-bg));
+  color: var(--da-fg);
 }
 
 .da-panel {
-  background: var(--rd-color-surface-raised, #fff);
-  border: 1px solid var(--rd-color-border, #c8d0d8);
+  background: var(--da-panel-bg);
+  color: var(--da-panel-fg);
+  border: 1px solid var(--da-border);
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
 }
 
 .da-panel h2 {
   margin-top: 0;
+  color: var(--da-panel-fg);
 }
 
 .da-grid {
@@ -72,7 +102,7 @@ body {
 }
 
 .da-kpi {
-  border: 1px solid var(--rd-color-border, #c8d0d8);
+  border: 1px solid var(--da-border);
   border-radius: 0.375rem;
   padding: 0.75rem 1rem;
 }
@@ -83,15 +113,16 @@ body {
 }
 
 .da-gap {
-  border: 2px dashed var(--rd-color-border, #c8d0d8);
+  border: 2px dashed var(--da-border);
   border-radius: 0.375rem;
   padding: 1rem;
-  background: color-mix(in srgb, var(--rd-color-accent, #2563eb) 4%, transparent);
+  background: color-mix(in srgb, var(--da-accent) 6%, var(--da-panel-bg));
 }
 
 .da-gap h3 {
   margin: 0 0 0.5rem;
   font-size: 1rem;
+  color: var(--da-panel-fg);
 }
 
 .da-gap dl {
@@ -100,16 +131,14 @@ body {
   grid-template-columns: auto 1fr;
   gap: 0.25rem 1rem;
   font-size: 0.875rem;
-}
-
-.da-provider-select {
-  margin-top: 0.75rem;
+  color: var(--da-muted);
 }
 
 .da-provider-select label {
   display: block;
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
+  color: var(--da-panel-fg);
 }
 
 .da-provider-select select {
@@ -117,6 +146,9 @@ body {
   max-width: 20rem;
   font: inherit;
   padding: 0.35rem 0.5rem;
+  color: var(--da-panel-fg);
+  background: var(--da-panel-bg);
+  border: 1px solid var(--da-border);
 }
 
 .da-provider-meta {
@@ -125,6 +157,7 @@ body {
   grid-template-columns: auto 1fr;
   gap: 0.25rem 1rem;
   font-size: 0.875rem;
+  color: var(--da-muted);
 }
 
 .da-geo-map {
@@ -141,7 +174,7 @@ body {
 .da-note {
   margin: 0.75rem 0 0;
   font-size: 0.875rem;
-  opacity: 0.85;
+  color: var(--da-muted);
 }
 
 rd-app-language-select {
@@ -157,6 +190,11 @@ rd-app-language-select {
   flex-wrap: wrap;
   margin-bottom: 1rem;
   font-size: 0.875rem;
+  color: var(--da-muted);
+}
+
+.da-locale-bar strong {
+  color: var(--da-fg);
 }
 
 .da-dest-list {
@@ -167,7 +205,7 @@ rd-app-language-select {
 
 .da-dest-list li {
   padding: 0.35rem 0;
-  border-bottom: 1px solid var(--rd-color-border, #c8d0d8);
+  border-bottom: 1px solid var(--da-border);
 }
 
 .da-dest-list button {
@@ -175,7 +213,7 @@ rd-app-language-select {
   border: none;
   padding: 0;
   font: inherit;
-  color: var(--rd-color-accent, #2563eb);
+  color: var(--da-accent);
   cursor: pointer;
   text-align: left;
 }

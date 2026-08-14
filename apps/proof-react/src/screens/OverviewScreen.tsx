@@ -1,14 +1,40 @@
 import { BarChart } from '@rosettadash/react/visual/chart/bar';
 import { LineChart } from '@rosettadash/react/visual/chart/line';
 import { GridLayout } from '@rosettadash/react/layout/grid';
+import { RoleGate } from '@rosettadash/react/domain/role-gate';
 import { KpiCard } from '@rosettadash/react/visual/kpi';
 import { MetricChip } from '@rosettadash/react/visual/plugin/metric-chip';
 import { StatusBadge } from '@rosettadash/react/visual/plugin/status-badge';
 import { MOCK_DESTINATIONS, formatVisitorCount } from '@destination-atlas';
 import type { AtlasContext } from '../state/useDestinationAtlasState';
-import { computeVisitorDelta, localizedDestinationName } from '../lib/atlas-utils';
+import {
+  aggregateVisitorTrend,
+  computeVisitorDelta,
+  destinationBarSeries,
+  localizedDestinationName,
+} from '../lib/atlas-utils';
 
-export function OverviewScreen({ locale }: Pick<AtlasContext, 'locale'>) {
+export const OVERVIEW_SOURCE = `<OverviewScreen locale={locale} userRole={userRole}>
+  <GridLayout columns={3} gap={12} title="Destination KPIs">
+    {MOCK_DESTINATIONS.map((dest) => (
+      <KpiCard title={...} value={...} delta={...} />
+    ))}
+  </GridLayout>
+  <LineChart points={aggregateVisitorTrend()} xAxisLabel="Year" yAxisLabel="Total visitors" />
+  <BarChart bars={destinationBarSeries(locale)} yAxisLabel="Visitors" />
+
+  <RoleGate currentRole={userRole} allowedRoles={['admin']} label="Operations metrics">
+    <MetricChip chipLabel="Avg. stay" chipValue="4.2 nights" />
+    <StatusBadge statusText="Data freshness: current" tone="success" />
+  </RoleGate>
+</OverviewScreen>`;
+
+type Props = Pick<AtlasContext, 'locale' | 'userRole'>;
+
+export function OverviewScreen({ locale, userRole }: Props) {
+  const trend = aggregateVisitorTrend();
+  const bars = destinationBarSeries(locale, localizedDestinationName);
+
   return (
     <section className="da-panel">
       <h2>Overview</h2>
@@ -26,13 +52,32 @@ export function OverviewScreen({ locale }: Pick<AtlasContext, 'locale'>) {
           ))}
         </GridLayout>
         <div className="da-stack da-stack--2">
-          <LineChart title="Visitors over time (aggregate trend)" />
-          <BarChart title="2024 visitors by destination" />
+          <LineChart
+            title="Visitors over time (aggregate trend)"
+            points={trend}
+            xAxisLabel="Year"
+            yAxisLabel="Total visitors"
+            valueFormat={formatVisitorCount}
+          />
+          <BarChart
+            title="2024 visitors by destination"
+            bars={bars}
+            yAxisLabel="Visitors"
+            valueFormat={formatVisitorCount}
+          />
         </div>
-        <div className="da-stack da-stack--2">
-          <MetricChip chipLabel="Avg. stay" chipValue="4.2 nights" />
-          <StatusBadge statusText="Data freshness: current" tone="success" />
-        </div>
+        <RoleGate
+          label="Operations metrics"
+          currentRole={userRole}
+          allowedRoles={['admin']}
+          statusText="Admin operations panel"
+          hiddenStatusText="Operations metrics are hidden for Viewer and Editor roles."
+        >
+          <div className="da-stack da-stack--2 da-stack--metrics">
+            <MetricChip chipLabel="Avg. stay" chipValue="4.2 nights" />
+            <StatusBadge statusText="Data freshness: current" tone="success" />
+          </div>
+        </RoleGate>
       </div>
     </section>
   );

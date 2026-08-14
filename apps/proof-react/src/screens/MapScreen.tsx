@@ -1,16 +1,35 @@
-import { TabsLayout } from '@rosettadash/react/layout/tabs';
+import { useState } from 'react';
+import { GeoExplorerLayout, type GeoExplorerListPlacement } from '@rosettadash/react/layout/geo-explorer';
 import { GeoMap } from '@rosettadash/react/visual/display/geo-map';
-import { LinkList } from '@rosettadash/react/visual/link-list';
 import { SelectInput } from '@rosettadash/react/visual/input/select';
+import { TextInput } from '@rosettadash/react/visual/input/text';
 import { GEO_MAP_PROVIDERS, MOCK_DESTINATIONS, getDestinationById, type GeoMapProvider } from '@destination-atlas';
 import type { AtlasContext } from '../state/useDestinationAtlasState';
-import { localizedDestinationName } from '../lib/atlas-utils';
+import { formatRegionLabel, localizedDestinationName } from '../lib/atlas-utils';
+import { destinationByIdMapView, destinationMapView, resolveMapLocationQuery } from '../lib/map-location';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '';
 
+export const MAP_SOURCE = `<MapScreen mapProvider={mapProvider} selectedId={selectedId}>
+  <TextInput label="Request location" value={mapLocationQuery} />
+  <SelectInput label="Map provider" value={mapProvider} />
+  <GeoExplorerLayout listPlacement={listPlacement} items={destinationItems} selectedId={selectedId}>
+    <GeoMap center={…} zoom={…} markers={destinationMarkers} selectedId={selectedId} />
+  </GeoExplorerLayout>
+</MapScreen>`;
+
 type Props = Pick<
   AtlasContext,
-  'locale' | 'selectedId' | 'setSelectedId' | 'mapProvider' | 'setMapProvider' | 'mapTabId' | 'setMapTabId'
+  | 'locale'
+  | 'selectedId'
+  | 'setSelectedId'
+  | 'mapProvider'
+  | 'setMapProvider'
+  | 'mapLocationQuery'
+  | 'setMapLocationQuery'
+  | 'mapViewOverride'
+  | 'focusDestinationOnMap'
+  | 'goToMapView'
 >;
 
 export function MapScreen({
@@ -19,13 +38,19 @@ export function MapScreen({
   setSelectedId,
   mapProvider,
   setMapProvider,
-  mapTabId,
-  setMapTabId,
+  mapLocationQuery,
+  setMapLocationQuery,
+  mapViewOverride,
+  focusDestinationOnMap,
+  goToMapView,
 }: Props) {
+  const [locationError, setLocationError] = useState('');
+  const [listPlacement, setListPlacement] = useState<GeoExplorerListPlacement>('right');
+
   const selected = getDestinationById(selectedId);
-  const view = selected
-    ? { lat: selected.lat, lng: selected.lng, zoom: 5 }
-    : { lat: 20, lng: 0, zoom: 2 };
+  const view =
+    mapViewOverride ??
+    (selected ? destinationMapView(selected, locale) : { lat: 20, lng: 0, zoom: 2, label: 'World' });
 
   const markers = MOCK_DESTINATIONS.map((dest) => ({
     id: dest.id,
@@ -34,12 +59,68 @@ export function MapScreen({
     label: localizedDestinationName(dest, locale),
   }));
 
+  const listItems = MOCK_DESTINATIONS.map((dest) => ({
+    id: dest.id,
+    label: localizedDestinationName(dest, locale),
+    meta: formatRegionLabel(dest.region),
+  }));
+
   const activeProvider = GEO_MAP_PROVIDERS.find((entry) => entry.id === mapProvider);
+
+  const submitLocation = () => {
+    const resolved = resolveMapLocationQuery(mapLocationQuery, locale);
+    if (!resolved) {
+      setLocationError('No match — try a dataset destination (Tokyo, Paris, New York City…) or lat, lng (40.71, -74.01).');
+      return;
+    }
+    setLocationError('');
+    const matchedDest = MOCK_DESTINATIONS.find(
+      (dest) => localizedDestinationName(dest, locale).toLowerCase() === resolved.label.toLowerCase(),
+    );
+    if (matchedDest) {
+      focusDestinationOnMap(matchedDest.id);
+      return;
+    }
+    goToMapView(resolved);
+  };
+
+  const selectDestination = (id: string) => {
+    setSelectedId(id);
+    const destView = destinationByIdMapView(id, locale);
+    if (destView) {
+      goToMapView(destView);
+    }
+  };
 
   return (
     <section className="da-panel">
       <h2>Map</h2>
       <p>2D exploration with developer-selectable geo-map provider.</p>
+
+      <div className="rd-map-location">
+        <TextInput
+          label="Request location"
+          placeholder="Destination name or lat, lng…"
+          value={mapLocationQuery}
+          onChange={(value) => {
+            setMapLocationQuery(value);
+            if (locationError) {
+              setLocationError('');
+            }
+          }}
+        />
+        <button type="button" className="rd-button" onClick={submitLocation}>
+          Go to location
+        </button>
+      </div>
+      {locationError ? <p className="da-map-location-error">{locationError}</p> : null}
+      {view.label ? (
+        <p className="da-note">
+          Map view: <strong>{view.label}</strong>
+          {mapViewOverride ? ' (custom coordinates)' : selected ? '' : ' (default)'}
+        </p>
+      ) : null}
+
       <SelectInput
         label="Map provider"
         options={GEO_MAP_PROVIDERS.map((entry) => ({
@@ -64,39 +145,37 @@ export function MapScreen({
           Set <code>VITE_GOOGLE_MAPS_API_KEY</code> in <code>.env.local</code> to load Google Maps.
         </p>
       ) : null}
-      <TabsLayout
-        title="Explore"
-        tabs={[
-          { id: 'map', label: 'Map' },
-          { id: 'list', label: 'Destinations' },
+
+      <SelectInput
+        label="Destination list placement"
+        options={[
+          { value: 'right', label: 'List on right' },
+          { value: 'left', label: 'List on left' },
         ]}
-        activeTabId={mapTabId}
-        onTabChange={(tabId) => setMapTabId(tabId as 'map' | 'list')}
+        value={listPlacement}
+        onChange={(value) => setListPlacement(value as GeoExplorerListPlacement)}
+      />
+
+      <GeoExplorerLayout
+        title="Explore"
+        listPlacement={listPlacement}
+        items={listItems}
+        selectedId={selectedId}
+        onSelect={selectDestination}
       >
-        {mapTabId === 'map' ? (
+        <div className="da-map-stage">
           <GeoMap
-            className="da-geo-map"
+            className="da-map-stage__map"
             provider={mapProvider}
             center={JSON.stringify({ lat: view.lat, lng: view.lng })}
             zoom={view.zoom}
             markers={markers}
             selectedId={selectedId}
             apiKey={mapProvider === 'google-maps' ? GOOGLE_MAPS_API_KEY : undefined}
-            onMarkerSelect={({ id }) => setSelectedId(id)}
+            onMarkerSelect={({ id }) => selectDestination(id)}
           />
-        ) : (
-          <LinkList
-            dense
-            items={MOCK_DESTINATIONS.map((dest) => ({
-              label: localizedDestinationName(dest, locale),
-              href: `#${dest.id}`,
-            }))}
-          />
-        )}
-      </TabsLayout>
-      <p className="da-note">
-        Selected destination: <strong>{selected ? localizedDestinationName(selected, locale) : 'none'}</strong>
-      </p>
+        </div>
+      </GeoExplorerLayout>
     </section>
   );
 }

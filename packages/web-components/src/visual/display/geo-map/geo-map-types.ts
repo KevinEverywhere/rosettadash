@@ -38,8 +38,8 @@ export const DEFAULT_MAPLIBRE_STYLE = 'https://demotiles.maplibre.org/style.json
 export const DEFAULT_LEAFLET_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 export function normalizeGeoMapProvider(value: string | null | undefined): GeoMapProvider {
-  if (value === 'leaflet' || value === 'google-maps') {
+  if (value === 'maplibre' || value === 'leaflet' || value === 'google-maps') {
     return value;
   }
-  return 'maplibre';
+  return 'leaflet';
 }

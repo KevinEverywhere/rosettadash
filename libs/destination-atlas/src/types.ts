@@ -18,18 +18,18 @@ export interface GeoMapProviderInfo {
 
 export const GEO_MAP_PROVIDERS: GeoMapProviderInfo[] = [
   {
-    id: 'maplibre',
-    label: 'MapLibre GL',
-    costSummary: 'OSS engine; vector tiles often via paid/free-tier host (e.g. MapTiler)',
-    apiKeyRequired: true,
-    notes: 'Recommended default — modern vector maps, no Google dependency.',
-  },
-  {
     id: 'leaflet',
     label: 'Leaflet',
     costSummary: 'OSS engine; tile costs depend on provider (OSM has usage policies)',
     apiKeyRequired: false,
-    notes: 'Lightweight raster-first maps; large plugin ecosystem.',
+    notes: 'Recommended default — lightweight raster maps with reliable rendering.',
+  },
+  {
+    id: 'maplibre',
+    label: 'MapLibre GL',
+    costSummary: 'OSS engine; vector tiles often via paid/free-tier host (e.g. MapTiler)',
+    apiKeyRequired: true,
+    notes: 'Modern vector maps; tiles often need a third-party key.',
   },
   {
     id: 'google-maps',
@@ -53,6 +53,8 @@ export interface Destination {
   lat: number;
   lng: number;
   youtubeId?: string;
+  /** When `equirect`, show 360° tooling; default flat for standard video. */
+  videoProjection?: 'flat' | 'equirect';
   equirectUrl?: string;
   visitorsCurrent: number;
   visitorsHistoric: DestinationHistoricStat[];

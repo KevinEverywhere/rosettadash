@@ -17,6 +17,7 @@ export interface GeoMapProps {
   zoom?: number;
   markers?: GeoMapMarker[];
   selectedId?: string;
+  minHeight?: string | number;
   className?: string;
   style?: CSSProperties;
   onMarkerSelect?: (detail: { id: string; lat: number; lng: number }) => void;
@@ -34,10 +35,18 @@ export const GeoMap = forwardRef<HTMLElement, GeoMapProps>(function GeoMap(
     selectedId,
     className,
     style,
+    minHeight,
     onMarkerSelect,
   },
   ref,
 ) {
+  const hostStyle: CSSProperties = {
+    ...style,
+    ...(minHeight !== undefined
+      ? { minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }
+      : {}),
+  };
+
   const hostRef = useCustomElementHost(
     {
       register: registerRdGeoMap,
@@ -62,6 +71,6 @@ export const GeoMap = forwardRef<HTMLElement, GeoMapProps>(function GeoMap(
   return createElement(DB_GEO_MAP_TAG, {
     ref: hostRef,
     className,
-    style,
+    style: hostStyle,
   });
 });

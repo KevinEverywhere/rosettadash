@@ -27,7 +27,7 @@ const state: AppState = {
   screen: 'overview',
   selectedId: MOCK_DESTINATIONS[0]?.id ?? '',
   locale: 'en',
-  mapProvider: 'maplibre',
+  mapProvider: 'leaflet',
 };
 
 function localizedName(dest: Destination): string {
@@ -345,7 +345,7 @@ function render(): void {
 
   const mapSelect = root.querySelector<HTMLSelectElement>('[data-map-provider]');
   mapSelect?.addEventListener('change', () => {
-    state.mapProvider = (mapSelect.value as GeoMapProvider) ?? 'maplibre';
+    state.mapProvider = (mapSelect.value as GeoMapProvider) ?? 'leaflet';
     render();
   });
 

@@ -19,8 +19,11 @@ export const DetailPanel = forwardRef<HTMLElement, DetailPanelProps>(function De
   return (
     <section ref={ref as React.RefObject<HTMLElement>} className={rootClass} style={style} data-testid="rd-detail">
       <header className="rd-detail__header"><span>{props.title ?? 'Details'}</span></header>
-      <p className="rd-detail__empty">{props.emptyMessage ?? 'Select a row to view details'}</p>
-      {children}
+      {children ? (
+        <div className="rd-detail__body">{children}</div>
+      ) : (
+        <p className="rd-detail__empty">{props.emptyMessage ?? 'Select a row to view details'}</p>
+      )}
     </section>
   );
 });

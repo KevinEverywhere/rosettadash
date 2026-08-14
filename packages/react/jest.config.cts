@@ -5,6 +5,7 @@ module.exports = {
   transform: {
     '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
+  transformIgnorePatterns: ['/node_modules/(?!three/)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'html'],
   setupFilesAfterEnv: ['<rootDir>/../web-components/jest-setup.cjs'],
   coverageDirectory: '../../coverage/packages/react',

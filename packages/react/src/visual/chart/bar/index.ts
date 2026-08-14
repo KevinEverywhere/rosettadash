@@ -1,2 +1,2 @@
-export type { BarChartProps } from './BarChart.js';
+export type { BarChartProps, BarChartBar } from './BarChart.js';
 export { BarChart } from './BarChart.js';

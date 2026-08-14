@@ -1,4 +1,6 @@
-import type { Destination } from '@destination-atlas';
+import { MOCK_DESTINATIONS, type Destination } from '@destination-atlas';
+import type { BarChartBar } from '@rosettadash/react/visual/chart/bar';
+import type { LineChartPoint } from '@rosettadash/react/visual/chart/line';
 
 export interface MockNewsArticle {
   id: string;
@@ -69,4 +71,93 @@ export function computeVisitorDelta(dest: Destination): string {
   const pct = ((current - prev) / prev) * 100;
   const sign = pct >= 0 ? '+' : '';
   return `${sign}${pct.toFixed(1)}%`;
+}
+
+/** Sum visitor counts across all destinations by year. */
+export function aggregateVisitorTrend(): LineChartPoint[] {
+  const totals = new Map<number, number>();
+  for (const dest of MOCK_DESTINATIONS) {
+    for (const row of dest.visitorsHistoric) {
+      totals.set(row.year, (totals.get(row.year) ?? 0) + row.visitors);
+    }
+  }
+  return [...totals.entries()]
+    .sort(([a], [b]) => a - b)
+    .map(([year, visitors]) => ({ x: String(year), y: visitors }));
+}
+
+export function destinationBarSeries(
+  locale: string,
+  localize: (dest: Destination, locale: string) => string,
+): BarChartBar[] {
+  return MOCK_DESTINATIONS.map((dest) => ({
+    label: localize(dest, locale),
+    value: dest.visitorsCurrent,
+  }));
+}
+
+export function formatRegionLabel(region: string): string {
+  return region
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+const TIME_PRESET_LABELS: Record<string, string> = {
+  '1y': '1 year',
+  '5y': '5 years',
+  all: 'All years',
+};
+
+export function historicWindowLabel(preset: string): string {
+  return TIME_PRESET_LABELS[preset] ?? preset;
+}
+
+/** Years included for each historic-window preset (mock data spans 2019–2024). */
+export function historicYearsForPreset(preset: string): number[] {
+  if (preset === '1y') {
+    return [2024];
+  }
+  if (preset === '5y') {
+    return [2019, 2022, 2024];
+  }
+  return [2019, 2022, 2024];
+}
+
+export function filterHistoricByPreset(
+  dest: Destination,
+  preset: string,
+): Destination['visitorsHistoric'] {
+  const allowed = new Set(historicYearsForPreset(preset));
+  return dest.visitorsHistoric.filter((row) => allowed.has(row.year));
+}
+
+export function formatMonthLabel(value: string): string {
+  if (!value) {
+    return '—';
+  }
+  const [year, month] = value.split('-');
+  if (!year || !month) {
+    return value;
+  }
+  const date = new Date(Number(year), Number(month) - 1, 1);
+  return date.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+}
+
+export function formatVisitPeriod(start: string, end: string): string {
+  if (!start && !end) {
+    return 'Any period';
+  }
+  if (start && end) {
+    return `${formatMonthLabel(start)} – ${formatMonthLabel(end)}`;
+  }
+  return formatMonthLabel(start || end);
+}
+
+export function periodColumnLabel(preset: string): string {
+  const years = historicYearsForPreset(preset);
+  if (years.length === 1) {
+    return String(years[0]);
+  }
+  return `${years[0]}–${years[years.length - 1]}`;
 }
