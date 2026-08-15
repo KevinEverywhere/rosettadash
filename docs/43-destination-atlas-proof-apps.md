@@ -94,6 +94,8 @@ Branch: `feature/DAS-135-byok-destination-atlas`.
 - Intel attempts live NewsAPI when key set; mock fallback + CORS guidance
 - Stack `EnvConfig` shows per-key configured / missing status (`keyStatus` prop on `@rosettadash/react/infra/env`)
 
+**Env templates ([DAS-136](https://planetkevin.atlassian.net/browse/DAS-136)):** repo root `.env.example` (builder, AI BYOK, database, server); `apps/proof-react/.env.example` for `VITE_*` map/news fallbacks. Copy to `.env.local` — or use Settings BYOK vault at runtime.
+
 ## Geo-map providers
 
 | Provider | Engine | Typical cost | API key | Tradeoffs |
