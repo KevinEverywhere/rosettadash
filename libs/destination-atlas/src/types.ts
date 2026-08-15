@@ -96,14 +96,9 @@ export const DESTINATION_ATLAS_SCREENS: DestinationAtlasScreen[] = [
     description: 'Searchable table with detail panel and filters.',
   },
   {
-    id: 'map',
-    label: 'Map',
-    description: '2D map with provider choice (MapLibre, Leaflet, Google Maps).',
-  },
-  {
-    id: 'globe',
-    label: 'Globe',
-    description: '3D geo globe with lat/lng markers.',
+    id: 'maps',
+    label: 'Maps',
+    description: '2D map and 3D globe — switch panels without leaving the tab.',
   },
   {
     id: 'media',

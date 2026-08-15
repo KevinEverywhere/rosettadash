@@ -7,8 +7,15 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { ConsumerSecretsSnapshot, ConsumerSecretsStore, EnvFieldDefinition } from '@rosettadash/core';
 import {
+  scoutAiProviderReady,
+  type ConsumerSecretsSnapshot,
+  type ConsumerSecretsStore,
+  type EnvFieldDefinition,
+} from '@rosettadash/core';
+import {
+  atlasAiFields,
+  atlasAllSecretFields,
   atlasIntegrationFields,
   createAtlasSecretsStore,
   integrationKeyStatus,
@@ -28,6 +35,7 @@ export interface ConsumerSecretsContextValue {
   rememberKeys: boolean;
   saveMessage: string | null;
   integrationFields: EnvFieldDefinition[];
+  aiFields: EnvFieldDefinition[];
   getDraftValue: (envKey: string) => string;
   setDraftValue: (envKey: string, value: string) => void;
   setRememberKeys: (remember: boolean) => void;
@@ -35,6 +43,7 @@ export interface ConsumerSecretsContextValue {
   clearAll: () => Promise<void>;
   hasConfiguredKey: (envKey: string) => boolean;
   resolveSecret: (envKey: string) => string;
+  scoutAiReady: boolean;
   googleMapsApiKey: string;
   mapTilerApiKey: string;
   newsApiKey: string;
@@ -70,7 +79,7 @@ export function ConsumerSecretsProvider({ children }: { children: ReactNode }) {
 
   const syncDraftFromStore = useCallback(() => {
     const next: Record<string, string> = {};
-    for (const field of atlasIntegrationFields()) {
+    for (const field of atlasAllSecretFields()) {
       next[field.envKey] = store.getValue(field.envKey);
     }
     setDraftValues(next);
@@ -99,20 +108,35 @@ export function ConsumerSecretsProvider({ children }: { children: ReactNode }) {
   );
 
   const save = useCallback(async () => {
-    for (const field of atlasIntegrationFields()) {
+    for (const field of atlasAllSecretFields()) {
       store.setSecretValue(field.envKey, draftValues[field.envKey] ?? '');
     }
     await store.save();
-    setSaveMessage('Integration keys saved in this browser.');
+    setSaveMessage('Keys saved in this browser.');
     window.setTimeout(() => setSaveMessage(null), 4000);
   }, [draftValues, store]);
 
   const clearAll = useCallback(async () => {
     store.clearAll();
     syncDraftFromStore();
-    setSaveMessage('Cleared integration keys from this browser.');
+    setSaveMessage('Cleared keys from this browser.');
     window.setTimeout(() => setSaveMessage(null), 4000);
   }, [store, syncDraftFromStore]);
+
+  const hasConfiguredKey = useCallback(
+    (envKey: string) => isAtlasKeyConfigured(store, envKey),
+    [store],
+  );
+
+  const resolveSecret = useCallback(
+    (envKey: string) => resolveAtlasSecret(store, envKey),
+    [store],
+  );
+
+  const scoutAiReady = useMemo(
+    () => scoutAiProviderReady(hasConfiguredKey, resolveSecret),
+    [hasConfiguredKey, resolveSecret, snapshot],
+  );
 
   const value = useMemo<ConsumerSecretsContextValue>(
     () => ({
@@ -120,13 +144,15 @@ export function ConsumerSecretsProvider({ children }: { children: ReactNode }) {
       rememberKeys: snapshot.settings.rememberKeys,
       saveMessage,
       integrationFields: atlasIntegrationFields(),
+      aiFields: atlasAiFields(),
       getDraftValue,
       setDraftValue,
       setRememberKeys,
       save,
       clearAll,
-      hasConfiguredKey: (envKey: string) => isAtlasKeyConfigured(store, envKey),
-      resolveSecret: (envKey: string) => resolveAtlasSecret(store, envKey),
+      hasConfiguredKey,
+      resolveSecret,
+      scoutAiReady,
       googleMapsApiKey: resolveAtlasGoogleMapsKey(store),
       mapTilerApiKey: resolveAtlasMapTilerKey(store),
       newsApiKey: resolveAtlasNewsKey(store),
@@ -142,6 +168,9 @@ export function ConsumerSecretsProvider({ children }: { children: ReactNode }) {
       setRememberKeys,
       save,
       clearAll,
+      hasConfiguredKey,
+      resolveSecret,
+      scoutAiReady,
       store,
     ],
   );

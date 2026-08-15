@@ -9,13 +9,15 @@ import { useConsumerSecrets } from '../state/consumer-secrets-context';
 import { formatRegionLabel, localizedDestinationName } from '../lib/atlas-utils';
 import { destinationByIdMapView, destinationMapView, resolveMapLocationQuery } from '../lib/map-location';
 
-export const MAP_SOURCE = `<MapScreen mapProvider={mapProvider} selectedId={selectedId}>
+export const MAP_SOURCE = `<MapScreen part="toolbar|explorer" mapProvider={mapProvider} selectedId={selectedId}>
   <TextInput label="Request location" value={mapLocationQuery} />
   <SelectInput label="Map provider" value={mapProvider} />
   <GeoExplorerLayout listPlacement={listPlacement} items={destinationItems} selectedId={selectedId}>
     <GeoMap center={…} zoom={…} markers={destinationMarkers} selectedId={selectedId} apiKey={byokGoogleMapsKey} />
   </GeoExplorerLayout>
 </MapScreen>`;
+
+type MapScreenPart = 'toolbar' | 'explorer';
 
 type Props = Pick<
   AtlasContext,
@@ -31,7 +33,11 @@ type Props = Pick<
   | 'goToMapView'
   | 'setScreen'
   | 'setHighlightTarget'
->;
+> & {
+  embedded?: boolean;
+  part?: MapScreenPart;
+  listPlacement?: GeoExplorerListPlacement;
+};
 
 export function MapScreen({
   locale,
@@ -46,9 +52,11 @@ export function MapScreen({
   goToMapView,
   setScreen,
   setHighlightTarget,
+  embedded = false,
+  part,
+  listPlacement = 'right',
 }: Props) {
   const [locationError, setLocationError] = useState('');
-  const [listPlacement, setListPlacement] = useState<GeoExplorerListPlacement>('right');
   const secrets = useConsumerSecrets();
   const googleMapsApiKey = secrets.googleMapsApiKey;
   const maplibreTileUrl = secrets.maplibreTileUrl;
@@ -103,11 +111,8 @@ export function MapScreen({
     }
   };
 
-  return (
-    <section className="da-panel">
-      <h2>Map</h2>
-      <p>2D exploration with developer-selectable geo-map provider.</p>
-
+  const renderToolbar = () => (
+    <>
       <div className="rd-map-location">
         <TextInput
           label="Request location"
@@ -126,7 +131,7 @@ export function MapScreen({
       </div>
       {locationError ? <p className="da-map-location-error">{locationError}</p> : null}
       {view.label ? (
-        <p className="da-note">
+        <p className="da-note da-maps-toolbar__view-label">
           Map view: <strong>{view.label}</strong>
           {mapViewOverride ? ' (custom coordinates)' : selected ? '' : ' (default)'}
         </p>
@@ -169,38 +174,55 @@ export function MapScreen({
           for hosted vector tiles.
         </p>
       ) : null}
+    </>
+  );
 
-      <SelectInput
-        label="Destination list placement"
-        options={[
-          { value: 'right', label: 'List on right' },
-          { value: 'left', label: 'List on left' },
-        ]}
-        value={listPlacement}
-        onChange={(value) => setListPlacement(value as GeoExplorerListPlacement)}
-      />
+  const renderExplorer = () => (
+    <GeoExplorerLayout
+      listPlacement={listPlacement}
+      items={listItems}
+      selectedId={selectedId}
+      onSelect={selectDestination}
+    >
+      <div className="da-map-stage">
+        <GeoMap
+          className="da-map-stage__map"
+          provider={mapProvider}
+          center={JSON.stringify({ lat: view.lat, lng: view.lng })}
+          zoom={view.zoom}
+          markers={markers}
+          selectedId={selectedId}
+          apiKey={mapProvider === 'google-maps' ? googleMapsApiKey : undefined}
+          tileUrl={mapProvider === 'maplibre' ? maplibreTileUrl : undefined}
+          onMarkerSelect={({ id }) => selectDestination(id)}
+        />
+      </div>
+    </GeoExplorerLayout>
+  );
 
-      <GeoExplorerLayout
-        title="Explore"
-        listPlacement={listPlacement}
-        items={listItems}
-        selectedId={selectedId}
-        onSelect={selectDestination}
-      >
-        <div className="da-map-stage">
-          <GeoMap
-            className="da-map-stage__map"
-            provider={mapProvider}
-            center={JSON.stringify({ lat: view.lat, lng: view.lng })}
-            zoom={view.zoom}
-            markers={markers}
-            selectedId={selectedId}
-            apiKey={mapProvider === 'google-maps' ? googleMapsApiKey : undefined}
-            tileUrl={mapProvider === 'maplibre' ? maplibreTileUrl : undefined}
-            onMarkerSelect={({ id }) => selectDestination(id)}
-          />
-        </div>
-      </GeoExplorerLayout>
+  if (embedded && part === 'toolbar') {
+    return <div className="da-maps-toolbar__map-fields">{renderToolbar()}</div>;
+  }
+
+  if (embedded && part === 'explorer') {
+    return renderExplorer();
+  }
+
+  if (embedded) {
+    return (
+      <>
+        {renderToolbar()}
+        {renderExplorer()}
+      </>
+    );
+  }
+
+  return (
+    <section className="da-panel">
+      <h2>Map</h2>
+      <p>2D exploration with developer-selectable geo-map provider.</p>
+      {renderToolbar()}
+      {renderExplorer()}
     </section>
   );
 }

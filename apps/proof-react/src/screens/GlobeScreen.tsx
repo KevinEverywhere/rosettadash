@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { GeoExplorerLayout, type GeoExplorerListPlacement } from '@rosettadash/react/layout/geo-explorer';
 import { ThreeGeoGlobe } from '@rosettadash/react/visual/display/3d-geo-globe';
-import { SelectInput } from '@rosettadash/react/visual/input/select';
 import {
   DEFAULT_WORLD_EQUIRECT_ATTRIBUTION,
   DEFAULT_WORLD_EQUIRECT_URL,
@@ -11,17 +9,29 @@ import {
 import type { AtlasContext } from '../state/useDestinationAtlasState';
 import { formatRegionLabel, localizedDestinationName } from '../lib/atlas-utils';
 
-export const GLOBE_SOURCE = `<GlobeScreen locale={locale} selectedId={selectedId}>
+export const GLOBE_SOURCE = `<GlobeScreen part="explorer" locale={locale} selectedId={selectedId}>
   <GeoExplorerLayout listPlacement={listPlacement} items={destinationItems} selectedId={selectedId}>
     <ThreeGeoGlobe textureUrl={DEFAULT_WORLD_EQUIRECT_URL} markers={destinationMarkers} selectedId={selectedId} />
   </GeoExplorerLayout>
 </GlobeScreen>`;
 
-type Props = Pick<AtlasContext, 'locale' | 'selectedId' | 'setSelectedId' | 'focusDestinationOnMap'>;
+type GlobeScreenPart = 'explorer' | 'footer';
 
-export function GlobeScreen({ locale, selectedId, setSelectedId, focusDestinationOnMap }: Props) {
-  const [listPlacement, setListPlacement] = useState<GeoExplorerListPlacement>('right');
+type Props = Pick<AtlasContext, 'locale' | 'selectedId' | 'setSelectedId' | 'focusDestinationOnMap'> & {
+  embedded?: boolean;
+  part?: GlobeScreenPart;
+  listPlacement?: GeoExplorerListPlacement;
+};
 
+export function GlobeScreen({
+  locale,
+  selectedId,
+  setSelectedId,
+  focusDestinationOnMap,
+  embedded = false,
+  part,
+  listPlacement = 'right',
+}: Props) {
   const markers = MOCK_DESTINATIONS.map((dest) => ({
     id: dest.id,
     lat: dest.lat,
@@ -47,31 +57,14 @@ export function GlobeScreen({ locale, selectedId, setSelectedId, focusDestinatio
     setSelectedId(id);
   };
 
-  return (
-    <section className="da-panel">
-      <h2>Globe</h2>
-      <p>
-        Three.js globe with dataset destination markers — pick a destination in the list to fly the globe to it;
-        click the same marker again to open the Map screen.
-      </p>
-
-      <SelectInput
-        label="Destination list placement"
-        options={[
-          { value: 'right', label: 'List on right' },
-          { value: 'left', label: 'List on left' },
-        ]}
-        value={listPlacement}
-        onChange={(value) => setListPlacement(value as GeoExplorerListPlacement)}
-      />
-
-      <GeoExplorerLayout
-        title="World view"
-        listPlacement={listPlacement}
-        items={listItems}
-        selectedId={selectedId}
-        onSelect={selectFromList}
-      >
+  const renderExplorer = () => (
+    <GeoExplorerLayout
+      listPlacement={listPlacement}
+      items={listItems}
+      selectedId={selectedId}
+      onSelect={selectFromList}
+    >
+      <div className="da-globe-stage">
         <ThreeGeoGlobe
           title="Destination globe (Three.js)"
           textureUrl={DEFAULT_WORLD_EQUIRECT_URL}
@@ -79,8 +72,12 @@ export function GlobeScreen({ locale, selectedId, setSelectedId, focusDestinatio
           selectedId={selectedId}
           onMarkerSelect={selectFromGlobe}
         />
-      </GeoExplorerLayout>
+      </div>
+    </GeoExplorerLayout>
+  );
 
+  const renderFooter = () => (
+    <>
       <p className="da-note">{DEFAULT_WORLD_EQUIRECT_ATTRIBUTION}</p>
       <details className="da-globe-sources">
         <summary>Future globe texture sources</summary>
@@ -93,6 +90,35 @@ export function GlobeScreen({ locale, selectedId, setSelectedId, focusDestinatio
           ))}
         </ul>
       </details>
+    </>
+  );
+
+  if (embedded && part === 'explorer') {
+    return renderExplorer();
+  }
+
+  if (embedded && part === 'footer') {
+    return <div className="da-maps-footer">{renderFooter()}</div>;
+  }
+
+  if (embedded) {
+    return (
+      <>
+        {renderExplorer()}
+        {renderFooter()}
+      </>
+    );
+  }
+
+  return (
+    <section className="da-panel">
+      <h2>Globe</h2>
+      <p>
+        Three.js globe with dataset destination markers — pick a destination in the list to fly the globe to it;
+        click the same marker again to open the Map panel.
+      </p>
+      {renderExplorer()}
+      {renderFooter()}
     </section>
   );
 }

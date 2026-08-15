@@ -6,6 +6,7 @@ import { TextareaInput } from '@rosettadash/react/visual/input/textarea';
 import type { AtlasContext } from '../state/useDestinationAtlasState';
 import { useConsumerSecrets } from '../state/consumer-secrets-context';
 import { AtlasContextControls } from '../components/AtlasContextControls';
+import { ScoutSettingsSection } from '../components/ScoutSettingsSection';
 import { ThemeToggle, type ThemePreference } from '../lib/theme';
 import { roleLabel } from '../lib/roles';
 import { isSettingFieldTarget } from '../lib/settings-highlight';
@@ -14,6 +15,7 @@ export const SETTINGS_SOURCE = `<SettingsScreen>
   <header><h2>Settings</h2><ThemeToggle /></header>
   <AtlasContextControls highlightField={…} />
   <Collapsible title="Integration keys (BYOK)">…</Collapsible>
+  <Collapsible title="Scout / AI providers (BYOK)">…</Collapsible>
   <TextareaInput label="Feedback" />
 </SettingsScreen>`;
 
@@ -53,9 +55,11 @@ export function SettingsScreen({
   const preferencesRef = useRef<HTMLDivElement>(null);
   const themeRef = useRef<HTMLLabelElement>(null);
   const integrationsRef = useRef<HTMLDivElement>(null);
+  const aiRef = useRef<HTMLDivElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const secrets = useConsumerSecrets();
   const [integrationsOpen, setIntegrationsOpen] = useState(highlightTarget === 'integrations');
+  const [aiOpen, setAiOpen] = useState(highlightTarget === 'ai');
   const [feedbackDraft, setFeedbackDraft] = useState('');
   const [feedbackSent, setFeedbackSent] = useState(false);
 
@@ -71,16 +75,21 @@ export function SettingsScreen({
         ? themeRef.current
         : highlightTarget === 'integrations'
           ? integrationsRef.current
-          : highlightTarget === 'feedback'
-            ? feedbackRef.current
-            : isSettingFieldTarget(highlightTarget)
-              ? preferencesRef.current?.querySelector(`[data-setting="${highlightTarget}"]`)
-              : preferencesRef.current;
+          : highlightTarget === 'ai'
+            ? aiRef.current
+            : highlightTarget === 'feedback'
+              ? feedbackRef.current
+              : isSettingFieldTarget(highlightTarget)
+                ? preferencesRef.current?.querySelector(`[data-setting="${highlightTarget}"]`)
+                : preferencesRef.current;
 
     scrollTarget?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
     if (highlightTarget === 'integrations') {
       setIntegrationsOpen(true);
+    }
+    if (highlightTarget === 'ai') {
+      setAiOpen(true);
     }
 
     const timer = window.setTimeout(() => setHighlightTarget(null), 2400);
@@ -155,6 +164,67 @@ export function SettingsScreen({
                     ) : (
                       <span className="da-byok-field__status">not set</span>
                     )}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <label className="da-byok-remember">
+              <input
+                type="checkbox"
+                checked={secrets.rememberKeys}
+                onChange={(event) => secrets.setRememberKeys(event.target.checked)}
+              />
+              Remember keys in this browser (localStorage + encryption)
+            </label>
+            <div className="da-byok-actions">
+              <button type="button" className="rd-button" onClick={() => void secrets.save()} disabled={!secrets.loaded}>
+                Save keys
+              </button>
+              <button type="button" className="rd-button rd-button--ghost" onClick={() => void secrets.clearAll()}>
+                Clear keys
+              </button>
+            </div>
+            {secrets.saveMessage ? <p className="da-byok-save-msg">{secrets.saveMessage}</p> : null}
+          </RoleGate>
+        </Collapsible>
+      </div>
+
+      <div ref={aiRef} className={highlightTarget === 'ai' ? 'rd-highlight-target' : undefined}>
+        <Collapsible
+          title="Scout / AI providers (BYOK)"
+          summary="Deal scout — OpenAI, Anthropic, Gemini, Azure, Ollama"
+          open={aiOpen}
+          onOpenChange={setAiOpen}
+          className="da-byok-collapsible"
+        >
+          <ScoutSettingsSection locale={locale} selectedId={selectedId} />
+          <RoleGate
+            label="AI providers (BYOK)"
+            currentRole={userRole}
+            allowedRoles={['admin']}
+            statusText="Admin can manage AI keys for Scout and future premium features"
+            hiddenStatusText={`AI keys are read-only for ${roleLabel(userRole)}. Switch to Admin to configure BYOK.`}
+          >
+            {!secrets.loaded ? <p className="da-note">Loading encrypted key vault…</p> : null}
+            <div className="da-byok-fields">
+              {secrets.aiFields.map((field) => (
+                <div key={field.id} className="da-byok-field">
+                  <TextInput
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    inputType={field.sensitive ? 'password' : 'text'}
+                    value={secrets.getDraftValue(field.envKey)}
+                    onChange={(value) => secrets.setDraftValue(field.envKey, value)}
+                  />
+                  <p className="da-byok-field__desc">{field.description}</p>
+                  <p className="da-byok-field__meta">
+                    Env key: <code>{field.envKey}</code>
+                    {field.optional ? <span className="da-byok-field__optional">optional</span> : null}
+                    {secrets.hasConfiguredKey(field.envKey) ? (
+                      <span className="da-byok-field__status da-byok-field__status--ok">configured</span>
+                    ) : field.sensitive ? (
+                      <span className="da-byok-field__status">not set</span>
+                    ) : null}
                   </p>
                 </div>
               ))}

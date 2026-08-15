@@ -1,7 +1,8 @@
-import type { DestinationAtlasScreenId } from './destination-atlas-routes';
+import type { DestinationAtlasScreenId, MapsPanelId } from './destination-atlas-routes';
 import {
   DEFAULT_DESTINATION_ATLAS_SCREEN,
   pathForDestinationAtlasScreen,
+  pathForMapsPanel,
   screenFromDestinationAtlasPath,
 } from './destination-atlas-routes';
 
@@ -9,6 +10,7 @@ export const ATLAS_URL_PARAM_DEST = 'dest';
 export const ATLAS_URL_PARAM_LOCALE = 'locale';
 export const ATLAS_URL_PARAM_PROVIDER = 'provider';
 export const ATLAS_URL_PARAM_ROLE = 'role';
+export const ATLAS_URL_PARAM_SCOUT = 'scout';
 
 export const ATLAS_GEO_MAP_PROVIDERS = ['maplibre', 'leaflet', 'google-maps'] as const;
 export type AtlasGeoMapProvider = (typeof ATLAS_GEO_MAP_PROVIDERS)[number];
@@ -107,11 +109,14 @@ export function buildAtlasLocation(
   screen: DestinationAtlasScreenId,
   state: Pick<AtlasUrlState, 'dest' | 'locale' | 'provider' | 'role'>,
   defaults: Partial<AtlasUrlDefaults> = {},
+  mapsPanel: MapsPanelId = 'map',
 ): { pathname: string; search: string } {
   const params = buildAtlasSearchParams(state, defaults);
   const search = params.toString();
+  const pathname =
+    screen === 'maps' ? pathForMapsPanel(mapsPanel) : pathForDestinationAtlasScreen(screen);
   return {
-    pathname: pathForDestinationAtlasScreen(screen),
+    pathname,
     search: search ? `?${search}` : '',
   };
 }

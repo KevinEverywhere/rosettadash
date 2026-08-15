@@ -2,8 +2,7 @@ export type DestinationAtlasScreenId =
   | 'about'
   | 'overview'
   | 'destinations'
-  | 'map'
-  | 'globe'
+  | 'maps'
   | 'media'
   | 'authoring'
   | 'intel'
@@ -11,6 +10,8 @@ export type DestinationAtlasScreenId =
   | 'views'
   | 'stack'
   | 'settings';
+
+export type MapsPanelId = 'map' | 'globe';
 
 export interface DestinationAtlasRouteDefinition {
   id: DestinationAtlasScreenId;
@@ -22,8 +23,7 @@ export const DESTINATION_ATLAS_ROUTES: readonly DestinationAtlasRouteDefinition[
   { id: 'about', path: '/' },
   { id: 'overview', path: '/overview' },
   { id: 'destinations', path: '/destinations' },
-  { id: 'map', path: '/map' },
-  { id: 'globe', path: '/globe' },
+  { id: 'maps', path: '/maps' },
   { id: 'media', path: '/media' },
   { id: 'authoring', path: '/authoring' },
   { id: 'intel', path: '/intel' },
@@ -51,15 +51,59 @@ function normalizePath(pathname: string): string {
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
 }
 
+export function mapsPanelFromPath(pathname: string): MapsPanelId {
+  return normalizePath(pathname) === '/maps/globe' ? 'globe' : 'map';
+}
+
+export function pathForMapsPanel(panel: MapsPanelId): string {
+  return panel === 'globe' ? '/maps/globe' : '/maps';
+}
+
+/** Legacy proof-app paths redirected in client routers. */
+export function legacyAtlasPathRedirect(pathname: string): string | null {
+  const normalized = normalizePath(pathname);
+  if (normalized === '/map') {
+    return '/maps';
+  }
+  if (normalized === '/globe') {
+    return '/maps/globe';
+  }
+  if (normalized === '/maps/map') {
+    return '/maps';
+  }
+  if (normalized === '/scout') {
+    return '/settings';
+  }
+  return null;
+}
+
 export function pathForDestinationAtlasScreen(screen: DestinationAtlasScreenId): string {
   return PATH_BY_SCREEN.get(screen) ?? '/';
 }
 
 export function screenFromDestinationAtlasPath(pathname: string): DestinationAtlasScreenId {
   const normalized = normalizePath(pathname);
+  if (
+    normalized === '/maps' ||
+    normalized === '/maps/map' ||
+    normalized === '/maps/globe' ||
+    normalized === '/map' ||
+    normalized === '/globe'
+  ) {
+    return 'maps';
+  }
   return SCREEN_BY_PATH.get(normalized) ?? DEFAULT_DESTINATION_ATLAS_SCREEN;
 }
 
 export function isKnownDestinationAtlasPath(pathname: string): boolean {
-  return SCREEN_BY_PATH.has(normalizePath(pathname));
+  const normalized = normalizePath(pathname);
+  if (
+    normalized === '/maps/map' ||
+    normalized === '/maps/globe' ||
+    normalized === '/map' ||
+    normalized === '/globe'
+  ) {
+    return true;
+  }
+  return SCREEN_BY_PATH.has(normalized);
 }

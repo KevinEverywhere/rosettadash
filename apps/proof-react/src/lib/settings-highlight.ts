@@ -5,6 +5,7 @@ export type SettingsHighlightTarget =
   | 'selected'
   | 'theme'
   | 'integrations'
+  | 'ai'
   | 'feedback'
   | null;
 

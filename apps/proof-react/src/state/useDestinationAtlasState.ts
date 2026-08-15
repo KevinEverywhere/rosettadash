@@ -3,9 +3,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   buildAtlasLocation,
   isKnownDestinationAtlasPath,
+  legacyAtlasPathRedirect,
+  mapsPanelFromPath,
   parseAtlasUrlState,
   type AtlasUrlDefaults,
   type DestinationAtlasScreenId,
+  type MapsPanelId,
 } from '@rosettadash/core';
 import type { GeoMapProvider } from '@destination-atlas';
 import type { AtlasUserRole } from '../lib/roles';
@@ -14,6 +17,7 @@ import type { SettingsHighlightTarget } from '../lib/settings-highlight';
 
 export interface DestinationAtlasState {
   screen: DestinationAtlasScreenId;
+  mapsPanel: MapsPanelId;
   selectedId: string;
   locale: string;
   mapProvider: GeoMapProvider;
@@ -30,10 +34,12 @@ export interface DestinationAtlasState {
   visitPeriodEnd: string;
   userRole: AtlasUserRole;
   highlightTarget: SettingsHighlightTarget;
+  settingsScoutFocus: boolean;
 }
 
 export function useDestinationAtlasState(initialSelectedId: string): DestinationAtlasState & {
   setScreen: (screen: DestinationAtlasScreenId) => void;
+  setMapsPanel: (panel: MapsPanelId) => void;
   setSelectedId: (id: string) => void;
   setLocale: (locale: string) => void;
   setMapProvider: (provider: GeoMapProvider) => void;
@@ -51,6 +57,8 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   setUserRole: (role: AtlasUserRole) => void;
   setHighlightTarget: (target: SettingsHighlightTarget) => void;
   openAuthoringForDestination: (destinationId: string) => void;
+  openScoutSettings: () => void;
+  settingsScoutFocus: boolean;
 } {
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,10 +79,16 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   );
 
   const screen = urlState.screen;
+  const mapsPanel = mapsPanelFromPath(location.pathname);
   const selectedId = urlState.dest || initialSelectedId;
   const locale = urlState.locale;
   const mapProvider = urlState.provider as GeoMapProvider;
   const userRole = urlState.role as AtlasUserRole;
+
+  const settingsScoutFocus = useMemo(() => {
+    const params = new URLSearchParams(location.search.replace(/^\?/, ''));
+    return screen === 'settings' && params.get('scout') === '1';
+  }, [location.search, screen]);
 
   const [newsQuery, setNewsQuery] = useState('');
   const [newsRegion, setNewsRegion] = useState('');
@@ -105,11 +119,17 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   );
 
   const navigateAtlas = useCallback(
-    (nextScreen: DestinationAtlasScreenId, query = atlasQuery, replace = false) => {
-      const { pathname, search } = buildAtlasLocation(nextScreen, query, urlDefaults);
+    (
+      nextScreen: DestinationAtlasScreenId,
+      query = atlasQuery,
+      replace = false,
+      nextMapsPanel: MapsPanelId = mapsPanel,
+    ) => {
+      const panel = nextScreen === 'maps' ? nextMapsPanel : 'map';
+      const { pathname, search } = buildAtlasLocation(nextScreen, query, urlDefaults, panel);
       navigate({ pathname, search }, { replace });
     },
-    [atlasQuery, navigate, urlDefaults],
+    [atlasQuery, mapsPanel, navigate, urlDefaults],
   );
 
   const setScreen = useCallback(
@@ -117,6 +137,13 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       navigateAtlas(nextScreen);
     },
     [navigateAtlas],
+  );
+
+  const setMapsPanel = useCallback(
+    (panel: MapsPanelId) => {
+      navigateAtlas('maps', atlasQuery, false, panel);
+    },
+    [atlasQuery, navigateAtlas],
   );
 
   const setSelectedId = useCallback(
@@ -157,7 +184,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       setMapViewOverride(null);
       setMapLocationQuery('');
       setMapTabId('map');
-      navigateAtlas('map', { ...atlasQuery, dest: id });
+      navigateAtlas('maps', { ...atlasQuery, dest: id }, false, 'map');
     },
     [atlasQuery, navigateAtlas],
   );
@@ -166,9 +193,9 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
     (view: { lat: number; lng: number; zoom: number; label: string }) => {
       setMapViewOverride(view);
       setMapTabId('map');
-      navigateAtlas('map');
+      navigateAtlas('maps', atlasQuery, false, 'map');
     },
-    [navigateAtlas],
+    [atlasQuery, navigateAtlas],
   );
 
   const openAuthoringForDestination = useCallback(
@@ -177,6 +204,30 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
     },
     [atlasQuery, navigateAtlas],
   );
+
+  const openScoutSettings = useCallback(() => {
+    setHighlightTarget('ai');
+    const { pathname, search } = buildAtlasLocation('settings', atlasQuery, urlDefaults);
+    const params = new URLSearchParams(search.replace(/^\?/, ''));
+    params.set('scout', '1');
+    const nextSearch = params.toString();
+    navigate({ pathname, search: nextSearch ? `?${nextSearch}` : '' });
+  }, [atlasQuery, navigate, urlDefaults]);
+
+  useEffect(() => {
+    const redirect = legacyAtlasPathRedirect(location.pathname);
+    if (redirect) {
+      if (location.pathname.replace(/\/+$/, '') === '/scout') {
+        setHighlightTarget('ai');
+        const params = new URLSearchParams(location.search.replace(/^\?/, ''));
+        params.set('scout', '1');
+        const nextSearch = params.toString();
+        navigate({ pathname: redirect, search: nextSearch ? `?${nextSearch}` : '' }, { replace: true });
+        return;
+      }
+      navigate({ pathname: redirect, search: location.search }, { replace: true });
+    }
+  }, [location.pathname, location.search, navigate]);
 
   useEffect(() => {
     if (!isKnownDestinationAtlasPath(location.pathname)) {
@@ -193,6 +244,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   return useMemo(
     () => ({
       screen,
+      mapsPanel,
       selectedId,
       locale,
       mapProvider,
@@ -209,7 +261,9 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       visitPeriodEnd,
       userRole,
       highlightTarget,
+      settingsScoutFocus,
       setScreen,
+      setMapsPanel,
       setSelectedId,
       setLocale,
       setMapProvider,
@@ -227,9 +281,11 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       setUserRole,
       setHighlightTarget,
       openAuthoringForDestination,
+      openScoutSettings,
     }),
     [
       screen,
+      mapsPanel,
       selectedId,
       locale,
       mapProvider,
@@ -246,7 +302,9 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       visitPeriodEnd,
       userRole,
       highlightTarget,
+      settingsScoutFocus,
       setScreen,
+      setMapsPanel,
       setSelectedId,
       setLocale,
       setMapProvider,
@@ -254,6 +312,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       focusDestinationOnMap,
       goToMapView,
       openAuthoringForDestination,
+      openScoutSettings,
     ],
   );
 }

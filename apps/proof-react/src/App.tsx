@@ -8,8 +8,7 @@ import { useDestinationAtlasState } from './state/useDestinationAtlasState';
 import { AboutScreen, ABOUT_SOURCE } from './screens/AboutScreen';
 import { OverviewScreen, OVERVIEW_SOURCE } from './screens/OverviewScreen';
 import { DestinationsScreen, DESTINATIONS_SOURCE } from './screens/DestinationsScreen';
-import { MapScreen, MAP_SOURCE } from './screens/MapScreen';
-import { GlobeScreen, GLOBE_SOURCE } from './screens/GlobeScreen';
+import { MapsScreen, MAPS_SOURCE } from './screens/MapsScreen';
 import { MediaScreen, MEDIA_SOURCE } from './screens/MediaScreen';
 import { AuthoringScreen, AUTHORING_SOURCE } from './screens/AuthoringScreen';
 import { IntelScreen, INTEL_SOURCE } from './screens/IntelScreen';
@@ -32,8 +31,7 @@ const SCREEN_SOURCES: Record<string, string> = {
   about: ABOUT_SOURCE,
   overview: OVERVIEW_SOURCE,
   destinations: DESTINATIONS_SOURCE,
-  map: MAP_SOURCE,
-  globe: GLOBE_SOURCE,
+  maps: MAPS_SOURCE,
   media: MEDIA_SOURCE,
   authoring: AUTHORING_SOURCE,
   intel: INTEL_SOURCE,
@@ -69,20 +67,25 @@ export function App() {
   };
 
   const screenTo = (screenId: (typeof visibleScreens)[number]['id']) => {
-    const { pathname, search } = buildAtlasLocation(screenId, atlasQuery, urlDefaults);
+    const mapsPanel = screenId === 'maps' ? atlas.mapsPanel : 'map';
+    const { pathname, search } = buildAtlasLocation(screenId, atlasQuery, urlDefaults, mapsPanel);
     return { pathname, search };
   };
 
-  const openSetting = (field: SettingFieldTarget | 'theme') => {
+  const openSetting = (field: SettingFieldTarget | 'theme' | 'ai') => {
     atlas.setHighlightTarget(field);
     atlas.setScreen('settings');
   };
+
+  const settingsIndex = visibleScreens.findIndex((screen) => screen.id === 'settings');
+  const navScreensBeforeScout = settingsIndex >= 0 ? visibleScreens.slice(0, settingsIndex) : visibleScreens;
+  const navScreensFromSettings = settingsIndex >= 0 ? visibleScreens.slice(settingsIndex) : [];
 
   return (
     <div className="da-shell">
       <header className="da-header">
         <h1>Destination Atlas</h1>
-        <p>Current and historic information about world locations — React proof (DAS-135 BYOK)</p>
+        <p>Current and historic information about world locations — React proof (DAS-137 Scout + Maps)</p>
       </header>
 
       <div className="da-body-row">
@@ -99,12 +102,33 @@ export function App() {
             />
           </div>
 
-          <nav className="da-nav" aria-label="Screens">
-            {visibleScreens.map((screen) => (
+          <nav className="da-nav da-tabbar" aria-label="Screens">
+            {navScreensBeforeScout.map((screen) => (
               <NavLink
                 key={screen.id}
+                className="da-tabbar__tab"
                 to={screenTo(screen.id)}
                 aria-current={atlas.screen === screen.id ? 'page' : undefined}
+              >
+                {screen.label}
+              </NavLink>
+            ))}
+            <button
+              type="button"
+              className="da-tabbar__tab"
+              aria-current={atlas.settingsScoutFocus ? 'page' : undefined}
+              onClick={atlas.openScoutSettings}
+            >
+              Scout
+            </button>
+            {navScreensFromSettings.map((screen) => (
+              <NavLink
+                key={screen.id}
+                className="da-tabbar__tab"
+                to={screenTo(screen.id)}
+                aria-current={
+                  atlas.screen === screen.id && !atlas.settingsScoutFocus ? 'page' : undefined
+                }
               >
                 {screen.label}
               </NavLink>
@@ -114,10 +138,7 @@ export function App() {
           <div className="da-workbench-host">
             <ErrorBoundary label={activeScreen?.label ?? atlas.screen}>
               <ScreenWorkbenchMobileToggle mobileView={mobileView} onChange={setMobileView} />
-              <ScreenWorkbenchPreview
-                scrollablePreview={atlas.screen === 'about' || atlas.screen === 'authoring'}
-                mobileView={mobileView}
-              >
+              <ScreenWorkbenchPreview mobileView={mobileView}>
               {atlas.screen === 'about' ? <AboutScreen /> : null}
               {atlas.screen === 'overview' ? (
                 <OverviewScreen locale={atlas.locale} userRole={atlas.userRole} />
@@ -140,8 +161,8 @@ export function App() {
                   focusDestinationOnMap={atlas.focusDestinationOnMap}
                 />
               ) : null}
-              {atlas.screen === 'map' ? (
-                <MapScreen
+              {atlas.screen === 'maps' ? (
+                <MapsScreen
                   locale={atlas.locale}
                   selectedId={atlas.selectedId}
                   setSelectedId={atlas.setSelectedId}
@@ -154,14 +175,8 @@ export function App() {
                   goToMapView={atlas.goToMapView}
                   setScreen={atlas.setScreen}
                   setHighlightTarget={atlas.setHighlightTarget}
-                />
-              ) : null}
-              {atlas.screen === 'globe' ? (
-                <GlobeScreen
-                  locale={atlas.locale}
-                  selectedId={atlas.selectedId}
-                  setSelectedId={atlas.setSelectedId}
-                  focusDestinationOnMap={atlas.focusDestinationOnMap}
+                  mapsPanel={atlas.mapsPanel}
+                  setMapsPanel={atlas.setMapsPanel}
                 />
               ) : null}
               {atlas.screen === 'media' ? (

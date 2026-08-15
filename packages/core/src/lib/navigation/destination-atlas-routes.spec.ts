@@ -1,6 +1,9 @@
 import {
   DEFAULT_DESTINATION_ATLAS_SCREEN,
+  legacyAtlasPathRedirect,
+  mapsPanelFromPath,
   pathForDestinationAtlasScreen,
+  pathForMapsPanel,
   screenFromDestinationAtlasPath,
 } from './destination-atlas-routes';
 
@@ -10,9 +13,28 @@ describe('destination atlas routes', () => {
     expect(screenFromDestinationAtlasPath('/')).toBe('about');
   });
 
-  it('resolves nested screen paths', () => {
-    expect(pathForDestinationAtlasScreen('authoring')).toBe('/authoring');
-    expect(screenFromDestinationAtlasPath('/authoring/')).toBe('authoring');
+  it('resolves maps screen', () => {
+    expect(pathForDestinationAtlasScreen('maps')).toBe('/maps');
+    expect(screenFromDestinationAtlasPath('/maps')).toBe('maps');
+    expect(screenFromDestinationAtlasPath('/maps/globe')).toBe('maps');
+  });
+
+  it('redirects legacy scout path to settings', () => {
+    expect(legacyAtlasPathRedirect('/scout')).toBe('/settings');
+  });
+
+  it('derives maps panel from nested paths', () => {
+    expect(mapsPanelFromPath('/maps')).toBe('map');
+    expect(mapsPanelFromPath('/maps/map')).toBe('map');
+    expect(mapsPanelFromPath('/maps/globe')).toBe('globe');
+    expect(pathForMapsPanel('map')).toBe('/maps');
+    expect(pathForMapsPanel('globe')).toBe('/maps/globe');
+  });
+
+  it('redirects legacy map and globe paths', () => {
+    expect(legacyAtlasPathRedirect('/map')).toBe('/maps');
+    expect(legacyAtlasPathRedirect('/globe')).toBe('/maps/globe');
+    expect(legacyAtlasPathRedirect('/maps/map')).toBe('/maps');
   });
 
   it('falls back to about for unknown paths', () => {

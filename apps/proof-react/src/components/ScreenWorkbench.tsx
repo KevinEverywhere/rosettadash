@@ -28,16 +28,14 @@ export function ComponentSourcePanel({ source, className, hidden }: SourcePanelP
 interface Props {
   source: string;
   children: ReactNode;
-  scrollablePreview?: boolean;
   mobileView: 'preview' | 'source';
 }
 
-export function ScreenWorkbenchPreview({ children, scrollablePreview, mobileView }: Omit<Props, 'source'>) {
+export function ScreenWorkbenchPreview({ children, mobileView }: Omit<Props, 'source'>) {
   return (
     <div
       className={[
         'da-workbench__preview',
-        scrollablePreview ? 'da-workbench__preview--scroll' : '',
         mobileView === 'source' ? 'da-workbench__pane--hidden-mobile' : '',
       ]
         .filter(Boolean)
@@ -79,15 +77,13 @@ export function ScreenWorkbenchMobileToggle({
   );
 }
 
-export function ScreenWorkbench({ source, children, scrollablePreview = false }: Omit<Props, 'mobileView'>) {
+export function ScreenWorkbench({ source, children }: Omit<Props, 'mobileView'>) {
   const [mobileView, setMobileView] = useState<'preview' | 'source'>('preview');
 
   return (
     <>
       <ScreenWorkbenchMobileToggle mobileView={mobileView} onChange={setMobileView} />
-      <ScreenWorkbenchPreview scrollablePreview={scrollablePreview} mobileView={mobileView}>
-        {children}
-      </ScreenWorkbenchPreview>
+      <ScreenWorkbenchPreview mobileView={mobileView}>{children}</ScreenWorkbenchPreview>
       <ComponentSourcePanel source={source} hidden={mobileView === 'preview'} />
     </>
   );

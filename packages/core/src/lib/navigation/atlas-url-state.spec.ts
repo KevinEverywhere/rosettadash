@@ -8,13 +8,26 @@ describe('atlas url state', () => {
   const defaults = { dest: 'tokyo', locale: 'en', provider: 'leaflet' as const, role: 'viewer' as const };
 
   it('parses pathname and search params', () => {
-    expect(parseAtlasUrlState('/map', '?dest=paris&locale=fr&provider=maplibre&role=admin', defaults)).toEqual({
-      screen: 'map',
+    expect(parseAtlasUrlState('/maps', '?dest=paris&locale=fr&provider=maplibre&role=admin', defaults)).toEqual({
+      screen: 'maps',
       dest: 'paris',
       locale: 'fr',
       provider: 'maplibre',
       role: 'admin',
     });
+    expect(parseAtlasUrlState('/map', '?dest=paris', defaults).screen).toBe('maps');
+    expect(parseAtlasUrlState('/maps/globe', '?dest=paris', defaults).screen).toBe('maps');
+  });
+
+  it('builds nested maps paths from panel id', () => {
+    expect(
+      buildAtlasLocation(
+        'maps',
+        { dest: 'tokyo', locale: 'en', provider: 'leaflet', role: 'viewer' },
+        defaults,
+        'globe',
+      ),
+    ).toEqual({ pathname: '/maps/globe', search: '' });
   });
 
   it('omits default query values when building search', () => {

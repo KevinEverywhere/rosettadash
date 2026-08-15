@@ -18,6 +18,7 @@ const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '';
 
 interface AppState {
   screen: DestinationAtlasScreenId;
+  mapsPanel: 'map' | 'globe';
   selectedId: string;
   locale: string;
   mapProvider: GeoMapProvider;
@@ -25,6 +26,7 @@ interface AppState {
 
 const state: AppState = {
   screen: 'overview',
+  mapsPanel: 'map',
   selectedId: MOCK_DESTINATIONS[0]?.id ?? '',
   locale: 'en',
   mapProvider: 'leaflet',
@@ -108,7 +110,7 @@ function renderDestinations(): string {
   `;
 }
 
-function renderMap(): string {
+function renderMapInner(): string {
   const providerOptions = GEO_MAP_PROVIDERS.map(
     (p) => `<option value="${p.id}" ${p.id === state.mapProvider ? 'selected' : ''}>${p.label}</option>`,
   ).join('');
@@ -119,8 +121,6 @@ function renderMap(): string {
       : '';
 
   return `
-    <section class="da-panel">
-      <h2>Map</h2>
       <p>2D slippy map with developer-selectable provider (<code>visual.display.geo-map</code>).</p>
       <div class="da-provider-select">
         <label for="map-provider">Map provider (component prop)</label>
@@ -140,19 +140,75 @@ function renderMap(): string {
       ${googleKeyHint}
       <rd-geo-map class="da-geo-map" data-ref="geo-map"></rd-geo-map>
       <p class="da-note">Click a marker to select a destination. Selected: <strong>${state.selectedId || 'none'}</strong></p>
+  `;
+}
+
+function renderMap(): string {
+  return `
+    <section class="da-panel">
+      <h2>Map</h2>
+      ${renderMapInner()}
     </section>
   `;
+}
+
+function renderGlobeInner(): string {
+  return renderGap(
+    '3D Geo Globe',
+    'DAS-126 / WC upgrade',
+    'ThreeGeoGlobe is a runtime stub today. WC + Three.js renderer will show textured globe with lat/lng markers.',
+  );
 }
 
 function renderGlobe(): string {
   return `
     <section class="da-panel">
       <h2>Globe</h2>
-      ${renderGap(
-        '3D Geo Globe',
-        'DAS-126 / WC upgrade',
-        'ThreeGeoGlobe is a runtime stub today. WC + Three.js renderer will show textured globe with lat/lng markers.',
-      )}
+      ${renderGlobeInner()}
+    </section>
+  `;
+}
+
+function renderMaps(): string {
+  const panelButtons = (['map', 'globe'] as const)
+    .map(
+      (panel) =>
+        `<button type="button" data-maps-panel="${panel}" aria-current="${state.mapsPanel === panel ? 'page' : 'false'}">${panel === 'map' ? 'Map' : 'Globe'}</button>`,
+    )
+    .join('');
+
+  return `
+    <section class="da-panel">
+      <h2>Maps</h2>
+      <div class="da-maps-panels">${panelButtons}</div>
+      ${state.mapsPanel === 'map' ? renderMapInner() : renderGlobeInner()}
+    </section>
+  `;
+}
+
+function renderAbout(): string {
+  return `
+    <section class="da-panel">
+      <h2>About</h2>
+      ${renderGap('About screen', 'DAS-120', 'Framework proof apps include runtime guides and Storybook links.')}
+    </section>
+  `;
+}
+
+function renderAuthoring(): string {
+  return `
+    <section class="da-panel">
+      <h2>Authoring</h2>
+      ${renderGap('360° authoring', 'DAS-122', 'ffmpeg.wasm crop and preview — React proof only.')}
+    </section>
+  `;
+}
+
+function renderViews(): string {
+  return `
+    <section class="da-panel">
+      <h2>Views</h2>
+      ${renderGap('Advanced charts', 'DAS-123', 'Journey flows and carousel demos in framework apps.')}
     </section>
   `;
 }
@@ -230,13 +286,15 @@ function renderSettings(): string {
 }
 
 const SCREEN_RENDERERS: Record<DestinationAtlasScreenId, () => string> = {
+  about: renderAbout,
   overview: renderOverview,
   destinations: renderDestinations,
-  map: renderMap,
-  globe: renderGlobe,
+  maps: renderMaps,
   media: renderMedia,
+  authoring: renderAuthoring,
   intel: renderIntel,
   plan: renderPlan,
+  views: renderViews,
   stack: renderStack,
   settings: renderSettings,
 };
@@ -307,10 +365,17 @@ function render(): void {
     return;
   }
 
-  const nav = DESTINATION_ATLAS_SCREENS.map(
-    (s) =>
+  const nav = DESTINATION_ATLAS_SCREENS.flatMap((s) => {
+    if (s.id === 'settings') {
+      return [
+        `<button type="button" data-open-scout aria-current="false">Scout</button>`,
+        `<button type="button" data-screen="${s.id}" aria-current="${state.screen === s.id ? 'page' : 'false'}">${s.label}</button>`,
+      ];
+    }
+    return [
       `<button type="button" data-screen="${s.id}" aria-current="${state.screen === s.id ? 'page' : 'false'}">${s.label}</button>`,
-  ).join('');
+    ];
+  }).join('');
 
   root.innerHTML = `
     <div class="da-shell">
@@ -328,6 +393,13 @@ function render(): void {
     </div>
   `;
 
+  root.querySelectorAll('[data-open-scout]').forEach((el) => {
+    el.addEventListener('click', () => {
+      state.screen = 'settings';
+      render();
+    });
+  });
+
   root.querySelectorAll('[data-screen]').forEach((el) => {
     el.addEventListener('click', () => {
       const id = (el as HTMLElement).dataset.screen as DestinationAtlasScreenId;
@@ -339,6 +411,13 @@ function render(): void {
   root.querySelectorAll('[data-select-dest]').forEach((el) => {
     el.addEventListener('click', () => {
       state.selectedId = (el as HTMLElement).dataset.selectDest ?? '';
+      render();
+    });
+  });
+
+  root.querySelectorAll('[data-maps-panel]').forEach((el) => {
+    el.addEventListener('click', () => {
+      state.mapsPanel = (el as HTMLElement).dataset.mapsPanel as 'map' | 'globe';
       render();
     });
   });
@@ -355,7 +434,7 @@ function render(): void {
     render();
   });
 
-  if (state.screen === 'map') {
+  if (state.screen === 'maps' && state.mapsPanel === 'map') {
     wireGeoMap(root);
   }
 

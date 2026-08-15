@@ -1,6 +1,7 @@
 import {
   buildMapTilerStyleUrl,
   canonicalConsumerSecretKey,
+  CONSUMER_AI_FIELDS,
   CONSUMER_INTEGRATION_FIELDS,
   ConsumerSecretsStore,
   GOOGLE_MAPS_API_KEY,
@@ -62,4 +63,12 @@ export function isAtlasKeyConfigured(store: ConsumerSecretsStore, envKey: string
 
 export function atlasIntegrationFields(): EnvFieldDefinition[] {
   return CONSUMER_INTEGRATION_FIELDS;
+}
+
+export function atlasAiFields(): EnvFieldDefinition[] {
+  return CONSUMER_AI_FIELDS;
+}
+
+export function atlasAllSecretFields(): EnvFieldDefinition[] {
+  return [...atlasIntegrationFields(), ...atlasAiFields()];
 }
