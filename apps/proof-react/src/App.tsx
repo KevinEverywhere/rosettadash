@@ -99,7 +99,10 @@ export function App() {
         ))}
       </nav>
       <ErrorBoundary label={activeScreen?.label ?? atlas.screen}>
-        <ScreenWorkbench source={SCREEN_SOURCES[atlas.screen] ?? ''} scrollablePreview={atlas.screen === 'about'}>
+        <ScreenWorkbench
+          source={SCREEN_SOURCES[atlas.screen] ?? ''}
+          scrollablePreview={atlas.screen === 'about' || atlas.screen === 'authoring'}
+        >
           {atlas.screen === 'about' ? <AboutScreen /> : null}
           {atlas.screen === 'overview' ? (
             <OverviewScreen locale={atlas.locale} userRole={atlas.userRole} />

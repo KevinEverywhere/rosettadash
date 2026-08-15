@@ -30,6 +30,7 @@ export interface WasmMediaProps {
     blob: Blob;
     metadata: Record<string, string | number | boolean | null | undefined>;
   }) => void;
+  onExtractError?: (detail: { message: string }) => void;
   onMetadata?: (
     detail: Record<string, string | number | boolean | null | undefined>,
   ) => void;
@@ -59,6 +60,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
     style,
     onProgress,
     onExtractComplete,
+    onExtractError,
     onMetadata,
   },
   ref,
@@ -77,12 +79,15 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
         cropHeight: 'crop-height',
         outputWidth: 'output-width',
         outputHeight: 'output-height',
+        yaw: 'yaw',
+        pitch: 'pitch',
         horizontalFov: 'horizontal-fov',
         reverse: 'reverse',
       },
       events: {
         progress: 'onProgress',
         'extract-complete': 'onExtractComplete',
+        'extract-error': 'onExtractError',
         metadata: 'onMetadata',
       },
     },
@@ -106,6 +111,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
     {
       onProgress: onProgress as ((detail: unknown) => void) | undefined,
       onExtractComplete: onExtractComplete as ((detail: unknown) => void) | undefined,
+      onExtractError: onExtractError as ((detail: unknown) => void) | undefined,
       onMetadata: onMetadata as ((detail: unknown) => void) | undefined,
     },
     ref,

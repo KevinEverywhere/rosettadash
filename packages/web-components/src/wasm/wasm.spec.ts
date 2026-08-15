@@ -38,4 +38,22 @@ describe('@rosettadash/web-components/wasm', () => {
 
     media.remove();
   });
+
+  it('includes reverse in rectilinear filter preview when reverse attribute is set', () => {
+    const media = document.createElement(DB_WASM_MEDIA_TAG) as RdWasmMediaElement;
+    document.body.appendChild(media);
+
+    media.setAttribute('operation', 'equirect-extract');
+    media.setAttribute('extraction-mode', 'rectilinear');
+    media.setAttribute('yaw', '25');
+    media.setAttribute('pitch', '-8');
+    media.setAttribute('horizontal-fov', '75');
+    media.setAttribute('output-width', '1280');
+    media.setAttribute('output-height', '720');
+    media.setAttribute('reverse', 'true');
+
+    expect(media.filterPreview).toContain('reverse');
+
+    media.remove();
+  });
 });

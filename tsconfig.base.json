@@ -276,6 +276,9 @@
       "@rosettadash/react/visual/media/equirect-viewport": [
         "./packages/react/src/visual/media/equirect-viewport/index.ts"
       ],
+      "@rosettadash/react/visual/media/equirect-sphere-viewport": [
+        "./packages/react/src/visual/media/equirect-sphere-viewport/index.ts"
+      ],
       "@rosettadash/react/visual/media/video-metadata": [
         "./packages/react/src/visual/media/video-metadata/index.ts"
       ],

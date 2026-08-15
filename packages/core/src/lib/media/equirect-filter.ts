@@ -45,10 +45,21 @@ export function buildEquirectRectilinearFilter(options: EquirectRectilinearOptio
   return reverse ? `${filter},reverse` : filter;
 }
 
-export type EquirectExtractOptions = EquirectFlatCropOptions &
-  Partial<Pick<EquirectRectilinearOptions, 'yaw' | 'pitch' | 'roll' | 'horizontalFov'>> & {
+export type EquirectRectilinearExtractOptions = EquirectRectilinearOptions & {
+  reverse?: boolean;
+};
+
+export type EquirectFlatCropExtractOptions = EquirectFlatCropOptions & {
+  reverse?: boolean;
+};
+
+/** Mode-specific fields; callers may include extras (ignored per mode). */
+export type EquirectExtractOptions = (Partial<EquirectFlatCropOptions> &
+  Partial<EquirectRectilinearOptions> & {
+    outputWidth: number;
+    outputHeight: number;
     reverse?: boolean;
-  };
+  });
 
 export function buildEquirectExtractFilter(
   mode: 'flat-crop' | 'rectilinear',
@@ -69,7 +80,17 @@ export function buildEquirectExtractFilter(
     );
   }
 
-  return buildEquirectFlatCropFilter(options, reverse);
+  return buildEquirectFlatCropFilter(
+    {
+      cropX: options.cropX ?? DEFAULT_EQUIRECT_FLAT_CROP.cropX,
+      cropY: options.cropY ?? DEFAULT_EQUIRECT_FLAT_CROP.cropY,
+      cropWidth: options.cropWidth ?? DEFAULT_EQUIRECT_FLAT_CROP.cropWidth,
+      cropHeight: options.cropHeight ?? DEFAULT_EQUIRECT_FLAT_CROP.cropHeight,
+      outputWidth: options.outputWidth,
+      outputHeight: options.outputHeight,
+    },
+    reverse,
+  );
 }
 
 /** Default crop centered on a 4096×2048 equirect frame. */

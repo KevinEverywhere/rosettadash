@@ -274,6 +274,11 @@
       "import": "./src/visual/media/equirect-viewport/index.js",
       "default": "./src/visual/media/equirect-viewport/index.js"
     },
+    "./visual/media/equirect-sphere-viewport": {
+      "types": "./src/visual/media/equirect-sphere-viewport/index.d.ts",
+      "import": "./src/visual/media/equirect-sphere-viewport/index.js",
+      "default": "./src/visual/media/equirect-sphere-viewport/index.js"
+    },
     "./visual/media/video-metadata": {
       "types": "./src/visual/media/video-metadata/index.d.ts",
       "import": "./src/visual/media/video-metadata/index.js",

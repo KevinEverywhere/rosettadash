@@ -22,7 +22,7 @@ interface FfmpegUtilModule {
 interface FfmpegInstance {
   loaded: boolean;
   on(event: 'progress', handler: (payload: { progress: number }) => void): void;
-  load(options: { coreURL: string; wasmURL: string }): Promise<void>;
+  load(options: { coreURL: string; wasmURL: string; workerURL?: string }): Promise<void>;
   writeFile(name: string, data: Uint8Array): Promise<void>;
   readFile(name: string): Promise<Uint8Array>;
   exec(args: string[]): Promise<void>;
@@ -39,6 +39,26 @@ export class RdWasmMediaElement extends HTMLElement {
   private error: string | null = null;
   private resourcesReady: Promise<void> | null = null;
   private extractListener: (() => void) | null = null;
+
+  static get observedAttributes(): string[] {
+    return [
+      'label',
+      'operation',
+      'extraction-mode',
+      'output-format',
+      'show-progress',
+      'reverse',
+      'yaw',
+      'pitch',
+      'horizontal-fov',
+      'crop-x',
+      'crop-y',
+      'crop-width',
+      'crop-height',
+      'output-width',
+      'output-height',
+    ];
+  }
 
   connectedCallback(): void {
     if (!this.shadowRoot) {
@@ -57,6 +77,12 @@ export class RdWasmMediaElement extends HTMLElement {
     this.extractListener = null;
   }
 
+  attributeChangedCallback(): void {
+    if (this.shadowRoot && this.resourcesReady) {
+      void this.resourcesReady.then(() => this.paint());
+    }
+  }
+
   setProperty(name: string, value: unknown): void {
     if (name === 'inputFile') {
       if (value instanceof Blob) {
@@ -69,6 +95,9 @@ export class RdWasmMediaElement extends HTMLElement {
       }
     } else if (name === 'cropRegion' && value && typeof value === 'object') {
       this.cropRegion = value as DashRow;
+      if (this.shadowRoot && this.resourcesReady) {
+        void this.resourcesReady.then(() => this.paint());
+      }
     } else {
       const attrMap: Record<string, string> = {
         outputFormat: 'output-format',
@@ -79,8 +108,11 @@ export class RdWasmMediaElement extends HTMLElement {
         cropHeight: 'crop-height',
         outputWidth: 'output-width',
         outputHeight: 'output-height',
+        yaw: 'yaw',
+        pitch: 'pitch',
         horizontalFov: 'horizontal-fov',
         showProgress: 'show-progress',
+        reverse: 'reverse',
       };
       const attr = attrMap[name] ?? name;
       if (value === null || value === undefined) {
@@ -120,7 +152,8 @@ export class RdWasmMediaElement extends HTMLElement {
   }
 
   get reverse(): boolean {
-    return this.getAttribute('reverse') === 'true';
+    const value = this.getAttribute('reverse');
+    return value === 'true' || value === '';
   }
 
   get filterPreview(): string {
@@ -239,6 +272,44 @@ export class RdWasmMediaElement extends HTMLElement {
     }
   }
 
+  private inputFileName(): string {
+    if (this.inputFile instanceof File) {
+      const extension = this.inputFile.name.split('.').pop()?.toLowerCase();
+      if (extension && /^[a-z0-9]+$/.test(extension)) {
+        return `input.${extension}`;
+      }
+    }
+    return 'input.mp4';
+  }
+
+  private outputFileName(): string {
+    const format = this.outputFormat.replace(/[^a-z0-9]/gi, '') || 'mp4';
+    return `output.${format}`;
+  }
+
+  private emitExtractError(message: string): void {
+    this.error = message;
+    this.dispatchEvent(
+      new CustomEvent('extract-error', {
+        detail: { message },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+    this.paint();
+  }
+
+  private blobFromFfmpegOutput(data: Uint8Array | string): Blob {
+    const bytes = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+    const mime =
+      this.outputFormat === 'webm'
+        ? 'video/webm'
+        : this.outputFormat === 'mp4'
+          ? 'video/mp4'
+          : `video/${this.outputFormat}`;
+    return new Blob([Uint8Array.from(bytes)], { type: mime });
+  }
+
   private async ensureFfmpeg(): Promise<FfmpegInstance> {
     if (this.ffmpeg?.loaded) {
       return this.ffmpeg;
@@ -270,6 +341,7 @@ export class RdWasmMediaElement extends HTMLElement {
     await ffmpeg.load({
       coreURL: await utilModule.toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
       wasmURL: await utilModule.toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+      workerURL: await utilModule.toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
     });
 
     this.ffmpeg = ffmpeg;
@@ -278,8 +350,7 @@ export class RdWasmMediaElement extends HTMLElement {
 
   async runEquirectExtract(): Promise<void> {
     if (!this.inputFile) {
-      this.error = 'Attach a video file before extracting.';
-      this.paint();
+      this.emitExtractError('Attach a video file before extracting.');
       return;
     }
 
@@ -291,8 +362,8 @@ export class RdWasmMediaElement extends HTMLElement {
     try {
       const ffmpeg = await this.ensureFfmpeg();
       const utilModule = (await import('@ffmpeg/util')) as FfmpegUtilModule;
-      const inputName = 'input.mp4';
-      const outputName = `output.${this.outputFormat}`;
+      const inputName = this.inputFileName();
+      const outputName = this.outputFileName();
       const crop = this.resolveCrop();
       const filter = buildEquirectExtractFilter(this.extractionMode, {
         ...crop,
@@ -303,9 +374,24 @@ export class RdWasmMediaElement extends HTMLElement {
       });
 
       await ffmpeg.writeFile(inputName, await utilModule.fetchFile(this.inputFile));
-      await ffmpeg.exec(['-i', inputName, '-vf', filter, '-c:a', 'copy', outputName]);
+      await ffmpeg.exec([
+        '-i',
+        inputName,
+        '-vf',
+        filter,
+        '-an',
+        '-c:v',
+        'libx264',
+        '-preset',
+        'ultrafast',
+        '-pix_fmt',
+        'yuv420p',
+        '-movflags',
+        'faststart',
+        outputName,
+      ]);
       const data = await ffmpeg.readFile(outputName);
-      const blob = new Blob([Uint8Array.from(data)], { type: `video/${this.outputFormat}` });
+      const blob = this.blobFromFfmpegOutput(data);
       const metadata: DashRow = {
         filter,
         outputWidth: crop.outputWidth,
@@ -329,7 +415,8 @@ export class RdWasmMediaElement extends HTMLElement {
         }),
       );
     } catch (nextError) {
-      this.error = nextError instanceof Error ? nextError.message : 'Extract failed';
+      const message = nextError instanceof Error ? nextError.message : 'Extract failed';
+      this.emitExtractError(message);
     } finally {
       this.busy = false;
       this.paint();

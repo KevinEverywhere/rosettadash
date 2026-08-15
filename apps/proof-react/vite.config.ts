@@ -28,10 +28,21 @@ export default defineConfig({
   server: {
     port: 4311,
     host: '0.0.0.0',
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  preview: {
+    port: 4311,
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
   },
   optimizeDeps: {
     include: ['leaflet', '@googlemaps/js-api-loader', 'three'],
-    exclude: ['maplibre-gl'],
+    exclude: ['maplibre-gl', '@ffmpeg/ffmpeg', '@ffmpeg/util'],
   },
   worker: {
     format: 'es',

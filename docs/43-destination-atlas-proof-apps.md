@@ -67,16 +67,18 @@ The **About** tab is the first screen and the **only** page-level scroller in ea
 
 Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/DAS-130). Shared copy: `libs/destination-atlas/src/data/about-guides.ts`.
 
-### Authoring tab (ffmpeg.wasm)
+### Authoring tab (Three.js sphere + ffmpeg.wasm)
 
-**Authoring** is separate from **Media**. Media is for watching destination embeds; Authoring is where users upload source video and run **ffmpeg.wasm** extract:
+**Authoring** is separate from **Media**. Media is for watching destination embeds; Authoring is where users upload 2:1 equirect video and frame an export:
 
-- **Source pane** — file upload, source video preview, equirect framing (yaw/pitch/FOV), scale, optional reverse, extract control
-- **Output pane** — live preview of the extracted MP4 blob + download
+- **Source pane** — `EquirectSphereViewport`: interior Three.js sphere (flipped texture), green export rectangle, orbit + Shift+drag framing, preset sizes (320×240, 640×360, 720×480, custom), ffmpeg.wasm extract
+- **Output pane** — live program-camera preview (matches export rectangle) + extracted MP4 blob + download
 
-Shipped with one example: **Cusco plaza (360° equirect)** (`libs/destination-atlas/src/data/authoring-examples.ts`). Requires optional `@ffmpeg/ffmpeg` + `@ffmpeg/util` peers.
+Shipped with one example: **Cusco plaza (360° equirect)** (`libs/destination-atlas/src/data/authoring-examples.ts`).
 
-Implemented in React proof: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131). Editor/Admin roles only.
+**Dev setup (proof-react):** from repo root run `npm install` (includes `@ffmpeg/ffmpeg` + `@ffmpeg/util` as devDependencies). The Vite dev server sets COOP/COEP headers required for ffmpeg.wasm SharedArrayBuffer. First extract downloads ~31 MB of `@ffmpeg/core` from unpkg.
+
+Implemented in React proof: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131) (tab shell); [DAS-132](https://planetkevin.atlassian.net/browse/DAS-132) (sphere viewport + WASM extract on branch `feature/DAS-132-wasm-authoring-extract`). Editor/Admin roles only.
 
 ## Geo-map providers
 

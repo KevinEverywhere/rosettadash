@@ -70,6 +70,7 @@
           "packages/react/src/visual/kpi/index.ts",
           "packages/react/src/visual/link-list/index.ts",
           "packages/react/src/visual/media/equirect-viewport/index.ts",
+          "packages/react/src/visual/media/equirect-sphere-viewport/index.ts",
           "packages/react/src/visual/media/live-capture/index.ts",
           "packages/react/src/visual/media/video-source/index.ts",
           "packages/react/src/visual/media/youtube-embed/index.ts",
