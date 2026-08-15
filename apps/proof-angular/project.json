@@ -1,0 +1,38 @@
+{
+  "name": "proof-angular",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/proof-angular/src",
+  "tags": ["scope:destination-atlas", "type:proof-app"],
+  "implicitDependencies": ["runtime-angular", "web-components", "destination-atlas"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite",
+        "cwd": "apps/proof-angular"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/proof-angular"],
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/proof-angular"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview --port 4312",
+        "cwd": "apps/proof-angular"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/proof-angular/tsconfig.json"
+      }
+    }
+  }
+}

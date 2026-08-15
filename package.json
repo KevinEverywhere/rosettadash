@@ -53,7 +53,9 @@
     "proof:web-components": "nx serve proof-web-components",
     "proof:web-components:build": "nx build proof-web-components",
     "proof:react": "nx serve proof-react",
-    "proof:react:build": "nx build proof-react"
+    "proof:react:build": "nx build proof-react",
+    "proof:angular": "nx serve proof-angular",
+    "proof:angular:build": "nx build proof-angular"
   },
   "private": true,
   "packageManager": "npm@11.17.0",

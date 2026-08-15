@@ -1,0 +1,148 @@
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { DESTINATION_ATLAS_SCREENS } from '@destination-atlas';
+import { screenAllowedForRole } from './lib/roles';
+import { SCREEN_SOURCES } from './lib/screen-sources';
+import type { SettingFieldTarget } from './lib/settings-highlight';
+import { AtlasStateService } from './services/atlas-state.service';
+import { ThemeService } from './services/theme.service';
+import { AtlasContextSummaryComponent } from './components/atlas-context-summary.component';
+import {
+  ComponentSourcePanelComponent,
+  ScreenWorkbenchMobileToggleComponent,
+  ScreenWorkbenchPreviewComponent,
+} from './components/screen-workbench.component';
+import { AboutScreenComponent } from './screens/about-screen.component';
+import { OverviewScreenComponent } from './screens/overview-screen.component';
+import { GapScreenComponent } from './screens/gap-screen.component';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [
+    RouterLink,
+    AtlasContextSummaryComponent,
+    ScreenWorkbenchMobileToggleComponent,
+    ScreenWorkbenchPreviewComponent,
+    ComponentSourcePanelComponent,
+    AboutScreenComponent,
+    OverviewScreenComponent,
+    GapScreenComponent,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="da-shell">
+      <header class="da-header">
+        <h1>Destination Atlas</h1>
+        <p>Current and historic information about world locations — Angular proof (DAS-123)</p>
+      </header>
+
+      <div class="da-body-row">
+        <div class="da-preview-column">
+          <div class="da-context-strip">
+            <da-atlas-context-summary
+              [locale]="atlas.locale()"
+              [userRole]="atlas.userRole()"
+              [mapProvider]="atlas.mapProvider()"
+              [selectedId]="atlas.selectedId()"
+              [theme]="theme.theme()"
+              (openSetting)="openSetting($event)"
+            />
+          </div>
+
+          <nav class="da-nav da-tabbar" aria-label="Screens">
+            @for (screen of navScreensBeforeScout(); track screen.id) {
+              <a
+                class="da-tabbar__tab"
+                [routerLink]="atlas.screenRouterLink(screen.id).path"
+                [queryParams]="atlas.screenRouterLink(screen.id).queryParams"
+                [attr.aria-current]="atlas.screen() === screen.id ? 'page' : null"
+              >
+                {{ screen.label }}
+              </a>
+            }
+            <button
+              type="button"
+              class="da-tabbar__tab"
+              [attr.aria-current]="atlas.settingsScoutFocus() ? 'page' : null"
+              (click)="atlas.openScoutSettings()"
+            >
+              Scout
+            </button>
+            @for (screen of navScreensFromSettings(); track screen.id) {
+              <a
+                class="da-tabbar__tab"
+                [routerLink]="atlas.screenRouterLink(screen.id).path"
+                [queryParams]="atlas.screenRouterLink(screen.id).queryParams"
+                [attr.aria-current]="
+                  atlas.screen() === screen.id && !atlas.settingsScoutFocus() ? 'page' : null
+                "
+              >
+                {{ screen.label }}
+              </a>
+            }
+          </nav>
+
+          <div class="da-workbench-host">
+            <da-screen-workbench-mobile-toggle
+              [mobileView]="mobileView()"
+              (viewChange)="mobileView.set($event)"
+            />
+            <da-screen-workbench-preview [mobileView]="mobileView()">
+              @switch (atlas.screen()) {
+                @case ('about') {
+                  <da-about-screen />
+                }
+                @case ('overview') {
+                  <da-overview-screen [locale]="atlas.locale()" [userRole]="atlas.userRole()" />
+                }
+                @default {
+                  <da-gap-screen [screenId]="atlas.screen()" [label]="activeScreenLabel()" />
+                }
+              }
+            </da-screen-workbench-preview>
+          </div>
+        </div>
+
+        <da-component-source-panel
+          [source]="activeSource()"
+          [hidden]="mobileView() === 'preview'"
+        />
+      </div>
+    </div>
+  `,
+})
+export class AppComponent {
+  readonly atlas = inject(AtlasStateService);
+  readonly theme = inject(ThemeService);
+
+  readonly mobileView = signal<'preview' | 'source'>('preview');
+
+  readonly visibleScreens = computed(() =>
+    DESTINATION_ATLAS_SCREENS.filter((screen) => screenAllowedForRole(screen.id, this.atlas.userRole())),
+  );
+
+  readonly navScreensBeforeScout = computed(() => {
+    const screens = this.visibleScreens();
+    const settingsIndex = screens.findIndex((screen) => screen.id === 'settings');
+    return settingsIndex >= 0 ? screens.slice(0, settingsIndex) : screens;
+  });
+
+  readonly navScreensFromSettings = computed(() => {
+    const screens = this.visibleScreens();
+    const settingsIndex = screens.findIndex((screen) => screen.id === 'settings');
+    return settingsIndex >= 0 ? screens.slice(settingsIndex) : [];
+  });
+
+  readonly activeScreenLabel = computed(() => {
+    const active = DESTINATION_ATLAS_SCREENS.find((screen) => screen.id === this.atlas.screen());
+    return active?.label ?? this.atlas.screen();
+  });
+
+  readonly activeSource = computed(() => SCREEN_SOURCES[this.atlas.screen()] ?? '');
+
+  openSetting(field: SettingFieldTarget | 'theme' | 'ai'): void {
+    this.atlas.setHighlightTarget(field === 'theme' ? 'theme' : field === 'ai' ? 'ai' : field);
+    this.atlas.setScreen('settings');
+  }
+}
