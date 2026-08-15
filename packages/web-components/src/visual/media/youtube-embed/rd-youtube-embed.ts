@@ -145,6 +145,7 @@ export class RdYoutubeEmbedElement extends HTMLElement {
     iframe.hidden = false;
     empty.hidden = true;
     iframe.title = this.embedTitle;
+    (iframe as HTMLIFrameElement & { credentialless?: boolean }).credentialless = true;
     iframe.src = buildYouTubeEmbedUrl(id, {
       start: this.start,
       autoplay: this.autoplay,

@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   type Ref,
   type RefCallback,
@@ -76,7 +77,7 @@ export function useCustomElementHost(
 
   const propertyKeys = options.properties ?? [];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = host.current;
     if (!el) {
       return;

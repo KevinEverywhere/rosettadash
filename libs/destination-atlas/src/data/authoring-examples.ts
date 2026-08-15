@@ -5,6 +5,8 @@ export interface AuthoringExample {
   label: string;
   summary: string;
   projection: 'equirect' | 'flat';
+  /** Shipped sample video URL (must be CORS-readable for in-browser sphere preview). */
+  sourceVideoUrl?: string;
   defaultYaw: number;
   defaultPitch: number;
   defaultHorizontalFov: number;
@@ -18,8 +20,9 @@ export const DESTINATION_ATLAS_AUTHORING_EXAMPLES: AuthoringExample[] = [
     destinationId: 'cusco',
     label: 'Cusco plaza (360° equirect)',
     summary:
-      'Reference equirectangular workflow — load a local 360° MP4/WebM, frame a rectilinear subsection, and extract with ffmpeg.wasm.',
+      'Reference equirectangular workflow — explore the plaza in the sphere viewport, frame a rectilinear subsection, and extract with ffmpeg.wasm.',
     projection: 'equirect',
+    sourceVideoUrl: '/media/cusco-plaza-360.webm',
     defaultYaw: 25,
     defaultPitch: -8,
     defaultHorizontalFov: 75,
@@ -32,4 +35,10 @@ export const DEFAULT_AUTHORING_EXAMPLE_ID = DESTINATION_ATLAS_AUTHORING_EXAMPLES
 
 export function getAuthoringExampleById(id: string): AuthoringExample | undefined {
   return DESTINATION_ATLAS_AUTHORING_EXAMPLES.find((entry) => entry.id === id);
+}
+
+export function getAuthoringExampleForDestinationId(
+  destinationId: string,
+): AuthoringExample | undefined {
+  return DESTINATION_ATLAS_AUTHORING_EXAMPLES.find((entry) => entry.destinationId === destinationId);
 }

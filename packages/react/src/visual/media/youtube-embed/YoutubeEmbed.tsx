@@ -39,5 +39,7 @@ export const YoutubeEmbed = forwardRef<HTMLElement, YoutubeEmbedProps>(function 
     ref: hostRef,
     className,
     style,
+    'video-id': videoId ?? undefined,
+    'embed-title': title ?? undefined,
   });
 });

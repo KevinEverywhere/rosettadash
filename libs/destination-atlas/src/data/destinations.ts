@@ -47,6 +47,7 @@ export const MOCK_DESTINATIONS: Destination[] = [
     youtubeId: '1La4QzGeaaQ',
     videoProjection: 'equirect',
     equirectUrl: '/media/cusco-plaza-360.jpg',
+    equirectVideoUrl: '/media/cusco-plaza-360.webm',
     visitorsCurrent: 1_450_000,
     visitorsHistoric: [
       { year: 2019, visitors: 1_620_000 },

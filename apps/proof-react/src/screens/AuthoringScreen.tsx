@@ -18,7 +18,9 @@ import {
   DEFAULT_AUTHORING_EXAMPLE_ID,
   DESTINATION_ATLAS_AUTHORING_EXAMPLES,
   getAuthoringExampleById,
+  getAuthoringExampleForDestinationId,
   getDestinationById,
+  resolveEquirectSourceVideoUrl,
 } from '@destination-atlas';
 import { AuthoringPlaybackBar } from '../components/AuthoringPlaybackBar';
 import { AuthoringCameraControls } from '../components/AuthoringCameraControls';
@@ -37,10 +39,18 @@ function matchOutputPreset(width: number, height: number): string {
   return match?.id ?? AUTHORING_OUTPUT_CUSTOM_ID;
 }
 
-export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
+export function AuthoringScreen({
+  locale = 'en',
+  selectedId,
+}: {
+  locale?: string;
+  selectedId?: string;
+}) {
   const [exampleId, setExampleId] = useState(DEFAULT_AUTHORING_EXAMPLE_ID);
   const [inputFile, setInputFile] = useState<File | null>(null);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
+  const [sourceLoadBusy, setSourceLoadBusy] = useState(false);
+  const [sourceLoadError, setSourceLoadError] = useState<string | null>(null);
   const [cropRegion, setCropRegion] = useState<CropRegion | null>(null);
   const [extractUrl, setExtractUrl] = useState<string | null>(null);
   const [extractFilter, setExtractFilter] = useState('');
@@ -63,6 +73,7 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
 
   const outputPreviewHostRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<EquirectSphereViewportHandle>(null);
+  const userPickedFileRef = useRef(false);
 
   const isEquirectExample = example?.projection === 'equirect';
   const isCustomOutput = outputPresetId === AUTHORING_OUTPUT_CUSTOM_ID;
@@ -72,7 +83,24 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
     isEquirectExample && sourceAspect !== null && Math.abs(sourceAspect - 2) > 0.05;
 
   useEffect(() => {
+    if (!selectedId) {
+      return;
+    }
+    const linkedExample = getAuthoringExampleForDestinationId(selectedId);
+    if (linkedExample) {
+      setExampleId(linkedExample.id);
+    }
+  }, [selectedId]);
+
+  useEffect(() => {
+    userPickedFileRef.current = false;
+  }, [selectedId, exampleId]);
+
+  useEffect(() => {
     if (!example) {
+      return;
+    }
+    if (userPickedFileRef.current) {
       return;
     }
     setYaw(example.defaultYaw);
@@ -82,7 +110,6 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
     setOutputPresetId('720x480');
     setOutputWidth(preset?.width ?? 720);
     setOutputHeight(preset?.height ?? 480);
-    setInputFile(null);
     setSourceWidth(undefined);
     setSourceHeight(undefined);
     setCropRegion(null);
@@ -96,16 +123,66 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
       }
       return null;
     });
-  }, [exampleId, example]);
+
+    const destination = selectedId ? getDestinationById(selectedId) : undefined;
+    const shippedUrl = resolveEquirectSourceVideoUrl(destination);
+    const shouldLoadShipped =
+      Boolean(selectedId) &&
+      example.destinationId === selectedId &&
+      Boolean(shippedUrl);
+
+    if (!shouldLoadShipped || !shippedUrl || !destination) {
+      setInputFile(null);
+      setSourceUrl(null);
+      setSourceLoadBusy(false);
+      setSourceLoadError(null);
+      return;
+    }
+
+    let cancelled = false;
+    setSourceLoadError(null);
+    setSourceLoadBusy(true);
+    setInputFile(null);
+    setSourceUrl(null);
+
+    void (async () => {
+      try {
+        const response = await fetch(shippedUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const blob = await response.blob();
+        if (cancelled || userPickedFileRef.current) {
+          return;
+        }
+        const ext = shippedUrl.includes('.webm') ? 'webm' : 'mp4';
+        setInputFile(
+          new File([blob], `${destination.id}-equirect.${ext}`, {
+            type: blob.type || `video/${ext}`,
+          }),
+        );
+      } catch (error) {
+        if (cancelled) {
+          return;
+        }
+        setSourceLoadError(
+          error instanceof Error ? error.message : 'Could not load shipped 360° video',
+        );
+        setSourceUrl(shippedUrl);
+      } finally {
+        if (!cancelled) {
+          setSourceLoadBusy(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [exampleId, example, selectedId]);
 
   useEffect(() => {
     if (!inputFile) {
-      setSourceUrl((previous) => {
-        if (previous) {
-          URL.revokeObjectURL(previous);
-        }
-        return null;
-      });
       return;
     }
     const url = URL.createObjectURL(inputFile);
@@ -171,6 +248,50 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
     setOutputPresetId(matchOutputPreset(width, height));
   };
 
+  const handleVideoFile = (detail: {
+    file: File;
+    metadata: Record<string, string | number | boolean | null | undefined>;
+  }) => {
+    userPickedFileRef.current = true;
+    setSourceLoadBusy(false);
+    setSourceLoadError(null);
+    setInputFile(detail.file);
+    if (example) {
+      setYaw(example.defaultYaw);
+      setPitch(example.defaultPitch);
+      setHorizontalFov(example.defaultHorizontalFov);
+    }
+    const width = Number(detail.metadata.sourceWidth);
+    const height = Number(detail.metadata.sourceHeight);
+    if (Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0) {
+      setSourceWidth(width);
+      setSourceHeight(height);
+    } else {
+      setSourceWidth(undefined);
+      setSourceHeight(undefined);
+    }
+    setExtractUrl((previous) => {
+      if (previous) {
+        URL.revokeObjectURL(previous);
+      }
+      return null;
+    });
+    setExtractProgress(0);
+    setExtractError(null);
+    setExtractBusy(false);
+  };
+
+  const authoringVideoSource = (
+    <VideoSource
+      className="da-authoring-upload"
+      label="Authoring video file"
+      accept="video/*"
+      sourceWidth={sourceWidth}
+      sourceHeight={sourceHeight}
+      onVideoFile={handleVideoFile}
+    />
+  );
+
   return (
     <section className="da-panel da-panel--authoring">
       <h2>Authoring</h2>
@@ -189,6 +310,31 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
         onChange={setExampleId}
       />
       {example ? <p className="da-note">{example.summary}</p> : null}
+      {sourceLoadBusy ? (
+        <p className="da-note" aria-live="polite">
+          Loading shipped 360° source…
+        </p>
+      ) : null}
+      {sourceLoadError ? (
+        <p className="da-note da-note--warn" role="alert">
+          Shipped video fetch failed ({sourceLoadError}). Choose a local 2:1 equirect file below.
+        </p>
+      ) : null}
+
+      <section className="da-authoring-upload-panel" aria-label="Source video file">
+        <h3 className="da-authoring-upload-panel__title">Source video</h3>
+        <p className="da-note">
+          Pick a local 2:1 equirect MP4/WebM, or use the shipped example when available at{' '}
+          <code>/media/cusco-plaza-360.webm</code>.
+        </p>
+        {authoringVideoSource}
+        {inputFile ? (
+          <p className="da-note">
+            Loaded: <strong>{inputFile.name}</strong>
+            {sourceWidth && sourceHeight ? ` (${sourceWidth}×${sourceHeight})` : ''}
+          </p>
+        ) : null}
+      </section>
 
       <div className="da-authoring-workspace">
         <header className="da-authoring-workspace__headers">
@@ -244,38 +390,6 @@ export function AuthoringScreen({ locale = 'en' }: { locale?: string }) {
                 setYaw(example.defaultYaw);
                 setPitch(example.defaultPitch);
                 setHorizontalFov(example.defaultHorizontalFov);
-              }}
-            />
-            <VideoSource
-              label="Authoring video file"
-              accept="video/*"
-              sourceWidth={sourceWidth}
-              sourceHeight={sourceHeight}
-              onVideoFile={(detail) => {
-                setInputFile(detail.file);
-                if (example) {
-                  setYaw(example.defaultYaw);
-                  setPitch(example.defaultPitch);
-                  setHorizontalFov(example.defaultHorizontalFov);
-                }
-                const width = Number(detail.metadata.sourceWidth);
-                const height = Number(detail.metadata.sourceHeight);
-                if (Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0) {
-                  setSourceWidth(width);
-                  setSourceHeight(height);
-                } else {
-                  setSourceWidth(undefined);
-                  setSourceHeight(undefined);
-                }
-                setExtractUrl((previous) => {
-                  if (previous) {
-                    URL.revokeObjectURL(previous);
-                  }
-                  return null;
-                });
-                setExtractProgress(0);
-                setExtractError(null);
-                setExtractBusy(false);
               }}
             />
             <AuthoringCameraControls

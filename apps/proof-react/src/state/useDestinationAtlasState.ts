@@ -49,6 +49,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   setVisitPeriod: (range: { startDate: string; endDate: string }) => void;
   setUserRole: (role: AtlasUserRole) => void;
   setHighlightTarget: (target: 'locale' | null) => void;
+  openAuthoringForDestination: (destinationId: string) => void;
 } {
   const location = useLocation();
   const navigate = useNavigate();
@@ -169,6 +170,13 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
     [navigateAtlas],
   );
 
+  const openAuthoringForDestination = useCallback(
+    (destinationId: string) => {
+      navigateAtlas('authoring', { ...atlasQuery, dest: destinationId });
+    },
+    [atlasQuery, navigateAtlas],
+  );
+
   useEffect(() => {
     if (!isKnownDestinationAtlasPath(location.pathname)) {
       navigateAtlas('about', atlasQuery, true);
@@ -217,6 +225,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       setVisitPeriod,
       setUserRole,
       setHighlightTarget,
+      openAuthoringForDestination,
     }),
     [
       screen,
@@ -243,6 +252,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       setUserRole,
       focusDestinationOnMap,
       goToMapView,
+      openAuthoringForDestination,
     ],
   );
 }

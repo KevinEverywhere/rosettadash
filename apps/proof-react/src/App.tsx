@@ -177,9 +177,12 @@ export function App() {
               locale={atlas.locale}
               selectedId={atlas.selectedId}
               setSelectedId={atlas.setSelectedId}
+              openAuthoringForDestination={atlas.openAuthoringForDestination}
             />
           ) : null}
-          {atlas.screen === 'authoring' ? <AuthoringScreen locale={atlas.locale} /> : null}
+          {atlas.screen === 'authoring' ? (
+            <AuthoringScreen locale={atlas.locale} selectedId={atlas.selectedId} />
+          ) : null}
           {atlas.screen === 'intel' ? (
             <IntelScreen
               userRole={atlas.userRole}

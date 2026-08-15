@@ -1,76 +1,109 @@
+import { useEffect } from 'react';
 import { YoutubeEmbed } from '@rosettadash/react/visual/media/youtube-embed';
 import { VideoMetadataPanel } from '@rosettadash/react/visual/media/video-metadata';
 import { SelectInput } from '@rosettadash/react/visual/input/select';
-import { getDestinationById, MOCK_DESTINATIONS } from '@destination-atlas';
+import {
+  EQUIRECT_VIDEO_DESTINATIONS,
+  FLAT_VIDEO_DESTINATIONS,
+  destinationHasFlatVideo,
+  getDestinationById,
+  isEquirectDestination,
+} from '@destination-atlas';
 import type { AtlasContext } from '../state/useDestinationAtlasState';
 import { localizedDestinationName } from '../lib/atlas-utils';
 
 export const MEDIA_SOURCE = `<MediaScreen selectedId={selectedId}>
-  <SelectInput label="Destination video" value={selectedId} />
+  <SelectInput label="Flat video (YouTube)" … />
+  <SelectInput label="360° video (Authoring)" … />
   <YoutubeEmbed videoId={selected.youtubeId} controls />
   <VideoMetadataPanel items={videoMetadata} />
 </MediaScreen>`;
 
-type Props = Pick<AtlasContext, 'locale' | 'selectedId' | 'setSelectedId'>;
+type Props = Pick<AtlasContext, 'locale' | 'selectedId' | 'setSelectedId'> & {
+  openAuthoringForDestination: (destinationId: string) => void;
+};
 
-function isEquirectVideo(dest: ReturnType<typeof getDestinationById>): boolean {
-  return dest?.videoProjection === 'equirect' || Boolean(dest?.equirectUrl);
-}
-
-export function MediaScreen({ locale, selectedId, setSelectedId }: Props) {
-  const videoDestinations = MOCK_DESTINATIONS.filter((dest) => dest.youtubeId);
+export function MediaScreen({
+  locale,
+  selectedId,
+  setSelectedId,
+  openAuthoringForDestination,
+}: Props) {
   const selected = getDestinationById(selectedId);
-  const is360 = isEquirectVideo(selected);
+  const flatSelected = destinationHasFlatVideo(selected) ? selected : undefined;
+  const equirectSelected = isEquirectDestination(selected) ? selected : undefined;
 
-  const metadataItems = selected
+  useEffect(() => {
+    if (equirectSelected) {
+      openAuthoringForDestination(equirectSelected.id);
+    }
+  }, [equirectSelected, openAuthoringForDestination]);
+
+  const metadataItems = flatSelected
     ? [
-        { label: 'Destination', value: localizedDestinationName(selected, locale) },
-        { label: 'Source', value: selected.youtubeId ? 'YouTube embed' : 'None' },
-        {
-          label: 'Projection',
-          value: is360 ? 'Equirectangular (360°)' : 'Flat / standard',
-        },
-        { label: 'Video id', value: selected.youtubeId ?? '—' },
-        { label: 'Region', value: selected.region },
+        { label: 'Destination', value: localizedDestinationName(flatSelected, locale) },
+        { label: 'Source', value: 'YouTube embed' },
+        { label: 'Projection', value: 'Flat / standard' },
+        { label: 'Video id', value: flatSelected.youtubeId ?? '—' },
+        { label: 'Region', value: flatSelected.region },
       ]
     : [];
+
+  const handleFlatChange = (destinationId: string) => {
+    setSelectedId(destinationId);
+  };
+
+  const handleEquirectChange = (destinationId: string) => {
+    openAuthoringForDestination(destinationId);
+  };
 
   return (
     <section className="da-panel">
       <h2>Media</h2>
-      <p>Browse and watch destination videos. Upload, crop, and WASM extract live on the Authoring tab.</p>
+      <p>
+        Watch flat destination videos here. 360° equirectangular locations open in{' '}
+        <strong>Authoring</strong> with the shipped source loaded in the sphere viewport.
+      </p>
       <div className="rd-media-layout">
         <div className="rd-media-primary">
           <SelectInput
-            label="Destination video"
-            options={videoDestinations.map((dest) => ({
+            label="Flat video (YouTube)"
+            options={FLAT_VIDEO_DESTINATIONS.map((dest) => ({
               value: dest.id,
               label: localizedDestinationName(dest, locale),
             }))}
-            value={selectedId}
-            onChange={setSelectedId}
+            value={flatSelected?.id ?? ''}
+            onChange={handleFlatChange}
           />
-          {selected?.youtubeId ? (
+          {flatSelected?.youtubeId ? (
             <YoutubeEmbed
               className="rd-youtube-embed-host"
-              videoId={selected.youtubeId}
-              title={`${localizedDestinationName(selected, locale)} — destination video`}
+              videoId={flatSelected.youtubeId}
+              title={`${localizedDestinationName(flatSelected, locale)} — destination video`}
               controls
             />
           ) : (
-            <p className="da-note">Select a destination with a YouTube id.</p>
+            <p className="da-note">Select a flat destination video to play the YouTube embed.</p>
           )}
+
+          <SelectInput
+            label="360° video (Authoring)"
+            options={EQUIRECT_VIDEO_DESTINATIONS.map((dest) => ({
+              value: dest.id,
+              label: `${localizedDestinationName(dest, locale)} · 360°`,
+            }))}
+            value={equirectSelected?.id ?? ''}
+            onChange={handleEquirectChange}
+          />
+          <p className="da-note">
+            Choosing a 360° destination switches to the Authoring tab and loads its equirect source
+            for sphere preview and ffmpeg.wasm extract.
+          </p>
         </div>
         <div className="rd-media-tools">
           <VideoMetadataPanel items={metadataItems} />
         </div>
       </div>
-      {is360 && selected?.equirectUrl ? (
-        <p className="da-note">
-          This destination has equirect metadata (<code>{selected.equirectUrl}</code>). Use{' '}
-          <strong>Authoring</strong> to load a local 360° file and run ffmpeg.wasm extract.
-        </p>
-      ) : null}
     </section>
   );
 }

@@ -39,6 +39,8 @@ export const VideoSource = forwardRef<HTMLElement, VideoSourceProps>(function Vi
     {
       register: registerRdVideoSource,
       attrs: {
+        label: 'label',
+        accept: 'accept',
         sourceWidth: 'source-width',
         sourceHeight: 'source-height',
       },

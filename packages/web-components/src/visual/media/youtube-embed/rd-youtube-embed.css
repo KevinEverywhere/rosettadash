@@ -32,3 +32,11 @@
   font-size: 0.875rem;
   color: var(--rd-color-muted, #6b7280);
 }
+
+.rd-media-youtube-embed__iframe[hidden] {
+  display: none !important;
+}
+
+.rd-media-youtube-embed__empty[hidden] {
+  display: none !important;
+}

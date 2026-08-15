@@ -56,6 +56,8 @@ export interface Destination {
   /** When `equirect`, show 360° tooling; default flat for standard video. */
   videoProjection?: 'flat' | 'equirect';
   equirectUrl?: string;
+  /** Shipped 360° source video for Authoring (CORS-readable URL). */
+  equirectVideoUrl?: string;
   visitorsCurrent: number;
   visitorsHistoric: DestinationHistoricStat[];
   /** Optional per-locale labels — wired by developer i18n, not RosettaDash chrome. */

@@ -478,6 +478,24 @@ body {
   margin-top: 1rem;
 }
 
+.da-authoring-upload-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--da-border);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--da-accent) 6%, var(--da-panel-bg));
+}
+
+.da-authoring-upload-panel__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.da-authoring-upload {
+  display: block;
+  margin-top: 0.75rem;
+}
+
 .da-authoring-workspace__headers {
   grid-area: headers;
   display: grid;
