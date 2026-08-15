@@ -14,6 +14,10 @@ import {
 } from './components/screen-workbench.component';
 import { AboutScreenComponent } from './screens/about-screen.component';
 import { OverviewScreenComponent } from './screens/overview-screen.component';
+import { SettingsScreenComponent } from './screens/settings-screen.component';
+import { MapsScreenComponent } from './screens/maps-screen.component';
+import { DestinationsScreenComponent } from './screens/destinations-screen.component';
+import { IntelScreenComponent } from './screens/intel-screen.component';
 import { GapScreenComponent } from './screens/gap-screen.component';
 
 @Component({
@@ -27,6 +31,10 @@ import { GapScreenComponent } from './screens/gap-screen.component';
     ComponentSourcePanelComponent,
     AboutScreenComponent,
     OverviewScreenComponent,
+    SettingsScreenComponent,
+    MapsScreenComponent,
+    DestinationsScreenComponent,
+    IntelScreenComponent,
     GapScreenComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +42,7 @@ import { GapScreenComponent } from './screens/gap-screen.component';
     <div class="da-shell">
       <header class="da-header">
         <h1>Destination Atlas</h1>
-        <p>Current and historic information about world locations — Angular proof (DAS-123)</p>
+        <p>Current and historic information about world locations — Angular proof (DAS-138)</p>
       </header>
 
       <div class="da-body-row">
@@ -95,6 +103,18 @@ import { GapScreenComponent } from './screens/gap-screen.component';
                 }
                 @case ('overview') {
                   <da-overview-screen [locale]="atlas.locale()" [userRole]="atlas.userRole()" />
+                }
+                @case ('settings') {
+                  <da-settings-screen />
+                }
+                @case ('maps') {
+                  <da-maps-screen />
+                }
+                @case ('destinations') {
+                  <da-destinations-screen />
+                }
+                @case ('intel') {
+                  <da-intel-screen />
                 }
                 @default {
                   <da-gap-screen [screenId]="atlas.screen()" [label]="activeScreenLabel()" />

@@ -73,6 +73,14 @@ body {
   min-width: var(--da-stage-min);
 }
 
+.da-table-row--clickable {
+  cursor: pointer;
+}
+
+.da-table-row--clickable:hover {
+  background: color-mix(in srgb, var(--rd-color-accent, #3b82f6) 8%, transparent);
+}
+
 .da-shell {
   width: 100%;
   min-width: var(--da-stage-min);

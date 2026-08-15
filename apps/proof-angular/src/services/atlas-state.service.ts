@@ -84,6 +84,11 @@ export class AtlasStateService {
     this.syncFromRouter();
     this.applyLegacyRedirects();
     this.applyGuards();
+    queueMicrotask(() => {
+      this.syncFromRouter();
+      this.applyLegacyRedirects();
+      this.applyGuards();
+    });
   }
 
   private syncFromRouter(): void {
