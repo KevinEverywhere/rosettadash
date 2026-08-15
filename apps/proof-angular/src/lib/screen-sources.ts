@@ -32,11 +32,44 @@ export const DESTINATIONS_SOURCE = `<DestinationsScreen>
   </rd-flex>
 </DestinationsScreen>`;
 
+export const MEDIA_SOURCE = `<MediaScreen>
+  <da-bound-select-input label="Flat video (YouTube)" />
+  <rd-youtube-embed />
+  <da-bound-select-input label="360° video (Authoring)" />
+  <da-video-metadata-panel />
+</MediaScreen>`;
+
+export const AUTHORING_SOURCE = `<AuthoringScreen>
+  <rd-video-source />
+  <rd-equirect-sphere-viewport />
+  <rd-wasm-media operation="equirect-extract" />
+</AuthoringScreen>`;
+
 export const INTEL_SOURCE = `<IntelScreen>
   <da-role-gate-panel>…search + region…</da-role-gate-panel>
   <section class="rd-news-results-table">…</section>
   <rd-news-article-detail>…</rd-news-article-detail>
 </IntelScreen>`;
+
+export const PLAN_SOURCE = `<PlanScreen>
+  <da-role-gate-panel label="Trip editor">
+    <da-form-section-grid>…</da-form-section-grid>
+  </da-role-gate-panel>
+  <rd-timer />
+</PlanScreen>`;
+
+export const VIEWS_SOURCE = `<ViewsScreen>
+  <da-journey-sankey-chart />
+  <da-venn-overlap-chart />
+  <rd-display-3d-scatter />
+  <da-slide-carousel />
+</ViewsScreen>`;
+
+export const STACK_SOURCE = `<StackScreen>
+  <da-role-gate-panel label="Infrastructure stack">
+    <rd-postgresql /> … infra nodes …
+  </da-role-gate-panel>
+</StackScreen>`;
 
 export const GAP_SOURCE = `<GapScreen screenId="..." runtime="angular">…</GapScreen>`;
 
@@ -46,9 +79,10 @@ export const SCREEN_SOURCES: Record<string, string> = {
   settings: SETTINGS_SOURCE,
   maps: MAPS_SOURCE,
   destinations: DESTINATIONS_SOURCE,
+  media: MEDIA_SOURCE,
+  authoring: AUTHORING_SOURCE,
   intel: INTEL_SOURCE,
-  media: GAP_SOURCE,
-  plan: GAP_SOURCE,
-  views: GAP_SOURCE,
-  stack: GAP_SOURCE,
+  plan: PLAN_SOURCE,
+  views: VIEWS_SOURCE,
+  stack: STACK_SOURCE,
 };

@@ -70,6 +70,7 @@
           "packages/angular/src/visual/kpi/index.ts",
           "packages/angular/src/visual/link-list/index.ts",
           "packages/angular/src/visual/media/equirect-viewport/index.ts",
+          "packages/angular/src/visual/media/equirect-sphere-viewport/index.ts",
           "packages/angular/src/visual/media/live-capture/index.ts",
           "packages/angular/src/visual/media/video-source/index.ts",
           "packages/angular/src/visual/media/youtube-embed/index.ts",

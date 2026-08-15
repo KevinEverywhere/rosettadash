@@ -32,6 +32,9 @@ export interface WasmMediaProps {
   yaw?: number;
   pitch?: number;
   horizontalFov?: number;
+  reverse?: boolean;
+  inputFile?: File | Blob | null;
+  cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
   className?: string;
 }
 
@@ -60,6 +63,11 @@ export class WasmMedia implements OnInit, OnDestroy {
   readonly yaw = input<number | undefined>(undefined);
   readonly pitch = input<number | undefined>(undefined);
   readonly horizontalFov = input<number | undefined>(undefined);
+  readonly reverse = input<boolean | undefined>(undefined);
+  readonly inputFile = input<File | Blob | null | undefined>(undefined);
+  readonly cropRegion = input<
+    Record<string, string | number | boolean | null | undefined> | null | undefined
+  >(undefined);
   readonly className = input<string | undefined>(undefined);
 
   readonly progress = output<{ progress: number }>();
@@ -67,6 +75,7 @@ export class WasmMedia implements OnInit, OnDestroy {
     blob: Blob;
     metadata: Record<string, string | number | boolean | null | undefined>;
   }>();
+  readonly extractError = output<{ message: string }>();
   readonly metadata = output<
     Record<string, string | number | boolean | null | undefined>
   >();
@@ -87,6 +96,9 @@ export class WasmMedia implements OnInit, OnDestroy {
       this.yaw();
       this.pitch();
       this.horizontalFov();
+      this.reverse();
+      this.inputFile();
+      this.cropRegion();
       this.className();
       if (this.ready) {
         this.syncFromInputs();
@@ -108,6 +120,8 @@ export class WasmMedia implements OnInit, OnDestroy {
             metadata: Record<string, string | number | boolean | null | undefined>;
           },
         ),
+      'extract-error': (detail: unknown) =>
+        this.extractError.emit(detail as { message: string }),
       metadata: (detail: unknown) =>
         this.metadata.emit(
           detail as Record<string, string | number | boolean | null | undefined>,
@@ -135,6 +149,12 @@ export class WasmMedia implements OnInit, OnDestroy {
     setHostAttribute(el, 'yaw', this.yaw());
     setHostAttribute(el, 'pitch', this.pitch());
     setHostAttribute(el, 'horizontal-fov', this.horizontalFov());
+    setHostAttribute(el, 'reverse', this.reverse());
+    (el as HTMLElement & { inputFile?: File | Blob | null }).inputFile =
+      this.inputFile() ?? null;
+    (el as HTMLElement & {
+      cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
+    }).cropRegion = this.cropRegion() ?? null;
     if (this.className()) {
       el.setAttribute('class', this.className()!);
     } else {

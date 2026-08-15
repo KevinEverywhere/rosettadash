@@ -30,10 +30,14 @@ export function buildEquirectFlatCropFilter(options: EquirectFlatCropOptions, re
 }
 
 /** ffmpeg -vf filter for rectilinear reprojection from equirect source. */
+function roundAngle(value: number): number {
+  return Math.round(value * 10) / 10;
+}
+
 export function buildEquirectRectilinearFilter(options: EquirectRectilinearOptions, reverse = false): string {
-  const yaw = Number(options.yaw) || 0;
-  const pitch = Number(options.pitch) || 0;
-  const roll = Number(options.roll ?? 0) || 0;
+  const yaw = roundAngle(Number(options.yaw) || 0);
+  const pitch = roundAngle(Number(options.pitch) || 0);
+  const roll = roundAngle(Number(options.roll ?? 0) || 0);
   const horizontalFov = Math.max(1, Number(options.horizontalFov) || 90);
   const outputWidth = Math.max(2, Math.round(options.outputWidth));
   const outputHeight = Math.max(2, Math.round(options.outputHeight));

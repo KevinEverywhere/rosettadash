@@ -465,6 +465,9 @@
       "@rosettadash/angular/visual/media/equirect-viewport": [
         "./packages/angular/src/visual/media/equirect-viewport/index.ts"
       ],
+      "@rosettadash/angular/visual/media/equirect-sphere-viewport": [
+        "./packages/angular/src/visual/media/equirect-sphere-viewport/index.ts"
+      ],
       "@rosettadash/angular/visual/media/live-capture": [
         "./packages/angular/src/visual/media/live-capture/index.ts"
       ],

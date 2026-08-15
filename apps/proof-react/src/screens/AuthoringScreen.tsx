@@ -476,8 +476,11 @@ export function AuthoringScreen({
             </div>
 
             {extractFilter ? (
-              <p className="da-note">
-                Filter: <code>{extractFilter}</code>
+              <p className="da-note da-note--filter">
+                Filter:{' '}
+                <code className="da-value-ellipsis" tabIndex={0}>
+                  {extractFilter}
+                </code>
               </p>
             ) : null}
 

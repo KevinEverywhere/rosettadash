@@ -40,6 +40,7 @@ export * from './visual/input/textarea/index.js';
 export * from './visual/kpi/index.js';
 export * from './visual/link-list/index.js';
 export * from './visual/media/equirect-viewport/index.js';
+export * from './visual/media/equirect-sphere-viewport/index.js';
 export * from './visual/media/live-capture/index.js';
 export * from './visual/media/video-source/index.js';
 export * from './visual/media/youtube-embed/index.js';

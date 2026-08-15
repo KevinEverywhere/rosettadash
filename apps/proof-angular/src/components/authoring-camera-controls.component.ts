@@ -1,0 +1,181 @@
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+
+const MIN_HFOV = 30;
+const MAX_HFOV = 360;
+const MIN_FOCAL_MM = 8;
+const MAX_FOCAL_MM = 200;
+
+function clamp(value: number, low: number, high: number): number {
+  return Math.min(high, Math.max(low, value));
+}
+
+function zoomFromHfov(hfov: number): number {
+  const logMin = Math.log(MIN_HFOV);
+  const logMax = Math.log(MAX_HFOV);
+  const logFov = Math.log(clamp(hfov, MIN_HFOV, MAX_HFOV));
+  return clamp(((logFov - logMax) / (logMin - logMax)) * 100, 0, 100);
+}
+
+function hfovFromZoom(zoomPercent: number): number {
+  const t = clamp(zoomPercent, 0, 100) / 100;
+  const logMin = Math.log(MIN_HFOV);
+  const logMax = Math.log(MAX_HFOV);
+  return Math.exp(logMax + t * (logMin - logMax));
+}
+
+function focalLengthFromHfov(hfov: number): number {
+  const zoom = zoomFromHfov(hfov) / 100;
+  const logMin = Math.log(MIN_FOCAL_MM);
+  const logMax = Math.log(MAX_FOCAL_MM);
+  return Math.exp(logMin + (1 - zoom) * (logMax - logMin));
+}
+
+function hfovFromFocalLength(focal: number): number {
+  const f = clamp(focal, MIN_FOCAL_MM, MAX_FOCAL_MM);
+  const logMin = Math.log(MIN_FOCAL_MM);
+  const logMax = Math.log(MAX_FOCAL_MM);
+  const zoom = 1 - (Math.log(f) - logMin) / (logMax - logMin);
+  return hfovFromZoom(zoom * 100);
+}
+
+@Component({
+  selector: 'da-authoring-camera-controls',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="da-authoring-camera" aria-label="Camera framing controls">
+      <div class="da-authoring-camera__header">
+        <h4 class="da-authoring-camera__title">Camera framing</h4>
+        <div class="da-authoring-camera__actions">
+          <button type="button" class="da-authoring-camera__step" [disabled]="disabled() || zoom() >= 100" (click)="stepZoom(8)">
+            Zoom in
+          </button>
+          <button type="button" class="da-authoring-camera__step" [disabled]="disabled() || zoom() <= 0" (click)="stepZoom(-8)">
+            Zoom out
+          </button>
+          <button type="button" class="da-authoring-camera__reset" [disabled]="disabled()" (click)="reset.emit()">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <label class="da-authoring-camera__row">
+        <span class="da-authoring-camera__label">
+          Zoom
+          <span class="da-authoring-camera__hint">right = zoom in (works from little-planet too)</span>
+        </span>
+        <input type="range" min="0" max="100" step="0.5" [value]="zoom()" [disabled]="disabled()" (input)="onZoomChange($any($event.target).value)" />
+        <output class="da-authoring-camera__value">{{ zoom().toFixed(1) }}%</output>
+      </label>
+
+      <label class="da-authoring-camera__row">
+        <span class="da-authoring-camera__label">
+          Focal length
+          <span class="da-authoring-camera__hint">35mm full-frame equivalent · longer = zoom in</span>
+        </span>
+        <input
+          type="range"
+          [min]="minFocal"
+          [max]="maxFocal"
+          step="0.5"
+          [value]="focalLength()"
+          [disabled]="disabled()"
+          (input)="onFocalChange($any($event.target).value)"
+        />
+        <output class="da-authoring-camera__value">{{ focalLength().toFixed(1) }}mm</output>
+      </label>
+
+      <label class="da-authoring-camera__row">
+        <span class="da-authoring-camera__label">
+          Horizontal FOV
+          <span class="da-authoring-camera__hint">{{ inPlanetZone() ? 'drag left to exit little-planet' : 'rectilinear' }}</span>
+        </span>
+        <input
+          type="range"
+          [min]="minHfov"
+          [max]="maxHfov"
+          step="1"
+          [value]="horizontalFov()"
+          [disabled]="disabled()"
+          (input)="horizontalFovChange.emit(+$any($event.target).value)"
+        />
+        <output class="da-authoring-camera__value">{{ horizontalFov().toFixed(0) }}°</output>
+      </label>
+
+      <label class="da-authoring-camera__row">
+        <span class="da-authoring-camera__label">Yaw</span>
+        <input
+          type="range"
+          min="-180"
+          max="180"
+          step="0.5"
+          [value]="yaw()"
+          [disabled]="disabled()"
+          (input)="yawChange.emit(+$any($event.target).value)"
+        />
+        <output class="da-authoring-camera__value">{{ yaw().toFixed(1) }}°</output>
+      </label>
+
+      <label class="da-authoring-camera__row">
+        <span class="da-authoring-camera__label">
+          Pitch
+          <span class="da-authoring-camera__hint">down = ground in center for little-planet</span>
+        </span>
+        <input
+          type="range"
+          min="-85"
+          max="85"
+          step="0.5"
+          [value]="pitch()"
+          [disabled]="disabled()"
+          (input)="pitchChange.emit(+$any($event.target).value)"
+        />
+        <output class="da-authoring-camera__value">{{ pitch().toFixed(1) }}°</output>
+      </label>
+
+      <p class="da-note da-authoring-camera__note">
+        Stuck in little-planet? Drag Zoom or Focal length to the right, or click Zoom in.
+      </p>
+    </div>
+  `,
+})
+export class AuthoringCameraControlsComponent {
+  readonly yaw = input.required<number>();
+  readonly pitch = input.required<number>();
+  readonly horizontalFov = input.required<number>();
+  readonly disabled = input(false);
+
+  readonly yawChange = output<number>();
+  readonly pitchChange = output<number>();
+  readonly horizontalFovChange = output<number>();
+  readonly reset = output<void>();
+
+  readonly minHfov = MIN_HFOV;
+  readonly maxHfov = MAX_HFOV;
+  readonly minFocal = MIN_FOCAL_MM;
+  readonly maxFocal = MAX_FOCAL_MM;
+
+  zoom(): number {
+    return zoomFromHfov(this.horizontalFov());
+  }
+
+  focalLength(): number {
+    return focalLengthFromHfov(this.horizontalFov());
+  }
+
+  inPlanetZone(): boolean {
+    return this.horizontalFov() > 125;
+  }
+
+  stepZoom(delta: number): void {
+    this.horizontalFovChange.emit(hfovFromZoom(clamp(this.zoom() + delta, 0, 100)));
+  }
+
+  onZoomChange(value: string): void {
+    this.horizontalFovChange.emit(hfovFromZoom(+value));
+  }
+
+  onFocalChange(value: string): void {
+    this.horizontalFovChange.emit(hfovFromFocalLength(+value));
+  }
+}

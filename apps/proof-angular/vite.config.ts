@@ -15,6 +15,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@destination-atlas': resolve(__dirname, '../../libs/destination-atlas/src/index.ts'),
+      '@rosettadash/angular/visual/media/equirect-sphere-viewport': resolve(
+        __dirname,
+        '../../packages/angular/src/visual/media/equirect-sphere-viewport/index.ts',
+      ),
       '@rosettadash/web-components/styles.css': resolve(
         __dirname,
         '../../packages/web-components/src/styles/styles.css',

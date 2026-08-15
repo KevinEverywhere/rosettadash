@@ -18,6 +18,11 @@ import { SettingsScreenComponent } from './screens/settings-screen.component';
 import { MapsScreenComponent } from './screens/maps-screen.component';
 import { DestinationsScreenComponent } from './screens/destinations-screen.component';
 import { IntelScreenComponent } from './screens/intel-screen.component';
+import { MediaScreenComponent } from './screens/media-screen.component';
+import { AuthoringScreenComponent } from './screens/authoring-screen.component';
+import { PlanScreenComponent } from './screens/plan-screen.component';
+import { ViewsScreenComponent } from './screens/views-screen.component';
+import { StackScreenComponent } from './screens/stack-screen.component';
 import { GapScreenComponent } from './screens/gap-screen.component';
 
 @Component({
@@ -35,6 +40,11 @@ import { GapScreenComponent } from './screens/gap-screen.component';
     MapsScreenComponent,
     DestinationsScreenComponent,
     IntelScreenComponent,
+    MediaScreenComponent,
+    AuthoringScreenComponent,
+    PlanScreenComponent,
+    ViewsScreenComponent,
+    StackScreenComponent,
     GapScreenComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,7 +52,7 @@ import { GapScreenComponent } from './screens/gap-screen.component';
     <div class="da-shell">
       <header class="da-header">
         <h1>Destination Atlas</h1>
-        <p>Current and historic information about world locations — Angular proof (DAS-138)</p>
+        <p>Current and historic information about world locations — Angular proof (DAS-139)</p>
       </header>
 
       <div class="da-body-row">
@@ -113,8 +123,23 @@ import { GapScreenComponent } from './screens/gap-screen.component';
                 @case ('destinations') {
                   <da-destinations-screen />
                 }
+                @case ('media') {
+                  <da-media-screen />
+                }
+                @case ('authoring') {
+                  <da-authoring-screen />
+                }
                 @case ('intel') {
                   <da-intel-screen />
+                }
+                @case ('plan') {
+                  <da-plan-screen />
+                }
+                @case ('views') {
+                  <da-views-screen />
+                }
+                @case ('stack') {
+                  <da-stack-screen />
                 }
                 @default {
                   <da-gap-screen [screenId]="atlas.screen()" [label]="activeScreenLabel()" />
