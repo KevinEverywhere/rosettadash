@@ -1,6 +1,9 @@
+import { NavLink } from 'react-router-dom';
+import { buildAtlasLocation } from '@rosettadash/core';
 import { DESTINATION_ATLAS_SCREENS, MOCK_DESTINATIONS, getDestinationById } from '@destination-atlas';
 import { localizedDestinationName } from './lib/atlas-utils';
 import { screenAllowedForRole, roleLabel } from './lib/roles';
+import { useClientRouterMode } from './lib/client-router';
 import { useDestinationAtlasState } from './state/useDestinationAtlasState';
 import { AboutScreen, ABOUT_SOURCE } from './screens/AboutScreen';
 import { OverviewScreen, OVERVIEW_SOURCE } from './screens/OverviewScreen';
@@ -18,6 +21,7 @@ import { ThemeToggle, useThemePreference } from './lib/theme';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ScreenWorkbench } from './components/ScreenWorkbench';
 import { UserRoleToggle } from './components/UserRoleToggle';
+import { RouterModeSelect } from './components/RouterModeSelect';
 
 const SCREEN_SOURCES: Record<string, string> = {
   about: ABOUT_SOURCE,
@@ -35,13 +39,34 @@ const SCREEN_SOURCES: Record<string, string> = {
 };
 
 export function App() {
-  const atlas = useDestinationAtlasState(MOCK_DESTINATIONS[0]?.id ?? '');
+  const initialDestId = MOCK_DESTINATIONS[0]?.id ?? '';
+  const atlas = useDestinationAtlasState(initialDestId);
   const { theme, setTheme } = useThemePreference();
+  const { routerMode, setRouterMode } = useClientRouterMode();
   const selected = getDestinationById(atlas.selectedId);
   const activeScreen = DESTINATION_ATLAS_SCREENS.find((screen) => screen.id === atlas.screen);
   const visibleScreens = DESTINATION_ATLAS_SCREENS.filter((screen) =>
     screenAllowedForRole(screen.id, atlas.userRole),
   );
+
+  const atlasQuery = {
+    dest: atlas.selectedId,
+    locale: atlas.locale,
+    provider: atlas.mapProvider,
+    role: atlas.userRole,
+  };
+
+  const urlDefaults = {
+    dest: initialDestId,
+    locale: 'en',
+    provider: 'leaflet' as const,
+    role: 'viewer' as const,
+  };
+
+  const screenTo = (screenId: (typeof visibleScreens)[number]['id']) => {
+    const { pathname, search } = buildAtlasLocation(screenId, atlasQuery, urlDefaults);
+    return { pathname, search };
+  };
 
   const openSettingsLocale = () => {
     atlas.setHighlightTarget('locale');
@@ -56,8 +81,9 @@ export function App() {
     <div className="da-shell">
       <header className="da-header">
         <h1>Destination Atlas</h1>
-        <p>Current and historic information about world locations — React proof (DAS-122)</p>
+        <p>Current and historic information about world locations — React proof (DAS-133 routing)</p>
         <div className="da-header-tools">
+          <RouterModeSelect mode={routerMode} onChange={setRouterMode} />
           <ThemeToggle theme={theme} onChange={setTheme} />
           <UserRoleToggle role={atlas.userRole} onChange={atlas.setUserRole} />
           <div className="da-locale-bar">
@@ -88,14 +114,13 @@ export function App() {
       </header>
       <nav className="da-nav" aria-label="Screens">
         {visibleScreens.map((screen) => (
-          <button
+          <NavLink
             key={screen.id}
-            type="button"
-            aria-current={atlas.screen === screen.id ? 'page' : 'false'}
-            onClick={() => atlas.setScreen(screen.id)}
+            to={screenTo(screen.id)}
+            aria-current={atlas.screen === screen.id ? 'page' : undefined}
           >
             {screen.label}
-          </button>
+          </NavLink>
         ))}
       </nav>
       <ErrorBoundary label={activeScreen?.label ?? atlas.screen}>

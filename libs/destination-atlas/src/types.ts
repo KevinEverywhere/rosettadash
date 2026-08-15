@@ -68,19 +68,8 @@ export interface Destination {
   avgTripPriceUsd?: number;
 }
 
-export type DestinationAtlasScreenId =
-  | 'about'
-  | 'overview'
-  | 'destinations'
-  | 'map'
-  | 'globe'
-  | 'media'
-  | 'authoring'
-  | 'intel'
-  | 'plan'
-  | 'views'
-  | 'stack'
-  | 'settings';
+export type { DestinationAtlasScreenId } from '@rosettadash/core';
+import type { DestinationAtlasScreenId } from '@rosettadash/core';
 
 export interface DestinationAtlasScreen {
   id: DestinationAtlasScreenId;

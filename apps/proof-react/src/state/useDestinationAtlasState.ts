@@ -1,5 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { DestinationAtlasScreenId, GeoMapProvider } from '@destination-atlas';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  buildAtlasLocation,
+  isKnownDestinationAtlasPath,
+  parseAtlasUrlState,
+  type AtlasUrlDefaults,
+  type DestinationAtlasScreenId,
+} from '@rosettadash/core';
+import type { GeoMapProvider } from '@destination-atlas';
 import type { AtlasUserRole } from '../lib/roles';
 import { screenAllowedForRole } from '../lib/roles';
 
@@ -42,10 +50,30 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   setUserRole: (role: AtlasUserRole) => void;
   setHighlightTarget: (target: 'locale' | null) => void;
 } {
-  const [screen, setScreen] = useState<DestinationAtlasScreenId>('about');
-  const [selectedId, setSelectedId] = useState(initialSelectedId);
-  const [locale, setLocale] = useState('en');
-  const [mapProvider, setMapProvider] = useState<GeoMapProvider>('leaflet');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const urlDefaults = useMemo<AtlasUrlDefaults>(
+    () => ({
+      dest: initialSelectedId,
+      locale: 'en',
+      provider: 'leaflet',
+      role: 'viewer',
+    }),
+    [initialSelectedId],
+  );
+
+  const urlState = useMemo(
+    () => parseAtlasUrlState(location.pathname, location.search, urlDefaults),
+    [location.pathname, location.search, urlDefaults],
+  );
+
+  const screen = urlState.screen;
+  const selectedId = urlState.dest || initialSelectedId;
+  const locale = urlState.locale;
+  const mapProvider = urlState.provider as GeoMapProvider;
+  const userRole = urlState.role as AtlasUserRole;
+
   const [newsQuery, setNewsQuery] = useState('');
   const [newsRegion, setNewsRegion] = useState('');
   const [selectedArticleId, setSelectedArticleId] = useState('');
@@ -62,33 +90,96 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   const [timePreset, setTimePreset] = useState('5y');
   const [visitPeriodStart, setVisitPeriodStart] = useState('2019-01');
   const [visitPeriodEnd, setVisitPeriodEnd] = useState('2024-12');
-  const [userRole, setUserRole] = useState<AtlasUserRole>('viewer');
   const [highlightTarget, setHighlightTarget] = useState<'locale' | null>(null);
+
+  const atlasQuery = useMemo(
+    () => ({
+      dest: selectedId,
+      locale,
+      provider: mapProvider,
+      role: userRole,
+    }),
+    [selectedId, locale, mapProvider, userRole],
+  );
+
+  const navigateAtlas = useCallback(
+    (nextScreen: DestinationAtlasScreenId, query = atlasQuery, replace = false) => {
+      const { pathname, search } = buildAtlasLocation(nextScreen, query, urlDefaults);
+      navigate({ pathname, search }, { replace });
+    },
+    [atlasQuery, navigate, urlDefaults],
+  );
+
+  const setScreen = useCallback(
+    (nextScreen: DestinationAtlasScreenId) => {
+      navigateAtlas(nextScreen);
+    },
+    [navigateAtlas],
+  );
+
+  const setSelectedId = useCallback(
+    (id: string) => {
+      navigateAtlas(screen, { ...atlasQuery, dest: id });
+    },
+    [atlasQuery, navigateAtlas, screen],
+  );
+
+  const setLocale = useCallback(
+    (nextLocale: string) => {
+      navigateAtlas(screen, { ...atlasQuery, locale: nextLocale });
+    },
+    [atlasQuery, navigateAtlas, screen],
+  );
+
+  const setMapProvider = useCallback(
+    (provider: GeoMapProvider) => {
+      navigateAtlas(screen, { ...atlasQuery, provider });
+    },
+    [atlasQuery, navigateAtlas, screen],
+  );
+
+  const setUserRole = useCallback(
+    (role: AtlasUserRole) => {
+      navigateAtlas(screen, { ...atlasQuery, role });
+    },
+    [atlasQuery, navigateAtlas, screen],
+  );
 
   const setVisitPeriod = (range: { startDate: string; endDate: string }) => {
     setVisitPeriodStart(range.startDate);
     setVisitPeriodEnd(range.endDate);
   };
 
-  const focusDestinationOnMap = (id: string) => {
-    setSelectedId(id);
-    setMapViewOverride(null);
-    setMapLocationQuery('');
-    setMapTabId('map');
-    setScreen('map');
-  };
+  const focusDestinationOnMap = useCallback(
+    (id: string) => {
+      setMapViewOverride(null);
+      setMapLocationQuery('');
+      setMapTabId('map');
+      navigateAtlas('map', { ...atlasQuery, dest: id });
+    },
+    [atlasQuery, navigateAtlas],
+  );
 
-  const goToMapView = (view: { lat: number; lng: number; zoom: number; label: string }) => {
-    setMapViewOverride(view);
-    setMapTabId('map');
-    setScreen('map');
-  };
+  const goToMapView = useCallback(
+    (view: { lat: number; lng: number; zoom: number; label: string }) => {
+      setMapViewOverride(view);
+      setMapTabId('map');
+      navigateAtlas('map');
+    },
+    [navigateAtlas],
+  );
+
+  useEffect(() => {
+    if (!isKnownDestinationAtlasPath(location.pathname)) {
+      navigateAtlas('about', atlasQuery, true);
+    }
+  }, [atlasQuery, location.pathname, navigateAtlas]);
 
   useEffect(() => {
     if (!screenAllowedForRole(screen, userRole)) {
-      setScreen('about');
+      navigateAtlas('about', atlasQuery, true);
     }
-  }, [screen, userRole]);
+  }, [atlasQuery, navigateAtlas, screen, userRole]);
 
   return useMemo(
     () => ({
@@ -145,6 +236,13 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
       visitPeriodEnd,
       userRole,
       highlightTarget,
+      setScreen,
+      setSelectedId,
+      setLocale,
+      setMapProvider,
+      setUserRole,
+      focusDestinationOnMap,
+      goToMapView,
     ],
   );
 }
