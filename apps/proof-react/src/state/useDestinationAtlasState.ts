@@ -10,6 +10,7 @@ import {
 import type { GeoMapProvider } from '@destination-atlas';
 import type { AtlasUserRole } from '../lib/roles';
 import { screenAllowedForRole } from '../lib/roles';
+import type { SettingsHighlightTarget } from '../lib/settings-highlight';
 
 export interface DestinationAtlasState {
   screen: DestinationAtlasScreenId;
@@ -28,7 +29,7 @@ export interface DestinationAtlasState {
   visitPeriodStart: string;
   visitPeriodEnd: string;
   userRole: AtlasUserRole;
-  highlightTarget: 'locale' | null;
+  highlightTarget: SettingsHighlightTarget;
 }
 
 export function useDestinationAtlasState(initialSelectedId: string): DestinationAtlasState & {
@@ -48,7 +49,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   setTimePreset: (preset: string) => void;
   setVisitPeriod: (range: { startDate: string; endDate: string }) => void;
   setUserRole: (role: AtlasUserRole) => void;
-  setHighlightTarget: (target: 'locale' | null) => void;
+  setHighlightTarget: (target: SettingsHighlightTarget) => void;
   openAuthoringForDestination: (destinationId: string) => void;
 } {
   const location = useLocation();
@@ -91,7 +92,7 @@ export function useDestinationAtlasState(initialSelectedId: string): Destination
   const [timePreset, setTimePreset] = useState('5y');
   const [visitPeriodStart, setVisitPeriodStart] = useState('2019-01');
   const [visitPeriodEnd, setVisitPeriodEnd] = useState('2024-12');
-  const [highlightTarget, setHighlightTarget] = useState<'locale' | null>(null);
+  const [highlightTarget, setHighlightTarget] = useState<SettingsHighlightTarget>(null);
 
   const atlasQuery = useMemo(
     () => ({

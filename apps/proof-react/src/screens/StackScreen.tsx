@@ -8,14 +8,15 @@ import { ExpressServerInfra } from '@rosettadash/react/infra/server/express';
 import { NestServerInfra } from '@rosettadash/react/infra/server/nest';
 import { NextServerInfra } from '@rosettadash/react/infra/server/next';
 import { NuxtServerInfra } from '@rosettadash/react/infra/server/nuxt';
+import { useConsumerSecrets } from '../state/consumer-secrets-context';
 import type { AtlasUserRole } from '../lib/roles';
+
+const STACK_ENV_KEYS = ['DATABASE_URL', 'GOOGLE_MAPS_KEY', 'NEWS_API_KEY', 'FEATURE_FLAGS'];
 
 export const STACK_SOURCE = `<StackScreen userRole={userRole}>
   <RoleGate currentRole={userRole} allowedRoles={['admin']} label="Infrastructure stack">
-    <EnvConfig envKeys="DATABASE_URL, GOOGLE_MAPS_KEY, NEWS_API_KEY" />
-    <PostgresqlInfra label="Analytics DB" tableOrCollection="destinations" />
-    <NestServerInfra label="API (Nest)" globalPrefix="api" />
-    <NextServerInfra label="Web (Next.js)" />
+    <EnvConfig envKeys="DATABASE_URL, GOOGLE_MAPS_KEY, NEWS_API_KEY" keyStatus={…} />
+    …
   </RoleGate>
 </StackScreen>`;
 
@@ -24,10 +25,16 @@ type Props = {
 };
 
 export function StackScreen({ userRole }: Props) {
+  const secrets = useConsumerSecrets();
+  const keyStatus = secrets.stackKeyStatus(STACK_ENV_KEYS);
+
   return (
     <section className="da-panel">
       <h2>Stack</h2>
-      <p>Read-only infra configuration demo for export wizard nodes.</p>
+      <p>
+        Read-only infra configuration demo for export wizard nodes. Integration keys reflect BYOK status
+        from Settings.
+      </p>
       <RoleGate
         label="Infrastructure stack"
         currentRole={userRole}
@@ -36,7 +43,7 @@ export function StackScreen({ userRole }: Props) {
         hiddenStatusText="Stack configuration is restricted to Admin. Switch role in the header to inspect infra nodes."
       >
         <div className="da-infra-grid">
-          <EnvConfig envKeys="DATABASE_URL, GOOGLE_MAPS_KEY, NEWS_API_KEY, FEATURE_FLAGS" />
+          <EnvConfig envKeys={STACK_ENV_KEYS.join(', ')} keyStatus={keyStatus} />
           <PostgresqlInfra label="Analytics DB" envKey="DATABASE_URL" tableOrCollection="destinations" />
           <MongodbInfra label="Sessions" envKey="MONGODB_URI" tableOrCollection="sessions" />
           <MysqlInfra label="Legacy CRM" envKey="MYSQL_URL" tableOrCollection="contacts" />

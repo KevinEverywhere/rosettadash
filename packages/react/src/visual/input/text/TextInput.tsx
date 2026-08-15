@@ -6,6 +6,7 @@ export interface TextInputProps {
   required?: boolean;
   value?: string;
   defaultValue?: string;
+  inputType?: 'text' | 'password';
   onChange?: (value: string) => void;
   className?: string;
   style?: CSSProperties;
@@ -24,7 +25,7 @@ export const TextInput = forwardRef<HTMLElement, TextInputProps>(function TextIn
     <section ref={ref as React.RefObject<HTMLElement>} className={rootClass} style={style} data-testid="rd-input-text">
       {props.label ? <span className="rd-field__label">{props.label}</span> : null}
       <input
-        type="text"
+        type={props.inputType ?? 'text'}
         className="rd-input"
         placeholder={props.placeholder}
         required={props.required}

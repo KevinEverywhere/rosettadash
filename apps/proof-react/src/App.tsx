@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { buildAtlasLocation } from '@rosettadash/core';
-import { DESTINATION_ATLAS_SCREENS, MOCK_DESTINATIONS, getDestinationById } from '@destination-atlas';
-import { localizedDestinationName } from './lib/atlas-utils';
-import { screenAllowedForRole, roleLabel } from './lib/roles';
+import { DESTINATION_ATLAS_SCREENS, MOCK_DESTINATIONS } from '@destination-atlas';
+import { screenAllowedForRole } from './lib/roles';
 import { useClientRouterMode } from './lib/client-router';
 import { useDestinationAtlasState } from './state/useDestinationAtlasState';
 import { AboutScreen, ABOUT_SOURCE } from './screens/AboutScreen';
@@ -17,11 +17,16 @@ import { PlanScreen, PLAN_SOURCE } from './screens/PlanScreen';
 import { ViewsScreen, VIEWS_SOURCE } from './screens/ViewsScreen';
 import { StackScreen, STACK_SOURCE } from './screens/StackScreen';
 import { SettingsScreen, SETTINGS_SOURCE } from './screens/SettingsScreen';
-import { ThemeToggle, useThemePreference } from './lib/theme';
+import { useThemePreference } from './lib/theme';
+import type { SettingFieldTarget } from './lib/settings-highlight';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { ScreenWorkbench } from './components/ScreenWorkbench';
-import { UserRoleToggle } from './components/UserRoleToggle';
+import {
+  ComponentSourcePanel,
+  ScreenWorkbenchMobileToggle,
+  ScreenWorkbenchPreview,
+} from './components/ScreenWorkbench';
 import { RouterModeSelect } from './components/RouterModeSelect';
+import { AtlasContextSummary } from './components/AtlasContextSummary';
 
 const SCREEN_SOURCES: Record<string, string> = {
   about: ABOUT_SOURCE,
@@ -43,7 +48,7 @@ export function App() {
   const atlas = useDestinationAtlasState(initialDestId);
   const { theme, setTheme } = useThemePreference();
   const { routerMode, setRouterMode } = useClientRouterMode();
-  const selected = getDestinationById(atlas.selectedId);
+  const [mobileView, setMobileView] = useState<'preview' | 'source'>('preview');
   const activeScreen = DESTINATION_ATLAS_SCREENS.find((screen) => screen.id === atlas.screen);
   const visibleScreens = DESTINATION_ATLAS_SCREENS.filter((screen) =>
     screenAllowedForRole(screen.id, atlas.userRole),
@@ -68,148 +73,151 @@ export function App() {
     return { pathname, search };
   };
 
-  const openSettingsLocale = () => {
-    atlas.setHighlightTarget('locale');
+  const openSetting = (field: SettingFieldTarget | 'theme') => {
+    atlas.setHighlightTarget(field);
     atlas.setScreen('settings');
-  };
-
-  const openMapSettings = () => {
-    atlas.setScreen('map');
   };
 
   return (
     <div className="da-shell">
       <header className="da-header">
         <h1>Destination Atlas</h1>
-        <p>Current and historic information about world locations — React proof (DAS-133 routing)</p>
-        <div className="da-header-tools">
-          <RouterModeSelect mode={routerMode} onChange={setRouterMode} />
-          <ThemeToggle theme={theme} onChange={setTheme} />
-          <UserRoleToggle role={atlas.userRole} onChange={atlas.setUserRole} />
-          <div className="da-locale-bar">
-            <span>
-              Role: <strong>{roleLabel(atlas.userRole)}</strong>
-            </span>
-            <button type="button" className="da-locale-link" onClick={openSettingsLocale}>
-              App locale: <strong>{atlas.locale}</strong>
-            </button>
-            <button type="button" className="da-locale-link" onClick={openMapSettings}>
-              Map provider: <strong>{atlas.mapProvider}</strong>
-            </button>
-            {selected ? (
-              <button
-                type="button"
-                className="da-locale-link"
-                onClick={() => atlas.focusDestinationOnMap(atlas.selectedId)}
+        <p>Current and historic information about world locations — React proof (DAS-135 BYOK)</p>
+      </header>
+
+      <div className="da-body-row">
+        <div className="da-preview-column">
+          <div className="da-context-strip">
+            <RouterModeSelect mode={routerMode} onChange={setRouterMode} />
+            <AtlasContextSummary
+              locale={atlas.locale}
+              userRole={atlas.userRole}
+              mapProvider={atlas.mapProvider}
+              selectedId={atlas.selectedId}
+              theme={theme}
+              onOpenSetting={openSetting}
+            />
+          </div>
+
+          <nav className="da-nav" aria-label="Screens">
+            {visibleScreens.map((screen) => (
+              <NavLink
+                key={screen.id}
+                to={screenTo(screen.id)}
+                aria-current={atlas.screen === screen.id ? 'page' : undefined}
               >
-                Selected: <strong>{localizedDestinationName(selected, atlas.locale)}</strong>
-              </button>
-            ) : (
-              <span>
-                Selected: <strong>none</strong>
-              </span>
-            )}
+                {screen.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="da-workbench-host">
+            <ErrorBoundary label={activeScreen?.label ?? atlas.screen}>
+              <ScreenWorkbenchMobileToggle mobileView={mobileView} onChange={setMobileView} />
+              <ScreenWorkbenchPreview
+                scrollablePreview={atlas.screen === 'about' || atlas.screen === 'authoring'}
+                mobileView={mobileView}
+              >
+              {atlas.screen === 'about' ? <AboutScreen /> : null}
+              {atlas.screen === 'overview' ? (
+                <OverviewScreen locale={atlas.locale} userRole={atlas.userRole} />
+              ) : null}
+              {atlas.screen === 'destinations' ? (
+                <DestinationsScreen
+                  locale={atlas.locale}
+                  userRole={atlas.userRole}
+                  selectedId={atlas.selectedId}
+                  setSelectedId={atlas.setSelectedId}
+                  destSearch={atlas.destSearch}
+                  setDestSearch={atlas.setDestSearch}
+                  destRegion={atlas.destRegion}
+                  setDestRegion={atlas.setDestRegion}
+                  timePreset={atlas.timePreset}
+                  setTimePreset={atlas.setTimePreset}
+                  visitPeriodStart={atlas.visitPeriodStart}
+                  visitPeriodEnd={atlas.visitPeriodEnd}
+                  setVisitPeriod={atlas.setVisitPeriod}
+                  focusDestinationOnMap={atlas.focusDestinationOnMap}
+                />
+              ) : null}
+              {atlas.screen === 'map' ? (
+                <MapScreen
+                  locale={atlas.locale}
+                  selectedId={atlas.selectedId}
+                  setSelectedId={atlas.setSelectedId}
+                  mapProvider={atlas.mapProvider}
+                  setMapProvider={atlas.setMapProvider}
+                  mapLocationQuery={atlas.mapLocationQuery}
+                  setMapLocationQuery={atlas.setMapLocationQuery}
+                  mapViewOverride={atlas.mapViewOverride}
+                  focusDestinationOnMap={atlas.focusDestinationOnMap}
+                  goToMapView={atlas.goToMapView}
+                  setScreen={atlas.setScreen}
+                  setHighlightTarget={atlas.setHighlightTarget}
+                />
+              ) : null}
+              {atlas.screen === 'globe' ? (
+                <GlobeScreen
+                  locale={atlas.locale}
+                  selectedId={atlas.selectedId}
+                  setSelectedId={atlas.setSelectedId}
+                  focusDestinationOnMap={atlas.focusDestinationOnMap}
+                />
+              ) : null}
+              {atlas.screen === 'media' ? (
+                <MediaScreen
+                  locale={atlas.locale}
+                  selectedId={atlas.selectedId}
+                  setSelectedId={atlas.setSelectedId}
+                  openAuthoringForDestination={atlas.openAuthoringForDestination}
+                />
+              ) : null}
+              {atlas.screen === 'authoring' ? (
+                <AuthoringScreen locale={atlas.locale} selectedId={atlas.selectedId} />
+              ) : null}
+              {atlas.screen === 'intel' ? (
+                <IntelScreen
+                  userRole={atlas.userRole}
+                  newsQuery={atlas.newsQuery}
+                  setNewsQuery={atlas.setNewsQuery}
+                  newsRegion={atlas.newsRegion}
+                  setNewsRegion={atlas.setNewsRegion}
+                  selectedArticleId={atlas.selectedArticleId}
+                  setSelectedArticleId={atlas.setSelectedArticleId}
+                  setScreen={atlas.setScreen}
+                  setHighlightTarget={atlas.setHighlightTarget}
+                />
+              ) : null}
+              {atlas.screen === 'plan' ? <PlanScreen userRole={atlas.userRole} locale={atlas.locale} /> : null}
+              {atlas.screen === 'views' ? (
+                <ViewsScreen locale={atlas.locale} selectedId={atlas.selectedId} setSelectedId={atlas.setSelectedId} />
+              ) : null}
+              {atlas.screen === 'stack' ? <StackScreen userRole={atlas.userRole} /> : null}
+              {atlas.screen === 'settings' ? (
+                <SettingsScreen
+                  locale={atlas.locale}
+                  userRole={atlas.userRole}
+                  setLocale={atlas.setLocale}
+                  setUserRole={atlas.setUserRole}
+                  mapProvider={atlas.mapProvider}
+                  setMapProvider={atlas.setMapProvider}
+                  selectedId={atlas.selectedId}
+                  setSelectedId={atlas.setSelectedId}
+                  highlightTarget={atlas.highlightTarget}
+                  setHighlightTarget={atlas.setHighlightTarget}
+                  theme={theme}
+                  setTheme={setTheme}
+                />
+              ) : null}
+            </ScreenWorkbenchPreview>
+            </ErrorBoundary>
           </div>
         </div>
-      </header>
-      <nav className="da-nav" aria-label="Screens">
-        {visibleScreens.map((screen) => (
-          <NavLink
-            key={screen.id}
-            to={screenTo(screen.id)}
-            aria-current={atlas.screen === screen.id ? 'page' : undefined}
-          >
-            {screen.label}
-          </NavLink>
-        ))}
-      </nav>
-      <ErrorBoundary label={activeScreen?.label ?? atlas.screen}>
-        <ScreenWorkbench
+        <ComponentSourcePanel
           source={SCREEN_SOURCES[atlas.screen] ?? ''}
-          scrollablePreview={atlas.screen === 'about' || atlas.screen === 'authoring'}
-        >
-          {atlas.screen === 'about' ? <AboutScreen /> : null}
-          {atlas.screen === 'overview' ? (
-            <OverviewScreen locale={atlas.locale} userRole={atlas.userRole} />
-          ) : null}
-          {atlas.screen === 'destinations' ? (
-            <DestinationsScreen
-              locale={atlas.locale}
-              userRole={atlas.userRole}
-              selectedId={atlas.selectedId}
-              setSelectedId={atlas.setSelectedId}
-              destSearch={atlas.destSearch}
-              setDestSearch={atlas.setDestSearch}
-              destRegion={atlas.destRegion}
-              setDestRegion={atlas.setDestRegion}
-              timePreset={atlas.timePreset}
-              setTimePreset={atlas.setTimePreset}
-              visitPeriodStart={atlas.visitPeriodStart}
-              visitPeriodEnd={atlas.visitPeriodEnd}
-              setVisitPeriod={atlas.setVisitPeriod}
-              focusDestinationOnMap={atlas.focusDestinationOnMap}
-            />
-          ) : null}
-          {atlas.screen === 'map' ? (
-            <MapScreen
-              locale={atlas.locale}
-              selectedId={atlas.selectedId}
-              setSelectedId={atlas.setSelectedId}
-              mapProvider={atlas.mapProvider}
-              setMapProvider={atlas.setMapProvider}
-              mapLocationQuery={atlas.mapLocationQuery}
-              setMapLocationQuery={atlas.setMapLocationQuery}
-              mapViewOverride={atlas.mapViewOverride}
-              focusDestinationOnMap={atlas.focusDestinationOnMap}
-              goToMapView={atlas.goToMapView}
-            />
-          ) : null}
-          {atlas.screen === 'globe' ? (
-            <GlobeScreen
-              locale={atlas.locale}
-              selectedId={atlas.selectedId}
-              setSelectedId={atlas.setSelectedId}
-              focusDestinationOnMap={atlas.focusDestinationOnMap}
-            />
-          ) : null}
-          {atlas.screen === 'media' ? (
-            <MediaScreen
-              locale={atlas.locale}
-              selectedId={atlas.selectedId}
-              setSelectedId={atlas.setSelectedId}
-              openAuthoringForDestination={atlas.openAuthoringForDestination}
-            />
-          ) : null}
-          {atlas.screen === 'authoring' ? (
-            <AuthoringScreen locale={atlas.locale} selectedId={atlas.selectedId} />
-          ) : null}
-          {atlas.screen === 'intel' ? (
-            <IntelScreen
-              userRole={atlas.userRole}
-              newsQuery={atlas.newsQuery}
-              setNewsQuery={atlas.setNewsQuery}
-              newsRegion={atlas.newsRegion}
-              setNewsRegion={atlas.setNewsRegion}
-              selectedArticleId={atlas.selectedArticleId}
-              setSelectedArticleId={atlas.setSelectedArticleId}
-            />
-          ) : null}
-          {atlas.screen === 'plan' ? <PlanScreen userRole={atlas.userRole} locale={atlas.locale} /> : null}
-          {atlas.screen === 'views' ? (
-            <ViewsScreen locale={atlas.locale} selectedId={atlas.selectedId} setSelectedId={atlas.setSelectedId} />
-          ) : null}
-          {atlas.screen === 'stack' ? <StackScreen userRole={atlas.userRole} /> : null}
-          {atlas.screen === 'settings' ? (
-            <SettingsScreen
-              locale={atlas.locale}
-              userRole={atlas.userRole}
-              setLocale={atlas.setLocale}
-              highlightTarget={atlas.highlightTarget}
-              setHighlightTarget={atlas.setHighlightTarget}
-            />
-          ) : null}
-        </ScreenWorkbench>
-      </ErrorBoundary>
+          hidden={mobileView === 'preview'}
+        />
+      </div>
     </div>
   );
 }

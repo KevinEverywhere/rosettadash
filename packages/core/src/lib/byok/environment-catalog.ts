@@ -182,6 +182,7 @@ export const ENV_CONFIG_CATEGORY_LABELS: Record<EnvConfigCategory, string> = {
   server: 'Server',
   ai: 'AI providers (BYOK)',
   auth: 'Authentication & authorization',
+  integration: 'App integrations (BYOK)',
   custom: 'Custom variables',
 };
 
@@ -231,7 +232,7 @@ export function resolveEnvironmentFieldsForStack(
 export function groupEnvironmentFieldsByCategory(
   fields: EnvFieldDefinition[],
 ): Array<{ category: EnvConfigCategory; label: string; fields: EnvFieldDefinition[] }> {
-  const order: EnvConfigCategory[] = ['builder', 'database', 'server', 'auth', 'ai', 'custom'];
+  const order: EnvConfigCategory[] = ['builder', 'database', 'server', 'auth', 'ai', 'integration', 'custom'];
   const grouped = new Map<EnvConfigCategory, EnvFieldDefinition[]>();
 
   for (const field of fields) {

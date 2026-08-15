@@ -103,6 +103,97 @@ body {
   color: var(--da-muted);
 }
 
+.da-body-row {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0;
+  width: 100%;
+}
+
+@media (min-width: 2048px) {
+  .da-body-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.da-preview-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: var(--da-content-min);
+}
+
+@media (min-width: 2048px) {
+  .da-preview-column {
+    flex: 0 1 var(--da-content-min);
+    min-width: var(--da-content-min);
+  }
+
+  .da-body-row > .da-workbench__source {
+    flex: 0 1 960px;
+    max-width: 960px;
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+  }
+}
+
+.da-context-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.da-context-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+}
+
+.da-context-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  border: 1px solid var(--da-border);
+  background: var(--da-nav-bg);
+  color: var(--da-nav-fg);
+  border-radius: 0.375rem;
+  padding: 0.35rem 0.65rem;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.da-context-chip:hover,
+.da-context-chip:focus-visible {
+  border-color: var(--da-accent);
+  color: var(--da-accent);
+  outline: none;
+}
+
+.da-context-chip__label {
+  color: var(--da-muted);
+  font-weight: 600;
+}
+
+.da-context-chip__value {
+  color: var(--da-fg);
+  font-weight: 600;
+}
+
 .da-header-tools {
   display: flex;
   flex-wrap: wrap;
@@ -190,11 +281,168 @@ body {
   font-weight: 600;
 }
 
+.da-byok-panel {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--da-border);
+}
+
+.da-settings-panel .da-settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.da-settings-panel .da-settings-head h2 {
+  margin: 0;
+}
+
+.da-settings-preferences {
+  margin-bottom: 1.25rem;
+}
+
+.da-context-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.65rem;
+}
+
+.da-context-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.da-context-grid .rd-field__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--da-muted);
+}
+
+.da-context-grid .rd-select {
+  min-width: 100%;
+}
+
+.da-context-grid__cell {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.da-context-grid__hint {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--da-muted);
+}
+
+.da-byok-collapsible {
+  margin-top: 0.5rem;
+}
+
+.da-settings-feedback {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--da-border);
+}
+
+.da-settings-feedback__actions {
+  margin-top: 0.65rem;
+}
+
+.da-settings-feedback__msg {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--da-border);
+  background: color-mix(in srgb, var(--da-accent) 8%, var(--da-panel-bg));
+  color: var(--da-fg);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 1100px) {
+  .da-context-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .da-context-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.da-byok-fields {
+  display: grid;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.da-byok-field__desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--da-muted);
+}
+
+.da-byok-field__meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  color: var(--da-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.da-byok-field__status {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.125rem 0.375rem;
+  border-radius: 999px;
+  border: 1px solid var(--da-border);
+}
+
+.da-byok-field__status--ok {
+  color: #15803d;
+  border-color: color-mix(in srgb, #15803d 35%, var(--da-border));
+}
+
+.da-byok-remember {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+}
+
+.da-byok-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.da-byok-save-msg {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--da-accent);
+}
+
+.da-byok-cta {
+  border-left: 3px solid var(--da-accent);
+  padding-left: 0.75rem;
+}
+
 .da-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .da-nav button,
@@ -832,20 +1080,20 @@ body {
   }
 }
 
-/* Workbench — preview matches header width; source beside preview only on ultra-wide viewports */
-.da-workbench {
-  display: grid;
-  gap: 0.75rem;
-  width: 100%;
+/* Workbench — preview column matches context strip + nav width; source beside at 2048px+ */
+.da-workbench-host {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  width: 100%;
 }
 
 .da-workbench__mobile-toggle {
   display: none;
   gap: 0.5rem;
   width: 100%;
+  margin-bottom: 0.75rem;
 }
 
 .da-workbench__mobile-toggle button {
@@ -864,23 +1112,10 @@ body {
   background: color-mix(in srgb, var(--da-accent) 16%, var(--da-nav-bg));
 }
 
-.da-workbench__split {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: stretch;
-  width: 100%;
-  box-sizing: border-box;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
-}
-
 .da-workbench__preview {
   flex: 1 1 auto;
   width: 100%;
-  min-width: var(--da-content-min);
-  max-width: none;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
 }
@@ -1069,29 +1304,10 @@ body {
   word-break: break-word;
 }
 
-/* Side-by-side only when preview (1024px) + source (~960px) + gap fit comfortably */
+/* Side-by-side source only when ultra-wide */
 @media (min-width: 2048px) {
   .da-workbench__mobile-toggle {
     display: none !important;
-  }
-
-  .da-workbench__split {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .da-workbench__preview {
-    flex: 1 1 var(--da-content-min);
-    width: auto;
-    min-width: var(--da-content-min);
-  }
-
-  .da-workbench__source {
-    flex: 0 1 960px;
-    width: auto;
-    max-width: 960px;
-    position: sticky;
-    top: 1rem;
   }
 
   .da-workbench__preview,

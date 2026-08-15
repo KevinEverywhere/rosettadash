@@ -138,7 +138,7 @@ export const DESTINATION_ATLAS_SCREENS: DestinationAtlasScreen[] = [
   {
     id: 'settings',
     label: 'Settings',
-    description: 'App base language for developer i18n.',
+    description: 'App base language and client-side integration keys (BYOK).',
   },
 ];
 

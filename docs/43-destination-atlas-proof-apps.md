@@ -58,8 +58,8 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 | **Authoring** | Upload + WASM extract | VideoSource, EquirectViewport, WasmMedia (ffmpeg.wasm — [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131)) |
 | **Intel** | Regional news | NewsSearchBox, NewsRegionSelect, NewsResultsTable, NewsArticleDetail |
 | **Plan** | Trip + access | RoleGate, PersonInvite, RoleAssign, Timer, form inputs |
-| **Stack** | Infra demo | infra/* read-only panel |
-| **Settings** | App locale | AppLanguageSelect |
+| **Stack** | Infra demo | infra/* read-only panel; live BYOK key status — [DAS-135](https://planetkevin.atlassian.net/browse/DAS-135) |
+| **Settings** | App locale + integrations | AppLanguageSelect; consumer BYOK vault — [DAS-135](https://planetkevin.atlassian.net/browse/DAS-135) |
 
 ### About page & scroll policy
 
@@ -79,6 +79,20 @@ Shipped with one example: **Cusco plaza (360° equirect)** (`libs/destination-at
 **Dev setup (proof-react):** from repo root run `npm install` (includes `@ffmpeg/ffmpeg` + `@ffmpeg/util` as devDependencies). The Vite dev server sets COOP + `Cross-Origin-Embedder-Policy: credentialless` so ffmpeg.wasm can use SharedArrayBuffer while YouTube embeds still load. First extract downloads ~31 MB of `@ffmpeg/core` from unpkg.
 
 Implemented in React proof: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131) (tab shell); [DAS-132](https://planetkevin.atlassian.net/browse/DAS-132) (sphere viewport + WASM extract on branch `feature/DAS-132-wasm-authoring-extract`). Editor/Admin roles only.
+
+### Consumer BYOK (integrations)
+
+Builder BYOK shipped in [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) (`/environment`, `@rosettadash/core/lib/byok`). Destination Atlas proof apps initially used build-time env vars only (`VITE_GOOGLE_MAPS_API_KEY`, mock Intel). [DAS-135](https://planetkevin.atlassian.net/browse/DAS-135) wires a **consumer-facing** key vault into Settings, connects Map/Intel/Stack, and feeds API/docs improvements back into shared components.
+
+Branch: `feature/DAS-135-byok-destination-atlas`.
+
+**Implemented (proof-react):**
+
+- `@rosettadash/core/lib/byok` — `CONSUMER_INTEGRATION_FIELDS`, `ConsumerSecretsStore`, `resolveConsumerSecret()`
+- Settings → **Integration keys (BYOK)** (Admin): Google Maps, MapTiler, News API; encrypted browser vault
+- Map reads BYOK keys (+ `VITE_*` fallback); MapLibre uses MapTiler style URL when configured
+- Intel attempts live NewsAPI when key set; mock fallback + CORS guidance
+- Stack `EnvConfig` shows per-key configured / missing status (`keyStatus` prop on `@rosettadash/react/infra/env`)
 
 ## Geo-map providers
 

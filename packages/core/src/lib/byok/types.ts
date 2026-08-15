@@ -1,6 +1,6 @@
 import type { StackDatabaseChoice, StackServerChoice } from '../model/types';
 
-export type EnvConfigCategory = 'builder' | 'database' | 'server' | 'ai' | 'auth' | 'custom';
+export type EnvConfigCategory = 'builder' | 'database' | 'server' | 'ai' | 'auth' | 'integration' | 'custom';
 
 export type AiProviderId = 'openai' | 'anthropic' | 'google' | 'azure-openai' | 'ollama';
 

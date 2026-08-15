@@ -5,6 +5,7 @@ import '../../../packages/web-components/src/styles/styles.css';
 import '../public/styles.css';
 import { App } from './App';
 import { ClientRouterProvider } from './lib/client-router';
+import { ConsumerSecretsProvider } from './state/consumer-secrets-context';
 
 registerRosettaDashElements();
 
@@ -13,7 +14,9 @@ if (root) {
   createRoot(root).render(
     <StrictMode>
       <ClientRouterProvider>
-        <App />
+        <ConsumerSecretsProvider>
+          <App />
+        </ConsumerSecretsProvider>
       </ClientRouterProvider>
     </StrictMode>,
   );

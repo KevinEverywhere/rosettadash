@@ -5,16 +5,15 @@ import { SelectInput } from '@rosettadash/react/visual/input/select';
 import { TextInput } from '@rosettadash/react/visual/input/text';
 import { GEO_MAP_PROVIDERS, MOCK_DESTINATIONS, getDestinationById, type GeoMapProvider } from '@destination-atlas';
 import type { AtlasContext } from '../state/useDestinationAtlasState';
+import { useConsumerSecrets } from '../state/consumer-secrets-context';
 import { formatRegionLabel, localizedDestinationName } from '../lib/atlas-utils';
 import { destinationByIdMapView, destinationMapView, resolveMapLocationQuery } from '../lib/map-location';
-
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '';
 
 export const MAP_SOURCE = `<MapScreen mapProvider={mapProvider} selectedId={selectedId}>
   <TextInput label="Request location" value={mapLocationQuery} />
   <SelectInput label="Map provider" value={mapProvider} />
   <GeoExplorerLayout listPlacement={listPlacement} items={destinationItems} selectedId={selectedId}>
-    <GeoMap center={…} zoom={…} markers={destinationMarkers} selectedId={selectedId} />
+    <GeoMap center={…} zoom={…} markers={destinationMarkers} selectedId={selectedId} apiKey={byokGoogleMapsKey} />
   </GeoExplorerLayout>
 </MapScreen>`;
 
@@ -30,6 +29,8 @@ type Props = Pick<
   | 'mapViewOverride'
   | 'focusDestinationOnMap'
   | 'goToMapView'
+  | 'setScreen'
+  | 'setHighlightTarget'
 >;
 
 export function MapScreen({
@@ -43,9 +44,19 @@ export function MapScreen({
   mapViewOverride,
   focusDestinationOnMap,
   goToMapView,
+  setScreen,
+  setHighlightTarget,
 }: Props) {
   const [locationError, setLocationError] = useState('');
   const [listPlacement, setListPlacement] = useState<GeoExplorerListPlacement>('right');
+  const secrets = useConsumerSecrets();
+  const googleMapsApiKey = secrets.googleMapsApiKey;
+  const maplibreTileUrl = secrets.maplibreTileUrl;
+
+  const openIntegrationsSettings = () => {
+    setHighlightTarget('integrations');
+    setScreen('settings');
+  };
 
   const selected = getDestinationById(selectedId);
   const view =
@@ -140,9 +151,22 @@ export function MapScreen({
           <dd>{activeProvider.notes}</dd>
         </dl>
       ) : null}
-      {mapProvider === 'google-maps' && !GOOGLE_MAPS_API_KEY ? (
+      {mapProvider === 'google-maps' && !googleMapsApiKey ? (
+        <p className="da-note da-byok-cta">
+          Google Maps requires an API key.{' '}
+          <button type="button" className="da-locale-link" onClick={openIntegrationsSettings}>
+            Configure in Settings → Integrations
+          </button>{' '}
+          or set <code>VITE_GOOGLE_MAPS_API_KEY</code> in <code>.env.local</code>.
+        </p>
+      ) : null}
+      {mapProvider === 'maplibre' && !maplibreTileUrl ? (
         <p className="da-note">
-          Set <code>VITE_GOOGLE_MAPS_API_KEY</code> in <code>.env.local</code> to load Google Maps.
+          Using demo MapLibre tiles. Add a MapTiler key in{' '}
+          <button type="button" className="da-locale-link" onClick={openIntegrationsSettings}>
+            Settings → Integrations
+          </button>{' '}
+          for hosted vector tiles.
         </p>
       ) : null}
 
@@ -171,7 +195,8 @@ export function MapScreen({
             zoom={view.zoom}
             markers={markers}
             selectedId={selectedId}
-            apiKey={mapProvider === 'google-maps' ? GOOGLE_MAPS_API_KEY : undefined}
+            apiKey={mapProvider === 'google-maps' ? googleMapsApiKey : undefined}
+            tileUrl={mapProvider === 'maplibre' ? maplibreTileUrl : undefined}
             onMarkerSelect={({ id }) => selectDestination(id)}
           />
         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 export type ThemePreference = 'system' | 'light' | 'dark';
 
@@ -28,15 +28,28 @@ export function useThemePreference(): {
   };
 }
 
-export function ThemeToggle({
-  theme,
-  onChange,
-}: {
-  theme: ThemePreference;
-  onChange: (theme: ThemePreference) => void;
-}) {
+export function themeLabel(theme: ThemePreference): string {
+  switch (theme) {
+    case 'light':
+      return 'Light';
+    case 'dark':
+      return 'Dark';
+    default:
+      return 'System';
+  }
+}
+
+export const ThemeToggle = forwardRef<
+  HTMLLabelElement,
+  {
+    theme: ThemePreference;
+    onChange: (theme: ThemePreference) => void;
+    className?: string;
+  }
+>(function ThemeToggle({ theme, onChange, className }, ref) {
+  const rootClass = ['da-theme-toggle', className].filter(Boolean).join(' ');
   return (
-    <label className="da-theme-toggle">
+    <label ref={ref} className={rootClass}>
       <span>Theme</span>
       <select
         value={theme}
@@ -49,4 +62,4 @@ export function ThemeToggle({
       </select>
     </label>
   );
-}
+});
