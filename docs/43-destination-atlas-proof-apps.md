@@ -65,7 +65,9 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 
 The **About** tab is the first screen and the **only** page-level scroller in each proof app. Long-form copy (runtime guides, npm commands, Storybook ports) lives inside **`layout.scroll-region`**. The shell locks `body` overflow; other tabs fit within the viewport without page scroll. When content fits, the scroll region shows no visible scrollbar; overflow uses a thin overlay scrollbar.
 
-Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/DAS-130). Shared copy: `libs/destination-atlas/src/data/about-guides.ts`.
+Each proof app’s About page lists all five runtimes in a **three-column matrix** — **Package | Proof app | Storybook** — with the **current runtime row highlighted** (“You are here”) so you can see npm install targets, dev-server commands, and Storybook ports at a glance. Shared copy and column labels: `libs/destination-atlas/src/data/about-guides.ts` (`DESTINATION_ATLAS_RUNTIME_GUIDES`, `DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS`, `DESTINATION_ATLAS_CURRENT_RUNTIME_BADGE`).
+
+Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/DAS-130). Runtime matrix redesign: [DAS-143](https://planetkevin.atlassian.net/browse/DAS-143).
 
 ### Authoring tab (upload-first, flat + 360°)
 

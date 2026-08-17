@@ -1,7 +1,12 @@
 import {
   DESTINATION_ATLAS_ABOUT_INTRO,
+  DESTINATION_ATLAS_CURRENT_RUNTIME_BADGE,
   DESTINATION_ATLAS_RUNTIME_GUIDES,
+  DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS,
+  type DestinationAtlasRuntimeId,
 } from '@destination-atlas';
+
+const CURRENT_RUNTIME_ID: DestinationAtlasRuntimeId = 'react';
 
 export const ABOUT_SOURCE = `<AboutScreen>
   <section className="da-panel da-panel--about">
@@ -30,40 +35,59 @@ export function AboutScreen() {
             consumer project.
           </p>
           <p className="da-about__note">{DESTINATION_ATLAS_ABOUT_INTRO.runtimeCardsNote}</p>
-          <ul className="da-about__runtime-list">
-            {DESTINATION_ATLAS_RUNTIME_GUIDES.map((runtime) => (
-              <li key={runtime.id} className="da-about__runtime-card">
-                <header>
-                  <h4>{runtime.label}</h4>
-                  <span className="da-about__ticket">{runtime.ticket}</span>
-                </header>
-                <p>{runtime.summary}</p>
-                <dl className="da-about__commands">
-                  <div>
-                    <dt>Package</dt>
-                    <dd>
-                      <code>{runtime.npmPackage}</code>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Proof app</dt>
-                    <dd>
-                      <code>{runtime.proofCommand}</code>
-                      <span className="da-about__port">localhost:{runtime.proofPort}</span>
-                      <span className="da-about__path">{runtime.proofPath}</span>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Storybook</dt>
-                    <dd>
-                      <code>{runtime.storybookCommand}</code>
-                      <span className="da-about__port">localhost:{runtime.storybookPort}</span>
-                    </dd>
-                  </div>
-                </dl>
-              </li>
-            ))}
-          </ul>
+          <div className="da-about__runtime-matrix-wrap">
+            <div className="da-about__runtime-matrix-head" aria-hidden="true">
+              {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS.map((column) => (
+                <span key={column.id}>{column.label}</span>
+              ))}
+            </div>
+            <ul className="da-about__runtime-list">
+              {DESTINATION_ATLAS_RUNTIME_GUIDES.map((runtime) => {
+                const isCurrent = runtime.id === CURRENT_RUNTIME_ID;
+                return (
+                  <li
+                    key={runtime.id}
+                    className={`da-about__runtime-card${isCurrent ? ' da-about__runtime-card--current' : ''}`}
+                    aria-current={isCurrent ? 'true' : undefined}
+                  >
+                    <header>
+                      <h4>{runtime.label}</h4>
+                      <span className="da-about__ticket">{runtime.ticket}</span>
+                      {isCurrent ? (
+                        <span className="da-about__runtime-current-badge">
+                          {DESTINATION_ATLAS_CURRENT_RUNTIME_BADGE}
+                        </span>
+                      ) : null}
+                    </header>
+                    <p>{runtime.summary}</p>
+                    <div className="da-about__runtime-matrix">
+                      <div className="da-about__runtime-matrix-col">
+                        <span className="da-about__runtime-matrix-label">
+                          {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS[0].label}
+                        </span>
+                        <code>{runtime.npmPackage}</code>
+                      </div>
+                      <div className="da-about__runtime-matrix-col">
+                        <span className="da-about__runtime-matrix-label">
+                          {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS[1].label}
+                        </span>
+                        <code>{runtime.proofCommand}</code>
+                        <span className="da-about__port">localhost:{runtime.proofPort}</span>
+                        <span className="da-about__path">{runtime.proofPath}</span>
+                      </div>
+                      <div className="da-about__runtime-matrix-col">
+                        <span className="da-about__runtime-matrix-label">
+                          {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS[2].label}
+                        </span>
+                        <code>{runtime.storybookCommand}</code>
+                        <span className="da-about__port">localhost:{runtime.storybookPort}</span>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </section>
 
         <section className="da-about__section">

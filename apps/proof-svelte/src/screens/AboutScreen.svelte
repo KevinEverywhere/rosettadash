@@ -10,8 +10,13 @@
   import {
     DESTINATION_ATLAS_ABOUT_INTRO,
     DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES,
+    DESTINATION_ATLAS_CURRENT_RUNTIME_BADGE,
     DESTINATION_ATLAS_RUNTIME_GUIDES,
+    DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS,
+    type DestinationAtlasRuntimeId,
   } from '@destination-atlas';
+
+  const CURRENT_RUNTIME_ID: DestinationAtlasRuntimeId = 'svelte';
 </script>
 
 <section class="da-panel da-panel--about">
@@ -33,38 +38,56 @@
         project.
       </p>
       <p class="da-about__note">{DESTINATION_ATLAS_ABOUT_INTRO.runtimeCardsNote}</p>
-      <ul class="da-about__runtime-list">
-        {#each DESTINATION_ATLAS_RUNTIME_GUIDES as runtime (runtime.id)}
-          <li class="da-about__runtime-card">
-            <header>
-              <h4>{runtime.label}</h4>
-              <span class="da-about__ticket">{runtime.ticket}</span>
-            </header>
-            <p>{runtime.summary}</p>
-            <dl class="da-about__commands">
-              <div>
-                <dt>Package</dt>
-                <dd><code>{runtime.npmPackage}</code></dd>
-              </div>
-              <div>
-                <dt>Proof app</dt>
-                <dd>
+      <div class="da-about__runtime-matrix-wrap">
+        <div class="da-about__runtime-matrix-head" aria-hidden="true">
+          {#each DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS as column (column.id)}
+            <span>{column.label}</span>
+          {/each}
+        </div>
+        <ul class="da-about__runtime-list">
+          {#each DESTINATION_ATLAS_RUNTIME_GUIDES as runtime (runtime.id)}
+            <li
+              class="da-about__runtime-card"
+              class:da-about__runtime-card--current={runtime.id === CURRENT_RUNTIME_ID}
+              aria-current={runtime.id === CURRENT_RUNTIME_ID ? 'true' : undefined}
+            >
+              <header>
+                <h4>{runtime.label}</h4>
+                <span class="da-about__ticket">{runtime.ticket}</span>
+                {#if runtime.id === CURRENT_RUNTIME_ID}
+                  <span class="da-about__runtime-current-badge">
+                    {DESTINATION_ATLAS_CURRENT_RUNTIME_BADGE}
+                  </span>
+                {/if}
+              </header>
+              <p>{runtime.summary}</p>
+              <div class="da-about__runtime-matrix">
+                <div class="da-about__runtime-matrix-col">
+                  <span class="da-about__runtime-matrix-label">
+                    {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS[0].label}
+                  </span>
+                  <code>{runtime.npmPackage}</code>
+                </div>
+                <div class="da-about__runtime-matrix-col">
+                  <span class="da-about__runtime-matrix-label">
+                    {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS[1].label}
+                  </span>
                   <code>{runtime.proofCommand}</code>
                   <span class="da-about__port">localhost:{runtime.proofPort}</span>
                   <span class="da-about__path">{runtime.proofPath}</span>
-                </dd>
-              </div>
-              <div>
-                <dt>Storybook</dt>
-                <dd>
+                </div>
+                <div class="da-about__runtime-matrix-col">
+                  <span class="da-about__runtime-matrix-label">
+                    {DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS[2].label}
+                  </span>
                   <code>{runtime.storybookCommand}</code>
                   <span class="da-about__port">localhost:{runtime.storybookPort}</span>
-                </dd>
+                </div>
               </div>
-            </dl>
-          </li>
-        {/each}
-      </ul>
+            </li>
+          {/each}
+        </ul>
+      </div>
     </section>
 
     <section class="da-about__section">

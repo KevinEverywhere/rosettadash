@@ -1,6 +1,24 @@
+/** Runtime ids for Destination Atlas proof apps — use to highlight the active row on About. */
+export type DestinationAtlasRuntimeId =
+  | 'web-components'
+  | 'react'
+  | 'angular'
+  | 'vue'
+  | 'svelte';
+
+/** Column labels for the About runtime matrix (Package | Proof app | Storybook). */
+export const DESTINATION_ATLAS_RUNTIME_MATRIX_COLUMNS = [
+  { id: 'package', label: 'Package' },
+  { id: 'proof', label: 'Proof app' },
+  { id: 'storybook', label: 'Storybook' },
+] as const;
+
+/** Badge copy on the highlighted runtime row in each proof app's About page. */
+export const DESTINATION_ATLAS_CURRENT_RUNTIME_BADGE = 'You are here';
+
 /** Runtime catalog for Destination Atlas About page — proof apps and Storybook ports. */
 export interface DestinationAtlasRuntimeGuide {
-  id: string;
+  id: DestinationAtlasRuntimeId;
   label: string;
   npmPackage: string;
   ticket: string;

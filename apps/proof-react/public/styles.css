@@ -1749,6 +1749,7 @@ rd-wasm-media {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 0.35rem;
 }
@@ -1764,20 +1765,77 @@ rd-wasm-media {
   font-weight: 600;
 }
 
-.da-about__commands {
+.da-about__runtime-matrix-wrap {
+  margin-top: 0.75rem;
+}
+
+.da-about__runtime-matrix-head {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .da-about__runtime-matrix-head {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    padding: 0 0.75rem 0.35rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--da-muted);
+  }
+}
+
+.da-about__runtime-matrix {
   margin: 0.65rem 0 0;
   display: grid;
-  gap: 0.45rem;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+@media (min-width: 640px) {
+  .da-about__runtime-matrix {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+.da-about__runtime-matrix-col {
   font-size: 0.8125rem;
 }
 
-.da-about__commands dt {
+.da-about__runtime-matrix-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--da-muted);
 }
 
-.da-about__commands dd {
-  margin: 0.15rem 0 0;
+@media (min-width: 640px) {
+  .da-about__runtime-matrix-label {
+    display: none;
+  }
+}
+
+.da-about__runtime-card--current {
+  border-color: var(--da-accent);
+  background: color-mix(in srgb, var(--da-accent) 10%, var(--da-panel-bg));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--da-accent) 35%, transparent);
+}
+
+.da-about__runtime-current-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--da-accent);
+  background: color-mix(in srgb, var(--da-accent) 14%, var(--da-panel-bg));
+  border: 1px solid color-mix(in srgb, var(--da-accent) 40%, var(--da-border));
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  white-space: nowrap;
 }
 
 .da-about__port,
