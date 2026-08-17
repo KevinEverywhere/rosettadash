@@ -2,6 +2,7 @@ import {
   DB_WASM_MEDIA_TAG,
   registerRdWasmMedia,
 } from '@rosettadash/web-components/visual/wasm/media';
+import type { AuthoringRecordRange } from '@rosettadash/core';
 import type { PropType } from 'vue';
 import { defineCustomElementHost } from '../../../lib/custom-element-host';
 
@@ -20,8 +21,10 @@ export interface WasmMediaProps {
   yaw?: number;
   pitch?: number;
   horizontalFov?: number;
+  reverse?: boolean;
   inputFile?: File | Blob | null;
   cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
+  recordRange?: AuthoringRecordRange | null;
   className?: string;
 }
 
@@ -31,7 +34,7 @@ export const WasmMedia = defineCustomElementHost(
     name: 'RdWasmMedia',
     tagName: DB_WASM_MEDIA_TAG,
     register: registerRdWasmMedia,
-    properties: ['inputFile', 'cropRegion'],
+    properties: ['inputFile', 'cropRegion', 'recordRange'],
     attrs: {
       extractionMode: 'extraction-mode',
       outputFormat: 'output-format',
@@ -42,11 +45,15 @@ export const WasmMedia = defineCustomElementHost(
       cropHeight: 'crop-height',
       outputWidth: 'output-width',
       outputHeight: 'output-height',
+      yaw: 'yaw',
+      pitch: 'pitch',
       horizontalFov: 'horizontal-fov',
+      reverse: 'reverse',
     },
     events: {
       progress: 'progress',
       'extract-complete': 'extractComplete',
+      'extract-error': 'extractError',
       metadata: 'metadata',
     },
   },
@@ -65,11 +72,16 @@ export const WasmMedia = defineCustomElementHost(
     yaw: { type: Number, default: undefined },
     pitch: { type: Number, default: undefined },
     horizontalFov: { type: Number, default: undefined },
+    reverse: { type: Boolean, default: undefined },
     inputFile: { type: [Object, File] as PropType<File | Blob | null | undefined>, default: undefined },
     cropRegion: {
       type: Object as PropType<
         Record<string, string | number | boolean | null | undefined> | null | undefined
       >,
+      default: undefined,
+    },
+    recordRange: {
+      type: Object as PropType<AuthoringRecordRange | null | undefined>,
       default: undefined,
     },
   },

@@ -115,6 +115,8 @@ export const PALETTE_GROUP_DEFINITIONS: PaletteGroupDefinition[] = [
     types: [
       'visual.media.video-source',
       'visual.media.equirect-viewport',
+      'visual.media.equirect-sphere-viewport',
+      'visual.media.flat-video-viewport',
       'visual.media.live-capture',
     ],
   },

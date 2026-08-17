@@ -54,8 +54,8 @@ Most palette atoms are **native runtime** components today. The WC npm package s
 | **Destinations** | Browse + filter | DataTable, DetailPanel, TextInput, SelectInput, DateRangeFilter, TimePreset |
 | **Map** | 2D exploration | GeoMap (provider prop), LinkList, TabsLayout |
 | **Globe** | 3D markers | ThreeGeoGlobe |
-| **Media** | Video consumption | YoutubeEmbed, VideoMetadataPanel |
-| **Authoring** | Upload + WASM extract | VideoSource, EquirectViewport, WasmMedia (ffmpeg.wasm — [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131)) |
+| **Media** | Flat YouTube + 360° routing | YoutubeEmbed, VideoMetadataPanel — 360° destinations open Authoring |
+| **Authoring** | Upload + WASM extract | FlatVideoViewport or EquirectSphereViewport, AuthoringPlaybackBar, WasmMedia ([DAS-131](https://planetkevin.atlassian.net/browse/DAS-131), [DAS-141](https://planetkevin.atlassian.net/browse/DAS-141)) |
 | **Intel** | Regional news | NewsSearchBox, NewsRegionSelect, NewsResultsTable, NewsArticleDetail |
 | **Plan** | Trip + access | RoleGate, PersonInvite, RoleAssign, Timer, form inputs |
 | **Stack** | Infra demo | infra/* read-only panel; live BYOK key status — [DAS-135](https://planetkevin.atlassian.net/browse/DAS-135) |
@@ -67,18 +67,22 @@ The **About** tab is the first screen and the **only** page-level scroller in ea
 
 Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/DAS-130). Shared copy: `libs/destination-atlas/src/data/about-guides.ts`.
 
-### Authoring tab (Three.js sphere + ffmpeg.wasm)
+### Authoring tab (upload-first, flat + 360°)
 
-**Authoring** is separate from **Media**. Media is for watching destination embeds; Authoring is where users upload 2:1 equirect video and frame an export:
+**Authoring** is separate from **Media**. Media is for watching flat YouTube embeds; selecting a 360° destination navigates to Authoring where users **upload** their own source:
 
-- **Source pane** — `EquirectSphereViewport`: interior Three.js sphere (flipped texture), green export rectangle, orbit + Shift+drag framing, preset sizes (320×240, 640×360, 720×480, custom), ffmpeg.wasm extract
-- **Output pane** — live program-camera preview (matches export rectangle) + extracted MP4 blob + download
+- **Source pane** — auto-detects flat vs ~2:1 equirect:
+  - **Flat (2D):** `FlatVideoViewport` — draggable crop rectangle, live output mirror
+  - **360° equirect:** `EquirectSphereViewport` — interior Three.js sphere, orbit + Shift+drag framing, little-planet blend at wide FOV
+- **Playback bar** — play/pause/stop/record; orange segment marks recorded trim range used for extract
+- **Output pane** — program preview + ffmpeg.wasm extract (trimmed to record range when set) + download
+- **Export controls** — preset sizes, custom W×H, reverse-playback toggle
 
-Shipped with one example: **Cusco plaza (360° equirect)** (`libs/destination-atlas/src/data/authoring-examples.ts`).
+Default camera framing for Cusco and other destinations comes from `libs/destination-atlas/src/data/authoring-examples.ts` (presets only — **no autoload**).
 
-**Dev setup (proof-react / proof-angular):** from repo root run `npm install` (includes `@ffmpeg/ffmpeg`, `@ffmpeg/util`, and `@ffmpeg/core` as devDependencies). Proof and Storybook Vite configs serve `@ffmpeg/core` from same-origin `/ffmpeg-core/*` (see `tools/vite/ffmpeg-core-vite-plugin.mjs`) and set COOP + `Cross-Origin-Embedder-Policy: credentialless` so ffmpeg.wasm can use SharedArrayBuffer while YouTube embeds still load. `<rd-wasm-media>` loads core via `@rosettadash/core` helpers — no unpkg CDN fetch.
+**Dev setup (proof-react / proof-angular):** from repo root run `npm install` (includes `@ffmpeg/ffmpeg`, `@ffmpeg/util`, and `@ffmpeg/core` as devDependencies). Proof and Storybook Vite configs serve `@ffmpeg/core` from same-origin `/ffmpeg-core/*` (see `tools/vite/ffmpeg-core-vite-plugin.mjs`) and set COOP + `Cross-Origin-Embedder-Policy: credentialless` so ffmpeg.wasm can use SharedArrayBuffer while YouTube embeds still load. `<rd-wasm-media>` accepts `inputFile`, `cropRegion`, `recordRange`, and `reverse` — loads core via `@rosettadash/core` helpers (no unpkg CDN fetch).
 
-Implemented in React proof: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131) (tab shell); [DAS-132](https://planetkevin.atlassian.net/browse/DAS-132) (sphere viewport + WASM extract on branch `feature/DAS-132-wasm-authoring-extract`). Editor/Admin roles only.
+Implemented in React + Angular proof apps: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131) (tab shell); [DAS-132](https://planetkevin.atlassian.net/browse/DAS-132) (sphere + WASM); [DAS-140](https://planetkevin.atlassian.net/browse/DAS-140) / [DAS-141](https://planetkevin.atlassian.net/browse/DAS-141) (playback bar, flat crop, record trim). Editor/Admin roles only.
 
 ### Consumer BYOK (integrations)
 

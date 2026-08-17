@@ -353,6 +353,8 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     companionTypes: [
       'visual.media.video-source',
       'visual.media.equirect-viewport',
+      'visual.media.equirect-sphere-viewport',
+      'visual.media.flat-video-viewport',
       'infra.wasm.asset',
       'visual.table',
     ],
@@ -365,6 +367,8 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     animationKey: 'filter-table',
     companionTypes: [
       'visual.media.equirect-viewport',
+      'visual.media.equirect-sphere-viewport',
+      'visual.media.flat-video-viewport',
       'visual.media.live-capture',
       'visual.wasm.media',
     ],
@@ -376,6 +380,21 @@ const GROUPING_GUIDES: ComponentGroupingGuide[] = [
     animationKey: 'filter-table',
     companionTypes: ['visual.media.video-source', 'visual.wasm.media'],
     placementMessage: 'Bind crop region output to WASM media equirect-extract input.',
+  },
+  {
+    type: 'visual.media.equirect-sphere-viewport',
+    summary:
+      'Three.js interior sphere for 360° equirect — orbit, POV framing, program output mirror.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.media.video-source', 'visual.wasm.media'],
+    placementMessage: 'Bind camera state to WASM media rectilinear extract; pair with playback trim.',
+  },
+  {
+    type: 'visual.media.flat-video-viewport',
+    summary: 'Flat 2D crop rectangle with drag handles and live scaled output preview.',
+    animationKey: 'filter-table',
+    companionTypes: ['visual.media.video-source', 'visual.wasm.media'],
+    placementMessage: 'Bind crop region to WASM media flat-crop extract for 2D sources.',
   },
   {
     type: 'visual.media.live-capture',

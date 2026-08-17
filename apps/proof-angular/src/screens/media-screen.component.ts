@@ -22,7 +22,7 @@ import { VideoMetadataPanelComponent } from '../components/video-metadata-panel.
       <h2>Media</h2>
       <p>
         Watch flat destination videos here. 360° equirectangular locations open in
-        <strong>Authoring</strong> with the shipped source loaded in the sphere viewport.
+        <strong>Authoring</strong> — upload your source and frame the export there.
       </p>
       <div class="rd-media-layout">
         <div class="rd-media-primary">

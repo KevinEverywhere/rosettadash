@@ -103,12 +103,13 @@ export const DESTINATION_ATLAS_SCREENS: DestinationAtlasScreen[] = [
   {
     id: 'media',
     label: 'Media',
-    description: 'Watch destination videos — YouTube embeds and metadata.',
+    description: 'Flat YouTube embeds; 360° destinations route to Authoring for upload and extract.',
   },
   {
     id: 'authoring',
     label: 'Authoring',
-    description: 'Upload source video; ffmpeg.wasm crop, scale, and output preview.',
+    description:
+      'Upload source video (flat or 360°); record trim range; preview crop or sphere POV; ffmpeg.wasm extract.',
   },
   {
     id: 'intel',

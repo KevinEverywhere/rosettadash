@@ -87,6 +87,92 @@ export const MEDIA_COMPONENT_PLUGINS: ComponentPlugin[] = [
     },
   },
   {
+    id: 'media.equirect-sphere-viewport',
+    definition: {
+      type: 'visual.media.equirect-sphere-viewport',
+      category: 'visual',
+      label: 'Equirect Sphere Viewport',
+      description:
+        'Three.js interior sphere preview for 360° equirect sources — orbit, POV framing, program output mirror',
+      isVisual: true,
+      inputs: [{ id: 'metadata', name: 'metadata', dataType: 'row' }],
+      outputs: [{ id: 'camera-state', name: 'cameraState', dataType: 'row' }],
+      properties: [
+        { key: 'label', label: 'Label', type: 'string', default: 'Equirect sphere viewport' },
+        { key: 'flipInterior', label: 'Flip interior', type: 'boolean', default: true },
+        { key: 'yaw', label: 'Yaw', type: 'number', default: 0 },
+        { key: 'pitch', label: 'Pitch', type: 'number', default: -8 },
+        { key: 'horizontalFov', label: 'Horizontal FOV', type: 'number', default: 75 },
+        { key: 'outputWidth', label: 'Output width', type: 'number', default: 1280 },
+        { key: 'outputHeight', label: 'Output height', type: 'number', default: 720 },
+        { key: 'minHorizontalFov', label: 'Min horizontal FOV', type: 'number', default: 30 },
+        { key: 'maxHorizontalFov', label: 'Max horizontal FOV', type: 'number', default: 360 },
+      ],
+    },
+    metadata: {
+      paletteGroupId: 'media-authoring',
+      previewKind: 'plugin',
+    },
+  },
+  {
+    id: 'media.flat-video-viewport',
+    definition: {
+      type: 'visual.media.flat-video-viewport',
+      category: 'visual',
+      label: 'Flat Video Viewport',
+      description: 'Interactive crop rectangle on flat 2D video with live output mirror',
+      isVisual: true,
+      inputs: [{ id: 'metadata', name: 'metadata', dataType: 'row' }],
+      outputs: [{ id: 'crop-region', name: 'cropRegion', dataType: 'row' }],
+      properties: [
+        { key: 'label', label: 'Label', type: 'string', default: 'Flat video viewport' },
+        {
+          key: 'sourceWidth',
+          label: 'Source width (px)',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_SOURCE.width,
+        },
+        {
+          key: 'sourceHeight',
+          label: 'Source height (px)',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_SOURCE.height,
+        },
+        { key: 'cropX', label: 'Crop X', type: 'number', default: DEFAULT_EQUIRECT_FLAT_CROP.cropX },
+        { key: 'cropY', label: 'Crop Y', type: 'number', default: DEFAULT_EQUIRECT_FLAT_CROP.cropY },
+        {
+          key: 'cropWidth',
+          label: 'Crop width',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.cropWidth,
+        },
+        {
+          key: 'cropHeight',
+          label: 'Crop height',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.cropHeight,
+        },
+        {
+          key: 'outputWidth',
+          label: 'Output width',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.outputWidth,
+        },
+        {
+          key: 'outputHeight',
+          label: 'Output height',
+          type: 'number',
+          default: DEFAULT_EQUIRECT_FLAT_CROP.outputHeight,
+        },
+        { key: 'lockAspectRatio', label: 'Lock aspect ratio', type: 'boolean', default: true },
+      ],
+    },
+    metadata: {
+      paletteGroupId: 'media-authoring',
+      previewKind: 'plugin',
+    },
+  },
+  {
     id: 'media.live-capture',
     definition: {
       type: 'visual.media.live-capture',

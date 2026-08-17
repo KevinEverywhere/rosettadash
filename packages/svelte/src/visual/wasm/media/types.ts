@@ -1,3 +1,5 @@
+import type { AuthoringRecordRange } from '@rosettadash/core';
+
 export interface WasmMediaProps {
   label?: string;
   operation?: string;
@@ -13,14 +15,17 @@ export interface WasmMediaProps {
   yaw?: number;
   pitch?: number;
   horizontalFov?: number;
+  reverse?: boolean;
   inputFile?: File | Blob | null;
   cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
+  recordRange?: AuthoringRecordRange | null;
   className?: string;
   onProgress?: (detail: { progress: number }) => void;
   onExtractComplete?: (detail: {
     blob: Blob;
     metadata: Record<string, string | number | boolean | null | undefined>;
   }) => void;
+  onExtractError?: (detail: { message: string }) => void;
   onMetadata?: (
     detail: Record<string, string | number | boolean | null | undefined>,
   ) => void;

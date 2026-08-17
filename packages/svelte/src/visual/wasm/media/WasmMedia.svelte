@@ -26,11 +26,14 @@
 		yaw,
 		pitch,
 		horizontalFov,
+		reverse,
 		inputFile,
 		cropRegion,
+		recordRange,
 		className,
 		onProgress,
 		onExtractComplete,
+		onExtractError,
 		onMetadata,
 	}: WasmMediaProps = $props();
 
@@ -48,6 +51,7 @@
 						metadata: Record<string, string | number | boolean | null | undefined>;
 					},
 				),
+			'extract-error': (detail) => onExtractError?.(detail as { message: string }),
 			metadata: (detail) =>
 				onMetadata?.(
 					detail as Record<string, string | number | boolean | null | undefined>,
@@ -74,8 +78,10 @@
 		setHostAttribute(host, 'yaw', yaw);
 		setHostAttribute(host, 'pitch', pitch);
 		setHostAttribute(host, 'horizontal-fov', horizontalFov);
+		setHostAttribute(host, 'reverse', reverse);
 		setHostProperty(host, 'inputFile', inputFile);
 		setHostProperty(host, 'cropRegion', cropRegion);
+		setHostProperty(host, 'recordRange', recordRange);
 	});
 </script>
 

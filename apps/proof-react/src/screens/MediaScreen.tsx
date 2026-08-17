@@ -62,7 +62,7 @@ export function MediaScreen({
       <h2>Media</h2>
       <p>
         Watch flat destination videos here. 360° equirectangular locations open in{' '}
-        <strong>Authoring</strong> with the shipped source loaded in the sphere viewport.
+        <strong>Authoring</strong> — upload your source and frame the export there.
       </p>
       <div className="rd-media-layout">
         <div className="rd-media-primary">

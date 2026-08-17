@@ -96,6 +96,7 @@ export const WASM_COMPONENT_PLUGINS: ComponentPlugin[] = [
         { id: 'asset-ref', name: 'assetRef', dataType: 'any' },
         { id: 'input-file', name: 'inputFile', dataType: 'any' },
         { id: 'crop-region', name: 'cropRegion', dataType: 'row' },
+        { id: 'record-range', name: 'recordRange', dataType: 'row' },
       ],
       outputs: [
         { id: 'output-blob', name: 'outputBlob', dataType: 'any' },
@@ -157,6 +158,13 @@ export const WASM_COMPONENT_PLUGINS: ComponentPlugin[] = [
         { key: 'yaw', label: 'Yaw (rectilinear)', type: 'number', default: 0 },
         { key: 'pitch', label: 'Pitch (rectilinear)', type: 'number', default: 0 },
         { key: 'horizontalFov', label: 'Horizontal FOV', type: 'number', default: 90 },
+        { key: 'reverse', label: 'Reverse playback', type: 'boolean', default: false },
+        {
+          key: 'recordRange',
+          label: 'Record trim range (startSec/endSec)',
+          type: 'json',
+          default: null,
+        },
         { key: 'ffmpegArgs', label: 'Extra ffmpeg args', type: 'string', default: '' },
         { key: 'showProgress', label: 'Show progress UI', type: 'boolean', default: true },
         { key: 'label', label: 'Label', type: 'string', default: 'Media transcode' },

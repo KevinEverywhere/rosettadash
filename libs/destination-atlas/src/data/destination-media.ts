@@ -10,24 +10,14 @@ export function destinationHasFlatVideo(dest: Destination | undefined): boolean 
   return Boolean(dest?.youtubeId) && !isEquirectDestination(dest);
 }
 
+/** Destinations that route to Authoring (360° workflow) — upload required; no shipped autoload. */
 export function destinationHasEquirectVideo(dest: Destination | undefined): boolean {
-  if (!dest || !isEquirectDestination(dest)) {
-    return false;
-  }
-  return Boolean(getAuthoringExampleForDestinationId(dest.id)?.sourceVideoUrl ?? dest.equirectVideoUrl);
+  return isEquirectDestination(dest);
 }
 
 export const FLAT_VIDEO_DESTINATIONS = MOCK_DESTINATIONS.filter(destinationHasFlatVideo);
 
 export const EQUIRECT_VIDEO_DESTINATIONS = MOCK_DESTINATIONS.filter(destinationHasEquirectVideo);
-
-export function resolveEquirectSourceVideoUrl(dest: Destination | undefined): string | undefined {
-  if (!dest) {
-    return undefined;
-  }
-  const example = getAuthoringExampleForDestinationId(dest.id);
-  return example?.sourceVideoUrl ?? dest.equirectVideoUrl;
-}
 
 export function resolveAuthoringExampleIdForDestination(destId: string): string | undefined {
   return getAuthoringExampleForDestinationId(destId)?.id;

@@ -84,6 +84,35 @@ npm install @ffmpeg/ffmpeg @ffmpeg/util
 </script>
 ```
 
+## Authoring viewports (framework hosts)
+
+Destination Atlas Authoring uses **framework** viewports (React/Angular), not the legacy 2:1 canvas CE:
+
+| Component | Import | Use |
+|-----------|--------|-----|
+| `EquirectSphereViewport` | `@rosettadash/react/visual/media/equirect-sphere-viewport` | 360° interior sphere + program output |
+| `FlatVideoViewport` | `@rosettadash/react/visual/media/flat-video-viewport` | Flat 2D crop rectangle + output mirror |
+
+Legacy `<rd-equirect-viewport>` remains for 2:1 flat-crop on the equirect **frame** (builder palette / FFMP3).
+
+## Record trim + reverse on WasmMedia
+
+Authoring passes a recorded time range so extract uses `-ss`/`-t` instead of the full file:
+
+```html
+<rd-wasm-media
+  operation="equirect-extract"
+  extraction-mode="rectilinear"
+  reverse
+></rd-wasm-media>
+```
+
+```javascript
+media.setProperty('inputFile', file);
+media.setProperty('recordRange', { startSec: 1.5, endSec: 6.2 });
+media.setProperty('cropRegion', { yaw: 25, pitch: -8, horizontalFov: 75, outputWidth: 1280, outputHeight: 720 });
+```
+
 ## Rectilinear preview
 
 Set `preview-mode="rectilinear"` on `<rd-equirect-viewport>` and `yaw`, `pitch`, `horizontal-fov` attributes. WASM media `extraction-mode="rectilinear"` uses the matching v360 filter.

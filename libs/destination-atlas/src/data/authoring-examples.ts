@@ -1,12 +1,10 @@
-/** Shipped authoring example — equirect WASM crop/extract reference (Cusco). */
+/** Default camera framing preset when Authoring opens for a destination (upload-first — no autoload). */
 export interface AuthoringExample {
   id: string;
   destinationId: string;
   label: string;
   summary: string;
   projection: 'equirect' | 'flat';
-  /** Shipped sample video URL (must be CORS-readable for in-browser sphere preview). */
-  sourceVideoUrl?: string;
   defaultYaw: number;
   defaultPitch: number;
   defaultHorizontalFov: number;
@@ -20,9 +18,8 @@ export const DESTINATION_ATLAS_AUTHORING_EXAMPLES: AuthoringExample[] = [
     destinationId: 'cusco',
     label: 'Cusco plaza (360° equirect)',
     summary:
-      'Reference equirectangular workflow — explore the plaza in the sphere viewport, frame a rectilinear subsection, and extract with ffmpeg.wasm.',
+      'Reference equirectangular framing preset — upload a 2:1 source, explore in the sphere viewport, record a trim range, and extract with ffmpeg.wasm.',
     projection: 'equirect',
-    sourceVideoUrl: '/media/cusco-plaza-360.webm',
     defaultYaw: 25,
     defaultPitch: -8,
     defaultHorizontalFov: 75,

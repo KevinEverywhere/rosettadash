@@ -18,7 +18,7 @@ Peer dependency: `react` >= 18. Custom-element hosts register their WC definitio
 | Pattern | Components | DOM | Styling |
 |---------|------------|-----|---------|
 | **Native React (light DOM)** | Accordion, LinkList, AccordionLinkList | Standard React elements with `rd-*` BEM classnames | Inherits parent CSS (Tailwind, MUI, plain CSS, CSS Modules) |
-| **Custom-element host** | VideoSource, EquirectViewport, WasmMedia | `<rd-*>` shadow hosts | `className` / `style` on host; tune internals via `--rd-*` on host or wrapper |
+| **Custom-element host** | VideoSource, EquirectViewport, WasmMedia, FlatVideoViewport, EquirectSphereViewport | `<rd-*>` shadow hosts | `className` / `style` on host; tune internals via `--rd-*` on host or wrapper |
 
 Native React components match web-component behavior (panel always mounted; open state via `rd-accordion--open` + CSS). Import `@rosettadash/web-components/styles.css` when you want the packaged default chrome without wiring your own rules.
 
@@ -30,6 +30,8 @@ import { AccordionLinkList } from '@rosettadash/react/layout/accordion-link-list
 import { LinkList } from '@rosettadash/react/visual/link-list';
 import { VideoSource } from '@rosettadash/react/visual/media/video-source';
 import { EquirectViewport } from '@rosettadash/react/visual/media/equirect-viewport';
+import { EquirectSphereViewport } from '@rosettadash/react/visual/media/equirect-sphere-viewport';
+import { FlatVideoViewport } from '@rosettadash/react/visual/media/flat-video-viewport';
 import { WasmMedia } from '@rosettadash/react/wasm/wasm-media';
 ```
 
@@ -69,14 +71,39 @@ Hosts listen for WC `CustomEvent`s and surface them as React props:
 
 <EquirectViewport previewMode="flat" onCropRegion={(detail) => console.log(detail)} />
 
+<EquirectSphereViewport
+  videoSrc={objectUrl}
+  yaw={25}
+  pitch={-8}
+  horizontalFov={75}
+  outputWidth={1280}
+  outputHeight={720}
+  onCameraChange={(detail) => console.log(detail)}
+/>
+
+<FlatVideoViewport
+  videoSrc={objectUrl}
+  sourceWidth={1920}
+  sourceHeight={1080}
+  cropX={0}
+  cropY={0}
+  cropWidth={960}
+  cropHeight={540}
+  onCropChange={(detail) => console.log(detail)}
+/>
+
 <WasmMedia
   operation="equirect-extract"
+  extractionMode="rectilinear"
   inputFile={file}
+  recordRange={{ startSec: 2, endSec: 8 }}
+  reverse={false}
   onExtractComplete={({ blob }) => console.log(blob.size)}
+  onExtractError={({ message }) => console.error(message)}
 />
 ```
 
-Non-attribute props (`inputFile`, `cropRegion` on WasmMedia) sync through the element’s `setProperty` API.
+Non-attribute props (`inputFile`, `cropRegion`, `recordRange` on WasmMedia) sync through the element’s `setProperty` API. Boolean `reverse` uses a reflected attribute.
 
 ## Refs
 
