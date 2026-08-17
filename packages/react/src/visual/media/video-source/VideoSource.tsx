@@ -10,6 +10,8 @@ export interface VideoSourceProps {
   accept?: string;
   sourceWidth?: number;
   sourceHeight?: number;
+  presentation?: 'default' | 'authoring-source' | 'authoring-frame';
+  hint?: string;
   className?: string;
   style?: CSSProperties;
   onVideoFile?: (detail: {
@@ -28,6 +30,8 @@ export const VideoSource = forwardRef<HTMLElement, VideoSourceProps>(function Vi
     accept,
     sourceWidth,
     sourceHeight,
+    presentation,
+    hint,
     className,
     style,
     onVideoFile,
@@ -43,13 +47,15 @@ export const VideoSource = forwardRef<HTMLElement, VideoSourceProps>(function Vi
         accept: 'accept',
         sourceWidth: 'source-width',
         sourceHeight: 'source-height',
+        presentation: 'presentation',
+        hint: 'hint',
       },
       events: {
         'video-file': 'onVideoFile',
         metadata: 'onMetadata',
       },
     },
-    { label, accept, sourceWidth, sourceHeight },
+    { label, accept, sourceWidth, sourceHeight, presentation, hint },
     {
       onVideoFile: onVideoFile as ((detail: unknown) => void) | undefined,
       onMetadata: onMetadata as ((detail: unknown) => void) | undefined,

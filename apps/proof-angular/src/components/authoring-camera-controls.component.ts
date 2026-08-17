@@ -2,6 +2,9 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 
 const MIN_HFOV = 30;
 const MAX_HFOV = 360;
+export const LITTLE_PLANET_HFOV = MAX_HFOV;
+export const LITTLE_PLANET_PITCH = -85;
+const PLANET_ZONE_HFOV = 125;
 const MIN_FOCAL_MM = 8;
 const MAX_FOCAL_MM = 200;
 
@@ -47,6 +50,9 @@ function hfovFromFocalLength(focal: number): number {
       <div class="da-authoring-camera__header">
         <h4 class="da-authoring-camera__title">Camera framing</h4>
         <div class="da-authoring-camera__actions">
+          <button type="button" class="da-authoring-camera__preset" [disabled]="disabled()" (click)="littlePlanetPreset.emit()">
+            Little planet
+          </button>
           <button type="button" class="da-authoring-camera__step" [disabled]="disabled() || zoom() >= 100" (click)="stepZoom(8)">
             Zoom in
           </button>
@@ -62,7 +68,7 @@ function hfovFromFocalLength(focal: number): number {
       <label class="da-authoring-camera__row">
         <span class="da-authoring-camera__label">
           Zoom
-          <span class="da-authoring-camera__hint">right = zoom in (works from little-planet too)</span>
+          <span class="da-authoring-camera__hint">left = zoom out toward little-planet · right = zoom in</span>
         </span>
         <input type="range" min="0" max="100" step="0.5" [value]="zoom()" [disabled]="disabled()" (input)="onZoomChange($any($event.target).value)" />
         <output class="da-authoring-camera__value">{{ zoom().toFixed(1) }}%</output>
@@ -88,7 +94,7 @@ function hfovFromFocalLength(focal: number): number {
       <label class="da-authoring-camera__row">
         <span class="da-authoring-camera__label">
           Horizontal FOV
-          <span class="da-authoring-camera__hint">{{ inPlanetZone() ? 'drag left to exit little-planet' : 'rectilinear' }}</span>
+          <span class="da-authoring-camera__hint">{{ inPlanetZone() ? 'little-planet zone (125°–360°)' : 'below 125° = normal rectilinear' }}</span>
         </span>
         <input
           type="range"
@@ -134,7 +140,11 @@ function hfovFromFocalLength(focal: number): number {
       </label>
 
       <p class="da-note da-authoring-camera__note">
-        Stuck in little-planet? Drag Zoom or Focal length to the right, or click Zoom in.
+        @if (inPlanetZone()) {
+          Little-planet active. Keep your subject on the <strong>ring</strong> of the disk (horizon), not the center — the center is the ground below the camera. Use Yaw to rotate them around the ring; stretched heads usually mean the subject is too close to the disk center.
+        } @else {
+          To match VLC little-planet: click <strong>Little planet</strong>, or drag Zoom all the way <strong>left</strong> (0%) and Pitch down to −85°.
+        }
       </p>
     </div>
   `,
@@ -149,6 +159,7 @@ export class AuthoringCameraControlsComponent {
   readonly pitchChange = output<number>();
   readonly horizontalFovChange = output<number>();
   readonly reset = output<void>();
+  readonly littlePlanetPreset = output<void>();
 
   readonly minHfov = MIN_HFOV;
   readonly maxHfov = MAX_HFOV;
@@ -164,7 +175,7 @@ export class AuthoringCameraControlsComponent {
   }
 
   inPlanetZone(): boolean {
-    return this.horizontalFov() > 125;
+    return this.horizontalFov() > PLANET_ZONE_HFOV;
   }
 
   stepZoom(delta: number): void {

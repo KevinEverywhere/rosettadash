@@ -15,7 +15,7 @@ import {
   virtualCameraToCropRegion,
 } from '@rosettadash/core';
 import { EquirectSphereViewport } from '@rosettadash/angular/visual/media/equirect-sphere-viewport';
-import { VideoSource, type VideoFileDetail } from '@rosettadash/angular/visual/media/video-source';
+import { type VideoFileDetail } from '@rosettadash/angular/visual/media/video-source';
 import { WasmMedia } from '@rosettadash/angular/visual/wasm/media';
 import {
   DEFAULT_AUTHORING_EXAMPLE_ID,
@@ -40,12 +40,28 @@ function matchOutputPreset(width: number, height: number): string {
   return match?.id ?? AUTHORING_OUTPUT_CUSTOM_ID;
 }
 
+function probeVideoFile(file: File): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = () => {
+      resolve({ width: video.videoWidth, height: video.videoHeight });
+      URL.revokeObjectURL(url);
+    };
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve({ width: 0, height: 0 });
+    };
+    video.src = url;
+  });
+}
+
 @Component({
   selector: 'da-authoring-screen',
   standalone: true,
   imports: [
     EquirectSphereViewport,
-    VideoSource,
     WasmMedia,
     AuthoringPlaybackBarComponent,
     AuthoringCameraControlsComponent,
@@ -55,56 +71,10 @@ function matchOutputPreset(width: number, height: number): string {
   template: `
     <section class="da-panel da-panel--authoring">
       <h2>Authoring</h2>
-      <p>
-        Upload a 2:1 equirectangular video, use playback and record under the source view, and frame with the
-        camera sliders or by dragging inside the sphere. The output pane mirrors the same view at export size.
-      </p>
-
-      <da-bound-select-input
-        [fieldLabel]="'Shipped example'"
-        [options]="exampleOptions()"
-        [value]="exampleId()"
-        (valueChange)="exampleId.set($event)"
-      />
-      @if (example(); as activeExample) {
-        <p class="da-note">{{ activeExample.summary }}</p>
-      }
-      @if (sourceLoadBusy()) {
-        <p class="da-note" aria-live="polite">Loading shipped 360° source…</p>
-      }
-      @if (sourceLoadError(); as error) {
-        <p class="da-note da-note--warn" role="alert">
-          Shipped video fetch failed ({{ error }}). Choose a local 2:1 equirect file below.
-        </p>
-      }
-
-      <section class="da-authoring-upload-panel" aria-label="Source video file">
-        <h3 class="da-authoring-upload-panel__title">Source video</h3>
-        <p class="da-note">
-          Pick a local 2:1 equirect MP4/WebM, or use the shipped example when available at
-          <code>/media/cusco-plaza-360.webm</code>.
-        </p>
-        <rd-video-source
-          class="da-authoring-upload"
-          label="Authoring video file"
-          accept="video/*"
-          [sourceWidth]="sourceWidth()"
-          [sourceHeight]="sourceHeight()"
-          (videoFile)="handleVideoFile($event)"
-        />
-        @if (inputFile(); as file) {
-          <p class="da-note">
-            Loaded: <strong>{{ file.name }}</strong>
-            @if (sourceWidth() && sourceHeight()) {
-              ({{ sourceWidth() }}×{{ sourceHeight() }})
-            }
-          </p>
-        }
-      </section>
 
       <div class="da-authoring-workspace">
         <header class="da-authoring-workspace__headers">
-          <h3 class="da-authoring-pane__title">Source — {{ exampleLabel() }}</h3>
+          <h3 class="da-authoring-pane__title">Source</h3>
           <h3 class="da-authoring-pane__title">Output</h3>
         </header>
 
@@ -126,29 +96,47 @@ function matchOutputPreset(width: number, height: number): string {
                   (cameraChange)="onCameraChange($event)"
                 />
               } @else if (sourceLoadBusy()) {
-                <div class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder">
-                  <p class="da-authoring-output-placeholder">Loading shipped 360° source…</p>
-                </div>
+                <div
+                  class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder"
+                  aria-busy="true"
+                  aria-label="Loading source video"
+                ></div>
               } @else {
                 <div class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder">
-                  <p class="da-authoring-output-placeholder">
-                    Choose a local equirect (2:1) video to open the sphere view.
-                  </p>
+                  <label class="da-authoring-choose-file">
+                    <input
+                      type="file"
+                      class="da-authoring-choose-file__input"
+                      accept="video/*"
+                      (change)="onAuthoringFileSelected($event)"
+                    />
+                    Choose video file
+                  </label>
                 </div>
               }
             } @else {
               <div class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder">
-                <p class="da-authoring-output-placeholder">Select an equirect shipped example.</p>
+                <label class="da-authoring-choose-file">
+                  <input
+                    type="file"
+                    class="da-authoring-choose-file__input"
+                    accept="video/*"
+                    (change)="onAuthoringFileSelected($event)"
+                  />
+                  Choose video file
+                </label>
               </div>
             }
           </div>
 
           <div class="da-authoring-workspace__video-col">
-            <div #outputPreviewHost class="da-authoring-program-preview-host">
-              @if (!sourceUrl()) {
-                <p class="da-authoring-output-placeholder">Load source video to preview output.</p>
-              }
-            </div>
+            @if (sourceUrl()) {
+              <div #outputPreviewHost class="da-authoring-program-preview-host"></div>
+            } @else {
+              <div class="da-authoring-program-preview-host da-authoring-program-preview-host--placeholder">
+                <p class="da-authoring-output-placeholder">Choose source file to create output</p>
+              </div>
+            }
           </div>
         </div>
 
@@ -168,6 +156,7 @@ function matchOutputPreset(width: number, height: number): string {
               (pitchChange)="pitch.set($event)"
               (horizontalFovChange)="horizontalFov.set($event)"
               (reset)="resetView()"
+              (littlePlanetPreset)="applyLittlePlanetPreset()"
             />
           </div>
 
@@ -566,6 +555,25 @@ export class AuthoringScreenComponent {
     this.extractBusy.set(false);
   }
 
+  onAuthoringFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+    void probeVideoFile(file).then(({ width, height }) => {
+      this.handleVideoFile({
+        file,
+        metadata: {
+          name: file.name,
+          sourceWidth: width > 0 ? width : undefined,
+          sourceHeight: height > 0 ? height : undefined,
+          size: file.size,
+        },
+      });
+    });
+  }
+
   resetView(): void {
     const example = this.example();
     if (!example) {
@@ -574,6 +582,11 @@ export class AuthoringScreenComponent {
     this.yaw.set(example.defaultYaw);
     this.pitch.set(example.defaultPitch);
     this.horizontalFov.set(example.defaultHorizontalFov);
+  }
+
+  applyLittlePlanetPreset(): void {
+    this.horizontalFov.set(360);
+    this.pitch.set(-85);
   }
 
   onExtractProgress(detail: { progress: number }): void {

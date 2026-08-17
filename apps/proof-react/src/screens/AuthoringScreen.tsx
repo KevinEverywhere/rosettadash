@@ -9,9 +9,8 @@ import {
   EquirectSphereViewport,
   type EquirectSphereViewportHandle,
 } from '@rosettadash/react/visual/media/equirect-sphere-viewport';
-import { VideoSource } from '@rosettadash/react/visual/media/video-source';
-import { WasmMedia } from '@rosettadash/react/visual/wasm/media';
 import { CheckboxInput } from '@rosettadash/react/visual/input/checkbox';
+import { WasmMedia } from '@rosettadash/react/visual/wasm/media';
 import { NumberInput } from '@rosettadash/react/visual/input/number';
 import { SelectInput } from '@rosettadash/react/visual/input/select';
 import {
@@ -23,7 +22,7 @@ import {
   resolveEquirectSourceVideoUrl,
 } from '@destination-atlas';
 import { AuthoringPlaybackBar } from '../components/AuthoringPlaybackBar';
-import { AuthoringCameraControls } from '../components/AuthoringCameraControls';
+import { AuthoringCameraControls, LITTLE_PLANET_HFOV, LITTLE_PLANET_PITCH } from '../components/AuthoringCameraControls';
 import { localizedDestinationName } from '../lib/atlas-utils';
 
 export const AUTHORING_SOURCE = `<AuthoringScreen>
@@ -33,6 +32,23 @@ export const AUTHORING_SOURCE = `<AuthoringScreen>
 </AuthoringScreen>`;
 
 type CropRegion = Record<string, string | number | boolean | null | undefined>;
+
+function probeVideoFile(file: File): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = () => {
+      resolve({ width: video.videoWidth, height: video.videoHeight });
+      URL.revokeObjectURL(url);
+    };
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve({ width: 0, height: 0 });
+    };
+    video.src = url;
+  });
+}
 
 function matchOutputPreset(width: number, height: number): string {
   const match = AUTHORING_OUTPUT_PRESETS.find((entry) => entry.width === width && entry.height === height);
@@ -281,64 +297,31 @@ export function AuthoringScreen({
     setExtractBusy(false);
   };
 
-  const authoringVideoSource = (
-    <VideoSource
-      className="da-authoring-upload"
-      label="Authoring video file"
-      accept="video/*"
-      sourceWidth={sourceWidth}
-      sourceHeight={sourceHeight}
-      onVideoFile={handleVideoFile}
-    />
-  );
+  const onAuthoringFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+    void probeVideoFile(file).then(({ width, height }) => {
+      handleVideoFile({
+        file,
+        metadata: {
+          name: file.name,
+          sourceWidth: width > 0 ? width : undefined,
+          sourceHeight: height > 0 ? height : undefined,
+          size: file.size,
+        },
+      });
+    });
+  };
 
   return (
     <section className="da-panel da-panel--authoring">
       <h2>Authoring</h2>
-      <p>
-        Upload a 2:1 equirectangular video, use playback and record under the source view, and frame with the
-        camera sliders or by dragging inside the sphere. The output pane mirrors the same view at export size.
-      </p>
-
-      <SelectInput
-        label="Shipped example"
-        value={exampleId}
-        options={DESTINATION_ATLAS_AUTHORING_EXAMPLES.map((entry) => ({
-          value: entry.id,
-          label: entry.label,
-        }))}
-        onChange={setExampleId}
-      />
-      {example ? <p className="da-note">{example.summary}</p> : null}
-      {sourceLoadBusy ? (
-        <p className="da-note" aria-live="polite">
-          Loading shipped 360° source…
-        </p>
-      ) : null}
-      {sourceLoadError ? (
-        <p className="da-note da-note--warn" role="alert">
-          Shipped video fetch failed ({sourceLoadError}). Choose a local 2:1 equirect file below.
-        </p>
-      ) : null}
-
-      <section className="da-authoring-upload-panel" aria-label="Source video file">
-        <h3 className="da-authoring-upload-panel__title">Source video</h3>
-        <p className="da-note">
-          Pick a local 2:1 equirect MP4/WebM, or use the shipped example when available at{' '}
-          <code>/media/cusco-plaza-360.webm</code>.
-        </p>
-        {authoringVideoSource}
-        {inputFile ? (
-          <p className="da-note">
-            Loaded: <strong>{inputFile.name}</strong>
-            {sourceWidth && sourceHeight ? ` (${sourceWidth}×${sourceHeight})` : ''}
-          </p>
-        ) : null}
-      </section>
 
       <div className="da-authoring-workspace">
         <header className="da-authoring-workspace__headers">
-          <h3 className="da-authoring-pane__title">Source — {exampleLabel}</h3>
+          <h3 className="da-authoring-pane__title">Source</h3>
           <h3 className="da-authoring-pane__title">Output</h3>
         </header>
 
@@ -362,19 +345,35 @@ export function AuthoringScreen({
                   setHorizontalFov(nextFov);
                 }}
               />
+            ) : sourceLoadBusy ? (
+              <div
+                className="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder"
+                aria-busy="true"
+                aria-label="Loading source video"
+              />
             ) : (
               <div className="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder">
-                <p className="da-authoring-output-placeholder">Choose a local equirect (2:1) video to open the sphere view.</p>
+                <label className="da-authoring-choose-file">
+                  <input
+                    type="file"
+                    className="da-authoring-choose-file__input"
+                    accept="video/*"
+                    onChange={onAuthoringFileChange}
+                  />
+                  Choose video file
+                </label>
               </div>
             )}
           </div>
 
           <div className="da-authoring-workspace__video-col">
-            <div ref={outputPreviewHostRef} className="da-authoring-program-preview-host">
-              {!sourceUrl ? (
-                <p className="da-authoring-output-placeholder">Load source video to preview output.</p>
-              ) : null}
-            </div>
+            {sourceUrl ? (
+              <div ref={outputPreviewHostRef} className="da-authoring-program-preview-host" />
+            ) : (
+              <div className="da-authoring-program-preview-host da-authoring-program-preview-host--placeholder">
+                <p className="da-authoring-output-placeholder">Choose source file to create output</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -407,6 +406,10 @@ export function AuthoringScreen({
                 setYaw(example.defaultYaw);
                 setPitch(example.defaultPitch);
                 setHorizontalFov(example.defaultHorizontalFov);
+              }}
+              onLittlePlanetPreset={() => {
+                setHorizontalFov(LITTLE_PLANET_HFOV);
+                setPitch(LITTLE_PLANET_PITCH);
               }}
             />
           </div>

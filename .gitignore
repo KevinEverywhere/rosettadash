@@ -51,6 +51,12 @@ Thumbs.db
 
 __screenshots__/
 
+# Python tool venvs (VLC viewpoint dump, etc.)
+tools/.venv-vlc/
+
+# Local test media and scratch files (authoring experiments, ffmpeg output)
+.local/
+
 # Playwright (local e2e artifacts — see dist/.playwright when outputDir is under dist)
 /playwright-report/
 /test-results/

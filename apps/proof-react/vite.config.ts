@@ -21,6 +21,7 @@ export default defineConfig({
   },
   root: __dirname,
   publicDir: 'public',
+  cacheDir: resolve(__dirname, '../../node_modules/.vite/proof-react'),
   build: {
     outDir: '../../dist/apps/proof-react',
     emptyOutDir: true,

@@ -2,6 +2,10 @@
 const SENSOR_WIDTH_MM = 36;
 const MIN_HFOV = 30;
 const MAX_HFOV = 360;
+/** VLC-style little planet: max zoom-out + look straight down at nadir. */
+export const LITTLE_PLANET_HFOV = MAX_HFOV;
+export const LITTLE_PLANET_PITCH = -85;
+const PLANET_ZONE_HFOV = 125;
 const MIN_FOCAL_MM = 8;
 const MAX_FOCAL_MM = 200;
 
@@ -84,6 +88,7 @@ type Props = {
   onPitchChange: (value: number) => void;
   onHorizontalFovChange: (value: number) => void;
   onReset?: () => void;
+  onLittlePlanetPreset?: () => void;
 };
 
 export function AuthoringCameraControls({
@@ -95,10 +100,11 @@ export function AuthoringCameraControls({
   onPitchChange,
   onHorizontalFovChange,
   onReset,
+  onLittlePlanetPreset,
 }: Props) {
   const zoom = zoomFromHfov(horizontalFov);
   const focalLength = focalLengthFromHfov(horizontalFov);
-  const inPlanetZone = horizontalFov > 125;
+  const inPlanetZone = horizontalFov > PLANET_ZONE_HFOV;
 
   const stepZoom = (delta: number) => {
     onHorizontalFovChange(hfovFromZoom(clamp(zoom + delta, 0, 100)));
@@ -109,6 +115,16 @@ export function AuthoringCameraControls({
       <div className="da-authoring-camera__header">
         <h4 className="da-authoring-camera__title">Camera framing</h4>
         <div className="da-authoring-camera__actions">
+          {onLittlePlanetPreset ? (
+            <button
+              type="button"
+              className="da-authoring-camera__preset"
+              disabled={disabled}
+              onClick={onLittlePlanetPreset}
+            >
+              Little planet
+            </button>
+          ) : null}
           <button type="button" className="da-authoring-camera__step" disabled={disabled || zoom >= 100} onClick={() => stepZoom(8)}>
             Zoom in
           </button>
@@ -131,7 +147,7 @@ export function AuthoringCameraControls({
         step={0.5}
         unit="%"
         disabled={disabled}
-        hint="right = zoom in (works from little-planet too)"
+        hint="left = zoom out toward little-planet · right = zoom in"
         onChange={(nextZoom) => onHorizontalFovChange(hfovFromZoom(nextZoom))}
       />
       <SliderRow
@@ -153,7 +169,7 @@ export function AuthoringCameraControls({
         step={1}
         unit="°"
         disabled={disabled}
-        hint={inPlanetZone ? 'drag left to exit little-planet' : 'rectilinear'}
+        hint={inPlanetZone ? 'little-planet zone (125°–360°)' : 'below 125° = normal rectilinear'}
         onChange={onHorizontalFovChange}
       />
       <SliderRow
@@ -179,7 +195,18 @@ export function AuthoringCameraControls({
       />
 
       <p className="da-note da-authoring-camera__note">
-        Stuck in little-planet? Drag Zoom or Focal length to the right, or click Zoom in.
+        {inPlanetZone ? (
+          <>
+            Little-planet active. Keep your subject on the <strong>ring</strong> of the disk (horizon), not
+            the center — the center is the ground below the camera. Use Yaw to rotate them around the ring;
+            stretched heads usually mean the subject is too close to the disk center.
+          </>
+        ) : (
+          <>
+            To match VLC little-planet: click <strong>Little planet</strong>, or drag Zoom all the way{' '}
+            <strong>left</strong> (0%) and Pitch down to −85°.
+          </>
+        )}
       </p>
     </div>
   );

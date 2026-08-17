@@ -28,6 +28,8 @@ export interface VideoSourceProps {
   accept?: string;
   sourceWidth?: number;
   sourceHeight?: number;
+  presentation?: 'default' | 'authoring-source' | 'authoring-frame';
+  hint?: string;
   className?: string;
 }
 
@@ -49,6 +51,8 @@ export class VideoSource implements OnInit, OnDestroy {
   readonly accept = input<string | undefined>(undefined);
   readonly sourceWidth = input<number | undefined>(undefined);
   readonly sourceHeight = input<number | undefined>(undefined);
+  readonly presentation = input<'default' | 'authoring-source' | 'authoring-frame' | undefined>(undefined);
+  readonly hint = input<string | undefined>(undefined);
   readonly className = input<string | undefined>(undefined);
 
   readonly videoFile = output<VideoFileDetail>();
@@ -62,6 +66,8 @@ export class VideoSource implements OnInit, OnDestroy {
       this.accept();
       this.sourceWidth();
       this.sourceHeight();
+      this.presentation();
+      this.hint();
       this.className();
       if (this.ready) {
         this.syncFromInputs();
@@ -93,6 +99,8 @@ export class VideoSource implements OnInit, OnDestroy {
     setHostAttribute(el, 'accept', this.accept());
     setHostAttribute(el, 'source-width', this.sourceWidth());
     setHostAttribute(el, 'source-height', this.sourceHeight());
+    setHostAttribute(el, 'presentation', this.presentation());
+    setHostAttribute(el, 'hint', this.hint());
     if (this.className()) {
       el.setAttribute('class', this.className()!);
     } else {

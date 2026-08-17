@@ -276,7 +276,9 @@ export const EquirectSphereViewport = forwardRef<EquirectSphereViewportHandle, E
       renderer.domElement.className = 'rd-equirect-sphere-viewport__canvas';
       host.appendChild(renderer.domElement);
 
-      const outputMirror = document.createElement('canvas');
+      const outputRenderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      outputRenderer.setPixelRatio(1);
+      const outputMirror = outputRenderer.domElement;
       outputMirror.className = 'rd-equirect-sphere-viewport__mirror';
       outputMirror.setAttribute('aria-label', 'Output view (mirrors source)');
       const outputHost = outputPreviewHostRef?.current;
@@ -288,13 +290,10 @@ export const EquirectSphereViewport = forwardRef<EquirectSphereViewportHandle, E
       }
       (host as ViewportHost).__outputMirror = outputMirror;
 
-      const outputCtx = outputMirror.getContext('2d');
-
       const resizeOutputMirror = () => {
         const width = Math.max(2, Math.round(propsRef.current.outputWidth));
         const height = Math.max(2, Math.round(propsRef.current.outputHeight));
-        outputMirror.width = width;
-        outputMirror.height = height;
+        outputRenderer.setSize(width, height, false);
         outputMirror.style.width = '100%';
         outputMirror.style.height = 'auto';
         outputMirror.style.aspectRatio = `${width} / ${height}`;
@@ -567,23 +566,27 @@ export const EquirectSphereViewport = forwardRef<EquirectSphereViewportHandle, E
       resizeObserver.observe(host);
       resize();
 
+      const renderFrame = (targetAspect: number, targetRenderer: THREE.WebGLRenderer) => {
+        if (usePlanetRenderer()) {
+          syncPlanetUniforms(targetAspect);
+          targetRenderer.render(planetScene, quadCamera);
+        } else {
+          applySphereCamera(targetAspect);
+          targetRenderer.render(sphereScene, camera);
+        }
+      };
+
       let animationId = 0;
       const tick = () => {
         if (texture) {
           texture.needsUpdate = true;
         }
 
-        if (usePlanetRenderer()) {
-          syncPlanetUniforms(aspect);
-          renderer.render(planetScene, quadCamera);
-        } else {
-          applySphereCamera(aspect);
-          renderer.render(sphereScene, camera);
-        }
+        renderFrame(aspect, renderer);
 
-        if (outputCtx) {
-          outputCtx.drawImage(renderer.domElement, 0, 0, outputMirror.width, outputMirror.height);
-        }
+        const outputWidth = Math.max(2, Math.round(propsRef.current.outputWidth));
+        const outputHeight = Math.max(2, Math.round(propsRef.current.outputHeight));
+        renderFrame(outputWidth / outputHeight, outputRenderer);
 
         animationId = requestAnimationFrame(tick);
       };
@@ -619,6 +622,7 @@ export const EquirectSphereViewport = forwardRef<EquirectSphereViewportHandle, E
         sphereMaterial.dispose();
         planetMaterial.dispose();
         renderer.dispose();
+        outputRenderer.dispose();
         renderer.domElement.remove();
         outputMirror.remove();
       };

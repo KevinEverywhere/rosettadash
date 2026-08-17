@@ -1,11 +1,17 @@
-<section class="video-source">
-  <header class="video-source__header">
+<section class="video-source" data-ref="root">
+  <header class="video-source__header" data-ref="header">
     <h3 data-ref="label"></h3>
     <span class="video-source__meta" data-ref="meta"></span>
   </header>
-  <label class="video-source__upload">
+  <label class="video-source__upload" data-ref="upload">
     <input type="file" data-ref="input" />
-    <span>Choose video file</span>
+    <span class="video-source__upload-default" data-ref="upload-default">Choose video file</span>
+    <span class="video-source__authoring-copy" data-ref="upload-authoring" hidden>
+      <strong class="video-source__authoring-title">Source video</strong>
+      <span class="video-source__authoring-hint" data-ref="hint"></span>
+      <span class="video-source__authoring-action">Choose video file</span>
+    </span>
+    <span class="video-source__frame-copy" data-ref="upload-frame" hidden>Choose video file</span>
   </label>
   <p class="video-source__name" data-ref="file-name"></p>
 </section>
