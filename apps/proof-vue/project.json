@@ -1,0 +1,38 @@
+{
+  "name": "proof-vue",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/proof-vue/src",
+  "tags": ["scope:destination-atlas", "type:proof-app"],
+  "implicitDependencies": ["runtime-vue", "web-components", "destination-atlas"],
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite",
+        "cwd": "apps/proof-vue"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/proof-vue"],
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/proof-vue"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview --port 4313",
+        "cwd": "apps/proof-vue"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit -p apps/proof-vue/tsconfig.json"
+      }
+    }
+  }
+}
