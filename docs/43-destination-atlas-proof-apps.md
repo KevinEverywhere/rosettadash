@@ -93,11 +93,14 @@ Proof apps are native to their runtime by default. These screens **deliberately 
 | Host | Embedded | Screen | Feature | Bridge | Ticket |
 |------|----------|--------|---------|--------|--------|
 | Vue | React | Authoring | Viewports + WasmMedia extract | `ReactMount.vue` → `createRoot(AuthoringScreen.tsx)` | DAS-124 |
-| Svelte | React or Vue | Views | Sankey + Venn charts (planned) | TBD (`SvelteMount` or CE host) | DAS-125 |
+| Vue | React | Globe | Three.js geo globe + markers | `ReactMount.vue` → `GlobeThree.tsx` | DAS-124 |
+| Svelte | React | Authoring | Viewports + WasmMedia extract | `ReactMount.svelte` → `createRoot(AuthoringScreen.tsx)` | DAS-125 |
+| Svelte | React | Globe | Three.js geo globe + markers | `ReactMount.svelte` → `GlobeThree.tsx` | DAS-125 |
+| Svelte | React | Views | Sankey + Venn charts | `ReactMount.svelte` → `@rosettadash/react/visual/chart/*` | DAS-125 |
 
 Shared copy: `libs/destination-atlas/src/data/about-guides.ts` (`DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES`).
 
-**Planned second showcase (DAS-125):** `proof-svelte` Views tab embedding chart components from React or Vue for variety (Authoring stays WASM-heavy in Vue; Views is chart/media-heavy).
+**proof-svelte (DAS-125):** Native Svelte 5 for most screens; Authoring, Globe, and Views chart panels embed React via `ReactMount.svelte` when `@rosettadash/svelte` hosts are stubs or chart parity lives in React first.
 
 ### Consumer BYOK (integrations)
 

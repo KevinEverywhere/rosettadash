@@ -57,7 +57,9 @@
     "proof:angular": "nx serve proof-angular",
     "proof:angular:build": "nx build proof-angular",
     "proof:vue": "nx serve proof-vue",
-    "proof:vue:build": "nx build proof-vue"
+    "proof:vue:build": "nx build proof-vue",
+    "proof:svelte": "nx serve proof-svelte",
+    "proof:svelte:build": "nx build proof-svelte"
   },
   "private": true,
   "packageManager": "npm@11.17.0",

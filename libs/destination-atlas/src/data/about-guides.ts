@@ -76,7 +76,7 @@ export const DESTINATION_ATLAS_RUNTIME_GUIDES: DestinationAtlasRuntimeGuide[] = 
     storybookCommand: 'npm run storybook:svelte',
     storybookPort: 6010,
     summary:
-      'Svelte 5 components generated from the shared taxonomy. Pair with Storybook for isolated visual review.',
+      'Svelte 5 components with the same Destination Atlas navigation and mock data as the React reference app. Authoring and Globe embed React via ReactMount; Views embeds React Sankey/Venn charts.',
   },
 ];
 
@@ -121,15 +121,36 @@ export const DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES: DestinationAtlasCrossF
       'The Vue proof app is idiomatic Vue everywhere except Authoring, which mounts @rosettadash/react viewports and WasmMedia through a small ReactMount bridge. Props (locale, selectedId) pass from Vue into React; inspect AuthoringScreen.vue and the Component source panel.',
   },
   {
-    id: 'svelte-views-host',
+    id: 'svelte-authoring-react',
     hostRuntime: 'Svelte',
     hostTicket: 'DAS-125',
-    embeddedRuntime: 'React or Vue',
-    screen: 'Views',
-    feature: 'Journey Sankey + Venn overlap charts (planned)',
-    bridge: 'SvelteMount / web-component host (planned)',
+    embeddedRuntime: 'React',
+    screen: 'Authoring',
+    feature: '360° / flat viewport + WasmMedia extract',
+    bridge: 'ReactMount.svelte → createRoot(AuthoringScreen.tsx)',
     summary:
-      'Second showcase planned for proof-svelte: embed a chart bundle from another runtime on Views for variety (Authoring stays upload/WASM-heavy; Views is chart/media-heavy).',
-    planned: true,
+      'The Svelte proof app mounts @rosettadash/react Authoring through ReactMount — same bridge pattern as proof-vue. Props (locale, selectedId) pass from Svelte into React.',
+  },
+  {
+    id: 'svelte-globe-react',
+    hostRuntime: 'Svelte',
+    hostTicket: 'DAS-125',
+    embeddedRuntime: 'React',
+    screen: 'Globe',
+    feature: 'Three.js geo globe + destination markers',
+    bridge: 'ReactMount.svelte → GlobeThree.tsx → ThreeGeoGlobe',
+    summary:
+      '@rosettadash/svelte ThreeGeoGlobe is a taxonomy stub; the Svelte proof embeds the React implementation until the native host ships.',
+  },
+  {
+    id: 'svelte-views-react',
+    hostRuntime: 'Svelte',
+    hostTicket: 'DAS-125',
+    embeddedRuntime: 'React',
+    screen: 'Views',
+    feature: 'Journey Sankey + Venn overlap charts',
+    bridge: 'ReactMount.svelte → @rosettadash/react/visual/chart/*',
+    summary:
+      'Views embeds React chart components for Sankey and Venn while the Svelte shell owns layout, scatter stub, and destination carousel.',
   },
 ];
