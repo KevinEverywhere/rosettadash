@@ -51,8 +51,20 @@ export function useDestinationAtlasState(initialSelectedId: string) {
   }));
 
   const routeSearch = computed(() => {
-    const query = route.fullPath.includes('?') ? route.fullPath.split('?').slice(1).join('?') : '';
-    return query ? `?${query}` : '';
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(route.query)) {
+      if (typeof value === 'string') {
+        params.set(key, value);
+      } else if (Array.isArray(value)) {
+        for (const entry of value) {
+          if (typeof entry === 'string') {
+            params.append(key, entry);
+          }
+        }
+      }
+    }
+    const search = params.toString();
+    return search ? `?${search}` : '';
   });
 
   const urlState = computed(() => parseAtlasUrlState(route.path, routeSearch.value, urlDefaults.value));
@@ -114,6 +126,8 @@ export function useDestinationAtlasState(initialSelectedId: string) {
   }
 
   function setSelectedId(id: string) {
+    mapViewOverride.value = null;
+    mapLocationQuery.value = '';
     navigateAtlas(screen.value, { ...atlasQuery.value, dest: id });
   }
 

@@ -1,9 +1,11 @@
 {
   "recommendations": [
+    "Vue.volar",
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "firsttris.vscode-jest-runner",
     "ms-playwright.playwright"
-  ]
+  ],
+  "unwantedRecommendations": ["octref.vetur"]
 }

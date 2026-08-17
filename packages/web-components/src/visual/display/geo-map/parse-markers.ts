@@ -11,7 +11,7 @@ export function parseGeoMapMarkers(raw: string | null): GeoMapMarker[] {
       return [];
     }
     return parsed
-      .map((entry) => {
+      .map((entry): GeoMapMarker | null => {
         if (!entry || typeof entry !== 'object') {
           return null;
         }

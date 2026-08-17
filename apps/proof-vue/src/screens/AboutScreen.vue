@@ -7,7 +7,11 @@ export const ABOUT_SOURCE = `<AboutScreen>
 </script>
 
 <script setup lang="ts">
-import { DESTINATION_ATLAS_ABOUT_INTRO, DESTINATION_ATLAS_RUNTIME_GUIDES } from '@destination-atlas';
+import {
+  DESTINATION_ATLAS_ABOUT_INTRO,
+  DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES,
+  DESTINATION_ATLAS_RUNTIME_GUIDES,
+} from '@destination-atlas';
 </script>
 
 <template>
@@ -60,6 +64,41 @@ import { DESTINATION_ATLAS_ABOUT_INTRO, DESTINATION_ATLAS_RUNTIME_GUIDES } from 
             </dl>
           </li>
         </ul>
+      </section>
+
+      <section class="da-about__section">
+        <h3>Cross-framework composition</h3>
+        <p>
+          Proof apps are mostly native to their runtime. When a feature is ahead in another package — or you are
+          migrating incrementally — you can embed a subtree from another framework instead of rewriting it.
+        </p>
+        <ul class="da-about__interop-list">
+          <li
+            v-for="showcase in DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES"
+            :key="showcase.id"
+            class="da-about__interop-card"
+            :class="{ 'da-about__interop-card--planned': showcase.planned }"
+          >
+            <header>
+              <h4>
+                {{ showcase.hostRuntime }} + {{ showcase.embeddedRuntime }}
+                <span v-if="showcase.planned" class="da-about__interop-planned">planned</span>
+              </h4>
+              <span class="da-about__ticket">{{ showcase.hostTicket }}</span>
+            </header>
+            <p class="da-about__interop-meta">
+              <strong>{{ showcase.screen }}</strong> — {{ showcase.feature }}
+            </p>
+            <p>{{ showcase.summary }}</p>
+            <p class="da-about__interop-bridge">
+              Bridge: <code>{{ showcase.bridge }}</code>
+            </p>
+          </li>
+        </ul>
+        <p class="da-about__note">
+          Open the <strong>Authoring</strong> tab to see the live Vue → React demo. Read
+          <code>apps/proof-vue/src/components/ReactMount.vue</code> and the Component source panel on that tab.
+        </p>
       </section>
 
       <section class="da-about__section">

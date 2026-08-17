@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { createElement, type ComponentType } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, toRaw, watchEffect } from 'vue';
 
 const props = defineProps<{
   component: ComponentType<Record<string, unknown>>;
@@ -11,6 +11,12 @@ const props = defineProps<{
 const host = ref<HTMLDivElement | null>(null);
 let root: Root | null = null;
 
+function reactProps() {
+  const raw = toRaw(props.componentProps) ?? {};
+  // Spread unwraps Vue reactive proxies so function callbacks reach React intact.
+  return { ...raw };
+}
+
 function renderReact() {
   if (!host.value) {
     return;
@@ -18,11 +24,23 @@ function renderReact() {
   if (!root) {
     root = createRoot(host.value);
   }
-  root.render(createElement(props.component, props.componentProps ?? {}));
+  root.render(createElement(props.component, reactProps()));
 }
 
 onMounted(renderReact);
-watch(() => props.componentProps, renderReact, { deep: true });
+
+watchEffect(() => {
+  void props.component;
+  const componentProps = props.componentProps;
+  if (componentProps) {
+    for (const key of Object.keys(componentProps)) {
+      void componentProps[key];
+    }
+  }
+  if (host.value) {
+    renderReact();
+  }
+});
 onBeforeUnmount(() => {
   root?.unmount();
   root = null;

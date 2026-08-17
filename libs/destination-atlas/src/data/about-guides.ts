@@ -63,7 +63,7 @@ export const DESTINATION_ATLAS_RUNTIME_GUIDES: DestinationAtlasRuntimeGuide[] = 
     storybookCommand: 'npm run storybook:vue',
     storybookPort: 6008,
     summary:
-      'Vue 3 SFC wrappers with the same Destination Atlas navigation and mock data as the React reference app.',
+      'Vue 3 SFC wrappers with the same Destination Atlas navigation and mock data as the React reference app. Authoring embeds a React subtree via ReactMount to demonstrate cross-framework composition.',
   },
   {
     id: 'svelte',
@@ -92,5 +92,44 @@ export const DESTINATION_ATLAS_ABOUT_INTRO = {
     'The Web Components, React, Angular, Vue, and Svelte blocks below are not RosettaDash palette components — they are npm runtime packages (delivery targets). Each card is proof-app documentation UI: plain layout markup styled for this About page. The actual reusable components live inside those packages (KpiCard, GeoMap, ScrollRegion, etc.) and appear on the other tabs and in Storybook.',
   componentSourceTitle: 'Component source panel',
   componentSourceBody:
-    'Every screen, including About, shows a workbench with two panes. On the right, the Component source panel lists the React JSX for the active tab: screen component, imported RosettaDash wrappers, prop names, and nesting. Use it to copy composition patterns into your app. On narrow viewports, switch between Atlas preview and Component source with the toggle above the panes. About is the only tab without a source pane — you are reading the onboarding copy instead.',
+    'Every screen, including About, shows a workbench with two panes. On the right, the Component source panel lists the JSX or SFC markup for the active tab: screen component, imported RosettaDash wrappers, prop names, and nesting. Use it to copy composition patterns into your app. On narrow viewports, switch between Atlas preview and Component source with the toggle above the panes. About is the only tab without a source pane — you are reading the onboarding copy instead.',
 };
+
+/** Intentional cross-framework composition demos in proof apps. */
+export interface DestinationAtlasCrossFrameworkShowcase {
+  id: string;
+  hostRuntime: string;
+  hostTicket: string;
+  embeddedRuntime: string;
+  screen: string;
+  feature: string;
+  bridge: string;
+  summary: string;
+  planned?: boolean;
+}
+
+export const DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES: DestinationAtlasCrossFrameworkShowcase[] = [
+  {
+    id: 'vue-authoring-react',
+    hostRuntime: 'Vue',
+    hostTicket: 'DAS-124',
+    embeddedRuntime: 'React',
+    screen: 'Authoring',
+    feature: '360° / flat viewport + WasmMedia extract',
+    bridge: 'ReactMount.vue → createRoot(AuthoringScreen.tsx)',
+    summary:
+      'The Vue proof app is idiomatic Vue everywhere except Authoring, which mounts @rosettadash/react viewports and WasmMedia through a small ReactMount bridge. Props (locale, selectedId) pass from Vue into React; inspect AuthoringScreen.vue and the Component source panel.',
+  },
+  {
+    id: 'svelte-views-host',
+    hostRuntime: 'Svelte',
+    hostTicket: 'DAS-125',
+    embeddedRuntime: 'React or Vue',
+    screen: 'Views',
+    feature: 'Journey Sankey + Venn overlap charts (planned)',
+    bridge: 'SvelteMount / web-component host (planned)',
+    summary:
+      'Second showcase planned for proof-svelte: embed a chart bundle from another runtime on Views for variety (Authoring stays upload/WASM-heavy; Views is chart/media-heavy).',
+    planned: true,
+  },
+];

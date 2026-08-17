@@ -4,32 +4,43 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolve } from 'node:path';
 import { ffmpegCoreVitePlugin, wasmIsolationHeaders } from '../../tools/vite/ffmpeg-core-vite-plugin.mjs';
+import { rosettadashAliasEntries } from '../../tools/storybook-shared/vite-final';
 
 export default defineConfig({
   plugins: [
-    vue(),
-    react({ include: /\/src\/authoring\/.*\.tsx$/ }),
-    ffmpegCoreVitePlugin(),
     tsconfigPaths({
       projects: [resolve(__dirname, '../../tsconfig.base.json')],
     }),
+    vue(),
+    react({ include: /\/src\/(authoring|globe)\/.*\.tsx$/ }),
+    ffmpegCoreVitePlugin(),
   ],
   resolve: {
-    alias: {
-      '@destination-atlas': resolve(__dirname, '../../libs/destination-atlas/src/index.ts'),
-      '@rosettadash/react/visual/media/equirect-sphere-viewport': resolve(
-        __dirname,
-        '../../packages/react/src/visual/media/equirect-sphere-viewport/index.ts',
-      ),
-      '@rosettadash/react/visual/media/flat-video-viewport': resolve(
-        __dirname,
-        '../../packages/react/src/visual/media/flat-video-viewport/index.ts',
-      ),
-      '@rosettadash/web-components/styles.css': resolve(
-        __dirname,
-        '../../packages/web-components/src/styles/styles.css',
-      ),
-    },
+    alias: [
+      {
+        find: '@destination-atlas',
+        replacement: resolve(__dirname, '../../libs/destination-atlas/src/index.ts'),
+      },
+      {
+        find: '@rosettadash/react/visual/media/equirect-sphere-viewport',
+        replacement: resolve(
+          __dirname,
+          '../../packages/react/src/visual/media/equirect-sphere-viewport/index.ts',
+        ),
+      },
+      {
+        find: '@rosettadash/react/visual/media/flat-video-viewport',
+        replacement: resolve(
+          __dirname,
+          '../../packages/react/src/visual/media/flat-video-viewport/index.ts',
+        ),
+      },
+      {
+        find: '@rosettadash/web-components/styles.css',
+        replacement: resolve(__dirname, '../../packages/web-components/src/styles/styles.css'),
+      },
+      ...(rosettadashAliasEntries() as Array<{ find: string | RegExp; replacement: string }>),
+    ],
   },
   root: __dirname,
   publicDir: 'public',
@@ -40,6 +51,7 @@ export default defineConfig({
   },
   server: {
     port: 4313,
+    strictPort: true,
     host: '0.0.0.0',
     headers: wasmIsolationHeaders(),
   },

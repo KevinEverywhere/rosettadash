@@ -40,6 +40,7 @@ export default defineConfig({
   },
   server: {
     port: 4312,
+    strictPort: true,
     host: '0.0.0.0',
     headers: wasmIsolationHeaders(),
   },

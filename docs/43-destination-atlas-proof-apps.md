@@ -84,6 +84,21 @@ Default camera framing for Cusco and other destinations comes from `libs/destina
 
 Implemented in React + Angular proof apps: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131) (tab shell); [DAS-132](https://planetkevin.atlassian.net/browse/DAS-132) (sphere + WASM); [DAS-140](https://planetkevin.atlassian.net/browse/DAS-140) / [DAS-141](https://planetkevin.atlassian.net/browse/DAS-141) (playback bar, flat crop, record trim). Editor/Admin roles only.
 
+**proof-vue (DAS-124):** Authoring is intentionally a **Vue → React** cross-framework showcase — `AuthoringScreen.vue` wraps `ReactMount.vue`, which mounts `authoring/AuthoringScreen.tsx` from `@rosettadash/react`. See About → Cross-framework composition and the callout on the Authoring tab.
+
+### Cross-framework composition showcases
+
+Proof apps are native to their runtime by default. These screens **deliberately embed another runtime** when reusing an ahead-of-parity feature is more practical than rewriting it — a pattern teams use during migration or when mixing npm packages.
+
+| Host | Embedded | Screen | Feature | Bridge | Ticket |
+|------|----------|--------|---------|--------|--------|
+| Vue | React | Authoring | Viewports + WasmMedia extract | `ReactMount.vue` → `createRoot(AuthoringScreen.tsx)` | DAS-124 |
+| Svelte | React or Vue | Views | Sankey + Venn charts (planned) | TBD (`SvelteMount` or CE host) | DAS-125 |
+
+Shared copy: `libs/destination-atlas/src/data/about-guides.ts` (`DESTINATION_ATLAS_CROSS_FRAMEWORK_SHOWCASES`).
+
+**Planned second showcase (DAS-125):** `proof-svelte` Views tab embedding chart components from React or Vue for variety (Authoring stays WASM-heavy in Vue; Views is chart/media-heavy).
+
 ### Consumer BYOK (integrations)
 
 Builder BYOK shipped in [DAS-70](https://planetkevin.atlassian.net/browse/DAS-70) (`/environment`, `@rosettadash/core/lib/byok`). Destination Atlas proof apps initially used build-time env vars only (`VITE_GOOGLE_MAPS_API_KEY`, mock Intel). [DAS-135](https://planetkevin.atlassian.net/browse/DAS-135) wires a **consumer-facing** key vault into Settings, connects Map/Intel/Stack, and feeds API/docs improvements back into shared components.

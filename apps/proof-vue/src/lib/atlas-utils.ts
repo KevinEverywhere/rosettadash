@@ -1,6 +1,14 @@
 import { MOCK_DESTINATIONS, type Destination } from '@destination-atlas';
-import type { BarChartBar } from '@rosettadash/vue/visual/chart/bar';
-import type { LineChartPoint } from '@rosettadash/vue/visual/chart/line';
+
+export interface LineChartPoint {
+  x: string;
+  y: number;
+}
+
+export interface BarChartBar {
+  label: string;
+  value: number;
+}
 
 export interface MockNewsArticle {
   id: string;

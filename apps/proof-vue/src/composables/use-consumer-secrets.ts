@@ -1,4 +1,4 @@
-import { computed, inject, onMounted, provide, ref, watch, type App } from 'vue';
+import { computed, inject, provide, ref, type App, type InjectionKey } from 'vue';
 import {
   scoutAiProviderReady,
   type ConsumerSecretsSnapshot,
@@ -58,10 +58,9 @@ export function provideConsumerSecrets(app?: App) {
     snapshot.value = next;
   });
 
-  onMounted(() => {
-    void store.initialize().then(() => {
-      loaded.value = true;
-    });
+  void store.initialize().then(() => {
+    loaded.value = true;
+    syncDraftFromStore();
   });
 
   function syncDraftFromStore() {
@@ -71,12 +70,6 @@ export function provideConsumerSecrets(app?: App) {
     }
     draftValues.value = next;
   }
-
-  watch(loaded, (isLoaded) => {
-    if (isLoaded) {
-      syncDraftFromStore();
-    }
-  });
 
   function getDraftValue(envKey: string) {
     return draftValues.value[envKey] ?? '';

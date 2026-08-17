@@ -23,7 +23,7 @@ export function parseAppLocaleOptions(raw: string | null): AppLocaleOption[] {
       return [];
     }
     return parsed
-      .map((entry) => {
+      .map((entry): AppLocaleOption | null => {
         if (!entry || typeof entry !== 'object') {
           return null;
         }

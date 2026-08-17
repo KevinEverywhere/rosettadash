@@ -38,7 +38,7 @@ export const AUTHORING_SOURCE = `<AuthoringScreen>
   <WasmMedia operation="equirect-extract" inputFile={inputFile} />
 </AuthoringScreen>`;
 
-type CropRegion = Record<string, string | number | boolean | null | undefined>;
+type CropRegion = ReturnType<typeof virtualCameraToCropRegion> | ReturnType<typeof flatCropToCropRegion>;
 
 function probeVideoFile(file: File): Promise<{ width: number; height: number }> {
   return new Promise((resolve) => {
@@ -679,7 +679,9 @@ export function AuthoringScreen({
                   outputHeight={outputHeight}
                   reverse={reverse}
                   inputFile={inputFile}
-                  cropRegion={cropRegion}
+                  cropRegion={
+                    cropRegion as unknown as Record<string, string | number | boolean> | null
+                  }
                   recordRange={recordRange}
                 onProgress={({ progress }) => {
                   setExtractBusy(true);
