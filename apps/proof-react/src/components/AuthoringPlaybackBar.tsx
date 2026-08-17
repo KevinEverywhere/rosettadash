@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import type { EquirectSphereViewportHandle } from '@rosettadash/react/visual/media/equirect-sphere-viewport';
+import type { AuthoringRecordRange } from '@rosettadash/core';
+import type { AuthoringViewportHandle } from '../lib/authoring-viewport';
+import {
+  PlaybackPauseIcon,
+  PlaybackPlayIcon,
+  PlaybackRecordIcon,
+  PlaybackRecordStopIcon,
+  PlaybackSaveIcon,
+  PlaybackStopIcon,
+} from './authoring-playback-icons';
 
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) {
@@ -11,17 +20,37 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
+function rangeStyle(startSec: number, endSec: number, duration: number) {
+  if (duration <= 0) {
+    return { left: '0%', width: '0%' };
+  }
+  const left = Math.max(0, Math.min(100, (startSec / duration) * 100));
+  const width = Math.max(0, Math.min(100 - left, ((endSec - startSec) / duration) * 100));
+  return { left: `${left}%`, width: `${width}%` };
+}
+
 type Props = {
-  viewportRef: React.RefObject<EquirectSphereViewportHandle | null>;
+  viewportRef: React.RefObject<AuthoringViewportHandle | null>;
   disabled?: boolean;
+  hint?: string;
+  recordRange?: AuthoringRecordRange | null;
+  onRecordRangeChange?: (range: AuthoringRecordRange | null) => void;
   onResetView?: () => void;
 };
 
-export function AuthoringPlaybackBar({ viewportRef, disabled = false, onResetView }: Props) {
+export function AuthoringPlaybackBar({
+  viewportRef,
+  disabled = false,
+  hint,
+  recordRange = null,
+  onRecordRangeChange,
+  onResetView,
+}: Props) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [paused, setPaused] = useState(true);
   const [recording, setRecording] = useState(false);
+  const [recordingStartSec, setRecordingStartSec] = useState<number | null>(null);
   const [saveUrl, setSaveUrl] = useState<string | null>(null);
 
   useEffect(
@@ -44,7 +73,7 @@ export function AuthoringPlaybackBar({ viewportRef, disabled = false, onResetVie
   };
 
   useEffect(() => {
-    const id = window.setInterval(syncFromViewport, 250);
+    const id = window.setInterval(syncFromViewport, 100);
     return () => window.clearInterval(id);
   }, [viewportRef]);
 
@@ -77,6 +106,8 @@ export function AuthoringPlaybackBar({ viewportRef, disabled = false, onResetVie
       return;
     }
     if (!recording) {
+      const startSec = viewport.getCurrentTime();
+      setRecordingStartSec(startSec);
       viewport.startRecording();
       setRecording(true);
       if (viewport.isPaused()) {
@@ -84,8 +115,16 @@ export function AuthoringPlaybackBar({ viewportRef, disabled = false, onResetVie
       }
       return;
     }
+    const startSec = recordingStartSec ?? viewport.getCurrentTime();
+    const endSec = viewport.getCurrentTime();
     const blob = await viewport.stopRecording();
     setRecording(false);
+    setRecordingStartSec(null);
+    if (endSec > startSec + 0.05) {
+      onRecordRangeChange?.({ startSec, endSec });
+    } else {
+      onRecordRangeChange?.(null);
+    }
     if (!blob) {
       return;
     }
@@ -107,46 +146,99 @@ export function AuthoringPlaybackBar({ viewportRef, disabled = false, onResetVie
     anchor.click();
   };
 
+  const liveEndSec = recording && recordingStartSec !== null ? Math.max(recordingStartSec, currentTime) : null;
+  const displayRange = recordRange ?? (liveEndSec !== null && recordingStartSec !== null
+    ? { startSec: recordingStartSec, endSec: liveEndSec }
+    : null);
+
   return (
     <div className="da-authoring-playback" aria-label="Source playback and recording">
       <h4 className="da-authoring-playback__title">Playback</h4>
       <div className="da-authoring-playback__transport">
-        <button type="button" className="da-authoring-playback__btn" disabled={disabled} onClick={() => void handlePlayPause()}>
-          {paused ? 'Play' : 'Pause'}
-        </button>
-        <button type="button" className="da-authoring-playback__btn" disabled={disabled} onClick={handleStop}>
-          Stop
+        <button
+          type="button"
+          className="da-authoring-playback__btn da-authoring-playback__btn--icon"
+          disabled={disabled}
+          aria-label={paused ? 'Play' : 'Pause'}
+          onClick={() => void handlePlayPause()}
+        >
+          {paused ? <PlaybackPlayIcon /> : <PlaybackPauseIcon />}
         </button>
         <button
           type="button"
-          className={`da-authoring-playback__btn${recording ? ' is-active' : ''}`}
+          className="da-authoring-playback__btn da-authoring-playback__btn--icon"
           disabled={disabled}
+          aria-label="Stop"
+          onClick={handleStop}
+        >
+          <PlaybackStopIcon />
+        </button>
+        <button
+          type="button"
+          className={`da-authoring-playback__btn da-authoring-playback__btn--icon da-authoring-playback__btn--record${recording ? ' is-recording' : ''}`}
+          disabled={disabled}
+          aria-label={recording ? 'Stop recording' : 'Record'}
+          aria-pressed={recording}
           onClick={() => void handleRecordToggle()}
         >
-          {recording ? 'Stop recording' : 'Record'}
+          {recording ? <PlaybackRecordStopIcon /> : <PlaybackRecordIcon />}
         </button>
-        <button type="button" className="da-authoring-playback__btn" disabled={disabled || !saveUrl} onClick={handleSave}>
-          Save
+        <button
+          type="button"
+          className="da-authoring-playback__btn da-authoring-playback__btn--icon"
+          disabled={disabled || !saveUrl}
+          aria-label="Save recording"
+          onClick={handleSave}
+        >
+          <PlaybackSaveIcon />
         </button>
-        <button type="button" className="da-authoring-playback__btn" disabled={disabled || !onResetView} onClick={onResetView}>
-          Reset view
+        <button
+          type="button"
+          className="da-authoring-playback__btn da-authoring-playback__btn--reset"
+          disabled={disabled || !onResetView}
+          aria-label="Reset view"
+          onClick={onResetView}
+        >
+          RESET
         </button>
       </div>
       <label className="da-authoring-playback__scrub">
-        <span className="da-authoring-playback__time">{formatTime(currentTime)}</span>
-        <input
-          type="range"
-          min={0}
-          max={duration > 0 ? duration : 0}
-          step={0.05}
-          value={Math.min(currentTime, duration || 0)}
-          disabled={disabled || duration <= 0}
-          onChange={(event) => handleSeek(Number(event.target.value))}
-        />
-        <span className="da-authoring-playback__time">{formatTime(duration)}</span>
+        <span className="da-authoring-playback__time">
+          {displayRange ? formatTime(displayRange.startSec) : formatTime(currentTime)}
+        </span>
+        <div className="da-authoring-playback__track-wrap">
+          <div className="da-authoring-playback__track" aria-hidden="true">
+            {displayRange && duration > 0 ? (
+              <div
+                className={`da-authoring-playback__segment${recording ? ' da-authoring-playback__segment--live' : ''}`}
+                style={rangeStyle(displayRange.startSec, displayRange.endSec, duration)}
+              />
+            ) : null}
+          </div>
+          <input
+            type="range"
+            className={`da-authoring-playback__range${recording ? ' is-recording' : ''}`}
+            min={0}
+            max={duration > 0 ? duration : 0}
+            step={0.05}
+            value={Math.min(currentTime, duration || 0)}
+            disabled={disabled || duration <= 0}
+            onChange={(event) => handleSeek(Number(event.target.value))}
+          />
+        </div>
+        <span className="da-authoring-playback__time">
+          {displayRange ? formatTime(displayRange.endSec) : formatTime(duration)}
+        </span>
       </label>
+      {recordRange ? (
+        <p className="da-note da-authoring-playback__segment-note">
+          Extract uses {formatTime(recordRange.startSec)}–{formatTime(recordRange.endSec)} from your source (
+          {formatTime(recordRange.endSec - recordRange.startSec)} recorded).
+        </p>
+      ) : null}
       <p className="da-note da-authoring-playback__hint">
-        Drag on the sphere or use Camera framing sliders · FOV above 130° enters little-planet
+        {hint ??
+          'Drag on the sphere or use Camera framing sliders · FOV above 130° enters little-planet'}
       </p>
     </div>
   );

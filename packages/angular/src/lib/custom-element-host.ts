@@ -15,6 +15,14 @@ export function setHostAttribute(
   }
 }
 
+/** Sync complex props via the custom element's setProperty API when available. */
+export function setHostProperty(host: HTMLElement, name: string, value: unknown): void {
+  const setProperty = (host as { setProperty?: (prop: string, val: unknown) => void }).setProperty;
+  if (typeof setProperty === 'function') {
+    setProperty.call(host, name, value);
+  }
+}
+
 export function attachHostEvents(
   host: HTMLElement,
   handlers: Record<string, ((detail: unknown) => void) | undefined>,

@@ -2,12 +2,14 @@ import angular from '@analogjs/vite-plugin-angular';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolve } from 'node:path';
+import { ffmpegCoreVitePlugin, wasmIsolationHeaders } from '../../tools/vite/ffmpeg-core-vite-plugin.mjs';
 
 export default defineConfig({
   plugins: [
     angular({
       tsconfig: resolve(__dirname, 'tsconfig.json'),
     }),
+    ffmpegCoreVitePlugin(),
     tsconfigPaths({
       projects: [resolve(__dirname, '../../tsconfig.base.json')],
     }),
@@ -18,6 +20,10 @@ export default defineConfig({
       '@rosettadash/angular/visual/media/equirect-sphere-viewport': resolve(
         __dirname,
         '../../packages/angular/src/visual/media/equirect-sphere-viewport/index.ts',
+      ),
+      '@rosettadash/angular/visual/media/flat-video-viewport': resolve(
+        __dirname,
+        '../../packages/angular/src/visual/media/flat-video-viewport/index.ts',
       ),
       '@rosettadash/web-components/styles.css': resolve(
         __dirname,
@@ -35,17 +41,11 @@ export default defineConfig({
   server: {
     port: 4312,
     host: '0.0.0.0',
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'credentialless',
-    },
+    headers: wasmIsolationHeaders(),
   },
   preview: {
     port: 4312,
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'credentialless',
-    },
+    headers: wasmIsolationHeaders(),
   },
   optimizeDeps: {
     include: ['leaflet', '@googlemaps/js-api-loader', 'three'],

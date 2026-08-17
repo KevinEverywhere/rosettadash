@@ -56,4 +56,20 @@ describe('@rosettadash/web-components/wasm', () => {
 
     media.remove();
   });
+
+  it('enables extract when input file and record trim are set', async () => {
+    const media = document.createElement(DB_WASM_MEDIA_TAG) as RdWasmMediaElement;
+    document.body.appendChild(media);
+    await media.whenReady();
+
+    media.setAttribute('operation', 'equirect-extract');
+    media.setProperty('inputFile', new File(['x'], 'clip.mp4', { type: 'video/mp4' }));
+    media.setProperty('recordRange', { startSec: 1, endSec: 3 });
+    await media.whenReady();
+
+    const button = media.shadowRoot?.querySelector('[data-role="extract"]') as HTMLButtonElement | null;
+    expect(button?.disabled).toBe(false);
+
+    media.remove();
+  });
 });

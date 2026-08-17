@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { mergeConfig, type AliasOptions, type UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { ffmpegCoreVitePlugin, wasmIsolationHeaders } from '../vite/ffmpeg-core-vite-plugin.mjs';
 
 const workspaceRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -66,11 +67,18 @@ export async function rosettadashViteFinal(
 ): Promise<UserConfig> {
   return mergeConfig(config, {
     plugins: [
+      ffmpegCoreVitePlugin(),
       tsconfigPaths({
         root: workspaceRoot,
         projects: [path.join(workspaceRoot, 'tsconfig.base.json')],
       }),
     ],
+    server: {
+      headers: wasmIsolationHeaders(),
+    },
+    preview: {
+      headers: wasmIsolationHeaders(),
+    },
     resolve: {
       alias: rosettadashAliasEntries(),
     },

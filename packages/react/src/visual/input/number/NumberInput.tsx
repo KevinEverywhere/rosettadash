@@ -7,6 +7,7 @@ export interface NumberInputProps {
   max?: number;
   step?: number;
   value?: number;
+  disabled?: boolean;
   onChange?: (value: number) => void;
   className?: string;
   style?: CSSProperties;
@@ -32,6 +33,7 @@ export const NumberInput = forwardRef<HTMLElement, NumberInputProps>(function Nu
         max={props.max}
         step={props.step}
         value={props.value}
+        disabled={props.disabled}
         onChange={(e) => props.onChange?.(Number(e.target.value))}
       />
       {children}

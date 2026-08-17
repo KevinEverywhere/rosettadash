@@ -76,7 +76,7 @@ Implemented in React proof: [DAS-130](https://planetkevin.atlassian.net/browse/D
 
 Shipped with one example: **Cusco plaza (360° equirect)** (`libs/destination-atlas/src/data/authoring-examples.ts`).
 
-**Dev setup (proof-react):** from repo root run `npm install` (includes `@ffmpeg/ffmpeg` + `@ffmpeg/util` as devDependencies). The Vite dev server sets COOP + `Cross-Origin-Embedder-Policy: credentialless` so ffmpeg.wasm can use SharedArrayBuffer while YouTube embeds still load. First extract downloads ~31 MB of `@ffmpeg/core` from unpkg.
+**Dev setup (proof-react / proof-angular):** from repo root run `npm install` (includes `@ffmpeg/ffmpeg`, `@ffmpeg/util`, and `@ffmpeg/core` as devDependencies). Proof and Storybook Vite configs serve `@ffmpeg/core` from same-origin `/ffmpeg-core/*` (see `tools/vite/ffmpeg-core-vite-plugin.mjs`) and set COOP + `Cross-Origin-Embedder-Policy: credentialless` so ffmpeg.wasm can use SharedArrayBuffer while YouTube embeds still load. `<rd-wasm-media>` loads core via `@rosettadash/core` helpers — no unpkg CDN fetch.
 
 Implemented in React proof: [DAS-131](https://planetkevin.atlassian.net/browse/DAS-131) (tab shell); [DAS-132](https://planetkevin.atlassian.net/browse/DAS-132) (sphere viewport + WASM extract on branch `feature/DAS-132-wasm-authoring-extract`). Editor/Admin roles only.
 

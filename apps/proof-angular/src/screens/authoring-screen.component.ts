@@ -11,10 +11,16 @@ import {
 import {
   AUTHORING_OUTPUT_CUSTOM_ID,
   AUTHORING_OUTPUT_PRESETS,
+  centerCropForOutput,
+  flatCropToCropRegion,
+  authoringExtractDownloadName,
   getAuthoringOutputPreset,
+  isEquirectSourceDimensions,
+  type AuthoringRecordRange,
   virtualCameraToCropRegion,
 } from '@rosettadash/core';
 import { EquirectSphereViewport } from '@rosettadash/angular/visual/media/equirect-sphere-viewport';
+import { FlatVideoViewport } from '@rosettadash/angular/visual/media/flat-video-viewport';
 import { type VideoFileDetail } from '@rosettadash/angular/visual/media/video-source';
 import { WasmMedia } from '@rosettadash/angular/visual/wasm/media';
 import {
@@ -23,7 +29,6 @@ import {
   getAuthoringExampleById,
   getAuthoringExampleForDestinationId,
   getDestinationById,
-  resolveEquirectSourceVideoUrl,
 } from '@destination-atlas';
 import { localizedDestinationName } from '../lib/atlas-utils';
 import { AtlasStateService } from '../services/atlas-state.service';
@@ -38,6 +43,11 @@ function matchOutputPreset(width: number, height: number): string {
     (entry) => entry.width === width && entry.height === height,
   );
   return match?.id ?? AUTHORING_OUTPUT_CUSTOM_ID;
+}
+
+function evenDimension(value: number): number {
+  const rounded = Math.max(2, Math.round(value));
+  return rounded % 2 === 0 ? rounded : rounded - 1;
 }
 
 function probeVideoFile(file: File): Promise<{ width: number; height: number }> {
@@ -62,6 +72,7 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
   standalone: true,
   imports: [
     EquirectSphereViewport,
+    FlatVideoViewport,
     WasmMedia,
     AuthoringPlaybackBarComponent,
     AuthoringCameraControlsComponent,
@@ -79,9 +90,22 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
         </header>
 
         <div class="da-authoring-workspace__videos">
-          <div class="da-authoring-workspace__video-col">
-            @if (isEquirectExample()) {
-              @if (sourceUrl()) {
+          <div class="da-authoring-workspace__video-col da-authoring-workspace__video-col--source">
+            @if (sourceUrl()) {
+              <div class="da-authoring-source-toolbar">
+                <label class="da-authoring-change-file">
+                  <input
+                    type="file"
+                    class="da-authoring-choose-file__input"
+                    accept="video/*"
+                    (change)="onAuthoringFileSelected($event)"
+                  />
+                  Change video file
+                </label>
+              </div>
+            }
+            @if (sourceUrl()) {
+              @if (isEquirectSource()) {
                 <rd-equirect-sphere-viewport
                   #sphereViewport
                   class="da-authoring-sphere-viewport"
@@ -95,25 +119,35 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
                   [outputPreviewElement]="outputPreviewElement()"
                   (cameraChange)="onCameraChange($event)"
                 />
-              } @else if (sourceLoadBusy()) {
+              } @else if (sourceWidth() && sourceHeight()) {
+                <rd-flat-video-viewport
+                  #flatViewport
+                  class="da-authoring-flat-viewport"
+                  [videoSrc]="sourceUrl()"
+                  [sourceWidth]="sourceWidth()!"
+                  [sourceHeight]="sourceHeight()!"
+                  [cropX]="cropX()"
+                  [cropY]="cropY()"
+                  [cropWidth]="cropWidth()"
+                  [cropHeight]="cropHeight()"
+                  [outputWidth]="outputWidth()"
+                  [outputHeight]="outputHeight()"
+                  [outputPreviewElement]="outputPreviewElement()"
+                  (cropChange)="onCropChange($event)"
+                />
+              } @else {
                 <div
                   class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder"
                   aria-busy="true"
-                  aria-label="Loading source video"
+                  aria-label="Reading source video"
                 ></div>
-              } @else {
-                <div class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder">
-                  <label class="da-authoring-choose-file">
-                    <input
-                      type="file"
-                      class="da-authoring-choose-file__input"
-                      accept="video/*"
-                      (change)="onAuthoringFileSelected($event)"
-                    />
-                    Choose video file
-                  </label>
-                </div>
               }
+            } @else if (sourceLoadBusy()) {
+              <div
+                class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder"
+                aria-busy="true"
+                aria-label="Loading source video"
+              ></div>
             } @else {
               <div class="da-authoring-sphere-viewport da-authoring-sphere-viewport--placeholder">
                 <label class="da-authoring-choose-file">
@@ -142,31 +176,76 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
 
         <div class="da-authoring-workspace__footers">
           <div class="da-authoring-pane da-authoring-pane--source" aria-label="Authoring source controls">
-            <da-authoring-playback-bar
-              [viewport]="viewportRef()"
-              [disabled]="!sourceUrl()"
-              (resetView)="resetView()"
-            />
-            <da-authoring-camera-controls
-              [yaw]="yaw()"
-              [pitch]="pitch()"
-              [horizontalFov]="horizontalFov()"
-              [disabled]="!sourceUrl() || !isEquirectExample()"
-              (yawChange)="yaw.set($event)"
-              (pitchChange)="pitch.set($event)"
-              (horizontalFovChange)="horizontalFov.set($event)"
-              (reset)="resetView()"
-              (littlePlanetPreset)="applyLittlePlanetPreset()"
-            />
+            @if (!sourceUrl() && !sourceLoadBusy()) {
+              <p class="da-note da-authoring-controls-placeholder">
+                Choose a source video to show playback and framing controls.
+              </p>
+            } @else if (!sourceReady()) {
+              <p class="da-note da-authoring-controls-placeholder" aria-busy="true">Loading source video…</p>
+            } @else {
+              <p class="da-note da-authoring-source-mode">{{ sourceModeLabel() }}</p>
+              <da-authoring-playback-bar
+                [viewport]="viewportRef()"
+                [disabled]="false"
+                [hint]="playbackHint()"
+                [recordRange]="recordRange()"
+                (recordRangeChange)="recordRange.set($event)"
+                (resetView)="resetView()"
+              />
+              @if (isEquirectSource()) {
+                <da-authoring-camera-controls
+                  [yaw]="yaw()"
+                  [pitch]="pitch()"
+                  [horizontalFov]="horizontalFov()"
+                  [disabled]="false"
+                  (yawChange)="yaw.set($event)"
+                  (pitchChange)="pitch.set($event)"
+                  (horizontalFovChange)="horizontalFov.set($event)"
+                  (reset)="resetView()"
+                  (littlePlanetPreset)="applyLittlePlanetPreset()"
+                />
+              } @else {
+                <div class="da-authoring-crop-controls" aria-label="Crop region controls">
+                  <h4 class="da-authoring-crop-controls__title">Crop region</h4>
+                  <p class="da-note da-authoring-crop-controls__hint">
+                    Drag corners for any output size (updates export dimensions live). Pick a preset to snap to
+                    320×240, 640×360, or 720×480.
+                  </p>
+                  <div class="da-authoring-crop-controls__grid">
+                    <section class="rd-input-number">
+                      <span class="rd-field__label">Crop X</span>
+                      <input type="number" class="rd-input" step="1" min="0" [value]="cropX()" (change)="updateFlatCrop({ cropX: +$any($event.target).value })" />
+                    </section>
+                    <section class="rd-input-number">
+                      <span class="rd-field__label">Crop Y</span>
+                      <input type="number" class="rd-input" step="1" min="0" [value]="cropY()" (change)="updateFlatCrop({ cropY: +$any($event.target).value })" />
+                    </section>
+                    <section class="rd-input-number">
+                      <span class="rd-field__label">Crop width</span>
+                      <input type="number" class="rd-input" step="2" min="2" [value]="cropWidth()" (change)="updateFlatCrop({ cropWidth: +$any($event.target).value })" />
+                    </section>
+                    <section class="rd-input-number">
+                      <span class="rd-field__label">Crop height</span>
+                      <input type="number" class="rd-input" step="2" min="2" [value]="cropHeight()" (change)="updateFlatCrop({ cropHeight: +$any($event.target).value })" />
+                    </section>
+                  </div>
+                </div>
+              }
+            }
           </div>
 
           <div class="da-authoring-pane da-authoring-pane--output" aria-label="Authoring output controls">
+            @if (!sourceReady()) {
+              <p class="da-note da-authoring-controls-placeholder">
+                Output and export settings appear after you load a source video.
+              </p>
+            } @else {
             <p class="da-note">Same view as source — live mirror scaled to export dimensions.</p>
 
             @if (sourceWidth() && sourceHeight()) {
               <p class="da-note" [class.da-note--warn]="equirectAspectWarning()">
                 Source dimensions: {{ sourceWidth() }}×{{ sourceHeight() }} ({{ sourceAspect()?.toFixed(2) }}:1)
-                @if (isEquirectExample()) {
+                @if (isEquirectSource()) {
                   — interior view flips texture for inside-out viewing
                 }
                 @if (equirectAspectWarning()) {
@@ -176,54 +255,78 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
             }
 
             <div class="da-media-extract-controls">
-              <da-bound-select-input
-                [fieldLabel]="'Export rectangle size'"
-                [options]="outputPresetOptions()"
-                [value]="outputPresetId()"
-                (valueChange)="handleOutputPresetChange($event)"
-              />
-              <section class="rd-input-number">
-                <span class="rd-field__label">Yaw (°)</span>
-                <input type="number" class="rd-input" step="0.5" min="-180" max="180" [value]="formatDegree(yaw())" (change)="yaw.set(+$any($event.target).value)" />
-              </section>
-              <section class="rd-input-number">
-                <span class="rd-field__label">Pitch (°)</span>
-                <input type="number" class="rd-input" step="0.5" min="-85" max="85" [value]="formatDegree(pitch())" (change)="pitch.set(+$any($event.target).value)" />
-              </section>
-              <section class="rd-input-number">
-                <span class="rd-field__label">Horizontal FOV (°)</span>
-                <input type="number" class="rd-input" step="1" min="30" max="360" [value]="horizontalFov()" (change)="horizontalFov.set(+$any($event.target).value)" />
-              </section>
-              <section class="rd-input-number">
-                <span class="rd-field__label">Output width</span>
-                <input
-                  type="number"
-                  class="rd-input"
-                  step="2"
-                  min="160"
-                  max="3840"
-                  [value]="outputWidth()"
-                  [disabled]="!isCustomOutput()"
-                  (change)="handleCustomDimensionChange(+$any($event.target).value, outputHeight())"
-                />
-              </section>
-              <section class="rd-input-number">
-                <span class="rd-field__label">Output height</span>
-                <input
-                  type="number"
-                  class="rd-input"
-                  step="2"
-                  min="120"
-                  max="2160"
-                  [value]="outputHeight()"
-                  [disabled]="!isCustomOutput()"
-                  (change)="handleCustomDimensionChange(outputWidth(), +$any($event.target).value)"
-                />
-              </section>
-              <label class="rd-input-checkbox">
-                <input type="checkbox" [checked]="reverse()" (change)="reverse.set($any($event.target).checked)" />
-                Reverse playback
-              </label>
+              <div class="da-media-extract-size-row">
+                <div class="da-media-extract-size-row__preset">
+                  <da-bound-select-input
+                    [fieldLabel]="'Export rectangle size'"
+                    [options]="outputPresetOptions()"
+                    [value]="outputPresetId()"
+                    (valueChange)="handleOutputPresetChange($event)"
+                  />
+                </div>
+                <section class="rd-input-number da-media-extract-size-row__dim">
+                  <span class="rd-field__label">W</span>
+                  <input
+                    type="number"
+                    class="rd-input"
+                    step="2"
+                    min="160"
+                    max="3840"
+                    [value]="outputWidth()"
+                    [disabled]="!isCustomOutput()"
+                    (change)="handleCustomDimensionChange(+$any($event.target).value, outputHeight())"
+                  />
+                </section>
+                <span class="da-media-extract-size-row__sep" aria-hidden="true">×</span>
+                <section class="rd-input-number da-media-extract-size-row__dim">
+                  <span class="rd-field__label">H</span>
+                  <input
+                    type="number"
+                    class="rd-input"
+                    step="2"
+                    min="120"
+                    max="2160"
+                    [value]="outputHeight()"
+                    [disabled]="!isCustomOutput()"
+                    (change)="handleCustomDimensionChange(outputWidth(), +$any($event.target).value)"
+                  />
+                </section>
+                <button
+                  type="button"
+                  class="da-media-extract-size-row__reverse"
+                  [class.is-active]="reverse()"
+                  aria-label="Reverse playback"
+                  [attr.aria-pressed]="reverse()"
+                  (click)="reverse.set(!reverse())"
+                >
+                  <svg class="da-authoring-playback__icon da-authoring-playback__icon--reverse" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M7 7v10M7 17l-4-4 4-4M17 7v10M17 7l4 4-4 4"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+              @if (isEquirectSource()) {
+                <div class="da-media-extract-controls__camera">
+                  <section class="rd-input-number">
+                    <span class="rd-field__label">Yaw (°)</span>
+                    <input type="number" class="rd-input" step="0.5" min="-180" max="180" [value]="formatDegree(yaw())" (change)="yaw.set(+$any($event.target).value)" />
+                  </section>
+                  <section class="rd-input-number">
+                    <span class="rd-field__label">Pitch (°)</span>
+                    <input type="number" class="rd-input" step="0.5" min="-85" max="85" [value]="formatDegree(pitch())" (change)="pitch.set(+$any($event.target).value)" />
+                  </section>
+                  <section class="rd-input-number">
+                    <span class="rd-field__label">Horizontal FOV (°)</span>
+                    <input type="number" class="rd-input" step="1" min="30" max="360" [value]="horizontalFov()" (change)="horizontalFov.set(+$any($event.target).value)" />
+                  </section>
+                </div>
+              }
             </div>
 
             @if (extractFilter()) {
@@ -234,10 +337,13 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
             }
 
             @if (inputFile()) {
+              @if (!recordRange()) {
+                <p class="da-note">Record a segment on the playback bar, then extract that subsection.</p>
+              }
               <rd-wasm-media
                 label="ffmpeg.wasm extract"
                 operation="equirect-extract"
-                extractionMode="rectilinear"
+                [extractionMode]="isEquirectSource() ? 'rectilinear' : 'flat-crop'"
                 outputFormat="mp4"
                 [showProgress]="true"
                 [yaw]="yaw()"
@@ -248,6 +354,7 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
                 [reverse]="reverse()"
                 [inputFile]="inputFile()"
                 [cropRegion]="cropRegion()"
+                [recordRange]="recordRange()"
                 (progress)="onExtractProgress($event)"
                 (extractComplete)="onExtractComplete($event)"
                 (extractError)="onExtractError($event)"
@@ -275,6 +382,7 @@ function probeVideoFile(file: File): Promise<{ width: number; height: number }> 
               <a class="da-media-extract-output__download" [href]="url" [download]="downloadName()">
                 Download extracted video
               </a>
+            }
             }
           </div>
         </div>
@@ -306,6 +414,11 @@ export class AuthoringScreenComponent {
   readonly reverse = signal(false);
   readonly sourceWidth = signal<number | undefined>(undefined);
   readonly sourceHeight = signal<number | undefined>(undefined);
+  readonly cropX = signal(0);
+  readonly cropY = signal(0);
+  readonly cropWidth = signal(640);
+  readonly cropHeight = signal(360);
+  readonly recordRange = signal<AuthoringRecordRange | null>(null);
 
   private userPickedFile = false;
 
@@ -313,6 +426,7 @@ export class AuthoringScreenComponent {
   private extractObjectUrl: string | null = null;
 
   readonly sphereViewport = viewChild<EquirectSphereViewport>('sphereViewport');
+  readonly flatViewport = viewChild<FlatVideoViewport>('flatViewport');
   readonly outputPreviewHostEl = viewChild<ElementRef<HTMLElement>>('outputPreviewHost');
 
   readonly example = computed(
@@ -326,9 +440,29 @@ export class AuthoringScreenComponent {
     })),
   );
 
-  readonly isEquirectExample = computed(() => this.example()?.projection === 'equirect');
+  readonly sourceReady = computed(
+    () => Boolean(this.sourceUrl() && this.sourceWidth() && this.sourceHeight() && !this.sourceLoadBusy()),
+  );
+
+  readonly isEquirectSource = computed(() => {
+    const width = this.sourceWidth();
+    const height = this.sourceHeight();
+    return Boolean(this.sourceReady() && width && height && isEquirectSourceDimensions(width, height));
+  });
+
+  readonly sourceModeLabel = computed(() =>
+    this.isEquirectSource()
+      ? '360° equirectangular — camera framing controls'
+      : 'Flat video — drag the crop rectangle on source',
+  );
 
   readonly isCustomOutput = computed(() => this.outputPresetId() === AUTHORING_OUTPUT_CUSTOM_ID);
+
+  readonly playbackHint = computed(() =>
+    this.isEquirectSource()
+      ? 'Drag on the sphere or use Camera framing sliders · FOV above 130° enters little-planet'
+      : 'Drag the crop rectangle · corner handles set a custom output size · presets snap to standard dimensions',
+  );
 
   readonly sourceAspect = computed(() => {
     const width = this.sourceWidth();
@@ -338,7 +472,7 @@ export class AuthoringScreenComponent {
 
   readonly equirectAspectWarning = computed(
     () =>
-      this.isEquirectExample() &&
+      this.isEquirectSource() &&
       this.sourceAspect() !== null &&
       Math.abs(this.sourceAspect()! - 2) > 0.05,
   );
@@ -357,7 +491,7 @@ export class AuthoringScreenComponent {
     { value: AUTHORING_OUTPUT_CUSTOM_ID, label: 'Custom' },
   ]);
 
-  readonly downloadName = computed(() => `${this.example()?.id ?? 'authoring'}-extract.mp4`);
+  readonly downloadName = computed(() => authoringExtractDownloadName(this.inputFile()));
 
   constructor() {
     effect(() => {
@@ -377,9 +511,8 @@ export class AuthoringScreenComponent {
       this.userPickedFile = false;
     });
 
-    effect((onCleanup) => {
+    effect(() => {
       const example = this.example();
-      const selectedId = this.atlas.selectedId();
       if (!example) {
         return;
       }
@@ -394,69 +527,18 @@ export class AuthoringScreenComponent {
         this.outputHeight.set(preset?.height ?? 480);
         this.sourceWidth.set(undefined);
         this.sourceHeight.set(undefined);
+        this.recordRange.set(null);
         this.cropRegion.set(null);
         this.extractFilter.set('');
         this.extractProgress.set(0);
         this.extractError.set(null);
         this.extractBusy.set(false);
+        this.inputFile.set(null);
+        this.sourceUrl.set(null);
+        this.sourceLoadBusy.set(false);
+        this.sourceLoadError.set(null);
         this.revokeExtractUrl();
       }
-
-      const destination = selectedId ? getDestinationById(selectedId) : undefined;
-      const shippedUrl = resolveEquirectSourceVideoUrl(destination);
-      const shouldLoadShipped =
-        Boolean(selectedId) && example.destinationId === selectedId && Boolean(shippedUrl);
-
-      if (this.userPickedFile || !shouldLoadShipped || !shippedUrl || !destination) {
-        if (!this.userPickedFile) {
-          this.inputFile.set(null);
-          this.sourceUrl.set(null);
-          this.sourceLoadBusy.set(false);
-          this.sourceLoadError.set(null);
-        }
-        return;
-      }
-
-      let cancelled = false;
-      this.sourceLoadError.set(null);
-      this.sourceLoadBusy.set(true);
-      this.inputFile.set(null);
-      this.sourceUrl.set(null);
-
-      void (async () => {
-        try {
-          const response = await fetch(shippedUrl);
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-          const blob = await response.blob();
-          if (cancelled || this.userPickedFile) {
-            return;
-          }
-          const ext = shippedUrl.includes('.webm') ? 'webm' : 'mp4';
-          this.inputFile.set(
-            new File([blob], `${destination.id}-equirect.${ext}`, {
-              type: blob.type || `video/${ext}`,
-            }),
-          );
-        } catch (error) {
-          if (cancelled) {
-            return;
-          }
-          this.sourceLoadError.set(
-            error instanceof Error ? error.message : 'Could not load shipped 360° video',
-          );
-          this.sourceUrl.set(shippedUrl);
-        } finally {
-          if (!cancelled) {
-            this.sourceLoadBusy.set(false);
-          }
-        }
-      })();
-
-      onCleanup(() => {
-        cancelled = true;
-      });
     });
 
     effect((onCleanup) => {
@@ -476,22 +558,72 @@ export class AuthoringScreenComponent {
     });
 
     effect(() => {
-      const region = virtualCameraToCropRegion({
-        camera: { yaw: this.yaw(), pitch: this.pitch(), roll: 0, fov: this.horizontalFov() },
-        sourceWidth: this.sourceWidth(),
-        sourceHeight: this.sourceHeight(),
+      const file = this.inputFile();
+      const width = this.sourceWidth();
+      const height = this.sourceHeight();
+      if (!file || (width && height)) {
+        return;
+      }
+      void probeVideoFile(file).then(({ width: probedWidth, height: probedHeight }) => {
+        if (probedWidth > 0 && probedHeight > 0) {
+          this.sourceWidth.set(probedWidth);
+          this.sourceHeight.set(probedHeight);
+        }
+      });
+    });
+
+    effect(() => {
+      const width = this.sourceWidth();
+      const height = this.sourceHeight();
+      if (!width || !height || this.isEquirectSource() || this.outputPresetId() === AUTHORING_OUTPUT_CUSTOM_ID) {
+        return;
+      }
+      const centered = centerCropForOutput(width, height, this.outputWidth(), this.outputHeight());
+      this.cropX.set(centered.cropX);
+      this.cropY.set(centered.cropY);
+      this.cropWidth.set(centered.cropWidth);
+      this.cropHeight.set(centered.cropHeight);
+    });
+
+    effect(() => {
+      if (this.isEquirectSource()) {
+        const region = virtualCameraToCropRegion({
+          camera: { yaw: this.yaw(), pitch: this.pitch(), roll: 0, fov: this.horizontalFov() },
+          sourceWidth: this.sourceWidth(),
+          sourceHeight: this.sourceHeight(),
+          outputWidth: this.outputWidth(),
+          outputHeight: this.outputHeight(),
+          reverse: this.reverse(),
+        });
+        this.cropRegion.set(region);
+        this.extractFilter.set(typeof region.filter === 'string' ? region.filter : '');
+        return;
+      }
+      const width = this.sourceWidth();
+      const height = this.sourceHeight();
+      if (!width || !height) {
+        this.cropRegion.set(null);
+        this.extractFilter.set('');
+        return;
+      }
+      const region = flatCropToCropRegion({
+        cropX: this.cropX(),
+        cropY: this.cropY(),
+        cropWidth: this.cropWidth(),
+        cropHeight: this.cropHeight(),
+        sourceWidth: width,
+        sourceHeight: height,
         outputWidth: this.outputWidth(),
         outputHeight: this.outputHeight(),
         reverse: this.reverse(),
       });
       this.cropRegion.set(region);
-      const filter = region.filter;
-      this.extractFilter.set(typeof filter === 'string' ? filter : '');
+      this.extractFilter.set(region.filter);
     });
   }
 
-  viewportRef(): EquirectSphereViewport | null {
-    return this.sphereViewport() ?? null;
+  viewportRef(): EquirectSphereViewport | FlatVideoViewport | null {
+    return this.sphereViewport() ?? this.flatViewport() ?? null;
   }
 
   outputPreviewElement(): HTMLElement | null {
@@ -506,6 +638,29 @@ export class AuthoringScreenComponent {
     this.yaw.set(detail.yaw);
     this.pitch.set(detail.pitch);
     this.horizontalFov.set(detail.horizontalFov);
+  }
+
+  onCropChange(detail: { cropX: number; cropY: number; cropWidth: number; cropHeight: number }): void {
+    this.applyFlatCrop(detail);
+  }
+
+  updateFlatCrop(partial: Partial<{ cropX: number; cropY: number; cropWidth: number; cropHeight: number }>): void {
+    this.applyFlatCrop({
+      cropX: partial.cropX ?? this.cropX(),
+      cropY: partial.cropY ?? this.cropY(),
+      cropWidth: partial.cropWidth ?? this.cropWidth(),
+      cropHeight: partial.cropHeight ?? this.cropHeight(),
+    });
+  }
+
+  private applyFlatCrop(detail: { cropX: number; cropY: number; cropWidth: number; cropHeight: number }): void {
+    this.cropX.set(detail.cropX);
+    this.cropY.set(detail.cropY);
+    this.cropWidth.set(detail.cropWidth);
+    this.cropHeight.set(detail.cropHeight);
+    this.outputWidth.set(evenDimension(detail.cropWidth));
+    this.outputHeight.set(evenDimension(detail.cropHeight));
+    this.outputPresetId.set(AUTHORING_OUTPUT_CUSTOM_ID);
   }
 
   handleOutputPresetChange(presetId: string): void {
@@ -533,6 +688,7 @@ export class AuthoringScreenComponent {
     this.userPickedFile = true;
     this.sourceLoadBusy.set(false);
     this.sourceLoadError.set(null);
+    this.recordRange.set(null);
     this.inputFile.set(detail.file);
     const example = this.example();
     if (example) {
@@ -558,6 +714,7 @@ export class AuthoringScreenComponent {
   onAuthoringFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
+    input.value = '';
     if (!file) {
       return;
     }
@@ -579,9 +736,22 @@ export class AuthoringScreenComponent {
     if (!example) {
       return;
     }
-    this.yaw.set(example.defaultYaw);
-    this.pitch.set(example.defaultPitch);
-    this.horizontalFov.set(example.defaultHorizontalFov);
+    if (this.isEquirectSource()) {
+      this.yaw.set(example.defaultYaw);
+      this.pitch.set(example.defaultPitch);
+      this.horizontalFov.set(example.defaultHorizontalFov);
+      return;
+    }
+    const width = this.sourceWidth();
+    const height = this.sourceHeight();
+    if (!width || !height) {
+      return;
+    }
+    const centered = centerCropForOutput(width, height, this.outputWidth(), this.outputHeight());
+    this.cropX.set(centered.cropX);
+    this.cropY.set(centered.cropY);
+    this.cropWidth.set(centered.cropWidth);
+    this.cropHeight.set(centered.cropHeight);
   }
 
   applyLittlePlanetPreset(): void {

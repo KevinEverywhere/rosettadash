@@ -68,6 +68,7 @@
     "@angular/language-service": "~22.0.4",
     "@babel/standalone": "^8.0.4",
     "@eslint/js": "^9.8.0",
+    "@ffmpeg/core": "^0.12.6",
     "@ffmpeg/ffmpeg": "^0.12.10",
     "@ffmpeg/util": "^0.12.1",
     "@googlemaps/js-api-loader": "^2.1.1",

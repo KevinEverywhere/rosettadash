@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
+import { ffmpegCoreVitePlugin, wasmIsolationHeaders } from '../../tools/vite/ffmpeg-core-vite-plugin.mjs';
 
 export default defineConfig({
+  plugins: [ffmpegCoreVitePlugin()],
   root: __dirname,
   publicDir: 'public',
   build: {
@@ -11,6 +13,10 @@ export default defineConfig({
   server: {
     port: 4310,
     host: '0.0.0.0',
+    headers: wasmIsolationHeaders(),
+  },
+  preview: {
+    headers: wasmIsolationHeaders(),
   },
   resolve: {
     alias: {

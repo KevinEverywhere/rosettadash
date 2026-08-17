@@ -12,9 +12,11 @@ import {
   DB_WASM_MEDIA_TAG,
   registerRdWasmMedia,
 } from '@rosettadash/web-components/visual/wasm/media';
+import type { AuthoringRecordRange } from '@rosettadash/core';
 import {
   attachHostEvents,
   setHostAttribute,
+  setHostProperty,
 } from '../../../lib/custom-element-host';
 
 export interface WasmMediaProps {
@@ -35,6 +37,7 @@ export interface WasmMediaProps {
   reverse?: boolean;
   inputFile?: File | Blob | null;
   cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
+  recordRange?: AuthoringRecordRange | null;
   className?: string;
 }
 
@@ -68,6 +71,7 @@ export class WasmMedia implements OnInit, OnDestroy {
   readonly cropRegion = input<
     Record<string, string | number | boolean | null | undefined> | null | undefined
   >(undefined);
+  readonly recordRange = input<AuthoringRecordRange | null | undefined>(undefined);
   readonly className = input<string | undefined>(undefined);
 
   readonly progress = output<{ progress: number }>();
@@ -99,6 +103,7 @@ export class WasmMedia implements OnInit, OnDestroy {
       this.reverse();
       this.inputFile();
       this.cropRegion();
+      this.recordRange();
       this.className();
       if (this.ready) {
         this.syncFromInputs();
@@ -150,11 +155,9 @@ export class WasmMedia implements OnInit, OnDestroy {
     setHostAttribute(el, 'pitch', this.pitch());
     setHostAttribute(el, 'horizontal-fov', this.horizontalFov());
     setHostAttribute(el, 'reverse', this.reverse());
-    (el as HTMLElement & { inputFile?: File | Blob | null }).inputFile =
-      this.inputFile() ?? null;
-    (el as HTMLElement & {
-      cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
-    }).cropRegion = this.cropRegion() ?? null;
+    setHostProperty(el, 'inputFile', this.inputFile() ?? null);
+    setHostProperty(el, 'cropRegion', this.cropRegion() ?? null);
+    setHostProperty(el, 'recordRange', this.recordRange() ?? null);
     if (this.className()) {
       el.setAttribute('class', this.className()!);
     } else {

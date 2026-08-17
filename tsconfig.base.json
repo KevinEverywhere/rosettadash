@@ -279,6 +279,9 @@
       "@rosettadash/react/visual/media/equirect-sphere-viewport": [
         "./packages/react/src/visual/media/equirect-sphere-viewport/index.ts"
       ],
+      "@rosettadash/react/visual/media/flat-video-viewport": [
+        "./packages/react/src/visual/media/flat-video-viewport/index.ts"
+      ],
       "@rosettadash/react/visual/media/video-metadata": [
         "./packages/react/src/visual/media/video-metadata/index.ts"
       ],
@@ -467,6 +470,9 @@
       ],
       "@rosettadash/angular/visual/media/equirect-sphere-viewport": [
         "./packages/angular/src/visual/media/equirect-sphere-viewport/index.ts"
+      ],
+      "@rosettadash/angular/visual/media/flat-video-viewport": [
+        "./packages/angular/src/visual/media/flat-video-viewport/index.ts"
       ],
       "@rosettadash/angular/visual/media/live-capture": [
         "./packages/angular/src/visual/media/live-capture/index.ts"

@@ -1,4 +1,5 @@
 import { createElement, forwardRef, type CSSProperties } from 'react';
+import type { AuthoringRecordRange } from '@rosettadash/core';
 import {
   DB_WASM_MEDIA_TAG,
   registerRdWasmMedia,
@@ -23,6 +24,7 @@ export interface WasmMediaProps {
   reverse?: boolean;
   inputFile?: File | Blob | null;
   cropRegion?: Record<string, string | number | boolean | null | undefined> | null;
+  recordRange?: AuthoringRecordRange | null;
   className?: string;
   style?: CSSProperties;
   onProgress?: (detail: { progress: number }) => void;
@@ -56,6 +58,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
     reverse,
     inputFile,
     cropRegion,
+    recordRange,
     className,
     style,
     onProgress,
@@ -68,7 +71,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
   const hostRef = useCustomElementHost(
     {
       register: registerRdWasmMedia,
-      properties: ['inputFile', 'cropRegion'],
+      properties: ['inputFile', 'cropRegion', 'recordRange'],
       attrs: {
         extractionMode: 'extraction-mode',
         outputFormat: 'output-format',
@@ -115,7 +118,7 @@ export const WasmMedia = forwardRef<HTMLElement, WasmMediaProps>(function WasmMe
       onMetadata: onMetadata as ((detail: unknown) => void) | undefined,
     },
     ref,
-    { inputFile, cropRegion },
+    { inputFile, cropRegion, recordRange },
   );
 
   return createElement(DB_WASM_MEDIA_TAG, {

@@ -2,10 +2,12 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { resolve } from 'node:path';
+import { ffmpegCoreVitePlugin, wasmIsolationHeaders } from '../../tools/vite/ffmpeg-core-vite-plugin.mjs';
 
 export default defineConfig({
   plugins: [
     react(),
+    ffmpegCoreVitePlugin(),
     tsconfigPaths({
       projects: [resolve(__dirname, '../../tsconfig.base.json')],
     }),
@@ -29,17 +31,11 @@ export default defineConfig({
   server: {
     port: 4311,
     host: '0.0.0.0',
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'credentialless',
-    },
+    headers: wasmIsolationHeaders(),
   },
   preview: {
     port: 4311,
-    headers: {
-      'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'credentialless',
-    },
+    headers: wasmIsolationHeaders(),
   },
   optimizeDeps: {
     include: ['leaflet', '@googlemaps/js-api-loader', 'three'],

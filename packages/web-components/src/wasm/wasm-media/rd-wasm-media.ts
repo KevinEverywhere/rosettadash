@@ -1,6 +1,13 @@
 import {
   buildEquirectExtractFilter,
+  buildAuthoringExtractFfmpegArgs,
   DEFAULT_EQUIRECT_FLAT_CROP,
+  formatFfmpegError,
+  isValidAuthoringRecordRange,
+  loadFfmpegCore,
+  normalizeAuthoringRecordRange,
+  resolveFfmpegCoreBaseUrl,
+  type AuthoringRecordRange,
 } from '@rosettadash/core';
 import { defineRosettaElement, type DashRow, readNumber, readString } from '../../lib/element-utils.js';
 import { applyShadowMount, ensureShadowBase, getShadowBase, loadShadowPairForTag } from '../../lib/shadow-base.js';
@@ -21,11 +28,18 @@ interface FfmpegUtilModule {
 
 interface FfmpegInstance {
   loaded: boolean;
-  on(event: 'progress', handler: (payload: { progress: number }) => void): void;
-  load(options: { coreURL: string; wasmURL: string; workerURL?: string }): Promise<void>;
+  on(
+    event: 'progress' | 'log',
+    handler: (payload: { progress?: number; type?: string; message?: string }) => void,
+  ): void;
+  off?(
+    event: 'progress' | 'log',
+    handler: (payload: { progress?: number; type?: string; message?: string }) => void,
+  ): void;
+  load(options: { coreURL: string; wasmURL: string; workerURL?: string }): Promise<void | boolean>;
   writeFile(name: string, data: Uint8Array): Promise<void>;
-  readFile(name: string): Promise<Uint8Array>;
-  exec(args: string[]): Promise<void>;
+  readFile(name: string, encoding?: string): Promise<Uint8Array>;
+  exec(args: string[]): Promise<number>;
 }
 
 export class RdWasmMediaElement extends HTMLElement {
@@ -57,6 +71,9 @@ export class RdWasmMediaElement extends HTMLElement {
       'crop-height',
       'output-width',
       'output-height',
+      'ffmpeg-core-base-url',
+      'trim-start-sec',
+      'trim-end-sec',
     ];
   }
 
@@ -98,6 +115,18 @@ export class RdWasmMediaElement extends HTMLElement {
       if (this.shadowRoot && this.resourcesReady) {
         void this.resourcesReady.then(() => this.paint());
       }
+    } else if (name === 'recordRange') {
+      if (value && typeof value === 'object') {
+        const range = value as AuthoringRecordRange;
+        this.setAttribute('trim-start-sec', String(range.startSec));
+        this.setAttribute('trim-end-sec', String(range.endSec));
+      } else {
+        this.removeAttribute('trim-start-sec');
+        this.removeAttribute('trim-end-sec');
+      }
+      if (this.shadowRoot && this.resourcesReady) {
+        void this.resourcesReady.then(() => this.paint());
+      }
     } else {
       const attrMap: Record<string, string> = {
         outputFormat: 'output-format',
@@ -108,6 +137,8 @@ export class RdWasmMediaElement extends HTMLElement {
         cropHeight: 'crop-height',
         outputWidth: 'output-width',
         outputHeight: 'output-height',
+        trimStartSec: 'trim-start-sec',
+        trimEndSec: 'trim-end-sec',
         yaw: 'yaw',
         pitch: 'pitch',
         horizontalFov: 'horizontal-fov',
@@ -244,7 +275,7 @@ export class RdWasmMediaElement extends HTMLElement {
     if (actions) {
       if (this.operation === 'equirect-extract') {
         actions.innerHTML = `<button type="button" data-role="extract" ${
-          this.busy || !this.inputFile ? 'disabled' : ''
+          this.busy || !this.inputFile || !this.hasValidTrim() ? 'disabled' : ''
         }>${this.busy ? 'Extracting…' : 'Extract subsection'}</button>`;
       } else {
         actions.innerHTML =
@@ -270,6 +301,19 @@ export class RdWasmMediaElement extends HTMLElement {
       };
       button.addEventListener('click', this.extractListener);
     }
+  }
+
+  private resolveTrim(): AuthoringRecordRange | null {
+    const startSec = readNumber(this.getAttribute('trim-start-sec'), Number.NaN);
+    const endSec = readNumber(this.getAttribute('trim-end-sec'), Number.NaN);
+    if (!Number.isFinite(startSec) || !Number.isFinite(endSec)) {
+      return null;
+    }
+    return { startSec, endSec };
+  }
+
+  private hasValidTrim(): boolean {
+    return isValidAuthoringRecordRange(this.resolveTrim());
   }
 
   private inputFileName(): string {
@@ -318,14 +362,14 @@ export class RdWasmMediaElement extends HTMLElement {
     let ffmpegModule: FfmpegModule;
     let utilModule: FfmpegUtilModule;
     try {
-      ffmpegModule = (await import('@ffmpeg/ffmpeg')) as FfmpegModule;
-      utilModule = (await import('@ffmpeg/util')) as FfmpegUtilModule;
+      ffmpegModule = (await import('@ffmpeg/ffmpeg')) as unknown as FfmpegModule;
+      utilModule = (await import('@ffmpeg/util')) as unknown as FfmpegUtilModule;
     } catch {
       throw new Error('Install @ffmpeg/ffmpeg and @ffmpeg/util to run equirect extract.');
     }
 
     const ffmpeg = new ffmpegModule.FFmpeg();
-    ffmpeg.on('progress', ({ progress }) => {
+    ffmpeg.on('progress', ({ progress = 0 }) => {
       this.progress = Math.round(progress * 100);
       this.dispatchEvent(
         new CustomEvent('progress', {
@@ -337,20 +381,40 @@ export class RdWasmMediaElement extends HTMLElement {
       this.paint();
     });
 
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
-    await ffmpeg.load({
-      coreURL: await utilModule.toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-      wasmURL: await utilModule.toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      workerURL: await utilModule.toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript'),
-    });
+    const baseURL = resolveFfmpegCoreBaseUrl(this.getAttribute('ffmpeg-core-base-url'));
+    await loadFfmpegCore(ffmpeg, utilModule, baseURL);
 
     this.ffmpeg = ffmpeg;
     return ffmpeg;
   }
 
+  private attachFfmpegLogs(ffmpeg: FfmpegInstance) {
+    const lines: string[] = [];
+    const handler = ({ message }: { message?: string }) => {
+      const trimmed = message?.trim();
+      if (!trimmed) {
+        return;
+      }
+      lines.push(trimmed);
+      if (lines.length > 12) {
+        lines.shift();
+      }
+    };
+    ffmpeg.on('log', handler);
+    return {
+      tail: () => lines.slice(-4),
+      stop: () => ffmpeg.off?.('log', handler),
+    };
+  }
+
   async runEquirectExtract(): Promise<void> {
     if (!this.inputFile) {
       this.emitExtractError('Attach a video file before extracting.');
+      return;
+    }
+    const trim = this.resolveTrim();
+    if (!isValidAuthoringRecordRange(trim)) {
+      this.emitExtractError('Record a segment on the timeline before extracting.');
       return;
     }
 
@@ -359,64 +423,75 @@ export class RdWasmMediaElement extends HTMLElement {
     this.progress = 0;
     this.paint();
 
+    let logTail: string[] = [];
     try {
       const ffmpeg = await this.ensureFfmpeg();
-      const utilModule = (await import('@ffmpeg/util')) as FfmpegUtilModule;
-      const inputName = this.inputFileName();
-      const outputName = this.outputFileName();
-      const crop = this.resolveCrop();
-      const filter = buildEquirectExtractFilter(this.extractionMode, {
-        ...crop,
-        yaw: readNumber(this.getAttribute('yaw'), 0),
-        pitch: readNumber(this.getAttribute('pitch'), 0),
-        horizontalFov: readNumber(this.getAttribute('horizontal-fov'), 90),
-        reverse: this.reverse,
-      });
+      const logs = this.attachFfmpegLogs(ffmpeg);
+      try {
+        const utilModule = (await import('@ffmpeg/util')) as FfmpegUtilModule;
+        const inputName = this.inputFileName();
+        const outputName = this.outputFileName();
+        const crop = this.resolveCrop();
+        const filter = buildEquirectExtractFilter(this.extractionMode, {
+          ...crop,
+          yaw: readNumber(this.getAttribute('yaw'), 0),
+          pitch: readNumber(this.getAttribute('pitch'), 0),
+          horizontalFov: readNumber(this.getAttribute('horizontal-fov'), 90),
+          reverse: this.reverse,
+        });
 
-      await ffmpeg.writeFile(inputName, await utilModule.fetchFile(this.inputFile));
-      await ffmpeg.exec([
-        '-i',
-        inputName,
-        '-vf',
-        filter,
-        '-an',
-        '-c:v',
-        'libx264',
-        '-preset',
-        'ultrafast',
-        '-pix_fmt',
-        'yuv420p',
-        '-movflags',
-        'faststart',
-        outputName,
-      ]);
-      const data = await ffmpeg.readFile(outputName);
-      const blob = this.blobFromFfmpegOutput(data);
-      const metadata: DashRow = {
-        filter,
-        outputWidth: crop.outputWidth,
-        outputHeight: crop.outputHeight,
-        format: this.outputFormat,
-        reverse: this.reverse,
-      };
+        await ffmpeg.writeFile(inputName, await utilModule.fetchFile(this.inputFile));
+        const exitCode = await ffmpeg.exec(
+          buildAuthoringExtractFfmpegArgs({
+            inputName,
+            outputName,
+            filter,
+            trim,
+          }),
+        );
+        if (exitCode !== 0) {
+          throw new Error(
+            logs.tail().length
+              ? logs.tail().join(' ')
+              : `ffmpeg exited with code ${exitCode}`,
+          );
+        }
+        const data = await ffmpeg.readFile(outputName, 'binary');
+        const blob = this.blobFromFfmpegOutput(data);
+        if (blob.size === 0) {
+          throw new Error('ffmpeg produced an empty output file');
+        }
+        const metadata: DashRow = {
+          filter,
+          outputWidth: crop.outputWidth,
+          outputHeight: crop.outputHeight,
+          format: this.outputFormat,
+          reverse: this.reverse,
+          trimStartSec: trim!.startSec,
+          trimEndSec: trim!.endSec,
+          trimDurationSec: normalizeAuthoringRecordRange(trim!)?.durationSec ?? 0,
+        };
 
-      this.dispatchEvent(
-        new CustomEvent('extract-complete', {
-          detail: { blob, metadata },
-          bubbles: true,
-          composed: true,
-        }),
-      );
-      this.dispatchEvent(
-        new CustomEvent('metadata', {
-          detail: metadata,
-          bubbles: true,
-          composed: true,
-        }),
-      );
+        this.dispatchEvent(
+          new CustomEvent('extract-complete', {
+            detail: { blob, metadata },
+            bubbles: true,
+            composed: true,
+          }),
+        );
+        this.dispatchEvent(
+          new CustomEvent('metadata', {
+            detail: metadata,
+            bubbles: true,
+            composed: true,
+          }),
+        );
+      } finally {
+        logTail = logs.tail();
+        logs.stop();
+      }
     } catch (nextError) {
-      const message = nextError instanceof Error ? nextError.message : 'Extract failed';
-      this.emitExtractError(message);
+      this.emitExtractError(formatFfmpegError(nextError, logTail));
     } finally {
       this.busy = false;
       this.paint();
